@@ -1,0 +1,22 @@
+{
+    "assets": {
+        "spritesheets": [
+            {
+                "name": "player",
+                "path": "../assets/player_anims.png",
+                "frameWidth": 50,
+                "frameHeight": 37
+            }
+        ],
+        "images": [
+            {
+                "name": "background",
+                "path": "../assets/background.png"
+            },
+            {
+                "name": "ground",
+                "path": "../assets/simple_platform.png"
+            }
+        ]
+    }
+}
