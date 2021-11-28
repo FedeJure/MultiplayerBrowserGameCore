@@ -40,5 +40,6 @@
     "url": "https://github.com/FedeJure/MultiplayerBrowserGameCore/issues"
   },
   "homepage": "https://github.com/FedeJure/MultiplayerBrowserGameCore#readme",
-  "description": ""
+  "description": "",
+  "files": ["lib/**/*"]
 }
