@@ -4,7 +4,6 @@ import { SocketIOEvents } from "./infrastructure/events/socketIoEvents";
 import { ServerProvider } from "./infrastructure/providers/serverProvider";
 import { ClientProvider } from "./infrastructure/providers/clientProvider";
 import { GameScene } from "./view/scenes/GameScene";
-import { Socket as ClientSocket } from "socket.io-client";
 import { SocketClientConnection } from "./infrastructure/socketClientConnection";
 import {
   ClientConfig,
@@ -44,7 +43,7 @@ export const InitGame: (socket: Socket) => void = (socket: Socket) => {
   );
   socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
     const emitFn = clientSocket.emit;
-    clientSocket.emit = function (...args: any[]) {
+    clientSocket.emit = function (...args: [ev: string, ...args: any[]]) {
       setTimeout(() => {
         return emitFn.apply(clientSocket, args);
       }, 500);
