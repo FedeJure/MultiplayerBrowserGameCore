@@ -1,16 +1,20 @@
+import { AssetsConfiguration } from "../../infrastructure/configuration/AssetsConfiguration";
+
+
 export class LoadScene extends Phaser.Scene {
-  constructor() {
+  private readonly originUrl: string
+  constructor(originUrl: string) {
     super({ key: "loadScene" });
+    this.originUrl = originUrl
   }
 
   preload() {
-    this.load.spritesheet("player_anim", "./assets/player_anims.png", {
-      frameWidth: 50,
-      frameHeight: 37,
-    });
-    // this.load.image("player", "./assets/player.png");
-    this.load.image("background", "./assets/background.png");
-    this.load.image("ground", "./assets/simple_platform.png");
+    AssetsConfiguration.spritesheets.forEach(ss => {
+      this.load.spritesheet({...ss, url: `${this.originUrl}/${ss.path}`});
+    })
+    AssetsConfiguration.images.forEach(image => {
+      this.load.image({...image, url: `${this.originUrl}/${image.path}`});
+    } )
     this.load.on("complete", () => this.scene.start("gameScene"));
   }
 }

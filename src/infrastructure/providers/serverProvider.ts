@@ -43,6 +43,6 @@ export class ServerProvider {
   public static get playerInputRequestRepository(): PlayerInputRequestRepository {
     return DependencyManager.GetOrInstantiate<PlayerInputRequestRepository>(
       () => new PlayerInputRequestRepository()
-    )
+    );
   }
 }

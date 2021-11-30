@@ -41,5 +41,7 @@
   },
   "homepage": "https://github.com/FedeJure/MultiplayerBrowserGameCore#readme",
   "description": "",
-  "files": ["lib/**/*"]
+  "files": [
+    "lib/**/*"
+  ]
 }

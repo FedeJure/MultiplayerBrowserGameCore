@@ -50,6 +50,6 @@ export class ClientProvider {
   public static get playerInputRequestRepository(): PlayerInputRequestRepository {
     return DependencyManager.GetOrInstantiate<PlayerInputRequestRepository>(
       () => new PlayerInputRequestRepository()
-    )
+    );
   }
 }
