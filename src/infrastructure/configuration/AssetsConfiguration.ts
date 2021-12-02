@@ -1,14 +1,30 @@
+import { PhaserPlayerView } from "../../view/playerView";
+import { Types } from "phaser";
+
 interface Asset {
   path: string;
 }
 
-type SpriteSheet = Phaser.Types.Loader.FileTypes.SpriteSheetFileConfig & Asset;
-type ImageAsset = Phaser.Types.Loader.FileTypes.ImageFileConfig & Asset;
+type SpriteSheet = Types.Loader.FileTypes.SpriteSheetFileConfig & Asset;
+type ImageAsset = Types.Loader.FileTypes.ImageFileConfig & Asset;
+interface SpineAsset {
+  key: string;
+  jsonPath: string;
+  atlasPath: string;
+}
 
 export const AssetsConfiguration: {
   spritesheets: SpriteSheet[];
   images: ImageAsset[];
+  spines: SpineAsset[];
 } = {
+  spines: [
+    {
+      key: "hero",
+      jsonPath: "assets/hero.json",
+      atlasPath: "assets/hero.atlas",
+    },
+  ],
   spritesheets: [
     {
       key: "player_anim",

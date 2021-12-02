@@ -1,29 +1,13 @@
 import { Observable, Subject } from "rxjs";
-import { Scene, Physics } from "phaser";
+import { Scene, Physics, GameObjects } from "phaser";
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
 import { CollisionCategory } from "../../domain/collisions/collisionTypes";
-
-const safeStringify = (obj: any, indent = 2) => {
-  let cache: any = [];
-  const retVal = JSON.stringify(
-    obj,
-    (key, value) =>
-      typeof value === "object" && value !== null
-        ? cache.includes(value)
-          ? undefined // Duplicate reference found, discard key
-          : cache.push(value) && value // Store value in our collection
-        : value,
-    indent
-  );
-  cache = null;
-  return retVal;
-};
 
 export class GameScene extends Scene {
   private _onUpdate = new Subject<{ time: number; delta: number }>();
   private _onCreate = new Subject<void>();
 
-  private _lifeCycleObjects: Phaser.GameObjects.Group | undefined;
+  private _lifeCycleObjects: GameObjects.Group | undefined;
 
   private _collisionDispatcher: CollisionsDispatcher;
   constructor(collisionDispatcher: CollisionsDispatcher) {
@@ -45,7 +29,7 @@ export class GameScene extends Scene {
   initCollisions() {
     this.matter.world.addListener(
       "collisionstart",
-      (ev: Phaser.Physics.Matter.Events.CollisionStartEvent) => {
+      (ev: Physics.Matter.Events.CollisionStartEvent) => {
         this._collisionDispatcher.sendCollisionStart(ev)
       },
       this
@@ -53,7 +37,7 @@ export class GameScene extends Scene {
 
     this.matter.world.addListener(
       "collisionend",
-      (ev: Phaser.Physics.Matter.Events.CollisionEndEvent) => {
+      (ev: Physics.Matter.Events.CollisionEndEvent) => {
         this._collisionDispatcher.sendCollisionEnd(ev)
       },
       this
@@ -64,11 +48,11 @@ export class GameScene extends Scene {
     this._onUpdate.next({ time, delta });
   }
 
-  addToLifecycle(object: Phaser.GameObjects.GameObject) {
+  addToLifecycle(object: GameObjects.GameObject) {
     this._lifeCycleObjects?.add(object);
   }
 
-  removeFromLifecycle(object: Phaser.GameObjects.GameObject) {
+  removeFromLifecycle(object: GameObjects.GameObject) {
     this._lifeCycleObjects?.remove(object);
   }
 

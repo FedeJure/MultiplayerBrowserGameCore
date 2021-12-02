@@ -56,7 +56,7 @@ export class PlayerMovementValidationDelegator implements Delegator {
       targets: this.player.view,
       x: remoteState.position.x,
       y: remoteState.position.y,
-      duration: distance,
+      duration: distance / 0.5,
     });
   }
 

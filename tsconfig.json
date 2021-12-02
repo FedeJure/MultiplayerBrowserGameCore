@@ -5,7 +5,12 @@
     "declaration": true,
     "outDir": "./lib",
     "strict": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "@types",
+      "node_modules/@types",
+      "node_module/phaser/types"
+    ]
   },
   "include": [
     "src"

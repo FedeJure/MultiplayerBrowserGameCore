@@ -1,4 +1,5 @@
 import { AssetsConfiguration } from "../../infrastructure/configuration/AssetsConfiguration";
+import {Loader} from "phaser"
 
 
 export class LoadScene extends Phaser.Scene {
@@ -7,8 +8,11 @@ export class LoadScene extends Phaser.Scene {
     super({ key: "loadScene" });
     this.originUrl = originUrl
   }
-
+  
   preload() {
+    AssetsConfiguration.spines.forEach(s => {
+      this.load.spine(s.key, s.jsonPath, s.atlasPath)
+    })
     AssetsConfiguration.spritesheets.forEach(ss => {
       this.load.spritesheet({...ss, url: `${this.originUrl}/${ss.path}`});
     })

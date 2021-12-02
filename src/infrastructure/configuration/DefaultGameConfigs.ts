@@ -1,5 +1,5 @@
 import { GameConfig } from "../../view/gameConfig";
-
+import "phaser/plugins/spine/dist/SpinePlugin"
 
 export const ClientConfig: GameConfig = {
   type: Phaser.AUTO,
@@ -12,6 +12,11 @@ export const ClientConfig: GameConfig = {
     forceSetTimeOut: true,
     target: 60
   },
+  plugins: {
+		scene: [
+			{ key: 'SpinePlugin', plugin: window.SpinePlugin, mapping: 'spine' }
+		]
+	},
   physics: {
     default: "matter",
     matter: {

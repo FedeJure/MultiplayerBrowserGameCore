@@ -1,0 +1,1 @@
+declare module "phaser/plugins/spine/dist/SpinePlugin"
