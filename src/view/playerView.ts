@@ -29,6 +29,7 @@ export class PhaserPlayerView
     this.width = width;
     this.setBounce(0);
     this.initCollisions(this)
+    scene.add.spine(0,0, "hero").play("idle")
   }
 
   private initCollisions(view: PhaserPlayerView) {
