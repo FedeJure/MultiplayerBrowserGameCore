@@ -17,7 +17,7 @@ import { GameplayHud } from "./view/scenes/GameplayHud";
 import { LocalPlayerRepository } from "./infrastructure/repositories/localPlayerRepository";
 import { ActionProvider } from "./infrastructure/providers/actionProvider";
 import { DefaultPlayerState } from "./infrastructure/configuration/DefaultPlayerState";
-import * as Phaser from "phaser"
+import * as Phaser from "phaser";
 
 export const InitGame: (socket: Socket) => void = (socket: Socket) => {
   const scene = new GameScene(ServerProvider.collisionsDispatcher);
@@ -27,9 +27,12 @@ export const InitGame: (socket: Socket) => void = (socket: Socket) => {
   for (let i = 1; i <= 200; i++) {
     ServerProvider.playerInfoRepository.addPlayer(i.toString(), {
       id: i.toString(),
-      name: "Test Player "+ i,
+      name: "Test Player " + i,
     });
-    ServerProvider.playerStateRepository.setPlayerState(i.toString(), DefaultPlayerState);
+    ServerProvider.playerStateRepository.setPlayerState(
+      i.toString(),
+      DefaultPlayerState
+    );
   }
 
   const room = new SocketRoomConnection(socket, "main");
@@ -69,7 +72,11 @@ export const InitGame: (socket: Socket) => void = (socket: Socket) => {
   });
 };
 
-export const InitClientGame = (socket: any, localPlayerId: string, originUrl: string) => {
+export const InitClientGame = (
+  socket: any,
+  localPlayerId: string,
+  originUrl: string
+) => {
   const connectionWithServer = new SocketServerConnection(socket);
   ClientProvider.Init(
     connectionWithServer,
@@ -78,7 +85,11 @@ export const InitClientGame = (socket: any, localPlayerId: string, originUrl: st
   const scene = new GameScene(ClientProvider.collisionsDispatcher);
   const config = {
     ...ClientConfig,
-    scene: [new LoadScene(originUrl), scene, new GameplayHud(connectionWithServer)],
+    scene: [
+      new LoadScene(originUrl),
+      scene,
+      new GameplayHud(connectionWithServer),
+    ],
   };
   new Phaser.Game(config);
   ClientProvider.presenterProvider.forGameplay(scene);

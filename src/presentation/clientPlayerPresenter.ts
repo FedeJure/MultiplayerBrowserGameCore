@@ -8,7 +8,7 @@ export class ClientPlayerPresenter {
   protected readonly view: PhaserPlayerView;
   protected readonly player: Player;
   protected readonly connection: ServerConnection;
-  private readonly delegators: Delegator[]
+  private readonly delegators: Delegator[];
 
   constructor(
     connection: ServerConnection,
@@ -24,17 +24,17 @@ export class ClientPlayerPresenter {
     this.connection.onPlayerDisconnected
       .pipe(filter((p) => p.playerId === player.info.id))
       .subscribe((_) => {
-        delegators.forEach(d => d.stop())
+        delegators.forEach((d) => d.stop());
         player.view.destroy();
       });
-    delegators.forEach(d => d.init())
-    this.view.onUpdate.subscribe(data =>
-      this.delegators.forEach(d =>
-        d.update(data.time, data.delta))
-    )
+    delegators.forEach((d) => d.init());
+    this.view.onUpdate.subscribe((data) => {
+      this.delegators.forEach((d) => d.update(data.time, data.delta));
+    });
   }
 
   private renderPlayer(player: PhaserPlayerView): void {
     player.scene.add.existing(player);
+    // console.log(player.scene.add.spine(0, 0, "hero"), "sadasd");
   }
 }

@@ -11,7 +11,9 @@ export class GameScene extends Scene {
 
   private _collisionDispatcher: CollisionsDispatcher;
   constructor(collisionDispatcher: CollisionsDispatcher) {
-    super({ key: "gameScene" });
+    super({
+      key: "gameScene"
+    });
     this._collisionDispatcher = collisionDispatcher;
   }
 
@@ -30,7 +32,7 @@ export class GameScene extends Scene {
     this.matter.world.addListener(
       "collisionstart",
       (ev: Physics.Matter.Events.CollisionStartEvent) => {
-        this._collisionDispatcher.sendCollisionStart(ev)
+        this._collisionDispatcher.sendCollisionStart(ev);
       },
       this
     );
@@ -38,7 +40,7 @@ export class GameScene extends Scene {
     this.matter.world.addListener(
       "collisionend",
       (ev: Physics.Matter.Events.CollisionEndEvent) => {
-        this._collisionDispatcher.sendCollisionEnd(ev)
+        this._collisionDispatcher.sendCollisionEnd(ev);
       },
       this
     );
@@ -70,7 +72,7 @@ export class GameScene extends Scene {
     const ground = new Physics.Matter.Sprite(this.matter.world, 0, 500, "");
     ground.setScale(100, 1);
     ground.setStatic(true);
-    ground.setFriction(0)
+    ground.setFriction(0);
     ground.setCollisionCategory(CollisionCategory.StaticEnvironment);
     ground.setCollidesWith([CollisionCategory.Player]);
   };

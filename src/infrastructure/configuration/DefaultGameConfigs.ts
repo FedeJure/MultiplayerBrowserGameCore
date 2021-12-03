@@ -12,11 +12,6 @@ export const ClientConfig: GameConfig = {
     forceSetTimeOut: true,
     target: 60
   },
-  plugins: {
-		scene: [
-			{ key: 'SpinePlugin', plugin: window.SpinePlugin, mapping: 'spine' }
-		]
-	},
   physics: {
     default: "matter",
     matter: {
@@ -29,7 +24,16 @@ export const ClientConfig: GameConfig = {
         showStaticBody: false,
       },
     },
-  }
+  },
+  plugins: {
+    scene: [
+      {
+        key: "SpinePlugin",
+        plugin: window.SpinePlugin,
+        mapping: 'spine'
+      }
+    ]
+  },
 };
 
 export const ServerConfig: GameConfig = {
@@ -55,5 +59,5 @@ export const ServerConfig: GameConfig = {
         showStaticBody: false,
       },
     },
-  }
+  },
 };

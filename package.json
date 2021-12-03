@@ -4,8 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "npx jest --config jestconfig.json",
-    "build": "tsc",
+    "build": "",
     "start": "tsc --watch",
+    "watch": "tsc-watch --onSuccess \"npm link --ignore-scripts\"",
     "prepare": "npm run build"
   },
   "author": "Federico Jure",
@@ -21,7 +22,6 @@
     "socket.io-client": "^4.4.0"
   },
   "devDependencies": {
-    "@azerion/phaser-spine": "^3.0.9",
     "@babel/preset-typescript": "^7.16.0",
     "@fluffy-spoon/substitute": "^1.208.0",
     "@types/babel__core": "^7.1.16",
@@ -31,6 +31,7 @@
     "jest": "^27.3.1",
     "npm-link-watch": "^1.0.26",
     "ts-jest": "^27.0.7",
+    "tsc-watch": "^4.5.0",
     "typescript": "^4.5.2"
   },
   "directories": {

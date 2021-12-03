@@ -10,7 +10,22 @@
       "@types",
       "node_modules/@types",
       "node_module/phaser/types"
-    ]
+    ],
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+    "allowUnreachableCode": false,
+    "sourceMap": true,
+    "strictPropertyInitialization": false,
+    "allowJs": false,
+    "lib": ["dom", "es5", "esnext"],
+    "jsx": "react",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
   },
   "include": [
     "src"
@@ -28,8 +43,5 @@
       "**/node_modules",
       "_build"
     ],
-    "excludeFiles": [
-      "build/fileWhichChangesOfent.ts"
-    ]
   }
 }

@@ -1,5 +1,5 @@
 import { BodyType } from "matter";
-import { Physics, Scene } from "phaser";
+import { Physics, Scene, Plugins } from "phaser";
 import { Observable, Subject } from "rxjs";
 import { CollisionCategory } from "../domain/collisions/collisionTypes";
 import { PlayerView } from "../presentation/playerView";
@@ -29,7 +29,8 @@ export class PhaserPlayerView
     this.width = width;
     this.setBounce(0);
     this.initCollisions(this)
-    scene.add.spine(0,0, "hero").play("idle")
+    console.log("sadasd");
+
   }
 
   private initCollisions(view: PhaserPlayerView) {

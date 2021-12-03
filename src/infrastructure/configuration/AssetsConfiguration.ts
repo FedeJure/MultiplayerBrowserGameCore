@@ -20,9 +20,9 @@ export const AssetsConfiguration: {
 } = {
   spines: [
     {
-      key: "hero",
-      jsonPath: "assets/hero.json",
-      atlasPath: "assets/hero.atlas",
+      key: "spineboy",
+      jsonPath: "assets/spineboy.json",
+      atlasPath: "assets/spineboy.atlas",
     },
   ],
   spritesheets: [
