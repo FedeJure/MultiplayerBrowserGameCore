@@ -24,24 +24,24 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     super(view.scene, "player");
     this.view = view;
     this.view.setPosition(x, y);
-    this.view.scene.matter.add.gameObject(view)
+    this.view.scene.matter.add.gameObject(view);
     this.view.height = height;
     this.view.width = width;
     this.view.setBounce(0);
     this.initCollisions();
   }
   startFollowWithCam(): void {
-    this.scene.cameras.main.startFollow(this.view)
+    this.scene.cameras.main.startFollow(this.view);
   }
   playAnimation(anim: string): void {
     // if (this.view.anims.currentAnim?.key == anim) return;
     this.view.play(anim);
   }
   get velocity(): MatterJS.Vector {
-    return this.view.body.velocity
+    return this.view.body.velocity;
   }
   get position(): MatterJS.Vector {
-    return this.view.body.position
+    return this.view.body.position;
   }
   setScale(x: number, y: number): void {
     this.view.setScale(x, y);
@@ -74,9 +74,11 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   }
 
   update(time: number, delta: number) {
-    this.view.update(time, delta);
-    this.view.setAngle(0); //Prevents to gameobject rotate due Matter physics. Cant find another solution at the moment
-    this._onUpdate.next({ time, delta });
+    if (this.view.active) {
+      this.view.update(time, delta);
+      this.view.setAngle(0); //Prevents to gameobject rotate due Matter physics. Cant find another solution at the moment
+      this._onUpdate.next({ time, delta });
+    }
   }
 
   public get onUpdate(): Observable<{ time: number; delta: number }> {

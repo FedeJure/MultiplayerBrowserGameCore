@@ -20,7 +20,7 @@ export const ClientConfig: GameConfig = {
         y: 1,
       },
       debug: {
-        showBody: false,
+        showBody: true,
         showStaticBody: false,
       },
     },

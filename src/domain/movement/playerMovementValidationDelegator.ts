@@ -48,6 +48,7 @@ export class PlayerMovementValidationDelegator implements Delegator {
   }
 
   private validatePosition(state: PlayerState, remoteState: PlayerState) {
+    console.log("validating")
     const distance = Math.Distance.BetweenPoints(
       remoteState.position,
       state.position
