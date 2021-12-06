@@ -2,10 +2,10 @@ import { filter } from "rxjs";
 import { Delegator } from "../domain/delegator";
 import { Player } from "../domain/player/player";
 import { ServerConnection } from "../domain/serverConnection";
-import { PhaserPlayerView } from "../view/playerView";
+import { IPlayerView } from "./playerView";
 
 export class ClientPlayerPresenter {
-  protected readonly view: PhaserPlayerView;
+  protected readonly view: IPlayerView;
   protected readonly player: Player;
   protected readonly connection: ServerConnection;
   private readonly delegators: Delegator[];
@@ -19,7 +19,6 @@ export class ClientPlayerPresenter {
     this.player = player;
     this.connection = connection;
     this.delegators = delegators;
-    this.renderPlayer(this.view);
 
     this.connection.onPlayerDisconnected
       .pipe(filter((p) => p.playerId === player.info.id))
@@ -31,10 +30,5 @@ export class ClientPlayerPresenter {
     this.view.onUpdate.subscribe((data) => {
       this.delegators.forEach((d) => d.update(data.time, data.delta));
     });
-  }
-
-  private renderPlayer(player: PhaserPlayerView): void {
-    player.scene.add.existing(player);
-    // console.log(player.scene.add.spine(0, 0, "hero"), "sadasd");
   }
 }

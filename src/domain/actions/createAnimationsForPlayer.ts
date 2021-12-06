@@ -24,10 +24,10 @@ function createAnim(
 }
 
 export function setupPlayerAnimations(player: Player) {
-  player.view.setTexture("player_anim");
-  createAnim(player, 0, 2, AnimationCode.IDLE, true, 1000);
-  createAnim(player, 8, 13, AnimationCode.RUNNING, true, 800);
-  createAnim(player, 15, 23, AnimationCode.IDLE_JUMP, false, 500);
-  createAnim(player, 15, 23, AnimationCode.RUNNING_JUMP, false, 500);
-  createAnim(player, 22, 23, AnimationCode.FALLING, true, 200);
+  // player.view.setTexture("player_anim");
+  // createAnim(player, 0, 2, AnimationCode.IDLE, true, 1000);
+  // createAnim(player, 8, 13, AnimationCode.RUNNING, true, 800);
+  // createAnim(player, 15, 23, AnimationCode.IDLE_JUMP, false, 500);
+  // createAnim(player, 15, 23, AnimationCode.RUNNING_JUMP, false, 500);
+  // createAnim(player, 22, 23, AnimationCode.FALLING, true, 200);
 }

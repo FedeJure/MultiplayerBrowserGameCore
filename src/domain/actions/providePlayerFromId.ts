@@ -1,6 +1,6 @@
 import { Player } from "../../domain/player/player";
 import { GameScene } from "../../view/scenes/GameScene";
-import { PhaserPlayerView } from "../../view/playerView";
+import { PlayerView } from "../../view/playerView";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { ClientConnection } from "../clientConnection";
 import { PlayerSocketInput } from "../../infrastructure/input/playerSocketInput";
@@ -8,9 +8,9 @@ import { PlayerInfoRepository } from "../../infrastructure/repositories/playerIn
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ConnectedPlayersRepository } from "../../infrastructure/repositories/connectedPlayersRepository";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
-import { PlayerCollisionDelegator } from "../collisions/playerCollisionDelegator";
 import { ServerProvider } from "../../infrastructure/providers/serverProvider";
 import { DefaultPlayerState } from "../../infrastructure/configuration/DefaultPlayerState";
+import { ServerPlayerView } from "../../view/serverPlayerView";
 
 export class CreatePlayerFromId {
   private readonly infoRepository: PlayerInfoRepository;
@@ -40,7 +40,7 @@ export class CreatePlayerFromId {
       throw new Error(`Player with ID: ${playerId} not found`);
     const playerState =
       this.stateRepository.getPlayerState(playerId) || DefaultPlayerState;
-    const view = new PhaserPlayerView(
+    const view = new ServerPlayerView(
       scene,
       playerState.position.x,
       playerState.position.y,

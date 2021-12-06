@@ -65,11 +65,7 @@ export class PlayerInputDelegator implements Delegator {
       );
       this.player.view.setVelocity(newState.velocity.x, newState.velocity.y);
       this.player.view.setPosition(newState.position.x, newState.position.y);
-      this.player.view.setScale(
-        (newState.side == Side.RIGHT ? 1 : -1) *
-          Math.abs(this.player.view.scaleX),
-        this.player.view.scaleY
-      );
+      this.player.view.lookToLeft(newState.side == Side.LEFT);
       this.statesRepository.setPlayerState(this.player.info.id, newState);
       this.savedState = newState;
     }

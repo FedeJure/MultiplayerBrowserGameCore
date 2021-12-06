@@ -1,4 +1,4 @@
-import { PhaserPlayerView } from "../../view/playerView";
+import { IPlayerView } from "../../presentation/playerView";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { PlayerInput } from "../player/playerInput";
 import { PlayerState } from "../player/playerState";
@@ -9,12 +9,12 @@ export class ResolvePlayerMovementWithInputs {
 
   execute(
     input: PlayerInput,
-    view: PhaserPlayerView,
+    view: IPlayerView,
     state: PlayerState,
     deltaTime: number
   ): PlayerState {
-    let newVelX = view.body.velocity.x;
-    let newVelY = view.body.velocity.y;
+    let newVelX = view.velocity.x;
+    let newVelY = view.velocity.y;
     let velocity = 1;
     let maxRunVelocity = 5;
 
@@ -53,7 +53,7 @@ export class ResolvePlayerMovementWithInputs {
         y: Number(newVelY.toPrecision(2)),
       },
       jumpsAvailable: availableJumps,
-      position: view.body.position,
+      position: view.position,
       canJump,
       side,
     };

@@ -38,11 +38,7 @@ export class PlayerRemoteMovementDelegator implements Delegator {
     const state = this.playerStateRepository.getPlayerState(this.player.info.id)
     if (state) {
       const view = this.player.view;
-      view.setScale(
-        (state.side == Side.RIGHT ? 1 : -1) *
-          Math.abs(this.player.view.scaleX),
-        this.player.view.scaleY
-      );
+      view.lookToLeft(state.side === Side.LEFT)
       view.setPosition(state.position.x, state.position.y);
       view.setVelocity(state.velocity.x, state.velocity.y);
     }

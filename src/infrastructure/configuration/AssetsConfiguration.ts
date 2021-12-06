@@ -1,4 +1,4 @@
-import { PhaserPlayerView } from "../../view/playerView";
+import { PlayerView } from "../../view/playerView";
 import { Types } from "phaser";
 
 interface Asset {
@@ -20,7 +20,7 @@ export const AssetsConfiguration: {
 } = {
   spines: [
     {
-      key: "spineboy",
+      key: "hero",
       jsonPath: "assets/spineboy.json",
       atlasPath: "assets/spineboy.atlas",
     },

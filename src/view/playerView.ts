@@ -1,14 +1,10 @@
 import { BodyType } from "matter";
-import { Physics, Scene, Plugins } from "phaser";
+import { GameObjects, Physics } from "phaser";
 import { Observable, Subject } from "rxjs";
 import { CollisionCategory } from "../domain/collisions/collisionTypes";
-import { PlayerView } from "../presentation/playerView";
-import { GameScene } from "./scenes/GameScene";
+import { IPlayerView } from "../presentation/playerView";
 
-export class PhaserPlayerView
-  extends Physics.Matter.Sprite
-  implements PlayerView
-{
+export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   //TODO: ver de crear interfaces en el dominio con todas las propiedades q se usen de Phaser, para aislar
   // el core de la dependencia del framework
   private readonly _onUpdate = new Subject<{ time: number; delta: number }>();
@@ -16,41 +12,70 @@ export class PhaserPlayerView
     time: number;
     delta: number;
   }>();
+  protected readonly view: Physics.Matter.Sprite;
 
   constructor(
-    scene: GameScene,
+    view: Physics.Matter.Sprite,
     x: number,
     y: number,
     height: number,
     width: number
   ) {
-    super(scene.matter.world, x, y, "");
-    this.height = height;
-    this.width = width;
-    this.setBounce(0);
-    this.initCollisions(this)
-    console.log("sadasd");
-
+    super(view.scene, "player");
+    this.view = view;
+    this.view.setPosition(x, y);
+    this.view.scene.matter.add.gameObject(view)
+    this.view.height = height;
+    this.view.width = width;
+    this.view.setBounce(0);
+    this.initCollisions();
+  }
+  startFollowWithCam(): void {
+    this.scene.cameras.main.startFollow(this.view)
+  }
+  playAnimation(anim: string): void {
+    // if (this.view.anims.currentAnim?.key == anim) return;
+    this.view.play(anim);
+  }
+  get velocity(): MatterJS.Vector {
+    return this.view.body.velocity
+  }
+  get position(): MatterJS.Vector {
+    return this.view.body.position
+  }
+  setScale(x: number, y: number): void {
+    this.view.setScale(x, y);
+  }
+  lookToLeft(value: boolean): void {
+    this.view.setScale(
+      (value ? -1 : 1) * Math.abs(this.view.scaleX),
+      this.view.scaleY
+    );
+  }
+  setVelocity(x: number, y: number): void {
+    this.view.setVelocity(x, y);
+  }
+  setPosition(x: number, y: number): void {
+    this.view.setPosition(x, y);
   }
 
-  private initCollisions(view: PhaserPlayerView) {
-    view.setCollisionCategory(CollisionCategory.Player);
-    view.setCollidesWith([CollisionCategory.StaticEnvironment]);
+  private initCollisions() {
+    this.view.setCollisionCategory(CollisionCategory.Player);
+    this.view.setCollidesWith([CollisionCategory.StaticEnvironment]);
   }
 
   destroy() {
-    super.destroy();
-    this.scene?.matter.world.remove(this);
+    this.view.destroy();
+    this.scene.matter.world.remove(this.view);
   }
 
   preUpdate(time: number, delta: number) {
-    super.preUpdate(time, delta)
     this._onPreUpdate.next({ time, delta });
   }
 
   update(time: number, delta: number) {
-    super.update(time,delta)
-    this.setAngle(0); //Prevents to gameobject rotate due Matter physics. Cant find another solution at the moment
+    this.view.update(time, delta);
+    this.view.setAngle(0); //Prevents to gameobject rotate due Matter physics. Cant find another solution at the moment
     this._onUpdate.next({ time, delta });
   }
 
@@ -61,5 +86,7 @@ export class PhaserPlayerView
     return this._onPreUpdate;
   }
 
-  public get matterBody() { return this.body as BodyType }
+  public get matterBody() {
+    return this.view.body as BodyType;
+  }
 }

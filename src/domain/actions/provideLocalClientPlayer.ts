@@ -1,5 +1,5 @@
 import { GameScene } from "../../view/scenes/GameScene";
-import { PhaserPlayerView } from "../../view/playerView";
+import { PlayerView } from "../../view/playerView";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { PlayerInfo } from "../player/playerInfo";
 import { PlayerInput } from "../player/playerInput";
@@ -8,6 +8,7 @@ import { PlayerState } from "../player/playerState";
 import { ConnectedPlayersRepository } from "../../infrastructure/repositories/connectedPlayersRepository";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
+import { ClientPlayerView } from "../../view/clientPlayerView";
 
 export class CreateLocalClientPlayer {
   private readonly presenterProvider: ClientPresenterProvider;
@@ -29,7 +30,7 @@ export class CreateLocalClientPlayer {
     scene: GameScene,
     input: PlayerInput
   ) {
-    const view = new PhaserPlayerView(
+    const view = new ClientPlayerView(
       scene,
       state.position.x,
       state.position.y,
