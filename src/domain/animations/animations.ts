@@ -1,9 +1,9 @@
 export enum AnimationCode {
     IDLE = "idle",
-    RUNNING = "running",
-    IDLE_JUMP = "idleJump",
-    RUNNING_JUMP = "runningJump",
-    SECOND_JUMP = "secondJump",
-    FALLING = "falling",
+    RUNNING = "run",
+    IDLE_JUMP = "jump",
+    RUNNING_JUMP = "jump",
+    SECOND_JUMP = "jump",
+    FALLING = "fall",
   }
   

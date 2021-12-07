@@ -1,8 +1,7 @@
-import { AnimationCode } from "../animations/animations";
 import { Player } from "../player/player";
 
 export function getAnimationForPlayer(player: Player, anim: string) {
-  return `${player.info.id}-${anim}`;
+  return `${anim}`;
 }
 function createAnim(
   player: Player,

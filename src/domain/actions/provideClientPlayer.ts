@@ -1,5 +1,4 @@
 import { GameScene } from "../../view/scenes/GameScene";
-import { PlayerView } from "../../view/playerView";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { PlayerInfo } from "../player/playerInfo";
 import { Player } from "../player/player";

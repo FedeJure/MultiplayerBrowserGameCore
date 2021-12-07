@@ -23,10 +23,7 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   ) {
     super(view.scene, "player");
     this.view = view;
-    this.view.setPosition(x, y);
     this.view.scene.matter.add.gameObject(view);
-    this.view.height = height;
-    this.view.width = width;
     this.view.setBounce(0);
     this.initCollisions();
   }
@@ -34,8 +31,6 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     this.scene.cameras.main.startFollow(this.view);
   }
   playAnimation(anim: string): void {
-    // if (this.view.anims.currentAnim?.key == anim) return;
-    this.view.play(anim);
   }
   get velocity(): MatterJS.Vector {
     return this.view.body.velocity;

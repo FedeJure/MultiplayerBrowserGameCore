@@ -1,4 +1,3 @@
-import { PlayerView } from "../../view/playerView";
 import { Types } from "phaser";
 
 interface Asset {
@@ -21,8 +20,8 @@ export const AssetsConfiguration: {
   spines: [
     {
       key: "hero",
-      jsonPath: "assets/spineboy.json",
-      atlasPath: "assets/spineboy.atlas",
+      jsonPath: "assets/hero.json",
+      atlasPath: "assets/hero.atlas",
     },
   ],
   spritesheets: [

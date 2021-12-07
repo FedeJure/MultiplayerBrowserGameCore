@@ -18,7 +18,7 @@ export const DefaultConfiguration: PlayerConfiguration = {
   initialLife: 100,
   initialJumps: 2,
   height: 37,
-  width: 50,
+  width: 25,
   jumpVelocity: 10,
   runVelocity: 10,
   initialSide: RIGHT,
