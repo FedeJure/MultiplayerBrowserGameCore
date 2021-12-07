@@ -1,6 +1,4 @@
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
-import { setupPlayerAnimations } from "../actions/createAnimationsForPlayer";
-import { playAnim } from "../actions/playAnimation";
 import { Delegator } from "../delegator";
 import { Player } from "../player/player";
 
@@ -12,12 +10,10 @@ export class RemotePlayerAnimationDelegator implements Delegator {
     this.statesRepository = statesRepository;
     this.player = player;
   }
-  init(): void {
-    setupPlayerAnimations(this.player);
-  }
+  init(): void {}
   stop(): void {}
   update(time: number, delta: number) {
     const state = this.statesRepository.getPlayerState(this.player.info.id);
-    if (state) playAnim(this.player, state.anim)
+    if (state) this.player.view.playAnimation(state.anim);
   }
 }
