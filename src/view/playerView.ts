@@ -12,7 +12,7 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     time: number;
     delta: number;
   }>();
-  protected readonly view: Physics.Matter.Sprite;
+  protected readonly _view: Physics.Matter.Sprite;
 
   constructor(
     view: Physics.Matter.Sprite,
@@ -22,46 +22,53 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     width: number
   ) {
     super(view.scene, "player");
-    this.view = view;
-    this.view.scene.matter.add.gameObject(view);
-    this.view.setBounce(0);
+    this._view = view;
+    this._view.scene.matter.add.gameObject(view);
+    this._view.setBounce(0);
     this.initCollisions();
   }
+  moveTo(x: number, y: number, time: number): void {
+    this.view.scene.tweens.add({
+      targets: this.view,
+      x,
+      y,
+      duration: time,
+    });
+  }
   startFollowWithCam(): void {
-    this.scene.cameras.main.startFollow(this.view);
+    this.scene.cameras.main.startFollow(this._view);
   }
-  playAnimation(anim: string): void {
-  }
+  playAnimation(anim: string): void {}
   get velocity(): MatterJS.Vector {
-    return this.view.body.velocity;
+    return this._view.body.velocity;
   }
   get position(): MatterJS.Vector {
-    return this.view.body.position;
+    return this._view.body.position;
   }
   setScale(x: number, y: number): void {
-    this.view.setScale(x, y);
+    this._view.setScale(x, y);
   }
   lookToLeft(value: boolean): void {
-    this.view.setScale(
-      (value ? -1 : 1) * Math.abs(this.view.scaleX),
-      this.view.scaleY
+    this._view.setScale(
+      (value ? -1 : 1) * Math.abs(this._view.scaleX),
+      this._view.scaleY
     );
   }
   setVelocity(x: number, y: number): void {
-    this.view.setVelocity(x, y);
+    this._view.setVelocity(x, y);
   }
   setPosition(x: number, y: number): void {
-    this.view.setPosition(x, y);
+    this._view.setPosition(x, y);
   }
 
   private initCollisions() {
-    this.view.setCollisionCategory(CollisionCategory.Player);
-    this.view.setCollidesWith([CollisionCategory.StaticEnvironment]);
+    this._view.setCollisionCategory(CollisionCategory.Player);
+    this._view.setCollidesWith([CollisionCategory.StaticEnvironment]);
   }
 
   destroy() {
-    this.view.destroy();
-    this.scene.matter.world.remove(this.view);
+    this._view.destroy();
+    this.scene.matter.world.remove(this._view);
   }
 
   preUpdate(time: number, delta: number) {
@@ -69,9 +76,9 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   }
 
   update(time: number, delta: number) {
-    if (this.view.active) {
-      this.view.update(time, delta);
-      this.view.setAngle(0); //Prevents to gameobject rotate due Matter physics. Cant find another solution at the moment
+    if (this._view.active) {
+      this._view.update(time, delta);
+      this._view.setAngle(0); //Prevents to gameobject rotate due Matter physics. Cant find another solution at the moment
       this._onUpdate.next({ time, delta });
     }
   }
@@ -84,6 +91,10 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   }
 
   public get matterBody() {
-    return this.view.body as BodyType;
+    return this._view.body as BodyType;
+  }
+
+  public get view() {
+    return this._view;
   }
 }

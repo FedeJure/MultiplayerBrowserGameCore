@@ -52,12 +52,7 @@ export class PlayerMovementValidationDelegator implements Delegator {
       remoteState.position,
       state.position
     );
-    this.player.view.scene.tweens.add({
-      targets: this.player.view,
-      x: remoteState.position.x,
-      y: remoteState.position.y,
-      duration: distance / 0.5,
-    });
+    this.player.view.moveTo(remoteState.position.x, remoteState.position.y, distance / 0.7)
   }
 
   stop() {}
