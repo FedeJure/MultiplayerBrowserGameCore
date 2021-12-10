@@ -24,16 +24,7 @@ export const AssetsConfiguration: {
       atlasPath: "assets/hero.atlas",
     },
   ],
-  spritesheets: [
-    {
-      key: "player_anim",
-      path: "assets/player_anims.png",
-      frameConfig: {
-        frameWidth: 50,
-        frameHeight: 37,
-      },
-    },
-  ],
+  spritesheets: [],
   images: [
     {
       key: "background",

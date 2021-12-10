@@ -1,5 +1,5 @@
 import { Observable, Subject } from "rxjs";
-import { Scene, Physics, GameObjects } from "phaser";
+import Phaser, { Scene, Physics, GameObjects } from "phaser";
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
 import { CollisionCategory } from "../../domain/collisions/collisionTypes";
 
@@ -9,21 +9,17 @@ export class GameScene extends Scene {
 
   private _lifeCycleObjects: GameObjects.Group | undefined;
 
-  private _collisionDispatcher: CollisionsDispatcher;
-  constructor(collisionDispatcher: CollisionsDispatcher) {
+  constructor(protected collisionDispatcher: CollisionsDispatcher) {
     super({
-      key: "gameScene"
+      key: "gameScene",
     });
-    this._collisionDispatcher = collisionDispatcher;
+    this.collisionDispatcher = collisionDispatcher;
   }
 
   create() {
-    this.scene.launch("hud");
     this._lifeCycleObjects = this.add.group({ runChildUpdate: true });
     this.initPlatforms();
-    const background = this.add.image(1250, 300, "background");
-    background.scaleY = 2;
-    background.scaleX = 2;
+
     this.initCollisions();
     this._onCreate.next();
   }
@@ -32,7 +28,7 @@ export class GameScene extends Scene {
     this.matter.world.addListener(
       "collisionstart",
       (ev: Physics.Matter.Events.CollisionStartEvent) => {
-        this._collisionDispatcher.sendCollisionStart(ev);
+        this.collisionDispatcher.sendCollisionStart(ev);
       },
       this
     );
@@ -40,7 +36,7 @@ export class GameScene extends Scene {
     this.matter.world.addListener(
       "collisionend",
       (ev: Physics.Matter.Events.CollisionEndEvent) => {
-        this._collisionDispatcher.sendCollisionEnd(ev);
+        this.collisionDispatcher.sendCollisionEnd(ev);
       },
       this
     );
@@ -67,13 +63,41 @@ export class GameScene extends Scene {
   }
 
   private initPlatforms = () => {
-    //TODO: refactorear esto para generar platform de archivo de configs
+    const map = this.make.tilemap({
+      key: "level1",
+    });
+    const tileset = map.addTilesetImage("ground", "ground");
+    map.createLayer("background", tileset);
+    const solid = map.createLayer("solid", tileset);
+    const colliders = map.createFromObjects("colliders", {});
+    colliders.forEach((col) => {
+      const asSprite = col as Phaser.Physics.Matter.Sprite;
+      // this.matter.add.gameObject(col, {
+      //   isStatic: true,
+      // });
+      const bounds = asSprite.getBounds();
+      const collider = new Physics.Matter.Sprite(
+        this.matter.world,
+        bounds.centerX,
+        bounds.centerY + bounds.height,
+        "",
+        undefined,
+        { isStatic: true }
+      );
+      collider.setScale(bounds.width / 32, bounds.height / 32);
+      collider.setFriction(0);
+      collider.setAlpha(0);
+      console.log(collider);
 
-    const ground = new Physics.Matter.Sprite(this.matter.world, 0, 500, "");
-    ground.setScale(100, 1);
-    ground.setStatic(true);
-    ground.setFriction(0);
-    ground.setCollisionCategory(CollisionCategory.StaticEnvironment);
-    ground.setCollidesWith([CollisionCategory.Player]);
+      collider.setCollisionCategory(CollisionCategory.StaticEnvironment);
+      collider.setCollidesWith([CollisionCategory.Player]);
+      asSprite.destroy()
+      // const ground = new Physics.Matter.Sprite(this.matter.world,asSprite.x, asSprite.y, "");
+      // ground.setScale(asSprite.width, 1)
+      // ground.setStatic(true);
+      // ground.setFriction(0);
+      // ground.setCollisionCategory(CollisionCategory.StaticEnvironment);
+      // ground.setCollidesWith([CollisionCategory.Player]);
+    });
   };
 }

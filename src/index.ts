@@ -18,10 +18,12 @@ import { LocalPlayerRepository } from "./infrastructure/repositories/localPlayer
 import { ActionProvider } from "./infrastructure/providers/actionProvider";
 import { DefaultPlayerState } from "./infrastructure/configuration/DefaultPlayerState";
 import * as Phaser from "phaser";
+import { ClientLoadScene } from "./view/scenes/ClientLoadScene";
+import { ClientGameScene } from "./view/scenes/ClientGameScene";
 
-export const InitGame: (socket: Socket) => void = (socket: Socket) => {
+export const InitGame: (socket: Socket, originUrl: string) => void = (socket: Socket, originUrl: string) => {
   const scene = new GameScene(ServerProvider.collisionsDispatcher);
-  const config = { ...ServerConfig, scene: scene };
+  const config = { ...ServerConfig, scene: [new LoadScene(originUrl),scene] };
   const _ = new Phaser.Game(config);
 
   for (let i = 1; i <= 200; i++) {
@@ -82,11 +84,11 @@ export const InitClientGame = (
     connectionWithServer,
     new LocalPlayerRepository(localPlayerId)
   );
-  const scene = new GameScene(ClientProvider.collisionsDispatcher);
+  const scene = new ClientGameScene(ClientProvider.collisionsDispatcher);
   const config = {
     ...ClientConfig,
     scene: [
-      new LoadScene(originUrl),
+      new ClientLoadScene(originUrl),
       scene,
       new GameplayHud(connectionWithServer),
     ],
