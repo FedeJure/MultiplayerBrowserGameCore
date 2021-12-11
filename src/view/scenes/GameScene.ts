@@ -69,35 +69,63 @@ export class GameScene extends Scene {
     const tileset = map.addTilesetImage("ground", "ground");
     map.createLayer("background", tileset);
     const solid = map.createLayer("solid", tileset);
-    const colliders = map.createFromObjects("colliders", {});
-    colliders.forEach((col) => {
-      const asSprite = col as Phaser.Physics.Matter.Sprite;
-      // this.matter.add.gameObject(col, {
-      //   isStatic: true,
-      // });
-      const bounds = asSprite.getBounds();
-      const collider = new Physics.Matter.Sprite(
-        this.matter.world,
-        bounds.centerX,
-        bounds.centerY + bounds.height,
-        "",
-        undefined,
-        { isStatic: true }
-      );
-      collider.setScale(bounds.width / 32, bounds.height / 32);
-      collider.setFriction(0);
-      collider.setAlpha(0);
-      console.log(collider);
+    // solid.setCollisionByProperty({ collides: true }, true, true);
 
-      collider.setCollisionCategory(CollisionCategory.StaticEnvironment);
-      collider.setCollidesWith([CollisionCategory.Player]);
-      asSprite.destroy()
-      // const ground = new Physics.Matter.Sprite(this.matter.world,asSprite.x, asSprite.y, "");
-      // ground.setScale(asSprite.width, 1)
-      // ground.setStatic(true);
-      // ground.setFriction(0);
-      // ground.setCollisionCategory(CollisionCategory.StaticEnvironment);
-      // ground.setCollidesWith([CollisionCategory.Player]);
+    const colliders = map.createFromObjects("colliders", {});
+
+    colliders.forEach((col) => {
+      // let asSprite = col as Phaser.Physics.Matter.Image;
+
+      // console.log(this.matter.add.fromJSON(asSprite.x,asSprite.y,col.toJSON()))
+      // asSprite.setExistingBody(this.matter.add.fromJSON(asSprite.x,asSprite.y,col.toJSON()))
+      const asImage = col as Phaser.GameObjects.Polygon;
+      console.log(asImage)
+      const width = asImage.scaleX * 32;
+      const height = asImage.scaleY * 32;
+      const vertices = [
+        {x: 0, y: 0},
+        {x: 0, y: height},
+        {x:width, y: height},
+        {x: width, y: 0},
+      ]
+      const sp = Phaser.Physics.Matter.MatterGameObject(
+        this.matter.world,
+        col,
+        {
+          position: { x: asImage.x, y: asImage.y +height },
+          isStatic: true,
+          vertices: vertices,
+          friction: 0,
+          angle: asImage.rotation,
+          restitution: 0,
+        }
+      ) as Phaser.Physics.Matter.Image;
+      asImage.setAlpha(0)
+      sp.setFriction(0)
+      sp.setFrictionAir(0)
+
+
+      // this.matter.add.sprite(asSprite.x, asSprite.y, "",undefined).setBody(asSprite.body)
+
+      // const bounds = asSprite.getBounds();
+      // const collider = new Physics.Matter.Sprite(
+      //   this.matter.world,
+      //   bounds.centerX,
+      //   bounds.centerY + bounds.height,
+      //   "",
+      //   undefined,
+      //   { isStatic: true }
+      // );
+      // collider.setScale(bounds.width / 32, bounds.height / 32);
+      // collider.setFriction(0);
+      // collider.setAlpha(0);
+      // collider.setRotation(asSprite.rotation)
+
+      // collider.setCollisionCategory(CollisionCategory.StaticEnvironment);
+      // collider.setCollidesWith([CollisionCategory.Player]);
+      sp.setCollisionCategory(CollisionCategory.StaticEnvironment);
+      sp.setCollidesWith([CollisionCategory.Player]);
+      // asSprite.destroy()
     });
   };
 }

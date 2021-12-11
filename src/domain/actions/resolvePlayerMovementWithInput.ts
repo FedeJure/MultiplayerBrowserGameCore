@@ -24,7 +24,7 @@ export class ResolvePlayerMovementWithInputs {
     let canJump = state.canJump;
     let jumping = false;
 
-    if (canJump && availableJumps > 0 && input.jump) {
+    if (/*canJump && availableJumps > 0 &&*/ input.jump) {
       newVelY = -5;
       availableJumps--;
       canJump = false;
