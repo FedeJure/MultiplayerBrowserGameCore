@@ -2,7 +2,8 @@ import { Observable, Subject } from "rxjs";
 import Phaser, { Scene, Physics, GameObjects } from "phaser";
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
 import { CollisionCategory } from "../../domain/collisions/collisionTypes";
-
+import { BodyType } from "matter";
+class Test extends Phaser.GameObjects.Polygon {}
 export class GameScene extends Scene {
   private _onUpdate = new Subject<{ time: number; delta: number }>();
   private _onCreate = new Subject<void>();
@@ -68,64 +69,97 @@ export class GameScene extends Scene {
     });
     const tileset = map.addTilesetImage("ground", "ground");
     map.createLayer("background", tileset);
-    const solid = map.createLayer("solid", tileset);
+    map.createLayer("solid", tileset);
+    const objLayer = map.getObjectLayer("colliders");
     // solid.setCollisionByProperty({ collides: true }, true, true);
+    const pointsByName: { [key: string]: Phaser.Types.Tilemaps.TiledObject[] } =
+      {};
 
-    const colliders = map.createFromObjects("colliders", {});
+    objLayer.objects
+      .filter((o) => o.point)
+      .forEach((o) => {
+        if (!pointsByName[o.name]) pointsByName[o.name] = [];
+        pointsByName[o.name].push(o);
+      });
 
-    colliders.forEach((col) => {
-      // let asSprite = col as Phaser.Physics.Matter.Image;
-
-      // console.log(this.matter.add.fromJSON(asSprite.x,asSprite.y,col.toJSON()))
-      // asSprite.setExistingBody(this.matter.add.fromJSON(asSprite.x,asSprite.y,col.toJSON()))
-      const asImage = col as Phaser.GameObjects.Polygon;
-      console.log(asImage)
-      const width = asImage.scaleX * 32;
-      const height = asImage.scaleY * 32;
-      const vertices = [
-        {x: 0, y: 0},
-        {x: 0, y: height},
-        {x:width, y: height},
-        {x: width, y: 0},
-      ]
-      const sp = Phaser.Physics.Matter.MatterGameObject(
-        this.matter.world,
-        col,
-        {
-          position: { x: asImage.x, y: asImage.y +height },
+    objLayer.objects.forEach((obj) => {
+      var sp: Phaser.Physics.Matter.Sprite | undefined;
+      if (obj.rectangle) {
+        const rec = new Phaser.GameObjects.Rectangle(
+          this,
+          obj.x || 0,
+          obj.y || 0,
+          obj.width,
+          obj.height
+        );
+          
+        sp = this.matter.add.gameObject(rec, {
           isStatic: true,
-          vertices: vertices,
+        }) as Phaser.Physics.Matter.Sprite;
+        sp.setPosition(sp.x + sp.width / 2, sp.y + sp.height / 2);
+        sp.angle += obj.rotation || 0;
+        sp.setOrigin(0, 0);
+      }
+
+      if (obj.polygon) {
+        const pol = new Phaser.GameObjects.Polygon(
+          this,
+          (obj.x || 0 ),
+          (obj.y || 0),
+          obj.polygon
+        );
+        pol.setPosition(pol.x + pol.displayOriginX, pol.y - pol.displayOriginY)
+        sp = this.matter.add.gameObject(pol, {
+          vertices: obj.polygon,
+          isStatic: true,
           friction: 0,
-          angle: asImage.rotation,
+          angle: pol.rotation,
           restitution: 0,
-        }
-      ) as Phaser.Physics.Matter.Image;
-      asImage.setAlpha(0)
-      sp.setFriction(0)
-      sp.setFrictionAir(0)
+          frictionAir: 0,
+          ignoreGravity: true,
+        }) as Phaser.Physics.Matter.Sprite;
+      }
+      
 
-
-      // this.matter.add.sprite(asSprite.x, asSprite.y, "",undefined).setBody(asSprite.body)
-
-      // const bounds = asSprite.getBounds();
-      // const collider = new Physics.Matter.Sprite(
-      //   this.matter.world,
-      //   bounds.centerX,
-      //   bounds.centerY + bounds.height,
-      //   "",
-      //   undefined,
-      //   { isStatic: true }
-      // );
-      // collider.setScale(bounds.width / 32, bounds.height / 32);
-      // collider.setFriction(0);
-      // collider.setAlpha(0);
-      // collider.setRotation(asSprite.rotation)
-
-      // collider.setCollisionCategory(CollisionCategory.StaticEnvironment);
-      // collider.setCollidesWith([CollisionCategory.Player]);
-      sp.setCollisionCategory(CollisionCategory.StaticEnvironment);
-      sp.setCollidesWith([CollisionCategory.Player]);
-      // asSprite.destroy()
+      if (sp !== undefined) {
+        sp.setBounce(0)
+        sp.setFriction(0);
+        sp.setCollisionCategory(CollisionCategory.StaticEnvironment);
+        sp.setCollidesWith([
+          CollisionCategory.Player,
+          CollisionCategory.StaticEnvironment,
+        ]);
+      }
     });
   };
 }
+
+
+
+// Object.keys(pointsByName).forEach((k) => {
+//   const points = pointsByName[k].flatMap((p) => [p.x, p.y]) as number[];
+//   pointsByName[k].forEach((p) => {
+//     this.add.text(p.x || 0, p.y || 0, `(${p.x}, ${p.y})`);
+//   });
+//   const path = this.add.line(points[0], points[1], ...points);
+//   // this.matter.add.fromVertices(0,0, points)
+//   // const pol1 = this.add.polygon(undefined, undefined, points);
+//   // this.matter.add.fromVertices(0,0, points, {isStatic: true})
+//   const sp = this.matter.add.gameObject(path, {
+//     isStatic: true,
+//     vertices: pointsByName[k],
+//     chamfer: { radius: 5 },
+//   }) as Phaser.Physics.Matter.Sprite;
+
+//   // const pol = this.matter.add.polygon(points[0], points[1], points.length / 2, 1, {
+//   //   vertices: pointsByName[k],
+//   //   isStatic: true,
+//   // });
+//   const body = sp.body as BodyType;
+//   sp.setPosition(sp.x - body.centerOffset.x, sp.y - body.centerOffset.y);
+
+//   sp.setFriction(0);
+//   sp.setCollisionCategory(CollisionCategory.StaticEnvironment);
+//   sp.setCollidesWith([CollisionCategory.Player]);
+//   // sp.setPosition(sp.x + sp.width / 2, sp.y + sp.height / 2);
+// });
