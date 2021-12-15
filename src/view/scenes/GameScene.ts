@@ -66,7 +66,13 @@ export class GameScene extends Scene {
       key: "level1",
     });
     const tileset = map.addTilesetImage("ground", "ground");
-    map.createLayer("background", tileset);
+    const village = map.addTilesetImage("village", "village");
+    setTimeout(() => {
+      map.createLayer("background", village);
+      map.createLayer("background1", village);
+    }, 10000)
+    // map.createLayer("background", village);
+    // map.createLayer("background1", village);
     map.createLayer("solid", tileset);
     const objLayer = map.getObjectLayer("colliders");
     objLayer.objects.forEach((obj) => {
