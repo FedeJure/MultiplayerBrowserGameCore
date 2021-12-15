@@ -118,6 +118,7 @@ export class GameScene extends Scene {
           frictionAir: 0,
           ignoreGravity: true,
         }) as Phaser.Physics.Matter.Sprite;
+        sp.setDisplayOrigin(0)
       }
       
 

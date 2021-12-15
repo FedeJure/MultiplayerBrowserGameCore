@@ -21,9 +21,9 @@ export const ClientConfig: GameConfig = {
       },
       debug: {
         showBody: true,
-        showStaticBody: true,
-        showAxes: true,
-      },
+        showCollisions: true
+      }
+
     },
   },
   plugins: {
