@@ -2,8 +2,6 @@ import { Observable, Subject } from "rxjs";
 import Phaser, { Scene, Physics, GameObjects } from "phaser";
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
 import { CollisionCategory } from "../../domain/collisions/collisionTypes";
-import { BodyType } from "matter";
-class Test extends Phaser.GameObjects.Polygon {}
 export class GameScene extends Scene {
   private _onUpdate = new Subject<{ time: number; delta: number }>();
   private _onCreate = new Subject<void>();
@@ -71,17 +69,6 @@ export class GameScene extends Scene {
     map.createLayer("background", tileset);
     map.createLayer("solid", tileset);
     const objLayer = map.getObjectLayer("colliders");
-    // solid.setCollisionByProperty({ collides: true }, true, true);
-    const pointsByName: { [key: string]: Phaser.Types.Tilemaps.TiledObject[] } =
-      {};
-
-    objLayer.objects
-      .filter((o) => o.point)
-      .forEach((o) => {
-        if (!pointsByName[o.name]) pointsByName[o.name] = [];
-        pointsByName[o.name].push(o);
-      });
-
     objLayer.objects.forEach((obj) => {
       var sp: Phaser.Physics.Matter.Sprite | undefined;
       if (obj.rectangle) {
@@ -134,33 +121,3 @@ export class GameScene extends Scene {
     });
   };
 }
-
-
-
-// Object.keys(pointsByName).forEach((k) => {
-//   const points = pointsByName[k].flatMap((p) => [p.x, p.y]) as number[];
-//   pointsByName[k].forEach((p) => {
-//     this.add.text(p.x || 0, p.y || 0, `(${p.x}, ${p.y})`);
-//   });
-//   const path = this.add.line(points[0], points[1], ...points);
-//   // this.matter.add.fromVertices(0,0, points)
-//   // const pol1 = this.add.polygon(undefined, undefined, points);
-//   // this.matter.add.fromVertices(0,0, points, {isStatic: true})
-//   const sp = this.matter.add.gameObject(path, {
-//     isStatic: true,
-//     vertices: pointsByName[k],
-//     chamfer: { radius: 5 },
-//   }) as Phaser.Physics.Matter.Sprite;
-
-//   // const pol = this.matter.add.polygon(points[0], points[1], points.length / 2, 1, {
-//   //   vertices: pointsByName[k],
-//   //   isStatic: true,
-//   // });
-//   const body = sp.body as BodyType;
-//   sp.setPosition(sp.x - body.centerOffset.x, sp.y - body.centerOffset.y);
-
-//   sp.setFriction(0);
-//   sp.setCollisionCategory(CollisionCategory.StaticEnvironment);
-//   sp.setCollidesWith([CollisionCategory.Player]);
-//   // sp.setPosition(sp.x + sp.width / 2, sp.y + sp.height / 2);
-// });
