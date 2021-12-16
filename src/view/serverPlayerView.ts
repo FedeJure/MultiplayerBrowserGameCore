@@ -11,7 +11,7 @@ export class ServerPlayerView extends PlayerView {
     width: number
   ) {
     
-    const sprite = scene.matter.add.sprite(x,y, "")
+    const sprite = scene.physics.add.sprite(x,y, "")
     super(sprite, x, y, height, width);
   }
 }

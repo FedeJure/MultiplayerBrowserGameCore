@@ -40,7 +40,7 @@ export class PlayerCollisionDelegator implements Delegator {
   init(): void {
     this.disposer.add(
       this.collisionsDispatcher
-        .subscribeToCollision(this.player.view.matterBody.id.toString())
+        .subscribeToCollision(this.player.view.matterBody.gameObject.name.toString())
         .subscribe((col) => {
           const handler = this.handlersMap.get([col.collidedCategory, col.type].toString());
           if (handler) handler(col);

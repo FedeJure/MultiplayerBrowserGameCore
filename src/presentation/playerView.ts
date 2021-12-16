@@ -1,7 +1,5 @@
-import { BodyType, Vector } from "matter";
 import { Scene } from "phaser";
 import { Observable } from "rxjs";
-import { PlayerView } from "../view/playerView";
 
 export interface IPlayerView {
   body: {
@@ -19,7 +17,7 @@ export interface IPlayerView {
   destroy(): void;
   get onUpdate(): Observable<{ time: number; delta: number }>;
   get onPreUpdate(): Observable<{ time: number; delta: number }>;
-  get matterBody(): BodyType;
-  get velocity(): Vector;
-  get position(): Vector;
+  get matterBody(): Phaser.Physics.Arcade.Body;
+  get velocity(): Phaser.Math.Vector2;
+  get position(): Phaser.Math.Vector2;
 }

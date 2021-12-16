@@ -1,5 +1,4 @@
-import { Vector } from "matter";
-import { Physics } from "phaser";
+import { Types } from "phaser";
 import { AnimationCode } from "../domain/animations/animations";
 import { PlayerView } from "./playerView";
 import { GameScene } from "./scenes/GameScene";
@@ -14,12 +13,14 @@ export class ClientPlayerView extends PlayerView {
     width: number
   ) {
     const spine = scene.add.spine(x, y, "hero", AnimationCode.IDLE, true);
-    const currentSize: Vector = spine.getBounds().size
-    const factor = currentSize.y / height
+    const currentSize: Phaser.Math.Vector2 = spine.getBounds().size;
+    const factor = currentSize.y / height;
 
-    spine.setDisplaySize(currentSize.x / factor, height).refresh()
-    spine.setSize(width, height)
-    const viewAsSprite = spine as unknown as Physics.Matter.Sprite;
+    spine.setDisplaySize(currentSize.x / factor, height).refresh();
+    spine.setSize(width, height);
+    
+    const viewAsSprite =
+      spine as unknown as Types.Physics.Arcade.SpriteWithDynamicBody;
     super(viewAsSprite, x, y, height, width);
     this.spine = spine;
   }

@@ -14,7 +14,6 @@
   "dependencies": {
     "matter": "0.2.0",
     "phaser": "3.55.2",
-    "phaser-matter-collision-plugin": "^1.0.0",
     "phaser-tilemap-plus": "^0.3.0",
     "redux": "^4.1.2",
     "rxjs": "^7.4.0",

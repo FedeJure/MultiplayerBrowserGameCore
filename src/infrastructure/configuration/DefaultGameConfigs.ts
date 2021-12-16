@@ -13,17 +13,10 @@ export const ClientConfig: GameConfig = {
     target: 60
   },
   physics: {
-    default: "matter",
-    matter: {
-      enableSleeping: false,
-      gravity: {
-        y: 1,
-      },
-      debug: {
-        showBody: true,
-        showCollisions: true
-      }
-
+    default: "arcade",
+    arcade: {
+      gravity: { y: 300 },
+      debug: true,
     },
   },
   plugins: {
@@ -49,16 +42,10 @@ export const ServerConfig: GameConfig = {
     target: 60
   },
   physics: {
-    default: "matter",
-    matter: {
-      enableSleeping: false,
-      gravity: {
-        y: 1,
-      },
-      debug: {
-        showBody: false,
-        showStaticBody: false,
-      },
+    default: "arcade",
+    arcade: {
+      gravity: { y: 300 },
+      debug: true,
     },
   },
 };
