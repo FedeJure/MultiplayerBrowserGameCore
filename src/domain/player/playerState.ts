@@ -1,4 +1,5 @@
 import { AnimationCode } from "../animations/animations";
+import { currentMapState } from "../environment/currentMapState";
 import { Side } from "../side";
 
 export interface PlayerState {
@@ -13,4 +14,5 @@ export interface PlayerState {
   readonly side: Side;
   readonly inputNumber: number;
   readonly anim: AnimationCode;
+  readonly map: currentMapState;
 }
