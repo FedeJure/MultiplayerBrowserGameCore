@@ -1,4 +1,4 @@
-import { Observable, Subject, throwIfEmpty } from "rxjs";
+import { Subject } from "rxjs";
 import { Socket } from "socket.io-client";
 import { ServerConnection } from "../domain/serverConnection";
 import { PlayerInputDto } from "./dtos/playerInputDto";
@@ -39,7 +39,9 @@ export class SocketServerConnection implements ServerConnection {
     socket.on(GameEvents.PLAYER_DISCONNECTED.name, (data) =>
       this._onPlayerDisconnected.next(data)
     );
-    socket.on(GameEvents.MAP_UPDATE.name, (data) => this._onMapUpdated.next(data)))
+    socket.on(GameEvents.MAP_UPDATE.name, (data) =>
+      this._onMapUpdated.next(data)
+    );
 
     var startTime = Date.now();
     socket.on(SocketIOEvents.PONG, (data) =>
@@ -53,7 +55,6 @@ export class SocketServerConnection implements ServerConnection {
   get onMapUpdated() {
     return this._onMapUpdated;
   }
-
 
   get onInitialGameState() {
     return this._onInitialGameState;
