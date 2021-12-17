@@ -99,7 +99,8 @@ export const InitClientGame = (
   const connectionWithServer = new SocketServerConnection(socket);
   ClientProvider.Init(
     connectionWithServer,
-    new LocalPlayerRepository(localPlayerId)
+    new LocalPlayerRepository(localPlayerId),
+    originUrl
   );
   const scene = new ClientGameScene(ClientProvider.collisionsDispatcher);
   const config = {

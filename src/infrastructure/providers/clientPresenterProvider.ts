@@ -76,7 +76,8 @@ export class ClientPresenterProvider {
           scene,
           ClientProvider.localPlayerRepository.playerId,
           ClientProvider.serverConnection,
-          ClientProvider.playerStateRepository
+          ClientProvider.playerStateRepository,
+          ClientProvider.originUrl
         ),
       ]
     );

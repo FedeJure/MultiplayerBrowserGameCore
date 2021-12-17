@@ -11,13 +11,16 @@ import { PlayerInputRequestRepository } from "../repositories/playerInputRequest
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
   private static _localPlayerRepository: LocalPlayerRepository;
+  private static _originUrl: string;
 
   public static Init(
     serverConnection: SocketServerConnection,
-    localPlayerRepository: LocalPlayerRepository
+    localPlayerRepository: LocalPlayerRepository,
+    originUrl: string
   ) {
     ClientProvider._serverConnection = serverConnection;
     ClientProvider._localPlayerRepository = localPlayerRepository;
+    ClientProvider._originUrl = originUrl
   }
 
   public static get playerStateRepository(): PlayerStateRepository {
@@ -52,4 +55,6 @@ export class ClientProvider {
       () => new PlayerInputRequestRepository()
     );
   }
+
+  public static get originUrl(): string { return this._originUrl}
 }
