@@ -56,18 +56,21 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
     [
       new CompleteMapDelegator(
         MapsConfiguration,
-        ServerProvider.playerStateRepository
+        ServerProvider.playerStateRepository,
+        ServerProvider.connectionsRepository,
+        ServerProvider.playerConnectionsRepository
       ),
-    ]
+    ],
+    ServerProvider.playerConnectionsRepository
   );
   socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
-    const emitFn = clientSocket.emit;
-    clientSocket.emit = function (...args: [ev: string, ...args: any[]]) {
-      setTimeout(() => {
-        return emitFn.apply(clientSocket, args);
-      }, 500);
-      return true;
-    };
+    // const emitFn = clientSocket.emit;
+    // clientSocket.emit = function (...args: [ev: string, ...args: any[]]) {
+    //   setTimeout(() => {
+    //     return emitFn.apply(clientSocket, args);
+    //   }, 500);
+    //   return true;
+    // };
     const connection = new SocketClientConnection(clientSocket);
     room.join(connection);
     ServerProvider.connectionsRepository.addConnection(connection);

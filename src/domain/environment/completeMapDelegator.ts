@@ -1,3 +1,5 @@
+import { ConnectionsRepository } from "../../infrastructure/repositories/connectionsRepository";
+import { PlayerConnectionsRepository } from "../../infrastructure/repositories/playerConnectionsRespository";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
 import { MapConfiguration, MapLayer } from "./mapConfiguration";
@@ -13,7 +15,9 @@ export class CompleteMapDelegator implements Delegator {
   private currentY = 0;
   public constructor(
     private mapConfig: MapConfiguration,
-    playerStateRepository: PlayerStateRepository
+    playerStateRepository: PlayerStateRepository,
+    connections: ConnectionsRepository,
+    playerConnections: PlayerConnectionsRepository
   ) {
     mapConfig.mapLayers.forEach((layer) => {
       this.processLayer(layer);
@@ -32,6 +36,25 @@ export class CompleteMapDelegator implements Delegator {
             ...state,
             map: { mapId: foundedMap.id },
           });
+          const connectionId = playerConnections.getConnection(playerId);
+          if (connectionId) {
+            const connection = connections.getConnection(connectionId);
+            if (connection) {
+              const neighborMaps = [
+                foundedMap.bottomMapId,
+                foundedMap.topMapId,
+                foundedMap.leftBottomMapId,
+                foundedMap.leftMapId,
+                foundedMap.leftTopMapId,
+                foundedMap.rightBottomMapId,
+                foundedMap.rightMapId,
+                foundedMap.rightTopMapId,
+              ]
+                .filter((id) => id !== undefined)
+                .map((id) => this.processedMaps[id as number]);
+              connection.sendMapUpdateEvent(foundedMap, neighborMaps);
+            }
+          }
         }
       }
     );

@@ -8,8 +8,8 @@ import {
 } from "./events/gameEvents";
 import { Log } from "./Logger";
 import { SocketIOEvents } from "./events/socketIoEvents";
-import { PlayerInputDto } from "./dtos/playerInputDto";
 import { PlayerInitialStateDto } from "./dtos/playerInitialStateDto";
+import { ProcessedMap } from "../domain/environment/processedMap";
 
 export class SocketClientConnection implements ClientConnection {
   public readonly socket: Socket;
@@ -25,6 +25,15 @@ export class SocketClientConnection implements ClientConnection {
     this.socket = socket;
 
     this.listenEvents();
+  }
+  sendMapUpdateEvent(
+    newCurrentMap: ProcessedMap,
+    neighborMaps: ProcessedMap[]
+  ) {
+    this.socket.emit(
+      GameEvents.MAP_UPDATE.name,
+      GameEvents.MAP_UPDATE.getEvent(newCurrentMap, neighborMaps)
+    );
   }
 
   onInput(): Observable<PlayerInputEvent> {

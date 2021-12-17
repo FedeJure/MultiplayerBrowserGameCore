@@ -34,7 +34,7 @@ export const GameEvents: {
   };
   MAP_UPDATE: {
     name: string;
-    getEvent: (map: ProcessedMap) => MapUpdate;
+    getEvent: (map: ProcessedMap, neighborMaps: ProcessedMap[]) => MapUpdate;
   };
 } = {
   PLAYER_CONNECTED: {
@@ -68,9 +68,10 @@ export const GameEvents: {
   },
   MAP_UPDATE: {
     name: "map_update",
-    getEvent: (map: ProcessedMap) => ({
+    getEvent: (newMap: ProcessedMap, neighborMaps: ProcessedMap[]) => ({
       time: new Date(),
-      newMap: map,
+      newMap,
+      neighborMaps,
     }),
   },
 };

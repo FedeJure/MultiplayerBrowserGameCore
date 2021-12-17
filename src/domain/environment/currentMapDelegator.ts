@@ -10,5 +10,7 @@ export class CurrentMapDelegator implements Delegator {
   ) {}
   init(): void {}
   stop(): void {}
-  update(time: number, delta: number): void {}
+  update(time: number, delta: number): void {
+    console.log(this.statesRepository.getPlayerState(this.localPlayerId)?.map)
+  }
 }
