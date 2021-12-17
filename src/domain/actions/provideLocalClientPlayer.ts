@@ -37,7 +37,6 @@ export class CreateLocalClientPlayer {
       DefaultConfiguration.height,
       DefaultConfiguration.width
     );
-    console.log(info);
     const player = new Player(
       info,
       state,

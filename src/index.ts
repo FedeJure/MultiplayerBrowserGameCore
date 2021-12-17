@@ -20,6 +20,8 @@ import { DefaultPlayerState } from "./infrastructure/configuration/DefaultPlayer
 import * as Phaser from "phaser";
 import { ClientLoadScene } from "./view/scenes/ClientLoadScene";
 import { ClientGameScene } from "./view/scenes/ClientGameScene";
+import { CompleteMapDelegator } from "./domain/environment/completeMapDelegator";
+import { MapsConfiguration } from "./infrastructure/configuration/MapsConfiguration";
 
 export const InitGame: (socket: Socket, originUrl: string) => void = (socket: Socket, originUrl: string) => {
   const scene = new GameScene(ServerProvider.collisionsDispatcher);
@@ -44,7 +46,8 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (socket: So
     ActionProvider.CreatePlayerFromId,
     ServerProvider.connectionsRepository,
     ServerProvider.connectedPlayerRepository,
-    ServerProvider.playerStateRepository
+    ServerProvider.playerStateRepository,
+    [new CompleteMapDelegator(MapsConfiguration)]
   );
   socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
     const emitFn = clientSocket.emit;

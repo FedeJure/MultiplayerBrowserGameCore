@@ -6,34 +6,24 @@ import { CreatePlayerFromId } from "../domain/actions/providePlayerFromId";
 import { ConnectionsRepository } from "../infrastructure/repositories/connectionsRepository";
 import { ConnectedPlayersRepository } from "../infrastructure/repositories/connectedPlayersRepository";
 import { PlayerStateRepository } from "../infrastructure/repositories/playerStateRepository";
+import { Delegator } from "../domain/delegator";
 
 export class ServerGamePresenter {
-  readonly gameScene: GameScene
-  readonly room: RoomConnection
-  readonly createPlayer: CreatePlayerFromId
-  readonly connectionsRepository: ConnectionsRepository
-  readonly connectedPlayers: ConnectedPlayersRepository
-  readonly playerStates: PlayerStateRepository
+  readonly playerConnections: Map<string, string>;
 
-  private playerConnections: Map<string, string>;
-
-  constructor(gameScene: GameScene,
-    room: RoomConnection,
-    createPlayerFromId: CreatePlayerFromId,
-    connectionsRepository: ConnectionsRepository,
-    connectedPlayers: ConnectedPlayersRepository,
-    playerStates: PlayerStateRepository) {
-    this.gameScene = gameScene
-    this.room = room
-    this.createPlayer = createPlayerFromId
-    this.connectionsRepository = connectionsRepository
-    this.connectedPlayers = connectedPlayers
-    this.playerStates = playerStates
+  constructor(private readonly gameScene: GameScene,
+    private readonly room: RoomConnection,
+    private readonly createPlayer: CreatePlayerFromId,
+    private readonly connectionsRepository: ConnectionsRepository,
+    private readonly connectedPlayers: ConnectedPlayersRepository,
+    private readonly playerStates: PlayerStateRepository,
+    private readonly delegators: Delegator[]) {
     this.playerConnections = new Map();
 
     this.gameScene.onCreate.subscribe(() => {
       this.listenEvents();
     });
+    this.delegators.forEach(d => d.init())
   }
 
   listenEvents() {
@@ -94,6 +84,7 @@ export class ServerGamePresenter {
       });
 
     this.gameScene.onUpdate.subscribe(({ time, delta }) => {
+      this.delegators.forEach(d => d.update(time, delta))
       this.room.emit(
         GameEvents.PLAYERS_STATES.name,
         GameEvents.PLAYERS_STATES.getEvent(this.playerStates.getAll())

@@ -3,7 +3,7 @@ import { Delegator } from "../delegator";
 import { MapConfiguration, MapLayer } from "./mapConfiguration";
 import { ProcessedMap } from "./processedMap";
 
-export class CurrentMapDelegator implements Delegator {
+export class CompleteMapDelegator implements Delegator {
   private readonly maxWorldWidht = 10000;
   private readonly maxWorldHeight = Infinity;
 
@@ -16,38 +16,43 @@ export class CurrentMapDelegator implements Delegator {
     });
   }
   processLayer(layer: MapLayer) {
-      layer.mapsInOrder.forEach((horizontalMaps, i) => {
-        horizontalMaps.forEach((map, j) => {
-            this.processedMaps[map] = {
-                layerId: layer.id,
-                id: map,
-                originX: this.currentX,
-                originY: this.currentY,
-                height: this.mapConfig.singleMapSize.y * this.mapConfig.patronSizeInPixels,
-                width: this.mapConfig.singleMapSize.x * this.mapConfig.patronSizeInPixels,
-                leftMapId: layer.mapsInOrder[i][j -1],
-                rightMapId: layer.mapsInOrder[i][j+1],
-                topMapId: layer.mapsInOrder[i-1][j],
-                bottomMapId: layer.mapsInOrder[i+1][j],
-                leftTopMapId: layer.mapsInOrder[i-1][j-1],
-                rightTopMapId: layer.mapsInOrder[i-1][j+1],
-                leftBottomMapId: layer.mapsInOrder[i+1][j-1],
-                rightBottomMapId: layer.mapsInOrder[i+1][j+1]
-            }
+    layer.mapsInOrder.forEach((horizontalMaps, i) => {
+      horizontalMaps.forEach((map, j) => {
+        this.processedMaps[map] = {
+          layerId: layer.id,
+          id: map,
+          originX: this.currentX,
+          originY: this.currentY,
+          height:
+            this.mapConfig.singleMapSize.y * this.mapConfig.patronSizeInPixels,
+          width:
+            this.mapConfig.singleMapSize.x * this.mapConfig.patronSizeInPixels,
+          leftMapId: (layer.mapsInOrder[i] ?? {})[j - 1],
+          rightMapId: (layer.mapsInOrder[i] ?? {})[j + 1],
+          topMapId: (layer.mapsInOrder[i - 1] ?? {})[j],
+          bottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j],
+          leftTopMapId: (layer.mapsInOrder[i - 1] ?? {})[j - 1],
+          rightTopMapId: (layer.mapsInOrder[i - 1] ?? {})[j + 1],
+          leftBottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j - 1],
+          rightBottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j + 1],
+        };
 
-            const nextX = this.mapConfig.singleMapSize.x * this.mapConfig.patronSizeInPixels + 1
-            const nextY = this.mapConfig.singleMapSize.y * this.mapConfig.patronSizeInPixels
-            this.currentX = nextX > this.maxWorldWidht ? 0 : nextX
-            this.currentY = nextY > this.maxWorldHeight ? 0 : nextY
-        })
-      })
+        const nextX =
+          this.currentX +
+          this.mapConfig.singleMapSize.x * this.mapConfig.patronSizeInPixels +
+          1;
+        const nextY =
+          this.currentY +
+          this.mapConfig.singleMapSize.y * this.mapConfig.patronSizeInPixels;
+        this.currentX = nextX > this.maxWorldWidht ? 0 : nextX;
+        this.currentY = nextY > this.maxWorldHeight ? 0 : nextY;
+      });
+    });
   }
 
-  init(): void {}
-  stop(): void {
-    throw new Error("Method not implemented.");
+  init(): void {
+    console.log(this.processedMaps);
   }
-  update(time: number, delta: number): void {
-    throw new Error("Method not implemented.");
-  }
+  stop(): void {}
+  update(time: number, delta: number): void {}
 }
