@@ -1,7 +1,7 @@
 import { GameConfig } from "../../view/gameConfig";
 import "phaser/plugins/spine/dist/SpinePlugin"
 
-export const ClientConfig: GameConfig = {
+export const PhaserClientConfig: GameConfig = {
   type: Phaser.AUTO,
   parent: "gameContainer",
   width: 800,
@@ -37,7 +37,7 @@ export const ClientConfig: GameConfig = {
   },
 };
 
-export const ServerConfig: GameConfig = {
+export const PhaserServerConfig: GameConfig = {
   type: Phaser.HEADLESS,
   parent: "gameContainer",
   width: 800,

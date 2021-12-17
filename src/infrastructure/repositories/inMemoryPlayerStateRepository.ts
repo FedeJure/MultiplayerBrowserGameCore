@@ -1,18 +1,27 @@
+import { Observable, Subject } from "rxjs";
 import { PlayerState } from "../../domain/player/playerState";
 import { PlayerStateRepository } from "./playerStateRepository";
 
 export class InMemoryPlayerStateRepository implements PlayerStateRepository {
-  store: {[key: string]: PlayerState} = {};
+  private readonly _onPlayerStateChange: Subject<{
+    playerId: string;
+    state: PlayerState;
+  }> = new Subject();
+  public get onPlayerStateChange(): Observable<{ playerId: string; state: PlayerState }> {
+    return this._onPlayerStateChange;
+  }
+  store: { [key: string]: PlayerState } = {};
 
   getPlayerState(id: string): PlayerState | undefined {
-    return this.store[id]
+    return this.store[id];
   }
 
   setPlayerState(id: string, state: PlayerState): void {
-    this.store[id] = state
+    this.store[id] = state;
+    this._onPlayerStateChange.next({ playerId: id, state });
   }
 
-  getAll(): {[key: string]: PlayerState} {
-    return this.store
+  getAll(): { [key: string]: PlayerState } {
+    return this.store;
   }
 }

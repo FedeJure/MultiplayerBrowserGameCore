@@ -1,3 +1,4 @@
+import { ProcessedMap } from "../../domain/environment/processedMap";
 import { PlayerState } from "../../domain/player/playerState";
 import { PlayerInitialStateDto } from "../dtos/playerInitialStateDto";
 import { PlayerInputDto } from "../dtos/playerInputDto";
@@ -31,6 +32,10 @@ export const GameEvents: {
       inputNumber: number
     ) => PlayerInputEvent;
   };
+  MAP_UPDATE: {
+    name: string;
+    getEvent: (map: ProcessedMap) => MapUpdate;
+  };
 } = {
   PLAYER_CONNECTED: {
     name: "player_connected",
@@ -59,6 +64,13 @@ export const GameEvents: {
       input,
       inputNumber,
       time: new Date(),
+    }),
+  },
+  MAP_UPDATE: {
+    name: "map_update",
+    getEvent: (map: ProcessedMap) => ({
+      time: new Date(),
+      newMap: map,
     }),
   },
 };
@@ -91,4 +103,8 @@ export interface PlayerInputEvent extends BaseEvent {
   playerId: string;
   input: PlayerInputDto;
   inputNumber: number;
+}
+
+export interface MapUpdate extends BaseEvent {
+  newMap: ProcessedMap;
 }

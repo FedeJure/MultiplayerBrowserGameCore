@@ -4,6 +4,7 @@ import { ConnectedPlayersRepository } from "../repositories/connectedPlayersRepo
 import { ConnectionsRepository } from "../repositories/connectionsRepository";
 import { InMemoryPlayerRepository } from "../repositories/inMemoryPlayerRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
+import { MapRepository } from "../repositories/mapRepository";
 import { PlayerInfoRepository } from "../repositories/playerInfoRepository";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
 import { PlayerStateRepository } from "../repositories/playerStateRepository";
@@ -44,5 +45,11 @@ export class ServerProvider {
     return DependencyManager.GetOrInstantiate<PlayerInputRequestRepository>(
       () => new PlayerInputRequestRepository()
     );
+  }
+
+  public static get mapRepository(): MapRepository {
+    return DependencyManager.GetOrInstantiate<MapRepository>(
+      () => new MapRepository()
+    )
   }
 }

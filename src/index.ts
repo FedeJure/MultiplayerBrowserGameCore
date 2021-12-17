@@ -6,9 +6,9 @@ import { ClientProvider } from "./infrastructure/providers/clientProvider";
 import { GameScene } from "./view/scenes/GameScene";
 import { SocketClientConnection } from "./infrastructure/socketClientConnection";
 import {
-  ClientConfig,
-  ServerConfig,
-} from "./infrastructure/configuration/DefaultGameConfigs";
+  PhaserClientConfig,
+  PhaserServerConfig,
+} from "./infrastructure/configuration/PhaserGameConfigs";
 import { LoadScene } from "./view/scenes/LoadScene";
 import { SocketServerConnection } from "./infrastructure/socketServerConnection";
 import { SocketRoomConnection } from "./infrastructure/socketRoomConnection";
@@ -23,9 +23,15 @@ import { ClientGameScene } from "./view/scenes/ClientGameScene";
 import { CompleteMapDelegator } from "./domain/environment/completeMapDelegator";
 import { MapsConfiguration } from "./infrastructure/configuration/MapsConfiguration";
 
-export const InitGame: (socket: Socket, originUrl: string) => void = (socket: Socket, originUrl: string) => {
+export const InitGame: (socket: Socket, originUrl: string) => void = (
+  socket: Socket,
+  originUrl: string
+) => {
   const scene = new GameScene(ServerProvider.collisionsDispatcher);
-  const config = { ...ServerConfig, scene: [new LoadScene(originUrl),scene] };
+  const config = {
+    ...PhaserServerConfig,
+    scene: [new LoadScene(originUrl), scene],
+  };
   const _ = new Phaser.Game(config);
 
   for (let i = 1; i <= 200; i++) {
@@ -47,7 +53,12 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (socket: So
     ServerProvider.connectionsRepository,
     ServerProvider.connectedPlayerRepository,
     ServerProvider.playerStateRepository,
-    [new CompleteMapDelegator(MapsConfiguration)]
+    [
+      new CompleteMapDelegator(
+        MapsConfiguration,
+        ServerProvider.playerStateRepository
+      ),
+    ]
   );
   socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
     const emitFn = clientSocket.emit;
@@ -89,7 +100,7 @@ export const InitClientGame = (
   );
   const scene = new ClientGameScene(ClientProvider.collisionsDispatcher);
   const config = {
-    ...ClientConfig,
+    ...PhaserClientConfig,
     scene: [
       new ClientLoadScene(originUrl),
       scene,

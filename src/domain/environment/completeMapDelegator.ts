@@ -8,13 +8,45 @@ export class CompleteMapDelegator implements Delegator {
   private readonly maxWorldHeight = Infinity;
 
   private processedMaps: { [key: number]: ProcessedMap } = {};
+  private processedMapsAsList: ProcessedMap[] = [];
   private currentX = 0;
   private currentY = 0;
-  public constructor(private mapConfig: MapConfiguration) {
+  public constructor(
+    private mapConfig: MapConfiguration,
+    playerStateRepository: PlayerStateRepository
+  ) {
     mapConfig.mapLayers.forEach((layer) => {
       this.processLayer(layer);
     });
+    playerStateRepository.onPlayerStateChange.subscribe(
+      ({ playerId, state }) => {
+        const currentMap = this.processedMaps[state.map.mapId];
+        if (!this.isInside(state.position.x, state.position.y, currentMap)) {
+          const foundedMap = this.processedMapsAsList.find((map) =>
+            this.isInside(state.position.x, state.position.y, map)
+          );
+          if (!foundedMap) {
+            console.warn(`Player ${playerId} is not inside any map`);
+            return;
+          }
+          playerStateRepository.setPlayerState(playerId, {
+            ...state,
+            map: { mapId: foundedMap.id },
+          });
+        }
+      }
+    );
   }
+
+  isInside(x: number, y: number, map: ProcessedMap) {
+    return (
+      x >= map.originX &&
+      y >= map.originY &&
+      x < map.originX + map.width &&
+      y < map.originY + map.height
+    );
+  }
+
   processLayer(layer: MapLayer) {
     layer.mapsInOrder.forEach((horizontalMaps, i) => {
       horizontalMaps.forEach((map, j) => {
@@ -48,6 +80,7 @@ export class CompleteMapDelegator implements Delegator {
         this.currentY = nextY > this.maxWorldHeight ? 0 : nextY;
       });
     });
+    this.processedMapsAsList = Object.values(this.processedMaps);
   }
 
   init(): void {

@@ -5,32 +5,26 @@ import { ServerConnection } from "../domain/serverConnection";
 import { Log } from "../infrastructure/Logger";
 import { PlayerKeyBoardInput } from "../infrastructure/input/playerKeyboardInput";
 import { ConnectedPlayersRepository } from "../infrastructure/repositories/connectedPlayersRepository";
+import { Delegator } from "../domain/delegator";
 
 export class ClientGamePresenter {
-  readonly connection: ServerConnection
-  readonly scene: GameScene
-  readonly localPlayerId: string
-  readonly createClientPlayerAction: CreateClientPlayerAction
-  readonly createLocalPlayerAction: CreateLocalClientPlayer
-  readonly playersRepository: ConnectedPlayersRepository
-
   constructor(
-    localPlayerId: string,
-    connection: ServerConnection,
-    scene: GameScene,
-    createClientPlayer: CreateClientPlayerAction,
-    createLocalPlayer: CreateLocalClientPlayer,
-    playersRepository: ConnectedPlayersRepository
+    private readonly localPlayerId: string,
+    private readonly connection: ServerConnection,
+    private readonly scene: GameScene,
+    private readonly createClientPlayerAction: CreateClientPlayerAction,
+    private readonly createLocalPlayerAction: CreateLocalClientPlayer,
+    private readonly playersRepository: ConnectedPlayersRepository,
+    private readonly delegators: Delegator[]
   ) {
-    this.connection = connection;
-    this.scene = scene;
-    this.localPlayerId = localPlayerId;
-    this.createClientPlayerAction = createClientPlayer;
-    this.createLocalPlayerAction = createLocalPlayer;
-    this.playersRepository = playersRepository
     scene.onCreate.subscribe(() => {
       this.listenEvents();
       connection.emitStartNewConnection(localPlayerId);
+    });
+    delegators.forEach((d) => d.init());
+
+    scene.onUpdate.subscribe(({ time, delta }) => {
+      delegators.forEach((d) => d.update(time, delta));
     });
   }
 

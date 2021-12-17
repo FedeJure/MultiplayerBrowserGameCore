@@ -1,12 +1,13 @@
 import { AnimationCode } from "../../domain/animations/animations";
 import { PlayerState } from "../../domain/player/playerState";
 import { Side } from "../../domain/side";
+import { DefaultGameConfiguration } from "./GameConfigurations";
 
 export const DefaultPlayerState: PlayerState = {
   life: 100,
   jumpsAvailable: 2,
   inInertia: false,
-  position: { x: 100, y: 0 },
+  position: DefaultGameConfiguration.initialPosition,
   velocity: { x: 0, y: 0 },
   canMove: true,
   canJump: true,
@@ -14,5 +15,5 @@ export const DefaultPlayerState: PlayerState = {
   side: Side.RIGHT,
   inputNumber: 1,
   anim: AnimationCode.IDLE,
-  map: { mapId: 0 },
+  map: { mapId: DefaultGameConfiguration.initialMapId },
 };

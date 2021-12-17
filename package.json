@@ -12,6 +12,7 @@
   "author": "Federico Jure",
   "license": "ISC",
   "dependencies": {
+    "d3-array": "^3.1.1",
     "matter": "0.2.0",
     "phaser": "3.55.2",
     "phaser-matter-collision-plugin": "^1.0.0",
