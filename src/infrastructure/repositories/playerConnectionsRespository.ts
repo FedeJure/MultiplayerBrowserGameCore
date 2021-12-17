@@ -2,8 +2,8 @@
 type PlayerId = string
 type ConnectionId = string
 export class PlayerConnectionsRepository {
-    private mapConnections: {[key: PlayerId]: ConnectionId}
-    private mapPlayers: {[key: ConnectionId]: PlayerId}
+    private mapConnections: {[key: PlayerId]: ConnectionId} = {}
+    private mapPlayers: {[key: ConnectionId]: PlayerId} = {}
 
     constructor() {
 
