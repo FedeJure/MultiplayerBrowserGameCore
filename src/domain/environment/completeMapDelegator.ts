@@ -72,23 +72,24 @@ export class CompleteMapDelegator implements Delegator {
   processLayer(layer: MapLayer) {
     layer.mapsInOrder.forEach((horizontalMaps, i) => {
       horizontalMaps.forEach((map, j) => {
-        this.processedMaps[map] = {
+        this.processedMaps[map.id] = {
+          config: map,
           layerId: layer.id,
-          id: map,
+          id: map.id,
           originX: this.currentX,
           originY: this.currentY,
           height:
             this.mapConfig.singleMapSize.y * this.mapConfig.patronSizeInPixels,
           width:
             this.mapConfig.singleMapSize.x * this.mapConfig.patronSizeInPixels,
-          leftMapId: (layer.mapsInOrder[i] ?? {})[j - 1],
-          rightMapId: (layer.mapsInOrder[i] ?? {})[j + 1],
-          topMapId: (layer.mapsInOrder[i - 1] ?? {})[j],
-          bottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j],
-          leftTopMapId: (layer.mapsInOrder[i - 1] ?? {})[j - 1],
-          rightTopMapId: (layer.mapsInOrder[i - 1] ?? {})[j + 1],
-          leftBottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j - 1],
-          rightBottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j + 1],
+          leftMapId: (layer.mapsInOrder[i] ?? {})[j - 1].id,
+          rightMapId: (layer.mapsInOrder[i] ?? {})[j + 1].id,
+          topMapId: (layer.mapsInOrder[i - 1] ?? {})[j].id,
+          bottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j].id,
+          leftTopMapId: (layer.mapsInOrder[i - 1] ?? {})[j - 1].id,
+          rightTopMapId: (layer.mapsInOrder[i - 1] ?? {})[j + 1].id,
+          leftBottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j - 1].id,
+          rightBottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j + 1].id,
         };
 
         const nextX =

@@ -13,6 +13,7 @@ import { PlayerRemoteMovementDelegator } from "../../domain/movement/playerRemot
 import { PlayerAnimationDelegator } from "../../domain/animations/playerAnimationDelegator";
 import { RemotePlayerAnimationDelegator } from "../../domain/animations/remotePlayerAnimationDelegator";
 import { CurrentMapDelegator } from "../../domain/environment/currentMapDelegator";
+import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 export class ClientPresenterProvider {
   forLocalPlayer(input: PlayerInput, player: Player): void {
     new ClientPlayerPresenter(ClientProvider.serverConnection, player, [
@@ -62,7 +63,7 @@ export class ClientPresenterProvider {
     ]);
   }
 
-  forGameplay(scene: GameScene): void {
+  forGameplay(scene: ClientGameScene): void {
     new ClientGamePresenter(
       ClientProvider.localPlayerRepository.playerId,
       ClientProvider.serverConnection,
@@ -72,6 +73,7 @@ export class ClientPresenterProvider {
       ClientProvider.connectedPlayers,
       [
         new CurrentMapDelegator(
+          scene,
           ClientProvider.localPlayerRepository.playerId,
           ClientProvider.serverConnection,
           ClientProvider.playerStateRepository

@@ -6,8 +6,18 @@ export interface MapConfiguration {
 
 export interface MapLayer {
     id: number,
-    mapsInOrder: (number[])[]
+    mapsInOrder: (Map[])[]
 }
+
+export interface Map {
+    id: number
+    backgroundFile: {key: string, fileName: string}
+    jsonFile: {key: string, fileName: string}
+    tilesSourceFiles: {key: string, fileName: string}[] 
+    objectsSourceFile: {key: string, fileName: string}
+    collidersSourceFile: {key: string, fileName: string}
+  }
+  
 
 /*
 Example: 

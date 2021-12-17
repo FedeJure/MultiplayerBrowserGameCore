@@ -1,4 +1,7 @@
+import { Map } from "./mapConfiguration";
+
 export interface ProcessedMap {
+  config: Map
   layerId: number;
   id: number;
   originX: number;

@@ -17,4 +17,5 @@ export class ClientGameScene extends GameScene {
   update(time: number, delta: number): void {
     super.update(time, delta);
   }
+
 }
