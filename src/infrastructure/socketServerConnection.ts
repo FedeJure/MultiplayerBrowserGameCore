@@ -1,10 +1,11 @@
-import { Subject } from "rxjs";
+import { Observable, Subject, throwIfEmpty } from "rxjs";
 import { Socket } from "socket.io-client";
 import { ServerConnection } from "../domain/serverConnection";
 import { PlayerInputDto } from "./dtos/playerInputDto";
 import {
   GameEvents,
   InitialGameStateEvent,
+  MapUpdateEvent,
   NewPlayerConnectedEvent,
   PlayerDisconnectedEvent,
   PlayerStatesEvent,
@@ -21,6 +22,7 @@ export class SocketServerConnection implements ServerConnection {
   private readonly _onPlayerDisconnected =
     new Subject<PlayerDisconnectedEvent>();
   private readonly _onPing = new Subject<number>();
+  private readonly _onMapUpdated = new Subject<MapUpdateEvent>();
 
   constructor(socket: Socket) {
     this.socket = socket;
@@ -37,6 +39,7 @@ export class SocketServerConnection implements ServerConnection {
     socket.on(GameEvents.PLAYER_DISCONNECTED.name, (data) =>
       this._onPlayerDisconnected.next(data)
     );
+    socket.on(GameEvents.MAP_UPDATE.name, (data) => this._onMapUpdated.next(data)))
 
     var startTime = Date.now();
     socket.on(SocketIOEvents.PONG, (data) =>
@@ -47,6 +50,10 @@ export class SocketServerConnection implements ServerConnection {
       socket.emit(SocketIOEvents.PING);
     }, 2000);
   }
+  get onMapUpdated() {
+    return this._onMapUpdated;
+  }
+
 
   get onInitialGameState() {
     return this._onInitialGameState;

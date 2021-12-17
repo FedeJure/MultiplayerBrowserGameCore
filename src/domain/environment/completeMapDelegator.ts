@@ -107,7 +107,6 @@ export class CompleteMapDelegator implements Delegator {
   }
 
   init(): void {
-    console.log(this.processedMaps);
   }
   stop(): void {}
   update(time: number, delta: number): void {}

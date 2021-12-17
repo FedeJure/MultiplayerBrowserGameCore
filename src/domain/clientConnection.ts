@@ -10,5 +10,5 @@ export interface ClientConnection {
   sendInitialStateEvent(players: PlayerInitialStateDto[]): void;
   join(roomName: string): void;
   onInput(): Observable<PlayerInputEvent>;
-  sendMapUpdateEvent(newCurrentMap: ProcessedMap, neighborMaps: ProcessedMap[])
+  sendMapUpdateEvent(newCurrentMap: ProcessedMap, neighborMaps: ProcessedMap[]): void
 }

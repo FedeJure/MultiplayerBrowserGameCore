@@ -2,6 +2,7 @@ import { Observable } from "rxjs";
 import { PlayerInputDto } from "../infrastructure/dtos/playerInputDto";
 import {
   InitialGameStateEvent,
+  MapUpdateEvent,
   NewPlayerConnectedEvent,
   PlayerDisconnectedEvent,
   PlayerStatesEvent,
@@ -14,4 +15,5 @@ export interface ServerConnection {
   onPing: Observable<number>;
   emitStartNewConnection(playerId: string): void;
   emitInput(playerId: string, input: PlayerInputDto, inputRequest: number): void;
+  onMapUpdated: Observable<MapUpdateEvent>
 }
