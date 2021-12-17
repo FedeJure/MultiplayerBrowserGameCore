@@ -26,7 +26,6 @@ export class CompleteMapDelegator implements Delegator {
             this.isInside(state.position.x, state.position.y, map)
           );
           if (!foundedMap) {
-            console.warn(`Player ${playerId} is not inside any map`);
             return;
           }
           playerStateRepository.setPlayerState(playerId, {
@@ -40,8 +39,8 @@ export class CompleteMapDelegator implements Delegator {
 
   isInside(x: number, y: number, map: ProcessedMap) {
     return (
-      x >= map.originX &&
-      y >= map.originY &&
+      x > map.originX &&
+      y > map.originY &&
       x < map.originX + map.width &&
       y < map.originY + map.height
     );
@@ -71,13 +70,14 @@ export class CompleteMapDelegator implements Delegator {
 
         const nextX =
           this.currentX +
-          this.mapConfig.singleMapSize.x * this.mapConfig.patronSizeInPixels +
-          1;
-        const nextY =
-          this.currentY +
-          this.mapConfig.singleMapSize.y * this.mapConfig.patronSizeInPixels;
+          this.mapConfig.singleMapSize.x * this.mapConfig.patronSizeInPixels;
         this.currentX = nextX > this.maxWorldWidht ? 0 : nextX;
-        this.currentY = nextY > this.maxWorldHeight ? 0 : nextY;
+        if (nextX > this.maxWorldWidht) {
+          const nextY =
+            this.currentY +
+            this.mapConfig.singleMapSize.y * this.mapConfig.patronSizeInPixels;
+          this.currentY = nextY > this.maxWorldHeight ? 0 : nextY;
+        }
       });
     });
     this.processedMapsAsList = Object.values(this.processedMaps);
