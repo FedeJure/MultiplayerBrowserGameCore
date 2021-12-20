@@ -2,6 +2,7 @@ import { ConnectionsRepository } from "../../infrastructure/repositories/connect
 import { PlayerConnectionsRepository } from "../../infrastructure/repositories/playerConnectionsRespository";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
+import { PlayerState } from "../player/playerState";
 import { MapConfiguration, MapLayer } from "./mapConfiguration";
 import { ProcessedMap } from "./processedMap";
 
@@ -9,58 +10,53 @@ export class CompleteMapDelegator implements Delegator {
   private readonly maxWorldWidht = 10000;
   private readonly maxWorldHeight = Infinity;
 
-  private processedMaps: { [key: number]: ProcessedMap } = {};
-  private processedMapsAsList: ProcessedMap[] = [];
+  private static processedMaps: { [key: number]: ProcessedMap } = {};
+  private static processedMapsAsList: ProcessedMap[] = [];
   private currentX = 0;
   private currentY = 0;
   public constructor(
     private mapConfig: MapConfiguration,
-    playerStateRepository: PlayerStateRepository,
-    connections: ConnectionsRepository,
-    playerConnections: PlayerConnectionsRepository
+    private playerStateRepository: PlayerStateRepository,
+    private connections: ConnectionsRepository,
+    private playerConnections: PlayerConnectionsRepository
   ) {
     mapConfig.mapLayers.forEach((layer) => {
       this.processLayer(layer);
     });
+
+    playerConnections.onNewPlayerConnected.subscribe(({ playerId }) => {
+      const state = playerStateRepository.getPlayerState(playerId);
+      if (!state) return;
+      this.updateMapForPlayer(state, playerId);
+    });
     playerStateRepository.onPlayerStateChange.subscribe(
       ({ playerId, state }) => {
-        const currentMap = this.processedMaps[state.map.mapId];
-        if (!this.isInside(state.position.x, state.position.y, currentMap)) {
-          const foundedMap = this.processedMapsAsList.find((map) =>
-            this.isInside(state.position.x, state.position.y, map)
-          );
-          if (!foundedMap) {
-            return;
-          }
-          playerStateRepository.setPlayerState(playerId, {
-            ...state,
-            map: { mapId: foundedMap.id },
-          });
-          const connectionId = playerConnections.getConnection(playerId);
-          if (connectionId) {
-            const connection = connections.getConnection(connectionId);
-            if (connection) {
-              const neighborMaps = [
-                foundedMap.bottomMapId,
-                foundedMap.topMapId,
-                foundedMap.leftBottomMapId,
-                foundedMap.leftMapId,
-                foundedMap.leftTopMapId,
-                foundedMap.rightBottomMapId,
-                foundedMap.rightMapId,
-                foundedMap.rightTopMapId,
-              ]
-                .filter((id) => id !== undefined)
-                .map((id) => this.processedMaps[id as number]);
-              connection.sendMapUpdateEvent(foundedMap, neighborMaps);
-            }
-          }
-        }
+        this.updateMapForPlayer(state, playerId);
       }
     );
   }
 
-  isInside(x: number, y: number, map: ProcessedMap) {
+  private updateMapForPlayer(state: PlayerState, playerId: string) {
+    const { foundedMap, neighborMaps } =
+      CompleteMapDelegator.getMapForPlayer(state);
+
+    if (foundedMap && neighborMaps) {
+
+      this.playerStateRepository.setPlayerState(playerId, {
+        ...state,
+        map: { mapId: foundedMap.id },
+      });
+      const connectionId = this.playerConnections.getConnection(playerId);
+      if (connectionId) {
+        const connection = this.connections.getConnection(connectionId);
+        if (connection) {
+          connection.sendMapUpdateEvent(foundedMap, neighborMaps);
+        }
+      }
+    }
+  }
+
+  private static isInside(x: number, y: number, map: ProcessedMap) {
     return (
       x > map.originX &&
       y > map.originY &&
@@ -72,7 +68,7 @@ export class CompleteMapDelegator implements Delegator {
   processLayer(layer: MapLayer) {
     layer.mapsInOrder.forEach((horizontalMaps, i) => {
       horizontalMaps.forEach((map, j) => {
-        this.processedMaps[map.id] = {
+        CompleteMapDelegator.processedMaps[map.id] = {
           config: map,
           layerId: layer.id,
           id: map.id,
@@ -82,14 +78,14 @@ export class CompleteMapDelegator implements Delegator {
             this.mapConfig.singleMapSize.y * this.mapConfig.patronSizeInPixels,
           width:
             this.mapConfig.singleMapSize.x * this.mapConfig.patronSizeInPixels,
-          leftMapId: (layer.mapsInOrder[i] ?? {})[j - 1].id,
-          rightMapId: (layer.mapsInOrder[i] ?? {})[j + 1].id,
-          topMapId: (layer.mapsInOrder[i - 1] ?? {})[j].id,
-          bottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j].id,
-          leftTopMapId: (layer.mapsInOrder[i - 1] ?? {})[j - 1].id,
-          rightTopMapId: (layer.mapsInOrder[i - 1] ?? {})[j + 1].id,
-          leftBottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j - 1].id,
-          rightBottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j + 1].id,
+          leftMapId: (layer.mapsInOrder[i] ?? {})[j - 1]?.id,
+          rightMapId: (layer.mapsInOrder[i] ?? {})[j + 1]?.id,
+          topMapId: (layer.mapsInOrder[i - 1] ?? {})[j]?.id,
+          bottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j]?.id,
+          leftTopMapId: (layer.mapsInOrder[i - 1] ?? {})[j - 1]?.id,
+          rightTopMapId: (layer.mapsInOrder[i - 1] ?? {})[j + 1]?.id,
+          leftBottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j - 1]?.id,
+          rightBottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j + 1]?.id,
         };
 
         const nextX =
@@ -104,11 +100,39 @@ export class CompleteMapDelegator implements Delegator {
         }
       });
     });
-    this.processedMapsAsList = Object.values(this.processedMaps);
+    CompleteMapDelegator.processedMapsAsList = Object.values(
+      CompleteMapDelegator.processedMaps
+    );
   }
 
-  init(): void {
-  }
+  init(): void {}
   stop(): void {}
   update(time: number, delta: number): void {}
+
+  public static getMapForPlayer(state: PlayerState): {
+    foundedMap?: ProcessedMap;
+    neighborMaps?: ProcessedMap[];
+  } {
+    const currentMap = this.processedMaps[state.map.mapId];
+    if (!this.isInside(state.position.x, state.position.y, currentMap)) {
+      const foundedMap = this.processedMapsAsList.find((map) =>
+        this.isInside(state.position.x, state.position.y, map)
+      );
+      return {
+        foundedMap,
+        neighborMaps: [
+          foundedMap?.bottomMapId,
+          foundedMap?.topMapId,
+          foundedMap?.leftBottomMapId,
+          foundedMap?.leftMapId,
+          foundedMap?.leftTopMapId,
+          foundedMap?.rightBottomMapId,
+          foundedMap?.rightMapId,
+          foundedMap?.rightTopMapId,
+        ]
+          .filter((id) => id !== undefined)
+          .map((id) => this.processedMaps[id as number]),
+      };
+    } else return {};
+  }
 }

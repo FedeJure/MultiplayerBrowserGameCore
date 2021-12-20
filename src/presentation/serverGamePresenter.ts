@@ -22,8 +22,8 @@ export class ServerGamePresenter {
   ) {
     this.gameScene.onCreate.subscribe(() => {
       this.listenEvents();
+      this.delegators.forEach((d) => d.init());
     });
-    this.delegators.forEach((d) => d.init());
   }
 
   listenEvents() {
@@ -37,10 +37,6 @@ export class ServerGamePresenter {
           );
           this.connectedPlayers.savePlayer(playerId, player);
 
-          this.playerConnectionsRepository.addConnection(
-            playerId,
-            connection.connectionId
-          );
           connection.sendInitialStateEvent(
             Array.from(this.connectedPlayers.getAll()).map((player) => ({
               id: player[0],
@@ -48,6 +44,7 @@ export class ServerGamePresenter {
               info: player[1].info,
             }))
           );
+
           this.room.emit(
             GameEvents.NEW_PLAYER_CONNECTED.name,
             GameEvents.NEW_PLAYER_CONNECTED.getEvent({
@@ -55,6 +52,10 @@ export class ServerGamePresenter {
               info: player.info,
               state: player.state,
             })
+          );
+          this.playerConnectionsRepository.addConnection(
+            playerId,
+            connection.connectionId
           );
           Log(
             this,

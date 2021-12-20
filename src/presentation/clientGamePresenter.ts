@@ -15,16 +15,16 @@ export class ClientGamePresenter {
     private readonly createClientPlayerAction: CreateClientPlayerAction,
     private readonly createLocalPlayerAction: CreateLocalClientPlayer,
     private readonly playersRepository: ConnectedPlayersRepository,
-    private readonly delegators: Delegator[]
+    delegators: Delegator[]
   ) {
     scene.onCreate.subscribe(() => {
       this.listenEvents();
       connection.emitStartNewConnection(localPlayerId);
-    });
-    delegators.forEach((d) => d.init());
-
-    scene.onUpdate.subscribe(({ time, delta }) => {
-      delegators.forEach((d) => d.update(time, delta));
+      delegators.forEach((d) => d.init());
+      scene.onUpdate.subscribe(({ time, delta }) => {
+        delegators.forEach((d) => d.update(time, delta));
+      });
+      
     });
   }
 

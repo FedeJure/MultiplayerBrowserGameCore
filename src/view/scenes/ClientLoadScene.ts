@@ -21,17 +21,17 @@ export class ClientLoadScene extends LoadScene {
     AssetsConfiguration.images.forEach((image) => {
       this.load.image({ ...image, url: `${this.originUrl}/${image.path}` });
     });
-    this.load.image(
-      "ground",
-      `${this.originUrl}/assets/level1/tiles/Ground.png`
-    );
-    this.load.image(
-      "village",
-      `${this.originUrl}/assets/level1/tiles/Village.png`
-    );
-    this.load.tilemapTiledJSON(
-      "level1",
-      `${this.originUrl}/assets/level1/level1.json`
-    );
+    // this.load.image(
+    //   "ground",
+    //   `${this.originUrl}/assets/level1/tiles/Ground.png`
+    // );
+    // this.load.image(
+    //   "village",
+    //   `${this.originUrl}/assets/level1/tiles/Village.png`
+    // );
+    // this.load.tilemapTiledJSON(
+    //   "level1",
+    //   `${this.originUrl}/assets/level1/level1.json`
+    // );
   }
 }
