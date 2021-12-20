@@ -8,6 +8,7 @@ import { ConnectedPlayersRepository } from "../infrastructure/repositories/conne
 import { PlayerStateRepository } from "../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../domain/delegator";
 import { PlayerConnectionsRepository } from "../infrastructure/repositories/playerConnectionsRespository";
+import { CompleteMapDelegator } from "../domain/environment/completeMapDelegator";
 
 export class ServerGamePresenter {
   constructor(
@@ -23,8 +24,7 @@ export class ServerGamePresenter {
     this.listenEvents();
     this.delegators.forEach((d) => d.init());
 
-    this.gameScene.onCreate.subscribe(() => {
-    });
+    this.gameScene.onCreate.subscribe(() => {});
   }
 
   listenEvents() {
@@ -37,13 +37,20 @@ export class ServerGamePresenter {
             connection
           );
           this.connectedPlayers.savePlayer(playerId, player);
+          const { foundedMap, neighborMaps } =
+            CompleteMapDelegator.getMapForPlayer(player.state);
           connection.sendInitialStateEvent(
             Array.from(this.connectedPlayers.getAll()).map((player) => ({
               id: player[0],
               state: player[1].state,
               info: player[1].info,
-            }))
+            })),
+            foundedMap,
+            neighborMaps
           );
+          if (foundedMap && neighborMaps) {
+            connection.sendMapUpdateEvent(foundedMap, neighborMaps);
+          }
 
           this.room.emit(
             GameEvents.NEW_PLAYER_CONNECTED.name,

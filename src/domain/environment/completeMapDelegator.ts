@@ -39,9 +39,7 @@ export class CompleteMapDelegator implements Delegator {
   private updateMapForPlayer(state: PlayerState, playerId: string) {
     const { foundedMap, neighborMaps } =
       CompleteMapDelegator.getMapForPlayer(state);
-
-    if (foundedMap && neighborMaps) {
-
+    if (foundedMap && neighborMaps && foundedMap.id !== state.map.mapId) {
       this.playerStateRepository.setPlayerState(playerId, {
         ...state,
         map: { mapId: foundedMap.id },
@@ -133,6 +131,21 @@ export class CompleteMapDelegator implements Delegator {
           .filter((id) => id !== undefined)
           .map((id) => this.processedMaps[id as number]),
       };
-    } else return {};
+    } else
+      return {
+        foundedMap: currentMap,
+        neighborMaps: [
+          currentMap?.bottomMapId,
+          currentMap?.topMapId,
+          currentMap?.leftBottomMapId,
+          currentMap?.leftMapId,
+          currentMap?.leftTopMapId,
+          currentMap?.rightBottomMapId,
+          currentMap?.rightMapId,
+          currentMap?.rightTopMapId,
+        ]
+          .filter((id) => id !== undefined)
+          .map((id) => this.processedMaps[id as number]),
+      };
   }
 }

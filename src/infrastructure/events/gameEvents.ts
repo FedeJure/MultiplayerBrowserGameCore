@@ -14,7 +14,11 @@ export const GameEvents: {
   };
   INITIAL_GAME_STATE: {
     name: string;
-    getEvent: (players: PlayerInitialStateDto[]) => InitialGameStateEvent;
+    getEvent: (
+      players: PlayerInitialStateDto[],
+      currentMap: ProcessedMap | undefined,
+      neighborMaps: ProcessedMap[] | undefined
+    ) => InitialGameStateEvent;
   };
   NEW_PLAYER_CONNECTED: {
     name: string;
@@ -50,7 +54,12 @@ export const GameEvents: {
   },
   INITIAL_GAME_STATE: {
     name: "initial_game_state",
-    getEvent: (players) => ({ players, time: new Date() }),
+    getEvent: (players, currentMap, neighborMaps) => ({
+      players,
+      currentMap,
+      neighborMaps,
+      time: new Date(),
+    }),
   },
   NEW_PLAYER_CONNECTED: {
     name: "new_player_connected",
@@ -93,6 +102,8 @@ export interface PlayerStatesEvent extends BaseEvent {
 
 export interface InitialGameStateEvent extends BaseEvent {
   players: PlayerInitialStateDto[];
+  currentMap: ProcessedMap | undefined;
+  neighborMaps: ProcessedMap[] | undefined;
 }
 
 export interface NewPlayerConnectedEvent extends BaseEvent {

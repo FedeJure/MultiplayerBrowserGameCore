@@ -16,9 +16,9 @@ export class CurrentMapDelegator implements Delegator {
   ) {}
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {
-      this.loadAssets([ev.newMap]);
+      await this.loadAssets([ev.newMap]);
       this.createMap([ev.newMap]);
-      this.loadAssets(ev.neighborMaps);
+      await this.loadAssets(ev.neighborMaps);
       this.createMap(ev.neighborMaps);
     });
   }
@@ -29,37 +29,48 @@ export class CurrentMapDelegator implements Delegator {
     return new Promise<void>((res, _) => {
       try {
         maps.forEach((m) => {
-          this.scene.load.image(
-            m.config.backgroundFile.key,
-            `${this.originUrl}/${DefaultGameConfiguration.getMapRootPath(
+          
+          console.log(
+            `${this.originUrl}${DefaultGameConfiguration.getMapRootPath(
               m.id,
               m.layerId
-            )}/${m.config.backgroundFile.fileName}`
+            )}${m.config.tilesSourceFiles.fileName}`
           );
-          this.scene.load.image(
-            m.config.objectsSourceFile.key,
-            `${this.originUrl}/${DefaultGameConfiguration.getMapRootPath(
+          this.scene.load.image({
+            key: m.config.backgroundFile.key,
+            url: `${this.originUrl}${DefaultGameConfiguration.getMapRootPath(
               m.id,
               m.layerId
-            )}/${m.config.objectsSourceFile.fileName}`
-          );
-          this.scene.load.image(
-            m.config.tilesSourceFiles.key,
-            `${this.originUrl}/${DefaultGameConfiguration.getMapRootPath(
+            )}${m.config.backgroundFile.fileName}`,
+          });
+          this.scene.load.image({
+            key: m.config.objectsSourceFile.key,
+            url: `${this.originUrl}${DefaultGameConfiguration.getMapRootPath(
               m.id,
               m.layerId
-            )}/${m.config.tilesSourceFiles}`
-          );
-          this.scene.load.tilemapTiledJSON(
-            m.config.jsonFile.key,
-            `${this.originUrl}/${DefaultGameConfiguration.getMapRootPath(
+            )}${m.config.objectsSourceFile.fileName}`,
+          });
+          this.scene.load.image({
+            key:m.config.tilesSourceFiles.key,
+            url:`${this.originUrl}${DefaultGameConfiguration.getMapRootPath(
               m.id,
               m.layerId
-            )}/${m.config.jsonFile.fileName}`
+            )}${m.config.tilesSourceFiles.fileName}`}
           );
+          this.scene.load.tilemapTiledJSON({
+            key: m.config.jsonFile.key,
+            url: `${this.originUrl}${DefaultGameConfiguration.getMapRootPath(
+              m.id,
+              m.layerId
+            )}${m.config.jsonFile.fileName}`}
+          );
+          this.scene.load.once("complete", res)
+          this.scene.load.start()
         });
-        this.scene.load.on("complete", () => res());
-      } catch (error) {}
+        
+      } catch (error) {
+        console.log(error);
+      }
     });
   }
 
@@ -69,6 +80,7 @@ export class CurrentMapDelegator implements Delegator {
         const tilemap = this.scene.make.tilemap({
           key: m.config.jsonFile.key,
         });
+        console.log("TILEMAP", tilemap);
         tilemap.addTilesetImage(
           m.config.tilesSourceFiles.key,
           m.config.tilesSourceFiles.key

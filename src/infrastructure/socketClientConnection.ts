@@ -66,10 +66,14 @@ export class SocketClientConnection implements ClientConnection {
     });
   }
 
-  public sendInitialStateEvent(players: PlayerInitialStateDto[]) {
+  public sendInitialStateEvent(
+    players: PlayerInitialStateDto[],
+    currentMap: ProcessedMap | undefined,
+    neighborMaps: ProcessedMap[] | undefined
+  ) {
     this.socket.emit(
       GameEvents.INITIAL_GAME_STATE.name,
-      GameEvents.INITIAL_GAME_STATE.getEvent(players)
+      GameEvents.INITIAL_GAME_STATE.getEvent(players, currentMap, neighborMaps)
     );
   }
 

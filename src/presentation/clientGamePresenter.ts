@@ -18,10 +18,10 @@ export class ClientGamePresenter {
     delegators: Delegator[]
   ) {
     this.listenEvents();
+    delegators.forEach((d) => d.init());
 
     scene.onCreate.subscribe(() => {
       connection.emitStartNewConnection(localPlayerId);
-      delegators.forEach((d) => d.init());
       scene.onUpdate.subscribe(({ time, delta }) => {
         delegators.forEach((d) => d.update(time, delta));
       });

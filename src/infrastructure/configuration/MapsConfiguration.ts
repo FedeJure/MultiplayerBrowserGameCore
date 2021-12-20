@@ -9,60 +9,11 @@ export const MapsConfiguration: MapConfiguration = {
         [
           {
             id: 0,
-            backgroundFile: { key: "bg-0", fileName: "background0.png" },
+            backgroundFile: { key: "bg-0", fileName: "bg-0.png" },
             jsonFile: { key: "map-0", fileName: "map-0.json" },
             tilesSourceFiles: { key: "tiles-0", fileName: "tiles-0.png" },
             objectsSourceFile: { key: "obj-0", fileName: "obj-0.png" },
             collidersSourceFile: { key: "col-0", fileName: "col0.png" },
-          },
-          {
-            id: 1,
-            backgroundFile: { key: "", fileName: "" },
-            jsonFile: { key: "", fileName: "" },
-            tilesSourceFiles: { key: "", fileName: "" },
-            objectsSourceFile: { key: "", fileName: "" },
-            collidersSourceFile: { key: "", fileName: "" },
-          },
-        ],
-        [
-          {
-            id: 2,
-            backgroundFile: { key: "", fileName: "" },
-            jsonFile: { key: "", fileName: "" },
-            tilesSourceFiles: { key: "", fileName: "" },
-            objectsSourceFile: { key: "", fileName: "" },
-            collidersSourceFile: { key: "", fileName: "" },
-          },
-          {
-            id: 3,
-            backgroundFile: { key: "", fileName: "" },
-            jsonFile: { key: "", fileName: "" },
-            tilesSourceFiles: { key: "", fileName: "" },
-            objectsSourceFile: { key: "", fileName: "" },
-            collidersSourceFile: { key: "", fileName: "" },
-          },
-        ],
-      ],
-    },
-    {
-      id: 1,
-      mapsInOrder: [
-        [
-          {
-            id: 4,
-            backgroundFile: { key: "", fileName: "" },
-            jsonFile: { key: "", fileName: "" },
-            tilesSourceFiles: { key: "", fileName: "" },
-            objectsSourceFile: { key: "", fileName: "" },
-            collidersSourceFile: { key: "", fileName: "" },
-          },
-          {
-            id: 5,
-            backgroundFile: { key: "", fileName: "" },
-            jsonFile: { key: "", fileName: "" },
-            tilesSourceFiles: { key: "", fileName: "" },
-            objectsSourceFile: { key: "", fileName: "" },
-            collidersSourceFile: { key: "", fileName: "" },
           },
         ],
       ],

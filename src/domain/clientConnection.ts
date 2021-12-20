@@ -7,8 +7,15 @@ export interface ClientConnection {
   connectionId: string;
   connectionTime: Date;
   onPlayerConnection(): Observable<{ playerId: string }>;
-  sendInitialStateEvent(players: PlayerInitialStateDto[]): void;
+  sendInitialStateEvent(
+    players: PlayerInitialStateDto[],
+    currentMap: ProcessedMap | undefined,
+    neighborMaps: ProcessedMap[] | undefined
+  ): void;
   join(roomName: string): void;
   onInput(): Observable<PlayerInputEvent>;
-  sendMapUpdateEvent(newCurrentMap: ProcessedMap, neighborMaps: ProcessedMap[]): void
+  sendMapUpdateEvent(
+    newCurrentMap: ProcessedMap,
+    neighborMaps: ProcessedMap[]
+  ): void;
 }
