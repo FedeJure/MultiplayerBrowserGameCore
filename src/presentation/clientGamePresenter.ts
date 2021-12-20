@@ -17,8 +17,9 @@ export class ClientGamePresenter {
     private readonly playersRepository: ConnectedPlayersRepository,
     delegators: Delegator[]
   ) {
+    this.listenEvents();
+
     scene.onCreate.subscribe(() => {
-      this.listenEvents();
       connection.emitStartNewConnection(localPlayerId);
       delegators.forEach((d) => d.init());
       scene.onUpdate.subscribe(({ time, delta }) => {

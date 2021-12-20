@@ -20,9 +20,10 @@ export class ServerGamePresenter {
     private readonly delegators: Delegator[],
     private readonly playerConnectionsRepository: PlayerConnectionsRepository
   ) {
+    this.listenEvents();
+    this.delegators.forEach((d) => d.init());
+
     this.gameScene.onCreate.subscribe(() => {
-      this.listenEvents();
-      this.delegators.forEach((d) => d.init());
     });
   }
 
@@ -36,7 +37,6 @@ export class ServerGamePresenter {
             connection
           );
           this.connectedPlayers.savePlayer(playerId, player);
-
           connection.sendInitialStateEvent(
             Array.from(this.connectedPlayers.getAll()).map((player) => ({
               id: player[0],
