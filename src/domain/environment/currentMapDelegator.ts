@@ -1,10 +1,7 @@
-import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
-import { Log } from "../../infrastructure/Logger";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { createMapOnScene } from "../actions/createMapOnScene";
 import { loadMapAssets } from "../actions/loadMapAssets";
-import { CollisionCategory } from "../collisions/collisionTypes";
 import { Delegator } from "../delegator";
 import { ServerConnection } from "../serverConnection";
 import { ProcessedMap } from "./processedMap";
