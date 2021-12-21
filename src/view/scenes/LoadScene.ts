@@ -19,7 +19,8 @@ export class LoadScene extends Phaser.Scene {
     //   "level1",
     //   `${this.originUrl}/assets/level1/level1.json`
     // );
-    this.load.on("complete", () => this.scene.launch("gameScene"));
+    // this.load.once("complete", () => this.scene.launch("gameScene"));
+    this.scene.launch("gameScene")
   }
 
   create() {

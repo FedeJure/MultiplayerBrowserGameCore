@@ -1,6 +1,9 @@
+import { Scene } from "phaser";
 import { ConnectionsRepository } from "../../infrastructure/repositories/connectionsRepository";
 import { PlayerConnectionsRepository } from "../../infrastructure/repositories/playerConnectionsRespository";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
+import { createMapOnScene } from "../actions/createMapOnScene";
+import { loadMapAssets } from "../actions/loadMapAssets";
 import { Delegator } from "../delegator";
 import { PlayerState } from "../player/playerState";
 import { MapConfiguration, MapLayer } from "./mapConfiguration";
@@ -18,7 +21,9 @@ export class CompleteMapDelegator implements Delegator {
     private mapConfig: MapConfiguration,
     private playerStateRepository: PlayerStateRepository,
     private connections: ConnectionsRepository,
-    private playerConnections: PlayerConnectionsRepository
+    private playerConnections: PlayerConnectionsRepository,
+    private scene: Scene,
+    private originUrl: string
   ) {
     mapConfig.mapLayers.forEach((layer) => {
       this.processLayer(layer);
@@ -103,7 +108,17 @@ export class CompleteMapDelegator implements Delegator {
     );
   }
 
-  init(): void {}
+  init(): void {
+    Promise.all(
+      CompleteMapDelegator.processedMapsAsList.map((m) =>
+        loadMapAssets(this.originUrl, m, this.scene)
+      )
+    ).then((_) =>
+      CompleteMapDelegator.processedMapsAsList.forEach((m) =>
+        createMapOnScene(m, this.scene)
+      )
+    );
+  }
   stop(): void {}
   update(time: number, delta: number): void {}
 

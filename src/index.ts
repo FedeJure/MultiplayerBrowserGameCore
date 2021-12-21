@@ -58,7 +58,9 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
         MapsConfiguration,
         ServerProvider.playerStateRepository,
         ServerProvider.connectionsRepository,
-        ServerProvider.playerConnectionsRepository
+        ServerProvider.playerConnectionsRepository,
+        scene,
+        originUrl
       ),
     ],
     ServerProvider.playerConnectionsRepository

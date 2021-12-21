@@ -22,9 +22,10 @@ export class ServerGamePresenter {
     private readonly playerConnectionsRepository: PlayerConnectionsRepository
   ) {
     this.listenEvents();
-    this.delegators.forEach((d) => d.init());
 
-    this.gameScene.onCreate.subscribe(() => {});
+    this.gameScene.onCreate.subscribe(() => {
+      this.delegators.forEach((d) => d.init());
+    });
   }
 
   listenEvents() {
@@ -94,7 +95,6 @@ export class ServerGamePresenter {
         );
       }
     });
-
     this.gameScene.onUpdate.subscribe(({ time, delta }) => {
       this.delegators.forEach((d) => d.update(time, delta));
       this.room.emit(

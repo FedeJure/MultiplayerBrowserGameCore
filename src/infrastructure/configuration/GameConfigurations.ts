@@ -6,6 +6,6 @@ export interface GameConfigurations {
 
 export const DefaultGameConfiguration: GameConfigurations = {
   initialMapId: 0,
-  initialPosition: { x: 1000, y: 1600 },
+  initialPosition: { x: 1000, y: 1200 },
   getMapRootPath: (id: number) => `/assets/map-${id}/`,
 };

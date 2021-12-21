@@ -1,6 +1,7 @@
 import { Observable, Subject } from "rxjs";
 import { Scene, Physics, GameObjects } from "phaser";
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
+
 export class GameScene extends Scene {
   private _onUpdate = new Subject<{ time: number; delta: number }>();
   private _onCreate = new Subject<void>();
@@ -23,7 +24,7 @@ export class GameScene extends Scene {
 
   initCollisions() {
     this.matter.world.addListener(
-      "collisionstart",
+      "collisionactive",
       (ev: Physics.Matter.Events.CollisionStartEvent) => {
         this.collisionDispatcher.sendCollisionStart(ev);
       },

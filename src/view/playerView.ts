@@ -24,7 +24,7 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     super(view.scene, "player");
     this._view = view;
     this.view.setDepth(10)
-    this._view.scene.matter.add.gameObject(view, { chamfer: { radius: 5 } });
+    this._view.scene.matter.add.gameObject(view);
     this._view.setBounce(0);
     this.initCollisions();
   }
