@@ -1,12 +1,15 @@
-import { Scene } from "phaser";
+import { GameObjects, Scene } from "phaser";
 import { CollisionCategory } from "../collisions/collisionTypes";
 import { ProcessedMap } from "../environment/processedMap";
 
 export async function createMapOnScene(map: ProcessedMap, scene: Scene) {
-  return new Promise<void>((res, _) => {
+  return new Promise<(GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[]>((res, _) => {
+    const createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[] = [];
+
     const tilemap = scene.make.tilemap({
       key: map.config.jsonFile.key,
     });
+    createdObjects.push(tilemap)
     tilemap.addTilesetImage(
       map.config.tilesSourceFiles.key,
       map.config.tilesSourceFiles.key
@@ -50,6 +53,7 @@ export async function createMapOnScene(map: ProcessedMap, scene: Scene) {
         sp.setPosition(sp.x + sp.width / 2, sp.y + sp.height / 2);
         sp.angle += obj.rotation || 0;
         sp.setOrigin(0, 0);
+        createdObjects.push(rec);
       }
 
       if (obj.polygon) {
@@ -70,9 +74,11 @@ export async function createMapOnScene(map: ProcessedMap, scene: Scene) {
           ignoreGravity: true,
         }) as Phaser.Physics.Matter.Sprite;
         sp.setDisplayOrigin(0);
+        createdObjects.push(pol);
       }
 
       if (sp !== undefined) {
+        createdObjects.push(sp);
         sp.setBounce(0);
         sp.setFriction(0);
         sp.setCollisionCategory(CollisionCategory.StaticEnvironment);
@@ -81,6 +87,7 @@ export async function createMapOnScene(map: ProcessedMap, scene: Scene) {
           CollisionCategory.StaticEnvironment,
         ]);
       }
+      res(createdObjects);
     });
   });
 }

@@ -1,3 +1,4 @@
+import { GameObjects } from "phaser";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { createMapOnScene } from "../actions/createMapOnScene";
@@ -6,7 +7,15 @@ import { Delegator } from "../delegator";
 import { ServerConnection } from "../serverConnection";
 import { ProcessedMap } from "./processedMap";
 
+interface LoadedMap {
+  map: ProcessedMap;
+  createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[];
+}
+
+type MapId = number;
+
 export class CurrentMapDelegator implements Delegator {
+  private loadedMaps: { [key: MapId]: LoadedMap } = {};
   public constructor(
     private scene: ClientGameScene,
     private localPlayerId: string,
@@ -17,25 +26,59 @@ export class CurrentMapDelegator implements Delegator {
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {
       await this.loadAssets([ev.newMap]);
-      this.createMap([ev.newMap]);
+      await this.createMap([ev.newMap]);
       await this.loadAssets(ev.neighborMaps);
-      this.createMap(ev.neighborMaps);
+      await this.createMap(ev.neighborMaps);
+      this.removeUnusedMaps(ev.newMap);
     });
   }
   stop(): void {}
   update(time: number, delta: number): void {}
 
+  private removeUnusedMaps(currentMap: ProcessedMap) {
+    Object.keys(this.loadedMaps).forEach((m) => {
+      if (
+        ![
+          currentMap.bottomMapId,
+          currentMap.topMapId,
+          currentMap.rightTopMapId,
+          currentMap.rightMapId,
+          currentMap.rightBottomMapId,
+          currentMap.leftTopMapId,
+          currentMap.leftMapId,
+          currentMap.leftBottomMapId,
+          currentMap.id
+        ].includes(Number(m))
+      ) {
+        this.loadedMaps[m].createdObjects.forEach((o) => o.destroy());
+        delete this.loadedMaps[m];
+      }
+    });
+  }
+
   private async loadAssets(maps: ProcessedMap[]) {
+    const loadedKeys = Object.keys(this.loadedMaps);
     return Promise.all(
-      maps.map((m) => loadMapAssets(this.originUrl, m, this.scene))
+      maps
+        .filter((m) => !loadedKeys.includes(m.id.toString()))
+        .map((m) => loadMapAssets(this.originUrl, m, this.scene))
     );
   }
 
   private createMap(maps: ProcessedMap[]) {
     try {
-      maps.forEach((m) => {
-        createMapOnScene(m, this.scene);
-      });
+      const loadedKeys = Object.keys(this.loadedMaps);
+
+      return Promise.all(
+        maps
+          .filter((m) => !loadedKeys.includes(m.id.toString()))
+          .map((m) => {
+            return createMapOnScene(m, this.scene).then((createdObjects) => {
+              this.loadedMaps[m.id] = { map: m, createdObjects };
+              return createdObjects
+            });
+          })
+      );
     } catch (error) {}
   }
 }
