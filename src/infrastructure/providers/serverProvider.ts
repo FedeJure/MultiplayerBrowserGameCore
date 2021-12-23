@@ -1,4 +1,5 @@
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
+import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
 import { ConnectedPlayersRepository } from "../repositories/connectedPlayersRepository";
 import { ConnectionsRepository } from "../repositories/connectionsRepository";
@@ -57,6 +58,12 @@ export class ServerProvider {
   public static get playerConnectionsRepository(): PlayerConnectionsRepository {
     return DependencyManager.GetOrInstantiate<PlayerConnectionsRepository>(
       () => new PlayerConnectionsRepository()
+    )
+  }
+
+  public static get roomManager(): RoomManager {
+    return DependencyManager.GetOrInstantiate<RoomManager>(
+      () => new RoomManager()
     )
   }
 }
