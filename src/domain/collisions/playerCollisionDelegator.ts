@@ -11,10 +11,8 @@ export class PlayerCollisionDelegator implements Delegator {
   private readonly player: Player;
   private readonly statesRepository: PlayerStateRepository;
 
-  private readonly handlersMap: Map<
-    string,
-    (col: CollisionData) => void
-  > = new Map();
+  private readonly handlersMap: Map<string, (col: CollisionData) => void> =
+    new Map();
   private readonly disposer: Disposer = new Disposer();
 
   constructor(
@@ -34,15 +32,16 @@ export class PlayerCollisionDelegator implements Delegator {
       this.handleStaticEnvCollisionEnd.bind(this)
     );
   }
-  update(time: number, delta: number): void {
-  }
+  update(time: number, delta: number): void {}
 
   init(): void {
     this.disposer.add(
       this.collisionsDispatcher
         .subscribeToCollision(this.player.view.matterBody.id.toString())
         .subscribe((col) => {
-          const handler = this.handlersMap.get([col.collidedCategory, col.type].toString());
+          const handler = this.handlersMap.get(
+            [col.collidedCategory, col.type].toString()
+          );
           if (handler) handler(col);
         })
     );
@@ -52,10 +51,10 @@ export class PlayerCollisionDelegator implements Delegator {
   }
 
   private handleStaticEnvCollisionStart(col: CollisionData) {
-    if (Math.abs(col.tangent.y) !== 0) return
+    if (Math.abs(col.tangent.y) !== 0) return;
     const state = this.statesRepository.getPlayerState(this.player.info.id);
-    
-    if (state)
+
+    if (state && !state.grounded)
       this.statesRepository.setPlayerState(this.player.info.id, {
         ...state,
         grounded: true,
@@ -63,7 +62,7 @@ export class PlayerCollisionDelegator implements Delegator {
   }
 
   private handleStaticEnvCollisionEnd(col: CollisionData) {
-    if (Math.abs(col.tangent.y) !== 0) return
+    // if (Math.abs(col.tangent.y) !== 0) return
     const state = this.statesRepository.getPlayerState(this.player.info.id);
     if (state)
       this.statesRepository.setPlayerState(this.player.info.id, {

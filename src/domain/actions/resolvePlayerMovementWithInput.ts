@@ -17,7 +17,6 @@ export class ResolvePlayerMovementWithInputs {
     let newVelY = view.velocity.y;
     let velocity = 1;
     let maxRunVelocity = 5;
-
     let availableJumps = state.grounded
       ? DefaultConfiguration.initialJumps
       : state.jumpsAvailable;
