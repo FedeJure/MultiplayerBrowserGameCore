@@ -3,6 +3,7 @@ import { PlayerState } from "../../domain/player/playerState";
 import { PlayerStateRepository } from "./playerStateRepository";
 
 export class InMemoryPlayerStateRepository implements PlayerStateRepository {
+
   private readonly _onPlayerStateChange: Subject<{
     playerId: string;
     state: PlayerState;
@@ -23,5 +24,10 @@ export class InMemoryPlayerStateRepository implements PlayerStateRepository {
 
   getAll(): { [key: string]: PlayerState } {
     return this.store;
+  }
+  updateStateOf(id: string, newValues: Partial<PlayerState>) {
+    const state = this.getPlayerState(id)
+    if (!state) return
+    this.setPlayerState(id, {...state, ...newValues})
   }
 }

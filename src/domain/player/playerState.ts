@@ -15,4 +15,5 @@ export interface PlayerState {
   readonly inputNumber: number;
   readonly anim: AnimationCode;
   readonly map: currentMapState;
+  readonly currentRooms: string[]
 }

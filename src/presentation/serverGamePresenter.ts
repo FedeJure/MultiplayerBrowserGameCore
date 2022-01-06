@@ -9,17 +9,21 @@ import { PlayerStateRepository } from "../infrastructure/repositories/playerStat
 import { Delegator } from "../domain/delegator";
 import { PlayerConnectionsRepository } from "../infrastructure/repositories/playerConnectionsRespository";
 import { CompleteMapDelegator } from "../domain/environment/completeMapDelegator";
+import { RoomManager } from "../domain/roomManager";
+import { Socket } from "socket.io";
+import { PlayerState } from "../domain/player/playerState";
 
 export class ServerGamePresenter {
   constructor(
     private readonly gameScene: GameScene,
-    private readonly room: RoomConnection,
+    private readonly socket: Socket,
     private readonly createPlayer: CreatePlayerFromId,
     private readonly connectionsRepository: ConnectionsRepository,
     private readonly connectedPlayers: ConnectedPlayersRepository,
     private readonly playerStates: PlayerStateRepository,
     private readonly delegators: Delegator[],
-    private readonly playerConnectionsRepository: PlayerConnectionsRepository
+    private readonly playerConnectionsRepository: PlayerConnectionsRepository,
+    private readonly roomManager: RoomManager
   ) {
     this.listenEvents();
 
@@ -30,7 +34,7 @@ export class ServerGamePresenter {
 
   listenEvents() {
     this.connectionsRepository.onNewConnection().subscribe((connection) => {
-      connection.onPlayerConnection().subscribe(({ playerId }) => {
+      connection.onPlayerConnection().subscribe(async ({ playerId }) => {
         try {
           const player = this.createPlayer.execute(
             playerId,
@@ -49,11 +53,17 @@ export class ServerGamePresenter {
             foundedMap,
             neighborMaps
           );
-          if (foundedMap && neighborMaps) {
-            connection.sendMapUpdateEvent(foundedMap, neighborMaps);
-          }
+          if (!foundedMap || !neighborMaps) return;
+          //WARNING duplicated code
+          //TODO: convert completeMapDelegator into MapManager and move all logic there
+          const joinedRooms = await this.roomManager.joinToRoom(
+            playerId,
+            connection,
+            [foundedMap, ...neighborMaps]
+          );
+          connection.sendMapUpdateEvent(foundedMap, neighborMaps);
 
-          this.room.emit(
+          this.socket.in(joinedRooms).emit(
             GameEvents.NEW_PLAYER_CONNECTED.name,
             GameEvents.NEW_PLAYER_CONNECTED.getEvent({
               id: player.info.id,
@@ -80,12 +90,15 @@ export class ServerGamePresenter {
         connection.connectionId
       );
       if (playerId) {
-        this.room.emit(
-          GameEvents.PLAYER_DISCONNECTED.name,
-          GameEvents.PLAYER_DISCONNECTED.getEvent(playerId)
-        );
         const player = this.connectedPlayers.getPlayer(playerId);
+
         if (player) {
+          this.socket
+            .in(player.state.currentRooms)
+            .emit(
+              GameEvents.PLAYER_DISCONNECTED.name,
+              GameEvents.PLAYER_DISCONNECTED.getEvent(playerId)
+            );
           player.destroy();
           this.connectedPlayers.removePlayer(playerId);
         }
@@ -97,10 +110,24 @@ export class ServerGamePresenter {
     });
     this.gameScene.onUpdate.subscribe(({ time, delta }) => {
       this.delegators.forEach((d) => d.update(time, delta));
-      this.room.emit(
-        GameEvents.PLAYERS_STATES.name,
-        GameEvents.PLAYERS_STATES.getEvent(this.playerStates.getAll())
-      );
+      const playersByRoom = this.roomManager.getPlayersByRoom();
+      for (const roomId in playersByRoom) {
+        if (Object.prototype.hasOwnProperty.call(playersByRoom, roomId)) {
+          const players = playersByRoom[roomId] ?? [];
+          const states = {};
+          players.forEach((p) => {
+            const state = this.playerStates.getPlayerState(p);
+
+            if (state) states[p] = state;
+          });
+          this.socket
+            .in(roomId)
+            .emit(
+              GameEvents.PLAYERS_STATES.name,
+              GameEvents.PLAYERS_STATES.getEvent(states)
+            );
+        }
+      }
     });
   }
 }

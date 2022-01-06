@@ -10,6 +10,7 @@ import { PlayerConnectionsRepository } from "../repositories/playerConnectionsRe
 import { PlayerInfoRepository } from "../repositories/playerInfoRepository";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
 import { PlayerStateRepository } from "../repositories/playerStateRepository";
+import { SocketRoomManager } from "../SocketRoomManager";
 import { ServerPresenterProvider } from "./serverPresenterProvider";
 
 export class ServerProvider {
@@ -63,7 +64,7 @@ export class ServerProvider {
 
   public static get roomManager(): RoomManager {
     return DependencyManager.GetOrInstantiate<RoomManager>(
-      () => new RoomManager()
+      () => new SocketRoomManager(this.playerStateRepository)
     )
   }
 }

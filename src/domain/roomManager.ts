@@ -1,18 +1,10 @@
-import { RoomConnection } from "./roomConnection"
+import { ClientConnection } from "./clientConnection";
+import { ProcessedMap } from "./environment/processedMap";
 
-type RoomId = number
+export type RoomId = string;
+export type PlayerId = string;
 
-export class RoomManager {
-    private rooms: {[key: RoomId]: RoomConnection} = {}
-    constructor() {
-        
-    }
-
-    createRoomWithId(roomId: RoomId, room: RoomConnection) {
-        this.rooms[roomId] = room
-    }
-
-    emitOnRoom(roomId: RoomId, event: string, data: any) {
-        this.rooms[roomId]?.emit(event, data)
-    }
+export interface RoomManager {
+    joinToRoom(playerId: string, conn: ClientConnection, maps: ProcessedMap[]): Promise<string[]>
+    getPlayersByRoom(): { [key: RoomId]: PlayerId[] | undefined }
 }

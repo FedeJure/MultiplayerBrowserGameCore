@@ -6,6 +6,7 @@ import { createMapOnScene } from "../actions/createMapOnScene";
 import { loadMapAssets } from "../actions/loadMapAssets";
 import { Delegator } from "../delegator";
 import { PlayerState } from "../player/playerState";
+import { RoomManager } from "../roomManager";
 import { MapConfiguration, MapLayer } from "./mapConfiguration";
 import { ProcessedMap } from "./processedMap";
 
@@ -23,7 +24,8 @@ export class CompleteMapDelegator implements Delegator {
     private connections: ConnectionsRepository,
     private playerConnections: PlayerConnectionsRepository,
     private scene: Scene,
-    private originUrl: string
+    private originUrl: string,
+    private roomManager: RoomManager
   ) {
     mapConfig.mapLayers.forEach((layer) => {
       this.processLayer(layer);
@@ -54,6 +56,10 @@ export class CompleteMapDelegator implements Delegator {
         const connection = this.connections.getConnection(connectionId);
         if (connection) {
           connection.sendMapUpdateEvent(foundedMap, neighborMaps);
+          this.roomManager.joinToRoom(playerId, connection, [
+            foundedMap,
+            ...neighborMaps,
+          ]);
         }
       }
     }

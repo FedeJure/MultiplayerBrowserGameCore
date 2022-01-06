@@ -18,6 +18,7 @@ export class SocketClientConnection implements ClientConnection {
 
   private onPlayerConnectionSubject = new Subject<{ playerId: string }>();
   private onInputSubject = new Subject<PlayerInputEvent>();
+  private currentRooms: string[] = [];
 
   constructor(socket: Socket) {
     this.connectionId = socket.id;
@@ -40,8 +41,12 @@ export class SocketClientConnection implements ClientConnection {
     return this.onInputSubject;
   }
 
-  join(roomName: string): void {
-    this.socket.join(roomName);
+  async join(roomName: string[]): Promise<{ previousRooms: string[] }> {
+    const previousRooms = this.currentRooms;
+    this.currentRooms.forEach((r) => this.socket.leave(r));
+    this.currentRooms = roomName;
+    await this.socket.join(roomName);
+    return { previousRooms };
   }
 
   listenEvents() {

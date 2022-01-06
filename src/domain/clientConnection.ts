@@ -12,7 +12,7 @@ export interface ClientConnection {
     currentMap: ProcessedMap | undefined,
     neighborMaps: ProcessedMap[] | undefined
   ): void;
-  join(roomName: string): void;
+  join(roomName: string | string[]): Promise<{ previousRooms: string[] }> ;
   onInput(): Observable<PlayerInputEvent>;
   sendMapUpdateEvent(
     newCurrentMap: ProcessedMap,

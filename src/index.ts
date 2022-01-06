@@ -45,10 +45,10 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
     );
   }
 
-  const room = new SocketRoomConnection(socket, "main");
+  // const room = new SocketRoomConnection(socket, "main");
   const __ = new ServerGamePresenter(
     scene,
-    room,
+    socket,
     ActionProvider.CreatePlayerFromId,
     ServerProvider.connectionsRepository,
     ServerProvider.connectedPlayerRepository,
@@ -60,10 +60,12 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
         ServerProvider.connectionsRepository,
         ServerProvider.playerConnectionsRepository,
         scene,
-        originUrl
+        originUrl,
+        ServerProvider.roomManager
       ),
     ],
-    ServerProvider.playerConnectionsRepository
+    ServerProvider.playerConnectionsRepository,
+    ServerProvider.roomManager
   );
   socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
     // const emitFn = clientSocket.emit;
@@ -74,7 +76,7 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
     //   return true;
     // };
     const connection = new SocketClientConnection(clientSocket);
-    room.join(connection);
+    // room.join(connection);
     ServerProvider.connectionsRepository.addConnection(connection);
     Log(
       "InitServerGame",
