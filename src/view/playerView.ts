@@ -28,6 +28,9 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     this._view.setBounce(0);
     this.initCollisions();
   }
+  setDisplayName(): void {
+    
+  }
   moveTo(x: number, y: number, time: number): void {
     this.view.scene.tweens.add({
       targets: this.view,
@@ -73,7 +76,9 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   }
 
   preUpdate(time: number, delta: number) {
-    this._onPreUpdate.next({ time, delta });
+    if (this._view.active) {
+      this._onPreUpdate.next({ time, delta });
+    }
   }
 
   update(time: number, delta: number) {
@@ -83,6 +88,7 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
       this._onUpdate.next({ time, delta });
     }
   }
+
 
   public get onUpdate(): Observable<{ time: number; delta: number }> {
     return this._onUpdate;

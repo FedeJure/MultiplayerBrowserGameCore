@@ -22,4 +22,5 @@ export interface IPlayerView {
   get matterBody(): BodyType;
   get velocity(): Vector;
   get position(): Vector;
+  setDisplayName(): void;
 }

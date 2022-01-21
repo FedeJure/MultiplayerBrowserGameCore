@@ -14,20 +14,20 @@ export class GameplayHud extends Scene {
   }
 
   create() {
-    this.pointerText = this.add.text(10, 90, 'Move the mouse', { font: "12px Arial", color: "#ffffff" });
+    this.pointerText = this.add.text(10, 90, 'Move the mouse', { font: "15px Arial", color: "#ffffff", resolution: 10 });
     this.pingText = new Phaser.GameObjects.Text(
       this,
       10,
       10,
       this.getPingText(0),
-      { font: "12px Arial", color: "#ffffff" }
+      { font: "15px Arial", color: "#ffffff", resolution: 10 }
     );
     this.fpsText = new Phaser.GameObjects.Text(
       this,
       70,
       10,
       this.getFpsText(),
-      { font: "12px Arial", color: "#ffffff" }
+      { font: "15px Arial", color: "#ffffff", resolution: 10 }
     );
     this.add.existing(this.pingText);
     this.add.existing(this.fpsText);
