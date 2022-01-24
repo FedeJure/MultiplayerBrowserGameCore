@@ -1,12 +1,13 @@
-import { BodyType, Composite, Vector } from "matter";
-import { GameObjects, Physics } from "phaser";
+import { BodyType,  Vector } from "matter";
+import {  Physics } from "phaser";
 import { AnimationCode } from "../domain/animations/animations";
+import { PlayerIngameHud } from "./playerIngameHud";
 import { PlayerView } from "./playerView";
 import { GameScene } from "./scenes/GameScene";
 
 export class ClientPlayerView extends PlayerView {
   private readonly spine: SpineGameObject;
-  private readonly nameText: GameObjects.Text;
+  private readonly hud: PlayerIngameHud;
 
   constructor(
     scene: GameScene,
@@ -25,17 +26,8 @@ export class ClientPlayerView extends PlayerView {
     const viewAsSprite = spine as unknown as Physics.Matter.Sprite;
     super(viewAsSprite, x, y, height, width);
 
-    this.nameText = scene.add.text(x, y, "Karim", {
-      fontSize: "2",
-      resolution: 20,
-    });
-    this.nameText.setDepth(10)
-    const nameBody = scene.matter.add.gameObject(this.nameText, {
-      ignoreGravity: true,
-      isSensor: true,
-    }).body as BodyType;
-    this.nameText.displayOriginY = 40;
-    scene.matter.add.joint(this.matterBody, nameBody);
+    // this.hud = new PlayerIngameHud(scene, x, y)
+    // scene.matter.add.joint(this.matterBody, this.hud.matterBody);
     this.spine = spine;
   }
 
