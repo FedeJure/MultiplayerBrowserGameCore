@@ -1,20 +1,18 @@
 import { Delegator } from "../delegator";
-import { LocalPlayer } from "./localPlayer";
+import { ClientPlayer } from "./localPlayer";
 
 export class LocalPlayerRenderDelegator implements Delegator {
-  private readonly player: LocalPlayer;
   private readonly maxZoom = 3;
   private readonly minZoom = 0.05;
   private readonly startZoom = 2;
 
   private zoom = this.startZoom;
-  constructor(player: LocalPlayer) {
+  constructor(private player: ClientPlayer) {
     this.player = player;
   }
   init(): void {
     this.player.view.startFollowWithCam();
     this.player.view.scene.cameras.main.setZoom(this.startZoom);
-    this.player.view.setDisplayName(this.player.info.name)
     this.player.view.scene.input.on(
       "wheel",
       (pointer, gameObjects, deltaX, deltaY, deltaZ) => {

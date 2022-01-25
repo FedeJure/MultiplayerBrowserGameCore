@@ -14,9 +14,10 @@ import { PlayerAnimationDelegator } from "../../domain/animations/playerAnimatio
 import { RemotePlayerAnimationDelegator } from "../../domain/animations/remotePlayerAnimationDelegator";
 import { CurrentMapDelegator } from "../../domain/environment/currentMapDelegator";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
-import { LocalPlayer } from "../../domain/player/localPlayer";
+import { ClientPlayer } from "../../domain/player/localPlayer";
+import { PlayerInfoDelegator } from "../../domain/player/playerInfoDelegator";
 export class ClientPresenterProvider {
-  forLocalPlayer(input: PlayerInput, player: LocalPlayer): void {
+  forLocalPlayer(input: PlayerInput, player: ClientPlayer): void {
     new ClientPlayerPresenter(ClientProvider.serverConnection, player, [
       new PlayerCollisionDelegator(
         player,
@@ -42,16 +43,17 @@ export class ClientPresenterProvider {
         player,
         ClientProvider.playerStateRepository
       ),
+      new PlayerInfoDelegator(player)
     ]);
   }
-  forPlayer(player: Player): void {
+  forPlayer(player: ClientPlayer): void {
     new ClientPlayerPresenter(ClientProvider.serverConnection, player, [
-      // new PlayerMovementValidationDelegator(
-      //   player,
-      //   ClientProvider.serverConnection,
-      //   ClientProvider.playerStateRepository,
-      //   ClientProvider.playerInputRequestRepository
-      // ),
+      new PlayerMovementValidationDelegator(
+        player,
+        ClientProvider.serverConnection,
+        ClientProvider.playerStateRepository,
+        ClientProvider.playerInputRequestRepository
+      ),
       new RemotePlayerAnimationDelegator(
         player,
         ClientProvider.playerStateRepository
@@ -61,6 +63,7 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         ClientProvider.playerStateRepository
       ),
+      new PlayerInfoDelegator(player)
     ]);
   }
 
