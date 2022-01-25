@@ -1,5 +1,5 @@
-import { BodyType,  Vector } from "matter";
-import {  Physics } from "phaser";
+import { Vector } from "matter";
+import { Physics } from "phaser";
 import { AnimationCode } from "../domain/animations/animations";
 import { PlayerIngameHud } from "./playerIngameHud";
 import { PlayerView } from "./playerView";
@@ -26,8 +26,8 @@ export class ClientPlayerView extends PlayerView {
     const viewAsSprite = spine as unknown as Physics.Matter.Sprite;
     super(viewAsSprite, x, y, height, width);
 
-    // this.hud = new PlayerIngameHud(scene, x, y)
-    // scene.matter.add.joint(this.matterBody, this.hud.matterBody);
+    this.hud = new PlayerIngameHud(scene, height, width);
+    this.add(this.hud);
     this.spine = spine;
   }
 
@@ -35,5 +35,7 @@ export class ClientPlayerView extends PlayerView {
     this.spine.setAnimation(0, anim, true, true);
   }
 
-  setDisplayName(): void {}
+  setDisplayName(name: string): void {
+    this.hud.setDisplayName(name)
+  }
 }

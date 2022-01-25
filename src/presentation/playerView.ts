@@ -1,7 +1,6 @@
 import { BodyType, Vector } from "matter";
-import { Scene } from "phaser";
+import { GameObjects, Scene } from "phaser";
 import { Observable } from "rxjs";
-import { PlayerView } from "../view/playerView";
 
 export interface IPlayerView {
   body: {
@@ -22,5 +21,6 @@ export interface IPlayerView {
   get matterBody(): BodyType;
   get velocity(): Vector;
   get position(): Vector;
-  setDisplayName(): void;
+  get gameObject(): Phaser.GameObjects.GameObject
+  add(children: GameObjects.GameObject): this
 }

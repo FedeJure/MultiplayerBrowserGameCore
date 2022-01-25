@@ -12,7 +12,11 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     time: number;
     delta: number;
   }>();
+  protected readonly _container: GameObjects.Container;
+  protected readonly _physicContainer: Physics.Matter.Sprite &
+    GameObjects.Container;
   protected readonly _view: Physics.Matter.Sprite;
+  public readonly body: BodyType;
 
   constructor(
     view: Physics.Matter.Sprite,
@@ -21,36 +25,58 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     height: number,
     width: number
   ) {
-    super(view.scene, "player");
+    super(view.scene, "player")
+    this.scene.add.existing(this)
+
     this._view = view;
-    this.view.setDepth(10)
-    this._view.scene.matter.add.gameObject(view);
-    this._view.setBounce(0);
+    this.scene.add.existing(this._view);
+
+
+    this._container = this.scene.add.container(x, y, [view]);
+    this._container.setSize(width, height)
+
+    this._physicContainer = this._view.scene.matter.add.gameObject(
+      this._container
+    ) as unknown as Phaser.Physics.Matter.Sprite & GameObjects.Container;
+
+    this.body = this._container.body as BodyType;
+    this._physicContainer.setBounce(0);
+
+    this._container.setDepth(10);
+    this._view.displayOriginX = 0
+    this._view.displayOriginY = 0
+    this._view.setPosition(0,0)
+
     this.initCollisions();
+
   }
-  setDisplayName(): void {
-    
+  add(children: GameObjects.GameObject): this {
+    this._physicContainer.add(children)
+    return this
+  }
+  get gameObject(): GameObjects.GameObject {
+    return this._container;
   }
   moveTo(x: number, y: number, time: number): void {
     this.view.scene.tweens.add({
-      targets: this.view,
+      targets: this,
       x,
       y,
       duration: time,
     });
   }
   startFollowWithCam(): void {
-    this.scene.cameras.main.startFollow(this._view);
+    this.scene.cameras.main.startFollow(this._container);
   }
   playAnimation(anim: string): void {}
   get velocity(): MatterJS.Vector {
-    return this._view.body.velocity;
+    return this.matterBody.velocity;
   }
   get position(): MatterJS.Vector {
-    return this._view.body.position;
+    return this.matterBody.position;
   }
   setScale(x: number, y: number): void {
-    this._view.setScale(x, y);
+    this._container.setScale(x, y);
   }
   lookToLeft(value: boolean): void {
     this._view.setScale(
@@ -59,36 +85,35 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     );
   }
   setVelocity(x: number, y: number): void {
-    this._view.setVelocity(x, y);
+    this._physicContainer.setVelocity(x, y);
   }
   setPosition(x: number, y: number): void {
-    this._view.setPosition(x, y);
+    this._container.setPosition(x, y);
   }
 
   private initCollisions() {
-    this._view.setCollisionCategory(CollisionCategory.Player);
-    this._view.setCollidesWith([CollisionCategory.StaticEnvironment]);
+    this._physicContainer.setCollisionCategory(CollisionCategory.Player);
+    this._physicContainer.setCollidesWith([CollisionCategory.StaticEnvironment]);
   }
 
   destroy() {
-    this._view.destroy();
-    this.scene.matter.world.remove(this._view);
+    this._container.destroy();
+    this.scene.matter.world.remove(this._container);
   }
 
   preUpdate(time: number, delta: number) {
-    if (this._view.active) {
+    if (this._container.active) {
       this._onPreUpdate.next({ time, delta });
     }
   }
 
   update(time: number, delta: number) {
-    if (this._view.active) {
-      this._view.update(time, delta);
-      this._view.setAngle(0); //Prevents to gameobject rotate due Matter physics. Cant find another solution at the moment
+    if (this._container.active) {
+      this._container.update(time, delta);
+      this._container.setAngle(0); //Prevents to gameobject rotate due Matter physics. Cant find another solution at the moment
       this._onUpdate.next({ time, delta });
     }
   }
-
 
   public get onUpdate(): Observable<{ time: number; delta: number }> {
     return this._onUpdate;
@@ -98,7 +123,7 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   }
 
   public get matterBody() {
-    return this._view.body as BodyType;
+    return this._container.body as BodyType;
   }
 
   public get view() {
