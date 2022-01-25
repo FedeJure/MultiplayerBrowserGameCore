@@ -8,6 +8,7 @@ import { ConnectedPlayersRepository } from "../../infrastructure/repositories/co
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
 import { ClientPlayerView } from "../../view/clientPlayerView";
+import { LocalPlayer } from "../player/localPlayer";
 
 export class CreateLocalClientPlayer {
   private readonly presenterProvider: ClientPresenterProvider;
@@ -40,7 +41,7 @@ export class CreateLocalClientPlayer {
       info,
       state,
       view
-    );
+    ) as LocalPlayer;
     scene.addToLifecycle(view);
     this.presenterProvider.forLocalPlayer(input, player);
     this.connectedPlayersRepository.savePlayer(info.id, player);

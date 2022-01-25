@@ -14,8 +14,9 @@ import { PlayerAnimationDelegator } from "../../domain/animations/playerAnimatio
 import { RemotePlayerAnimationDelegator } from "../../domain/animations/remotePlayerAnimationDelegator";
 import { CurrentMapDelegator } from "../../domain/environment/currentMapDelegator";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
+import { LocalPlayer } from "../../domain/player/localPlayer";
 export class ClientPresenterProvider {
-  forLocalPlayer(input: PlayerInput, player: Player): void {
+  forLocalPlayer(input: PlayerInput, player: LocalPlayer): void {
     new ClientPlayerPresenter(ClientProvider.serverConnection, player, [
       new PlayerCollisionDelegator(
         player,
