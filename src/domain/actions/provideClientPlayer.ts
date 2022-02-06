@@ -7,6 +7,7 @@ import { ConnectedPlayersRepository } from "../../infrastructure/repositories/co
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ClientPlayerView } from "../../view/clientPlayerView";
+import { ClientPlayer } from "../player/localPlayer";
 export class CreateClientPlayerAction {
   private readonly presenterProvider: ClientPresenterProvider;
   private readonly connectedPlayersRepository: ConnectedPlayersRepository;
@@ -33,7 +34,7 @@ export class CreateClientPlayerAction {
       info,
       state,
       view
-    );
+    ) as ClientPlayer;
     this.presenterProvider.forPlayer(player);
     this.connectedPlayersRepository.savePlayer(info.id, player);
     this.playerStateRepository.setPlayerState(info.id, player.state);

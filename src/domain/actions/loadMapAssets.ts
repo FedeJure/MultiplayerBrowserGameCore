@@ -2,15 +2,12 @@ import { Scene } from "phaser";
 import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
 import { ProcessedMap } from "../environment/processedMap";
 
-export async function loadMapAssets(originUrl: string, map: ProcessedMap, scene: Scene) {
+export async function loadMapAssets(
+  originUrl: string,
+  map: ProcessedMap,
+  scene: Scene
+) {
   return new Promise((res, _) => {
-    scene.load.image({
-      key: map.config.backgroundFile.key,
-      url: `${originUrl}${DefaultGameConfiguration.getMapRootPath(
-        map.id,
-        map.layerId
-      )}${map.config.backgroundFile.fileName}`,
-    });
     scene.load.image({
       key: map.config.objectsSourceFile.key,
       url: `${originUrl}${DefaultGameConfiguration.getMapRootPath(

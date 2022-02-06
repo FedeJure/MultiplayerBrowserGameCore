@@ -1,5 +1,3 @@
-import { Player } from "../../domain/player/player";
-
 export class LocalPlayerRepository {
   private _playerId: string;
 

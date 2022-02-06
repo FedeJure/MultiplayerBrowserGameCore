@@ -1,5 +1,4 @@
 import { GameObjects } from "phaser";
-import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { createMapOnScene } from "../actions/createMapOnScene";
 import { loadMapAssets } from "../actions/loadMapAssets";
@@ -18,10 +17,8 @@ export class CurrentMapDelegator implements Delegator {
   private loadedMaps: { [key: MapId]: LoadedMap } = {};
   public constructor(
     private scene: ClientGameScene,
-    private localPlayerId: string,
     private connection: ServerConnection,
-    private statesRepository: PlayerStateRepository,
-    private originUrl: string
+    private originUrl: string,
   ) {}
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {
@@ -47,7 +44,7 @@ export class CurrentMapDelegator implements Delegator {
           currentMap.leftTopMapId,
           currentMap.leftMapId,
           currentMap.leftBottomMapId,
-          currentMap.id
+          currentMap.id,
         ].includes(Number(m))
       ) {
         this.loadedMaps[m].createdObjects.forEach((o) => o.destroy());
@@ -75,10 +72,11 @@ export class CurrentMapDelegator implements Delegator {
           .map((m) => {
             return createMapOnScene(m, this.scene).then((createdObjects) => {
               this.loadedMaps[m.id] = { map: m, createdObjects };
-              return createdObjects
+              return createdObjects;
             });
           })
       );
     } catch (error) {}
   }
+
 }

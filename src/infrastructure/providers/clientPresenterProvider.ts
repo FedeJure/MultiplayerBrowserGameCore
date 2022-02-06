@@ -16,6 +16,7 @@ import { CurrentMapDelegator } from "../../domain/environment/currentMapDelegato
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { ClientPlayer } from "../../domain/player/localPlayer";
 import { PlayerInfoDelegator } from "../../domain/player/playerInfoDelegator";
+import { BackgroundDelegator } from "../../domain/environment/backgroundDelegator";
 export class ClientPresenterProvider {
   forLocalPlayer(input: PlayerInput, player: ClientPlayer): void {
     new ClientPlayerPresenter(ClientProvider.serverConnection, player, [
@@ -78,10 +79,15 @@ export class ClientPresenterProvider {
       [
         new CurrentMapDelegator(
           scene,
-          ClientProvider.localPlayerRepository.playerId,
           ClientProvider.serverConnection,
-          ClientProvider.playerStateRepository,
-          ClientProvider.originUrl
+          ClientProvider.originUrl,
+        ),
+        new BackgroundDelegator(
+          scene,
+          ClientProvider.serverConnection,
+          ClientProvider.originUrl,
+          ClientProvider.localPlayerRepository,
+          ClientProvider.connectedPlayers
         ),
       ]
     );
