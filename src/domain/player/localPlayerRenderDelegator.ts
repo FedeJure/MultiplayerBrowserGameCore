@@ -23,6 +23,7 @@ export class LocalPlayerRenderDelegator implements Delegator {
           Math.max(this.minZoom, this.zoom + toAdd)
         );
         this.player.view.scene.cameras.main.setZoom(this.zoom);
+        this.player.view.scene.cameras.main.setOrigin(0.5, 0.8);
       }
     );
   }
