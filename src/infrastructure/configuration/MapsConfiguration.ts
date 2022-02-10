@@ -26,7 +26,16 @@ export const MapsConfiguration: MapConfiguration = {
           },
           {
             id: 1,
-            backgroundFile: [{ key: "bg-1", fileName: "bg-1.png" }],
+            backgroundFile: [
+              { key: "bg-10", fileName: "bg-10.png" },
+              { key: "bg-11", fileName: "bg-11.png" },
+              { key: "bg-12", fileName: "bg-10.png" },
+              { key: "bg-12", fileName: "bg-12.png" },
+              { key: "bg-13", fileName: "bg-13.png" },
+              { key: "bg-14", fileName: "bg-14.png" },
+              { key: "bg-15", fileName: "bg-15.png" },
+              { key: "bg-16", fileName: "bg-16.png" },
+            ],
             jsonFile: { key: "map-1", fileName: "map-1.json" },
             tilesSourceFiles: { key: "tiles-1", fileName: "tiles-1.png" },
             objectsSourceFile: { key: "obj-1", fileName: "obj-1.png" },

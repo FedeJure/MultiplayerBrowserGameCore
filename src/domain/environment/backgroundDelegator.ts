@@ -28,9 +28,10 @@ export class BackgroundDelegator implements Delegator {
       console.log(ev.newMap)
       this.mapCenterX = ev.newMap.originX + this.mapWidth / 2;
       this.mapCenterY = ev.newMap.originY + ev.newMap.height / 2;
-      console.log(this.mapCenterX)
       await this.loadAssets([ev.newMap]);
       await this.createBackground([ev.newMap]);
+      await this.loadAssets(ev.neighborMaps);
+      await this.createBackground(ev.neighborMaps);
     });
   }
   stop(): void {}
@@ -41,7 +42,7 @@ export class BackgroundDelegator implements Delegator {
         const isOnlyOne = this.currentBackgrounds.length === 1
         const factor =  isOnlyOne ? 0 : (i / this.currentBackgrounds.length);
         const newX = localPlayer.view.position.x - (localPlayer.view.position.x -this.mapCenterX) * factor
-        const newy = localPlayer.view.position.y + (localPlayer.view.position.y -this.mapCenterY) * factor / 1000
+        const newy = (localPlayer.view.position.y + 200) - (localPlayer.view.position.y - this.mapCenterY) * (factor / 2)
         bg.setPosition(
           newX,
           newy
