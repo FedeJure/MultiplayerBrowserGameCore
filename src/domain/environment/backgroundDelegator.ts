@@ -79,12 +79,12 @@ export class BackgroundDelegator implements Delegator {
             localPlayer.view.position.x,
             localPlayer.view.position.y,
             [
-              this.scene.add.image(-100, -300, bg.key),
+              this.scene.add.image(0, -300, bg.key),
               ...neighborMaps.map((nm) => {
                 const nb = nm.config.backgroundFile[i];
                 return this.scene.add.image(
-                  nm.originX,
-                  -nm.originY - 300,
+                  - currentMap.originX + nm.originX,
+                  currentMap.originY -nm.originY - 300,
                   nb.key
                 );
               }),
