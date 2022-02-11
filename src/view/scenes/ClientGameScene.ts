@@ -8,10 +8,6 @@ export class ClientGameScene extends GameScene {
 
   create(): void {
     super.create();
-    const background = this.add.image(1250, 300, "background");
-    background.scaleY = 2;
-    background.scaleX = 2;
-    background.setDepth(-1);
     this.scene.launch("hud");
   }
   update(time: number, delta: number): void {
