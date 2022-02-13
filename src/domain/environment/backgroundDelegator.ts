@@ -4,16 +4,12 @@ import { LocalPlayerRepository } from "../../infrastructure/repositories/localPl
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { loadBackgroundAssets } from "../actions/loadBackgroundAssets";
 import { Delegator } from "../delegator";
-import { Player } from "../player/player";
 import { ServerConnection } from "../serverConnection";
 import { ProcessedMap } from "./processedMap";
 
 export class BackgroundDelegator implements Delegator {
-  private localPlayer?: Player;
-  private currentBackgrounds: GameObjects.Container[] = [];
-  private mapWidth = 0;
-  private mapCenterX = 0;
-  private mapCenterY = 0;
+  private createdBackgrounds: GameObjects.Image[] = [];
+  private createdBackgroundsMap: { [key: string]: GameObjects.Image } = {};
 
   public constructor(
     private scene: ClientGameScene,
@@ -24,32 +20,12 @@ export class BackgroundDelegator implements Delegator {
   ) {}
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {
-      this.mapWidth = ev.newMap.width;
-      console.log(ev.newMap);
-      this.mapCenterX = ev.newMap.originX + this.mapWidth / 2;
-      this.mapCenterY = ev.newMap.originY + ev.newMap.height / 2;
       await this.loadAssets([ev.newMap, ...ev.neighborMaps]);
       await this.createBackground(ev.newMap, ev.neighborMaps);
     });
   }
   stop(): void {}
-  update(time: number, delta: number): void {
-    const localPlayer = this.localPlayer;
-    if (localPlayer) {
-      this.currentBackgrounds.forEach((bg, i) => {
-        const isOnlyOne = this.currentBackgrounds.length === 1;
-        const factor = isOnlyOne ? 0 : i / this.currentBackgrounds.length;
-        const newX =
-          localPlayer.view.position.x -
-          (localPlayer.view.position.x - this.mapCenterX) * factor;
-        const newy =
-          localPlayer.view.position.y +
-          200 -
-          (localPlayer.view.position.y - this.mapCenterY) * (factor / 2);
-        bg.setPosition(newX, newy);
-      });
-    }
-  }
+  update(time: number, delta: number): void {}
 
   private async loadAssets(maps: ProcessedMap[]) {
     return Promise.all(
@@ -62,38 +38,56 @@ export class BackgroundDelegator implements Delegator {
     neighborMaps: ProcessedMap[]
   ) {
     try {
-      if (this.currentBackgrounds.length > 0) {
-        this.currentBackgrounds.forEach((bg) => {
-          bg.destroy();
-        });
-        this.currentBackgrounds = [];
-      }
+      // this.createdBackgrounds.forEach((bg) => {
+      //   bg.setActive(false).setVisible(false);
+      // });
 
-      const localPlayer = this.playersRepository.getPlayer(
-        this.localplayerRepository.playerId
-      );
-      this.localPlayer = localPlayer;
+      const localPlayer = this.playersRepository.getPlayer(this.localplayerRepository.playerId)
+
       if (localPlayer) {
         currentMap.config.backgroundFile.forEach((bg, i) => {
-          const bgContainer = this.scene.add.container(
-            localPlayer.view.position.x,
-            localPlayer.view.position.y,
-            [
-              this.scene.add.image(0, -300, bg.key),
-              ...neighborMaps.map((nm) => {
-                const nb = nm.config.backgroundFile[i];
-                return this.scene.add.image(
-                  - currentMap.originX + nm.originX,
-                  currentMap.originY -nm.originY - 300,
-                  nb.key
-                );
-              }),
-            ]
-          );
-          bgContainer.setDepth(-1);
-          this.currentBackgrounds.push(bgContainer);
+          const isOnlyOne = currentMap.config.backgroundFile.length === 1;
+          const factor = isOnlyOne
+            ? 0
+            : (i / currentMap.config.backgroundFile.length) *0.9;
+  
+          neighborMaps.forEach((nm) => {
+            const nb = nm.config.backgroundFile[i];
+            if (this.createdBackgroundsMap[nb.key]) {
+              this.createdBackgroundsMap[nb.key].setActive(true).setVisible(true);
+              return;
+            }
+            console.log(factor, i)
+            const createdNeighbor = this.scene.add
+              .image(nm.originX, nm.originY - nm.height * 0.2, nb.key)
+              .setScrollFactor(factor, factor / 10)
+              .setOrigin(0.5, 0)
+              .setDepth(-1);
+            this.createdBackgroundsMap[nb.key] = createdNeighbor;
+            this.createdBackgrounds.push(createdNeighbor);
+          });
+  
+          if (this.createdBackgroundsMap[bg.key]) {
+            this.createdBackgroundsMap[bg.key].setActive(true).setVisible(true);
+            return;
+          }
+  
+          const currentBg = this.scene.add
+            .image(
+              currentMap.originX,
+              currentMap.originY - currentMap.height * 0.2,
+              bg.key
+            )
+            .setScrollFactor(factor, factor / 10)
+            .setOrigin(0.5, 0)
+            .setDepth(-1);
+  
+          this.createdBackgroundsMap[bg.key] = currentBg;
+          this.createdBackgrounds.push(currentBg);
         });
       }
+
+      
     } catch (error) {}
   }
 }
