@@ -66,7 +66,7 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     });
   }
   startFollowWithCam(): void {
-    this.scene.cameras.main.startFollow(this._container);
+    this.scene.cameras.main.startFollow(this._container, false, 0.1, 0.1);
   }
   playAnimation(anim: string): void {}
   get velocity(): MatterJS.Vector {

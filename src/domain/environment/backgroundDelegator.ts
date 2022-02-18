@@ -38,10 +38,6 @@ export class BackgroundDelegator implements Delegator {
     neighborMaps: ProcessedMap[]
   ) {
     try {
-      // this.createdBackgrounds.forEach((bg) => {
-      //   bg.setActive(false).setVisible(false);
-      // });
-
       const localPlayer = this.playersRepository.getPlayer(this.localplayerRepository.playerId)
 
       if (localPlayer) {
@@ -57,7 +53,6 @@ export class BackgroundDelegator implements Delegator {
               this.createdBackgroundsMap[nb.key].setActive(true).setVisible(true);
               return;
             }
-            console.log(factor, i)
             const createdNeighbor = this.scene.add
               .image(nm.originX, nm.originY - nm.height * 0.2, nb.key)
               .setScrollFactor(factor, factor / 10)
