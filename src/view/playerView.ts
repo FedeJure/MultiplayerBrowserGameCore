@@ -59,7 +59,7 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   }
   moveTo(x: number, y: number, time: number): void {
     this.view.scene.tweens.add({
-      targets: this,
+      targets: this._container,
       x,
       y,
       duration: time,

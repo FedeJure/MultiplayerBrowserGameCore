@@ -18,14 +18,14 @@ export class CurrentMapDelegator implements Delegator {
   public constructor(
     private scene: ClientGameScene,
     private connection: ServerConnection,
-    private originUrl: string,
+    private originUrl: string
   ) {}
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {
       await this.loadAssets([ev.newMap]);
-      await this.createMap([ev.newMap]);
       await this.loadAssets(ev.neighborMaps);
-      await this.createMap(ev.neighborMaps);
+      this.createMap([ev.newMap]);
+      this.createMap(ev.neighborMaps);
       this.removeUnusedMaps(ev.newMap);
     });
   }
@@ -78,5 +78,4 @@ export class CurrentMapDelegator implements Delegator {
       );
     } catch (error) {}
   }
-
 }

@@ -62,7 +62,7 @@ export class PlayerCollisionDelegator implements Delegator {
   }
 
   private handleStaticEnvCollisionEnd(col: CollisionData) {
-    // if (Math.abs(col.tangent.y) !== 0) return
+    if (Math.abs(col.tangent.y) !== 0) return;
     const state = this.statesRepository.getPlayerState(this.player.info.id);
     if (state)
       this.statesRepository.setPlayerState(this.player.info.id, {

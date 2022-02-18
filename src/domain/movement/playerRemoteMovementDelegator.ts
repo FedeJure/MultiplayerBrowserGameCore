@@ -35,7 +35,6 @@ export class PlayerRemoteMovementDelegator implements Delegator {
 
   update(time: number, delta: number): void {
     const state = this.playerStateRepository.getPlayerState(this.player.info.id)
-    // console.log(state)
     if (state) {
       const view = this.player.view;
       view.lookToLeft(state.side === Side.LEFT)
