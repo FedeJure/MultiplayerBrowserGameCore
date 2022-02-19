@@ -1,4 +1,5 @@
 import { GameObjects } from "phaser";
+import { MapUpdateEvent } from "../../infrastructure/events/gameEvents";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { createMapOnScene } from "../actions/createMapOnScene";
 import { loadMapAssets } from "../actions/loadMapAssets";
@@ -26,11 +27,38 @@ export class CurrentMapDelegator implements Delegator {
       await this.loadAssets(ev.neighborMaps);
       this.createMap([ev.newMap]);
       this.createMap(ev.neighborMaps);
+
+      this.setCameraBounds(ev);
       this.removeUnusedMaps(ev.newMap);
     });
   }
   stop(): void {}
   update(time: number, delta: number): void {}
+
+  private setCameraBounds(ev: MapUpdateEvent) {
+    const x =
+      ev.newMap.leftMapId === undefined
+        ? ev.newMap.originX
+        : ev.neighborMaps.find((m) => m.id === ev.newMap.leftMapId)!.originX ??
+          0;
+    const y =
+      ev.newMap.topMapId === undefined
+        ? ev.newMap.originY
+        : ev.neighborMaps.find((m) => m.id === ev.newMap.topMapId)!.originY ??
+          0;
+    const width =
+      ev.newMap.rightMapId === undefined
+        ? ev.newMap.width * 2
+        : ev.neighborMaps.find((m) => m.id === ev.newMap.rightMapId)!.originX +
+          ev.newMap.width * 3;
+    const height =
+      ev.newMap.bottomMapId === undefined
+        ? ev.newMap.height
+        : ev.neighborMaps.find((m) => m.id === ev.newMap.bottomMapId)!.originY +
+          y +
+          ev.newMap.height;
+    this.scene.cameras.main.setBounds(x, y, width, height);
+  }
 
   private removeUnusedMaps(currentMap: ProcessedMap) {
     Object.keys(this.loadedMaps).forEach((m) => {
