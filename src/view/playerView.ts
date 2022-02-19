@@ -25,15 +25,14 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     height: number,
     width: number
   ) {
-    super(view.scene, "player")
-    this.scene.add.existing(this)
+    super(view.scene, "player");
+    this.scene.add.existing(this);
 
     this._view = view;
     this.scene.add.existing(this._view);
 
-
     this._container = this.scene.add.container(x, y, [view]);
-    this._container.setSize(width, height)
+    this._container.setSize(width, height);
 
     this._physicContainer = this._view.scene.matter.add.gameObject(
       this._container
@@ -43,16 +42,15 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     this._physicContainer.setBounce(0);
 
     this._container.setDepth(10);
-    this._view.displayOriginX = 0
-    this._view.displayOriginY = 0
-    this._view.setPosition(0,0)
+    this._view.displayOriginX = 0;
+    this._view.displayOriginY = 0;
+    this._view.setPosition(0, 0);
 
     this.initCollisions();
-
   }
   add(children: GameObjects.GameObject): this {
-    this._physicContainer.add(children)
-    return this
+    this._physicContainer.add(children);
+    return this;
   }
   get gameObject(): GameObjects.GameObject {
     return this._container;
@@ -93,7 +91,10 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
 
   private initCollisions() {
     this._physicContainer.setCollisionCategory(CollisionCategory.Player);
-    this._physicContainer.setCollidesWith([CollisionCategory.StaticEnvironment]);
+    this._physicContainer.setCollidesWith([
+      CollisionCategory.StaticEnvironment,
+      CollisionCategory.WorldBounds,
+    ]);
   }
 
   destroy() {

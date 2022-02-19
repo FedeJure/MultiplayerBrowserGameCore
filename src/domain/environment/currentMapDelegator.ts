@@ -1,3 +1,4 @@
+import { BodyType } from "matter";
 import { GameObjects } from "phaser";
 import { MapUpdateEvent } from "../../infrastructure/events/gameEvents";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
@@ -23,13 +24,15 @@ export class CurrentMapDelegator implements Delegator {
   ) {}
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {
-      await this.loadAssets([ev.newMap]);
-      await this.loadAssets(ev.neighborMaps);
-      this.createMap([ev.newMap]);
-      this.createMap(ev.neighborMaps);
+      return new Promise(async () => {
+        await this.loadAssets([ev.newMap]);
+        await this.loadAssets(ev.neighborMaps);
+        this.createMap([ev.newMap]);
+        this.createMap(ev.neighborMaps);
 
-      this.setCameraBounds(ev);
-      this.removeUnusedMaps(ev.newMap);
+        this.setCameraBounds(ev);
+        this.removeUnusedMaps(ev.newMap);
+      });
     });
   }
   stop(): void {}
