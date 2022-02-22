@@ -19,7 +19,6 @@ export class ServerPresenterProvider {
       [
         new PlayerCollisionDelegator(
           player,
-          ServerProvider.collisionsDispatcher,
           ServerProvider.playerStateRepository
         ),
         new ServerPlayerAnimationDelegator(

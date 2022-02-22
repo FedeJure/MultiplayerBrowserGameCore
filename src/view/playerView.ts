@@ -3,6 +3,7 @@ import { GameObjects, Physics } from "phaser";
 import { Observable, Subject } from "rxjs";
 import { CollisionCategory } from "../domain/collisions/collisionTypes";
 import { IPlayerView } from "../presentation/playerView";
+import { CollisionDetector } from "./collisionDetector";
 
 export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   //TODO: ver de crear interfaces en el dominio con todas las propiedades q se usen de Phaser, para aislar
@@ -17,13 +18,15 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     GameObjects.Container;
   protected readonly _view: Physics.Matter.Sprite;
   public readonly body: BodyType;
+  private readonly groundCollisionDetector: CollisionDetector;
+  private currentTween?: Phaser.Tweens.Tween
 
   constructor(
     view: Physics.Matter.Sprite,
-    x: number,
-    y: number,
-    height: number,
-    width: number
+    private x: number,
+    private y: number,
+    private height: number,
+    private width: number
   ) {
     super(view.scene, "player");
     this.scene.add.existing(this);
@@ -37,7 +40,6 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     this._physicContainer = this._view.scene.matter.add.gameObject(
       this._container
     ) as unknown as Phaser.Physics.Matter.Sprite & GameObjects.Container;
-
     this.body = this._container.body as BodyType;
     this._physicContainer.setBounce(0);
 
@@ -45,6 +47,15 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     this._view.displayOriginX = 0;
     this._view.displayOriginY = 0;
     this._view.setPosition(0, 0);
+
+    this.groundCollisionDetector = new CollisionDetector(
+      this.scene.matter.bodies.rectangle(
+        this.x,
+        this.y + this.height / 2 + 1,
+        this.width / 2,
+        2
+      )
+    );
 
     this.initCollisions();
   }
@@ -56,11 +67,17 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     return this._container;
   }
   moveTo(x: number, y: number, time: number): void {
-    this.view.scene.tweens.add({
+    if (this.currentTween) {
+      this.currentTween.stop()
+      this.currentTween.complete()
+      this.currentTween = undefined
+    }
+    this.currentTween = this.view.scene.tweens.add({
       targets: this._container,
       x,
       y,
       duration: time,
+      
     });
   }
   startFollowWithCam(): void {
@@ -90,11 +107,20 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   }
 
   private initCollisions() {
-    this._physicContainer.setCollisionCategory(CollisionCategory.Player);
-    this._physicContainer.setCollidesWith([
-      CollisionCategory.StaticEnvironment,
-      CollisionCategory.WorldBounds,
-    ]);
+    const body = this.scene.matter.body.create({
+      parts: [this.matterBody, this.groundCollisionDetector.body],
+    });
+    this._physicContainer.setExistingBody(body);
+    this.matterBody.collisionFilter = body.collisionFilter = {
+      category: CollisionCategory.Player,
+      group: 0,
+      mask: CollisionCategory.StaticEnvironment | CollisionCategory.WorldBounds,
+    };
+    // this._physicContainer.setCollisionCategory(CollisionCategory.Player);
+    // this._physicContainer.setCollidesWith([
+    //   CollisionCategory.StaticEnvironment,
+    //   CollisionCategory.WorldBounds,
+    // ]);
   }
 
   destroy() {
@@ -129,5 +155,9 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
 
   public get view() {
     return this._view;
+  }
+
+  public get onGroundCollideChange(): Observable<boolean> {
+    return this.groundCollisionDetector.onCollideChange;
   }
 }

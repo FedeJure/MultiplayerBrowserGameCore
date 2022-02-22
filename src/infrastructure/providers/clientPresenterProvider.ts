@@ -22,14 +22,14 @@ export class ClientPresenterProvider {
     new ClientPlayerPresenter(ClientProvider.serverConnection, player, [
       new PlayerCollisionDelegator(
         player,
-        ClientProvider.collisionsDispatcher,
         ClientProvider.playerStateRepository
       ),
       new PlayerMovementValidationDelegator(
         player,
         ClientProvider.serverConnection,
         ClientProvider.playerStateRepository,
-        ClientProvider.playerInputRequestRepository
+        ClientProvider.playerInputRequestRepository,
+        input
       ),
       new PlayerInputDelegator(
         player,
@@ -49,12 +49,6 @@ export class ClientPresenterProvider {
   }
   forPlayer(player: ClientPlayer): void {
     new ClientPlayerPresenter(ClientProvider.serverConnection, player, [
-      new PlayerMovementValidationDelegator(
-        player,
-        ClientProvider.serverConnection,
-        ClientProvider.playerStateRepository,
-        ClientProvider.playerInputRequestRepository
-      ),
       new RemotePlayerAnimationDelegator(
         player,
         ClientProvider.playerStateRepository

@@ -45,6 +45,7 @@ function addBound(
 ) {
   scene.matter.add.rectangle(x, y, width, height, {
     isStatic: true,
+    label: 'Bound Wall'
   }).collisionFilter = {
     group: 0,
     mask: CollisionCategory.Player,
@@ -105,6 +106,7 @@ export async function createMapOnScene(map: ProcessedMap, scene: Scene) {
 
           sp = scene.matter.add.gameObject(rec, {
             isStatic: true,
+            label: 'Static Environment'
           }) as Phaser.Physics.Matter.Sprite;
           sp.setPosition(sp.x + sp.width / 2, sp.y + sp.height / 2);
           sp.angle += obj.rotation || 0;
@@ -131,6 +133,7 @@ export async function createMapOnScene(map: ProcessedMap, scene: Scene) {
             restitution: 0,
             frictionAir: 0,
             ignoreGravity: true,
+            label: 'Static Environment'
           }) as Phaser.Physics.Matter.Sprite;
           sp.setDisplayOrigin(0);
           createdObjects.push(pol);

@@ -23,4 +23,5 @@ export interface IPlayerView {
   get position(): Vector;
   get gameObject(): Phaser.GameObjects.GameObject
   add(children: GameObjects.GameObject): this
+  get onGroundCollideChange(): Observable<boolean>
 }

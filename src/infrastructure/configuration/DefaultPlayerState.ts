@@ -16,5 +16,6 @@ export const DefaultPlayerState: PlayerState = {
   inputNumber: 1,
   anim: AnimationCode.IDLE,
   map: { mapId: DefaultGameConfiguration.initialMapId },
-  currentRooms: []
+  currentRooms: [],
+  jumping: false
 };

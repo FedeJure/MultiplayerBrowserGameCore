@@ -19,10 +19,7 @@ export const PhaserClientConfig: GameConfig = {
       gravity: {
         y: 1,
       },
-      // debug: {
-      //   showBody: false,
-      //   showCollisions: false
-      // }
+      // debug: true
 
     },
   },

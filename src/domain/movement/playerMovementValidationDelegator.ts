@@ -1,4 +1,4 @@
-import { Math } from "phaser";
+import { Math as PhaserMath, Time } from "phaser";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
@@ -6,19 +6,20 @@ import { Disposer } from "../disposer";
 import { Player } from "../player/player";
 import { PlayerState } from "../player/playerState";
 import { ServerConnection } from "../serverConnection";
+import { PlayerInput } from "../player/playerInput";
 
 export class PlayerMovementValidationDelegator implements Delegator {
-  private readonly player: Player;
-  private readonly connection: ServerConnection;
   private readonly disposer: Disposer = new Disposer();
-  private readonly stateRepository: PlayerStateRepository;
-  private readonly inputRepository: PlayerInputRequestRepository;
   private lastInputValidated: number = 0;
+
+  private lastDistance: number = 0
+
   constructor(
-    player: Player,
-    connection: ServerConnection,
-    stateRepository: PlayerStateRepository,
-    inputRepository: PlayerInputRequestRepository
+    private readonly player: Player,
+    private readonly connection: ServerConnection,
+    private readonly stateRepository: PlayerStateRepository,
+    private readonly inputRepository: PlayerInputRequestRepository,
+    private readonly input: PlayerInput
   ) {
     this.player = player;
     this.connection = connection;
@@ -35,7 +36,7 @@ export class PlayerMovementValidationDelegator implements Delegator {
           state &&
           this.inputRepository.getOrCreate(this.player.info.id) ==
             state.inputNumber &&
-          state.inputNumber >= this.lastInputValidated 
+          state.inputNumber >= this.lastInputValidated
         ) {
           this.lastInputValidated = state.inputNumber;
           const localState = this.stateRepository.getPlayerState(
@@ -48,11 +49,36 @@ export class PlayerMovementValidationDelegator implements Delegator {
   }
 
   private validatePosition(state: PlayerState, remoteState: PlayerState) {
-    const distance = Math.Distance.BetweenPoints(
-      remoteState.position,
-      state.position
+
+    const distance = PhaserMath.Distance.BetweenPoints(remoteState.position, state.position)
+    const auxDistance = this.lastDistance
+    this.lastDistance = distance
+
+    if (Math.abs(distance - auxDistance) * 10 < 0.5) {
+      this.lastDistance = distance
+      return
+    }
+    const anyInputActive = Boolean(
+      this.input.down ||
+        this.input.up ||
+        this.input.left ||
+        this.input.right ||
+        this.input.jump
     );
-    this.player.view.moveTo(remoteState.position.x, remoteState.position.y, distance / 0.7)
+
+    // const localFactor = state.position.x / state.position.y;
+    // const remoteFactor = remoteState.position.x / remoteState.position.y;
+    if (
+      // !anyInputActive &&
+      // ((remoteState.velocity.x === 0 && remoteState.velocity.y === 0))
+      true
+    ) {
+      this.player.view.moveTo(
+        remoteState.position.x,
+        remoteState.position.y,
+        10
+      );
+    }
   }
 
   stop() {}

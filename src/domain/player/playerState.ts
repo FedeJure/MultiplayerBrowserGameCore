@@ -16,4 +16,5 @@ export interface PlayerState {
   readonly anim: AnimationCode;
   readonly map: currentMapState;
   readonly currentRooms: string[]
+  readonly jumping: boolean
 }
