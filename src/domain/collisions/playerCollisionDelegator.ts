@@ -18,8 +18,7 @@ export class PlayerCollisionDelegator implements Delegator {
   init(): void {
     this.disposer.add(
       this.player.view.onGroundCollideChange.subscribe((grounded) => {
-        this.statesRepository.setPlayerState(this.player.info.id, {
-          ...this.player.state,
+        this.statesRepository.updateStateOf(this.player.info.id, {
           grounded,
         });
       })

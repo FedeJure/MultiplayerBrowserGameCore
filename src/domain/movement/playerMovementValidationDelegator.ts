@@ -39,16 +39,17 @@ export class PlayerMovementValidationDelegator implements Delegator {
           state.inputNumber >= this.lastInputValidated
         ) {
           this.lastInputValidated = state.inputNumber;
-          const localState = this.stateRepository.getPlayerState(
-            this.player.info.id
-          );
-          if (localState) this.validatePosition(localState, state);
+          // const localState = this.stateRepository.getPlayerState(
+          //   this.player.info.id
+          // );
+          // if (localState) this.validatePosition(state);
+          this.validatePosition(state)
         }
       })
     );
   }
 
-  private validatePosition(state: PlayerState, remoteState: PlayerState) {
+  private validatePosition( remoteState: PlayerState) {
     this.player.view.moveTo(
       remoteState.position.x,
       remoteState.position.y,

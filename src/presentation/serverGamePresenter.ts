@@ -1,6 +1,5 @@
 import { GameEvents } from "../infrastructure/events/gameEvents";
 import { GameScene } from "../view/scenes/GameScene";
-import { RoomConnection } from "../domain/roomConnection";
 import { Log } from "../infrastructure/Logger";
 import { CreatePlayerFromId } from "../domain/actions/providePlayerFromId";
 import { ConnectionsRepository } from "../infrastructure/repositories/connectionsRepository";
@@ -11,7 +10,6 @@ import { PlayerConnectionsRepository } from "../infrastructure/repositories/play
 import { CompleteMapDelegator } from "../domain/environment/completeMapDelegator";
 import { RoomManager } from "../domain/roomManager";
 import { Socket } from "socket.io";
-import { PlayerState } from "../domain/player/playerState";
 
 export class ServerGamePresenter {
   constructor(
