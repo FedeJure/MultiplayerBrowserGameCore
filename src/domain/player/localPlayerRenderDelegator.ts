@@ -13,8 +13,8 @@ export class LocalPlayerRenderDelegator implements Delegator {
   init(): void {
     this.player.view.startFollowWithCam();
     this.player.view.scene.cameras.main.setZoom(this.startZoom);
-    this.player.view.scene.cameras.main.setOrigin(0.5, 0.8);
-    this.player.view.scene.cameras.main.setDeadzone(100, 300)
+    this.player.view.scene.cameras.main.setOrigin(0.5, 0.5);
+    this.player.view.scene.cameras.main.setDeadzone(100, 50)
 
     this.player.view.scene.input.on(
       "wheel",
@@ -24,6 +24,7 @@ export class LocalPlayerRenderDelegator implements Delegator {
           this.maxZoom,
           Math.max(this.minZoom, this.zoom + toAdd)
         );
+
         this.player.view.scene.cameras.main.setZoom(this.zoom);
       }
     );

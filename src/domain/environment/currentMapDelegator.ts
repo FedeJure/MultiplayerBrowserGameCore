@@ -60,7 +60,7 @@ export class CurrentMapDelegator implements Delegator {
         : ev.neighborMaps.find((m) => m.id === ev.newMap.bottomMapId)!.originY +
           y +
           ev.newMap.height;
-    this.scene.cameras.main.setBounds(x, -99999, width, 9999999999);
+    this.scene.cameras.main.setBounds(x, y, width, height);
   }
 
   private removeUnusedMaps(currentMap: ProcessedMap) {
