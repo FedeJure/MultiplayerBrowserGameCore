@@ -39,10 +39,10 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
       id: i.toString(),
       name: "Test Player " + i,
     });
-    ServerProvider.playerStateRepository.setPlayerState(
-      i.toString(),
-      DefaultPlayerState
-    );
+    // ServerProvider.playerStateRepository.setPlayerState(
+    //   i.toString(),
+    //   DefaultPlayerState
+    // );
   }
 
   // const room = new SocketRoomConnection(socket, "main");

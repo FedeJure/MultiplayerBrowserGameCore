@@ -49,36 +49,42 @@ export class PlayerMovementValidationDelegator implements Delegator {
   }
 
   private validatePosition(state: PlayerState, remoteState: PlayerState) {
-
-    const distance = PhaserMath.Distance.BetweenPoints(remoteState.position, state.position)
-    const auxDistance = this.lastDistance
-    this.lastDistance = distance
-
-    if (Math.abs(distance - auxDistance) * 10 < 0.5) {
-      this.lastDistance = distance
-      return
-    }
-    const anyInputActive = Boolean(
-      this.input.down ||
-        this.input.up ||
-        this.input.left ||
-        this.input.right ||
-        this.input.jump
+    this.player.view.moveTo(
+      remoteState.position.x,
+      remoteState.position.y,
+      0
     );
+    // const distance = PhaserMath.Distance.BetweenPoints(remoteState.position, state.position)
+    // const auxDistance = this.lastDistance
+    // this.lastDistance = distance
 
-    // const localFactor = state.position.x / state.position.y;
-    // const remoteFactor = remoteState.position.x / remoteState.position.y;
-    if (
-      // !anyInputActive &&
-      // ((remoteState.velocity.x === 0 && remoteState.velocity.y === 0))
-      true
-    ) {
-      this.player.view.moveTo(
-        remoteState.position.x,
-        remoteState.position.y,
-        10
-      );
-    }
+    // if (Math.abs(distance - auxDistance) < 10) {
+    //   this.lastDistance = distance
+    //   return
+    // }
+    // const anyInputActive = Boolean(
+    //   this.input.down ||
+    //     this.input.up ||
+    //     this.input.left ||
+    //     this.input.right ||
+    //     this.input.jump
+    // );
+    // // if (state.jumping || anyInputActive) return
+
+
+    // // const localFactor = state.position.x / state.position.y;
+    // // const remoteFactor = remoteState.position.x / remoteState.position.y;
+    // if (
+    //   // !anyInputActive &&
+    //   // ((remoteState.velocity.x === 0 && remoteState.velocity.y === 0))
+    //   true
+    // ) {
+    //   this.player.view.moveTo(
+    //     remoteState.position.x,
+    //     remoteState.position.y,
+    //     0
+    //   );
+    // }
   }
 
   stop() {}
