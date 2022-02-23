@@ -25,7 +25,8 @@ export class PlayerRemoteMovementDelegator implements Delegator {
     this.disposer.add(
       this.connection.onPlayersStates.subscribe((event) => {
         const state = event.states[this.player.info.id];
-        if (state) this.playerStateRepository.setPlayerState(this.player.info.id, state)
+        if (state)
+          this.playerStateRepository.setPlayerState(this.player.info.id, state);
       })
     );
   }
@@ -34,10 +35,12 @@ export class PlayerRemoteMovementDelegator implements Delegator {
   }
 
   update(time: number, delta: number): void {
-    const state = this.playerStateRepository.getPlayerState(this.player.info.id)
+    const state = this.playerStateRepository.getPlayerState(
+      this.player.info.id
+    );
     if (state) {
       const view = this.player.view;
-      view.lookToLeft(state.side === Side.LEFT)
+      view.lookToLeft(state.side === Side.LEFT);
       view.setPosition(state.position.x, state.position.y);
       view.setVelocity(state.velocity.x, state.velocity.y);
     }

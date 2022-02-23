@@ -19,7 +19,7 @@ export class CreateClientPlayerAction {
   ) {
     this.presenterProvider = presenterProvider;
     this.connectedPlayersRepository = connectedPlayersRepository;
-    this.playerStateRepository = playerStateRepository
+    this.playerStateRepository = playerStateRepository;
   }
 
   public execute(info: PlayerInfo, state: PlayerState, scene: GameScene) {
@@ -30,11 +30,7 @@ export class CreateClientPlayerAction {
       DefaultConfiguration.height,
       DefaultConfiguration.width
     );
-    const player = new Player(
-      info,
-      state,
-      view
-    ) as ClientPlayer;
+    const player = new Player(info, state, view) as ClientPlayer;
     this.presenterProvider.forPlayer(player);
     this.connectedPlayersRepository.savePlayer(info.id, player);
     this.playerStateRepository.setPlayerState(info.id, player.state);

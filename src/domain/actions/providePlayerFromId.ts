@@ -38,8 +38,13 @@ export class CreatePlayerFromId {
     const playerInfo = this.infoRepository.getPlayer(playerId);
     if (playerInfo === undefined)
       throw new Error(`Player with ID: ${playerId} not found`);
-    const playerState =
-      this.stateRepository.getPlayerState(playerId) || DefaultPlayerState;
+
+    let playerState = this.stateRepository.getPlayerState(playerId);
+    if (!playerState) {
+      this.stateRepository.setPlayerState(playerId, DefaultPlayerState);
+      playerState = DefaultPlayerState;
+    }
+
     const view = new ServerPlayerView(
       scene,
       playerState.position.x,
@@ -51,7 +56,11 @@ export class CreatePlayerFromId {
     const player = new Player(playerInfo, playerState, view);
     this.presenterProvider.forPlayer(
       player,
-      new PlayerSocketInput(playerId, connection, ServerProvider.playerInputRequestRepository)
+      new PlayerSocketInput(
+        playerId,
+        connection,
+        ServerProvider.playerInputRequestRepository
+      )
     );
 
     this.connectedPlayersRepository.savePlayer(playerId, player);

@@ -47,10 +47,7 @@ export class CompleteMapDelegator implements Delegator {
     const { foundedMap, neighborMaps } =
       CompleteMapDelegator.getMapForPlayer(state);
     if (foundedMap && neighborMaps && foundedMap.id !== state.map.mapId) {
-      this.playerStateRepository.setPlayerState(playerId, {
-        ...state,
-        map: { mapId: foundedMap.id },
-      });
+      this.playerStateRepository.updateStateOf(playerId, {map: { mapId: foundedMap.id}})
       const connectionId = this.playerConnections.getConnection(playerId);
       if (connectionId) {
         const connection = this.connections.getConnection(connectionId);

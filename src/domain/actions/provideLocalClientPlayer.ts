@@ -37,11 +37,7 @@ export class CreateLocalClientPlayer {
       DefaultConfiguration.height,
       DefaultConfiguration.width
     );
-    const player = new Player(
-      info,
-      state,
-      view
-    ) as ClientPlayer;
+    const player = new Player(info, state, view) as ClientPlayer;
     scene.addToLifecycle(view);
     this.presenterProvider.forLocalPlayer(input, player);
     this.connectedPlayersRepository.savePlayer(info.id, player);

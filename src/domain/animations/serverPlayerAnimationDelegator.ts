@@ -19,10 +19,7 @@ export class ServerPlayerAnimationDelegator implements Delegator {
     if (state) {
       const currentAnim = this.getAnimation(state);
       if (currentAnim) {
-        this.statesRepository.setPlayerState(this.player.info.id, {
-          ...state,
-          anim: currentAnim,
-        });
+        this.statesRepository.updateStateOf(this.player.info.id, {anim: currentAnim})
       }
     }
   }
