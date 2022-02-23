@@ -113,11 +113,13 @@ export class ServerGamePresenter {
         if (Object.prototype.hasOwnProperty.call(playersByRoom, roomId)) {
           const players = playersByRoom[roomId] ?? [];
           const states = {};
-          players.forEach((p) => {
-            const state = this.playerStates.getPlayerState(p);
 
+          for (let i = 0; i < players.length; i++) {
+            const p = players[i];
+            const state = this.playerStates.getPlayerState(p);
             if (state) states[p] = state;
-          });
+          }
+          
           this.socket
             .in(roomId)
             .emit(

@@ -1,12 +1,15 @@
 import { Observable, Subject } from "rxjs";
 import { Scene, Physics, GameObjects } from "phaser";
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
+import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
 
 export class GameScene extends Scene {
   private _onUpdate = new Subject<{ time: number; delta: number }>();
   private _onCreate = new Subject<void>();
 
   private _lifeCycleObjects: GameObjects.Group | undefined;
+  private frameTime: number = 0
+  private delay = 1000/DefaultGameConfiguration.gameRate
 
   constructor(protected collisionDispatcher: CollisionsDispatcher) {
     super({
@@ -41,7 +44,15 @@ export class GameScene extends Scene {
   }
 
   update(time: number, delta: number) {
-    this._onUpdate.next({ time, delta });
+
+    this.frameTime += delta
+
+    if (this.frameTime > this.delay) {  
+        this.frameTime = 0;
+        this._onUpdate.next({ time, delta });
+    }
+
+    
   }
 
   addToLifecycle(object: GameObjects.GameObject) {

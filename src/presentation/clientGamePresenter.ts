@@ -32,7 +32,8 @@ export class ClientGamePresenter {
   listenEvents() {
     this.connection.onInitialGameState.subscribe((data) => {
       Log(this, "Initial Game State Event", data);
-      data.players.forEach((dto) => {
+      for (let i = 0; i < data.players.length; i++) {
+        const dto = data.players[i];
         if (dto.id === this.localPlayerId)
           this.createLocalPlayerAction.execute(
             dto.info,
@@ -46,7 +47,7 @@ export class ClientGamePresenter {
             dto.state,
             this.scene
           );
-      });
+      }
 
       this.connection.onNewPlayerConnected.subscribe((data) => {
         if (this.playersRepository.getPlayer(data.player.id)) return;
