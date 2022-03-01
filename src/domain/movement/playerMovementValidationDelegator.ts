@@ -1,4 +1,4 @@
-import { Math as PhaserMath, Time } from "phaser";
+import { Math as PhaserMath } from "phaser";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
@@ -11,8 +11,6 @@ import { PlayerInput } from "../player/playerInput";
 export class PlayerMovementValidationDelegator implements Delegator {
   private readonly disposer: Disposer = new Disposer();
   private lastInputValidated: number = 0;
-
-  private lastDistance: number = 0
 
   constructor(
     private readonly player: Player,
@@ -43,19 +41,28 @@ export class PlayerMovementValidationDelegator implements Delegator {
           //   this.player.info.id
           // );
           // if (localState) this.validatePosition(state);
-          this.validatePosition(state)
+          this.validatePosition(state);
         }
       })
     );
   }
 
-  private validatePosition( remoteState: PlayerState) {
-    this.player.view.moveTo(
-      remoteState.position.x,
-      remoteState.position.y,
-      0
+  private validatePosition(remoteState: PlayerState) {
+    // this.player.view.moveTo(remoteState.position.x, remoteState.position.y, 0);
+
+    const currentPosition = this.player.view.position;
+    const directionVector = {
+      x: currentPosition.x - remoteState.position.x,
+      y: currentPosition.y - remoteState.position.y,
+    };
+    const distance = PhaserMath.Distance.BetweenPoints(remoteState.position, this.player.view.position)
+
+    this.player.view.scene.matter.body.applyForce(
+      this.player.view.matterBody,
+      this.player.view.position,
+      directionVector
     );
-    // const distance = PhaserMath.Distance.BetweenPoints(remoteState.position, state.position)
+
     // const auxDistance = this.lastDistance
     // this.lastDistance = distance
 
@@ -71,7 +78,6 @@ export class PlayerMovementValidationDelegator implements Delegator {
     //     this.input.jump
     // );
     // // if (state.jumping || anyInputActive) return
-
 
     // // const localFactor = state.position.x / state.position.y;
     // // const remoteFactor = remoteState.position.x / remoteState.position.y;

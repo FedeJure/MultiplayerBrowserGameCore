@@ -52,10 +52,6 @@ export const PhaserServerConfig: GameConfig = {
       gravity: {
         y: 1,
       },
-      debug: {
-        showBody: false,
-        showStaticBody: false,
-      },
     },
   },
 };

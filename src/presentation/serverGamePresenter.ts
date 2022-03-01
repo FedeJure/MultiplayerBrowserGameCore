@@ -60,7 +60,6 @@ export class ServerGamePresenter {
             [foundedMap, ...neighborMaps]
           );
           connection.sendMapUpdateEvent(foundedMap, neighborMaps);
-
           this.socket.in(joinedRooms).emit(
             GameEvents.NEW_PLAYER_CONNECTED.name,
             GameEvents.NEW_PLAYER_CONNECTED.getEvent({

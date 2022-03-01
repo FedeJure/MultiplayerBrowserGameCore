@@ -1,4 +1,6 @@
 import { Socket } from "socket.io";
+import * as Phaser from "phaser";
+
 import { ServerGamePresenter } from "./presentation/serverGamePresenter";
 import { SocketIOEvents } from "./infrastructure/events/socketIoEvents";
 import { ServerProvider } from "./infrastructure/providers/serverProvider";
@@ -11,13 +13,10 @@ import {
 } from "./infrastructure/configuration/PhaserGameConfigs";
 import { LoadScene } from "./view/scenes/LoadScene";
 import { SocketServerConnection } from "./infrastructure/socketServerConnection";
-import { SocketRoomConnection } from "./infrastructure/socketRoomConnection";
 import { Log } from "./infrastructure/Logger";
 import { GameplayHud } from "./view/scenes/GameplayHud";
 import { LocalPlayerRepository } from "./infrastructure/repositories/localPlayerRepository";
 import { ActionProvider } from "./infrastructure/providers/actionProvider";
-import { DefaultPlayerState } from "./infrastructure/configuration/DefaultPlayerState";
-import * as Phaser from "phaser";
 import { ClientLoadScene } from "./view/scenes/ClientLoadScene";
 import { ClientGameScene } from "./view/scenes/ClientGameScene";
 import { CompleteMapDelegator } from "./domain/environment/completeMapDelegator";
@@ -69,10 +68,12 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
   );
   socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
     // const emitFn = clientSocket.emit;
+
     // clientSocket.emit = function (...args: [ev: string, ...args: any[]]) {
     //   setTimeout(() => {
     //     return emitFn.apply(clientSocket, args);
     //   }, 500);
+    //   emitFn.apply(clientSocket, args)
     //   return true;
     // };
     const connection = new SocketClientConnection(clientSocket);
