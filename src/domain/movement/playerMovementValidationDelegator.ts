@@ -11,6 +11,8 @@ import { PlayerInput } from "../player/playerInput";
 export class PlayerMovementValidationDelegator implements Delegator {
   private readonly disposer: Disposer = new Disposer();
   private lastInputValidated: number = 0;
+  private remotePosition: { x: number; y: number } = Phaser.Math.Vector2.ZERO;
+
 
   constructor(
     private readonly player: Player,
@@ -24,12 +26,29 @@ export class PlayerMovementValidationDelegator implements Delegator {
     this.stateRepository = stateRepository;
     this.inputRepository = inputRepository;
   }
-  update(time: number, delta: number): void {}
+  update(time: number, delta: number): void {
+    const localState = this.stateRepository.getPlayerState(this.player.info.id);
+    if (localState) {
+      const currentPosition = this.player.view.position;
+      const x = Phaser.Math.Interpolation.SmoothStep(
+        0.5,
+        currentPosition.x,
+        this.remotePosition.x
+      );
+      const y = Phaser.Math.Interpolation.SmoothStep(
+        0.5,
+        currentPosition.y,
+        this.remotePosition.y
+      );
+      this.player.view.setPosition(x, y);
+    }
+  }
 
   init() {
     this.disposer.add(
       this.connection.onPlayersStates.subscribe((event) => {
         const state = event.states[this.player.info.id];
+        this.remotePosition = state.position;
         if (
           state &&
           this.inputRepository.getOrCreate(this.player.info.id) ==
@@ -37,61 +56,9 @@ export class PlayerMovementValidationDelegator implements Delegator {
           state.inputNumber >= this.lastInputValidated
         ) {
           this.lastInputValidated = state.inputNumber;
-          // const localState = this.stateRepository.getPlayerState(
-          //   this.player.info.id
-          // );
-          // if (localState) this.validatePosition(state);
-          this.validatePosition(state);
         }
       })
     );
-  }
-
-  private validatePosition(remoteState: PlayerState) {
-    // this.player.view.moveTo(remoteState.position.x, remoteState.position.y, 0);
-
-    const currentPosition = this.player.view.position;
-    const directionVector = {
-      x: currentPosition.x - remoteState.position.x,
-      y: currentPosition.y - remoteState.position.y,
-    };
-    const distance = PhaserMath.Distance.BetweenPoints(remoteState.position, this.player.view.position)
-
-    this.player.view.scene.matter.body.applyForce(
-      this.player.view.matterBody,
-      this.player.view.position,
-      directionVector
-    );
-
-    // const auxDistance = this.lastDistance
-    // this.lastDistance = distance
-
-    // if (Math.abs(distance - auxDistance) < 10) {
-    //   this.lastDistance = distance
-    //   return
-    // }
-    // const anyInputActive = Boolean(
-    //   this.input.down ||
-    //     this.input.up ||
-    //     this.input.left ||
-    //     this.input.right ||
-    //     this.input.jump
-    // );
-    // // if (state.jumping || anyInputActive) return
-
-    // // const localFactor = state.position.x / state.position.y;
-    // // const remoteFactor = remoteState.position.x / remoteState.position.y;
-    // if (
-    //   // !anyInputActive &&
-    //   // ((remoteState.velocity.x === 0 && remoteState.velocity.y === 0))
-    //   true
-    // ) {
-    //   this.player.view.moveTo(
-    //     remoteState.position.x,
-    //     remoteState.position.y,
-    //     0
-    //   );
-    // }
   }
 
   stop() {}
