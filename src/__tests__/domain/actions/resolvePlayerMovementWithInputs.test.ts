@@ -1,9 +1,10 @@
 import { expect, test, beforeEach } from "@jest/globals";
-import { Substitute, Arg } from "@fluffy-spoon/substitute";
+import { Substitute } from "@fluffy-spoon/substitute";
 import { ResolvePlayerMovementWithInputs } from "../../../domain/actions/resolvePlayerMovementWithInput";
 import { PlayerInput } from "../../../domain/player/playerInput";
 import { PlayerState } from "../../../domain/player/playerState";
-import { PhaserPlayerView } from "../../../view/playerView";
+import { PlayerView } from "../../../view/playerView";
+import {DefaultPlayerState} from "../../../infrastructure/configuration/DefaultPlayerState"
 import { PlayerInputDto } from "../../../infrastructure/dtos/playerInputDto";
 
 let action: ResolvePlayerMovementWithInputs;
@@ -24,7 +25,7 @@ test("Game initted with provided player repository", () => {
 
 function whenActionExecuted(
   input: PlayerInput,
-  view: PhaserPlayerView,
+  view: PlayerView,
   state: PlayerState
 ) {
   return action.execute(input, view, state, 1);
@@ -43,22 +44,11 @@ function givenAnInput() {
 }
 
 function givenAView() {
-  return Substitute.for<PhaserPlayerView>();
+  return Substitute.for<PlayerView>();
 }
 
 function givenAState(): PlayerState {
-  return ({
-    life: 100,
-    jumpsAvailable: 2,
-    inInertia: false,
-    position: {
-      x: 0,
-      y: 0,
-    },
-    velocity: { x: 0, y: 0 },
-    canMove: true,
-    canJump: true,
-  });
+  return (DefaultPlayerState);
 }
 
 function thenStateNotChange(state: PlayerState, finalState: PlayerState) {

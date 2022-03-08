@@ -4,7 +4,6 @@ import { Log } from "../infrastructure/Logger";
 import { CreatePlayerFromId } from "../domain/actions/providePlayerFromId";
 import { ConnectionsRepository } from "../infrastructure/repositories/connectionsRepository";
 import { ConnectedPlayersRepository } from "../infrastructure/repositories/connectedPlayersRepository";
-import { PlayerStateRepository } from "../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../domain/delegator";
 import { PlayerConnectionsRepository } from "../infrastructure/repositories/playerConnectionsRespository";
 import { CompleteMapDelegator } from "../domain/environment/completeMapDelegator";
@@ -18,7 +17,6 @@ export class ServerGamePresenter {
     private readonly createPlayer: CreatePlayerFromId,
     private readonly connectionsRepository: ConnectionsRepository,
     private readonly connectedPlayers: ConnectedPlayersRepository,
-    private readonly playerStates: PlayerStateRepository,
     private readonly delegators: Delegator[],
     private readonly playerConnectionsRepository: PlayerConnectionsRepository,
     private readonly roomManager: RoomManager
@@ -107,26 +105,6 @@ export class ServerGamePresenter {
     });
     this.gameScene.onUpdate.subscribe(({ time, delta }) => {
       this.delegators.forEach((d) => d.update(time, delta));
-      const playersByRoom = this.roomManager.getPlayersByRoom();
-      for (const roomId in playersByRoom) {
-        if (Object.prototype.hasOwnProperty.call(playersByRoom, roomId)) {
-          const players = playersByRoom[roomId] ?? [];
-          const states = {};
-
-          for (let i = 0; i < players.length; i++) {
-            const p = players[i];
-            const state = this.playerStates.getPlayerState(p);
-            if (state) states[p] = state;
-          }
-          
-          this.socket
-            .in(roomId)
-            .emit(
-              GameEvents.PLAYERS_STATES.name,
-              GameEvents.PLAYERS_STATES.getEvent(states)
-            );
-        }
-      }
     });
   }
 }

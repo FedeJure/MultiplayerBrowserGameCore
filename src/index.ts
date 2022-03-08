@@ -21,6 +21,7 @@ import { ClientLoadScene } from "./view/scenes/ClientLoadScene";
 import { ClientGameScene } from "./view/scenes/ClientGameScene";
 import { CompleteMapDelegator } from "./domain/environment/completeMapDelegator";
 import { MapsConfiguration } from "./infrastructure/configuration/MapsConfiguration";
+import { PlayerStateDelegator } from "./domain/gameState/playerStateDelegator";
 
 export const InitGame: (socket: Socket, originUrl: string) => void = (
   socket: Socket,
@@ -51,7 +52,6 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
     ActionProvider.CreatePlayerFromId,
     ServerProvider.connectionsRepository,
     ServerProvider.connectedPlayerRepository,
-    ServerProvider.playerStateRepository,
     [
       new CompleteMapDelegator(
         MapsConfiguration,
@@ -61,6 +61,11 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
         scene,
         originUrl,
         ServerProvider.roomManager
+      ),
+      new PlayerStateDelegator(
+        ServerProvider.roomManager,
+        ServerProvider.playerStateRepository,
+        socket
       ),
     ],
     ServerProvider.playerConnectionsRepository,
