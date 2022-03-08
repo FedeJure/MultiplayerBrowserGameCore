@@ -1,0 +1,4 @@
+{
+    "jestrunner.configPath": "jestconfig.json",
+    "jestRunIt.jestConfigPath": "./jestconfig.json"
+}

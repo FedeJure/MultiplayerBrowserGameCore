@@ -44,7 +44,7 @@ export class SocketClientConnection implements ClientConnection {
   async join(roomName: string[]): Promise<{ previousRooms: string[] }> {
     const previousRooms = this.currentRooms;
     this.currentRooms.forEach((r) => this.socket.leave(r));
-    this.currentRooms = roomName;
+    this.currentRooms = [...roomName];
     await this.socket.join(roomName);
     return { previousRooms };
   }

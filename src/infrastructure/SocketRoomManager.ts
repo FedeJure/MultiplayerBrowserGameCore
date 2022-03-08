@@ -18,11 +18,13 @@ export class SocketRoomManager implements RoomManager {
   ) {
     const roomIds = maps.map(this.getRoomId);
     const { previousRooms } = await conn.join(roomIds);
+    console.log("prev roms", previousRooms);
     previousRooms.forEach((r) => {
       if (!this.playersByRoom[r]) return;
-      this.playersByRoom[r] = this.playersByRoom[r]?.filter(
-        (p) => p !== playerId
-      );
+      this.playersByRoom[r] = [
+        ...this.playersByRoom[r]!.filter((p) => p !== playerId),
+      ];
+      if (this.playersByRoom[r]!.length === 0) delete this.playersByRoom[r];
     });
     roomIds.forEach((r) => {
       if (!this.playersByRoom[r]) this.playersByRoom[r] = [];
@@ -31,7 +33,7 @@ export class SocketRoomManager implements RoomManager {
     this.playerStateRepository.updateStateOf(playerId, {
       currentRooms: roomIds,
     });
-    return roomIds
+    return roomIds;
   }
 
   getPlayersByRoom() {
