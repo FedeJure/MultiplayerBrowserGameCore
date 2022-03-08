@@ -48,6 +48,7 @@ export class PlayerMovementValidationDelegator implements Delegator {
     this.disposer.add(
       this.connection.onPlayersStates.subscribe((event) => {
         const state = event.states[this.player.info.id];
+        if (!state) return
         this.remotePosition = state.position;
         if (
           state &&

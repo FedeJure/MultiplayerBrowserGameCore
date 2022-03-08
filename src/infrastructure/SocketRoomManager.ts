@@ -18,7 +18,6 @@ export class SocketRoomManager implements RoomManager {
   ) {
     const roomIds = maps.map(this.getRoomId);
     const { previousRooms } = await conn.join(roomIds);
-    console.log("prev roms", previousRooms);
     previousRooms.forEach((r) => {
       if (!this.playersByRoom[r]) return;
       this.playersByRoom[r] = [
