@@ -24,6 +24,3 @@ export async function loadMapAssets(
     scene.load.start();
   });
 }
-
-const loadIfNotExists = (scene: Scene, key: string, path: string) => {
-}
