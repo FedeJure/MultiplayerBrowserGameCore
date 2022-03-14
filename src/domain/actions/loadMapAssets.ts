@@ -10,26 +10,20 @@ export async function loadMapAssets(
   return new Promise((res, _) => {
     scene.load.image({
       key: map.config.objectsSourceFile.key,
-      url: `${originUrl}${DefaultGameConfiguration.getMapRootPath(
-        map.id,
-        map.layerId
-      )}${map.config.objectsSourceFile.fileName}`,
+      url: `${originUrl}${DefaultGameConfiguration.assetsPath}${map.config.objectsSourceFile.fileName}`,
     });
     scene.load.image({
       key: map.config.tilesSourceFiles.key,
-      url: `${originUrl}${DefaultGameConfiguration.getMapRootPath(
-        map.id,
-        map.layerId
-      )}${map.config.tilesSourceFiles.fileName}`,
+      url: `${originUrl}${DefaultGameConfiguration.assetsPath}${map.config.tilesSourceFiles.fileName}`,
     });
     scene.load.tilemapTiledJSON({
       key: map.config.jsonFile.key,
-      url: `${originUrl}${DefaultGameConfiguration.getMapRootPath(
-        map.id,
-        map.layerId
-      )}${map.config.jsonFile.fileName}`,
+      url: `${originUrl}${DefaultGameConfiguration.assetsPath}${map.config.jsonFile.fileName}`,
     });
     scene.load.on("complete", res);
     scene.load.start();
   });
+}
+
+const loadIfNotExists = (scene: Scene, key: string, path: string) => {
 }

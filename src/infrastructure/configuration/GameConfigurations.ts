@@ -1,13 +1,13 @@
 export interface GameConfigurations {
   initialMapId: number;
   initialPosition: { x: number; y: number };
-  getMapRootPath: (id: number, layerId: number) => string;
-  gameRate: 30 | 60 | 120
+  gameRate: 30 | 60 | 120,
+  assetsPath: string
 }
 
 export const DefaultGameConfiguration: GameConfigurations = {
   initialMapId: 0,
   initialPosition: { x: 1000, y: 1450 },
-  getMapRootPath: (id: number) => `/assets/map-${id}/`,
-  gameRate: 60
+  gameRate: 60,
+  assetsPath: '/assets/'
 };

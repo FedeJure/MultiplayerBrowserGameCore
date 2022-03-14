@@ -11,10 +11,7 @@ export async function loadBackgroundAssets(
     map.config.backgroundFile.forEach((bg) => {
       scene.load.image({
         key: bg.key,
-        url: `${originUrl}${DefaultGameConfiguration.getMapRootPath(
-          map.id,
-          map.layerId
-        )}${bg.fileName}`,
+        url: `${originUrl}${DefaultGameConfiguration.assetsPath}${bg.fileName}`,
       });
     });
 
