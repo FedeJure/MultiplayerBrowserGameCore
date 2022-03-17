@@ -22,6 +22,7 @@ import { ClientGameScene } from "./view/scenes/ClientGameScene";
 import { CompleteMapDelegator } from "./domain/environment/completeMapDelegator";
 import { MapsConfiguration } from "./infrastructure/configuration/MapsConfiguration";
 import { PlayerStateDelegator } from "./domain/gameState/playerStateDelegator";
+import { ServerPlayerCreatorDelegator } from "./domain/player/serverPlayerCreatorDelegator";
 
 export const InitGame: (socket: Socket, originUrl: string) => void = (
   socket: Socket,
@@ -46,13 +47,8 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
   }
 
   // const room = new SocketRoomConnection(socket, "main");
-  const __ = new ServerGamePresenter(
-    scene,
-    socket,
-    ActionProvider.CreatePlayerFromId,
-    ServerProvider.connectionsRepository,
-    ServerProvider.connectedPlayerRepository,
-    [
+  scene.onCreate.subscribe(() => {
+    const __ = new ServerGamePresenter(scene, [
       new CompleteMapDelegator(
         MapsConfiguration,
         ServerProvider.playerStateRepository,
@@ -67,36 +63,42 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
         ServerProvider.playerStateRepository,
         socket
       ),
-    ],
-    ServerProvider.playerConnectionsRepository,
-    ServerProvider.roomManager
-  );
-  socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
-    // const emitFn = clientSocket.emit;
+      new ServerPlayerCreatorDelegator(
+        ServerProvider.connectionsRepository,
+        ActionProvider.CreatePlayerFromId,
+        scene,
+        ServerProvider.connectedPlayerRepository,
+        socket,
+        ServerProvider.roomManager,
+        ServerProvider.playerConnectionsRepository
+      ),
+    ]);
+    socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
+      // const emitFn = clientSocket.emit;
 
-    // clientSocket.emit = function (...args: [ev: string, ...args: any[]]) {
-    //   setTimeout(() => {
-    //     return emitFn.apply(clientSocket, args);
-    //   }, 500);
-    //   emitFn.apply(clientSocket, args)
-    //   return true;
-    // };
-    const connection = new SocketClientConnection(clientSocket);
-    // room.join(connection);
-    ServerProvider.connectionsRepository.addConnection(connection);
-    Log(
-      "InitServerGame",
-      `[Event: ${SocketIOEvents.CONNECTION}] :: with connection id: ${clientSocket.id}`
-    );
-
-    clientSocket.on(SocketIOEvents.DISCONNECT, () => {
-      ServerProvider.connectionsRepository.removeConnection(
-        connection.connectionId
-      );
+      // clientSocket.emit = function (...args: [ev: string, ...args: any[]]) {
+      //   setTimeout(() => {
+      //     return emitFn.apply(clientSocket, args);
+      //   }, 500);
+      //   emitFn.apply(clientSocket, args)
+      //   return true;
+      // };
+      const connection = new SocketClientConnection(clientSocket);
+      ServerProvider.connectionsRepository.addConnection(connection);
       Log(
         "InitServerGame",
-        `[Event: ${SocketIOEvents.DISCONNECT}] :: with connection id: ${clientSocket.id}`
+        `[Event: ${SocketIOEvents.CONNECTION}] :: with connection id: ${clientSocket.id}`
       );
+
+      clientSocket.on(SocketIOEvents.DISCONNECT, () => {
+        ServerProvider.connectionsRepository.removeConnection(
+          connection.connectionId
+        );
+        Log(
+          "InitServerGame",
+          `[Event: ${SocketIOEvents.DISCONNECT}] :: with connection id: ${clientSocket.id}`
+        );
+      });
     });
   });
 };
@@ -107,21 +109,20 @@ export const InitClientGame = (
   originUrl: string
 ) => {
   const connectionWithServer = new SocketServerConnection(socket);
-  const hudScene = new GameplayHud(connectionWithServer)
+  const hudScene = new GameplayHud(connectionWithServer);
 
   ClientProvider.Init(
     connectionWithServer,
     new LocalPlayerRepository(localPlayerId),
     originUrl
   );
-  const scene = new ClientGameScene(ClientProvider.collisionsDispatcher, hudScene);
+  const scene = new ClientGameScene(
+    ClientProvider.collisionsDispatcher,
+    hudScene
+  );
   const config = {
     ...PhaserClientConfig,
-    scene: [
-      new ClientLoadScene(originUrl),
-      scene,
-      hudScene,
-    ],
+    scene: [new ClientLoadScene(originUrl), scene, hudScene],
   };
   new Phaser.Game(config);
   ClientProvider.presenterProvider.forGameplay(scene);
