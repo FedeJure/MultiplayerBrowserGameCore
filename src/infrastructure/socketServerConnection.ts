@@ -1,4 +1,4 @@
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { Socket } from "socket.io-client";
 
 import { ServerConnection } from "../domain/serverConnection";
@@ -6,6 +6,8 @@ import { PlayerInputDto } from "./dtos/playerInputDto";
 import {
   GameEvents,
   InitialGameStateEvent,
+  InventoryUpdatedEvent,
+  ItemDetailResponse,
   MapUpdateEvent,
   NewPlayerConnectedEvent,
   PlayerDisconnectedEvent,
@@ -24,6 +26,7 @@ export class SocketServerConnection implements ServerConnection {
     new Subject<PlayerDisconnectedEvent>();
   private readonly _onPing = new Subject<number>();
   private readonly _onMapUpdated = new Subject<MapUpdateEvent>();
+  private readonly _onInventoryUpdated = new Subject<InventoryUpdatedEvent>();
 
   constructor(socket: Socket) {
     this.socket = socket;
@@ -53,6 +56,11 @@ export class SocketServerConnection implements ServerConnection {
       socket.emit(SocketIOEvents.PING);
     }, 2000);
   }
+
+  get onInventoryUpdate() {
+    return this._onInventoryUpdated;
+  }
+
   get onMapUpdated() {
     return this._onMapUpdated;
   }
@@ -93,5 +101,18 @@ export class SocketServerConnection implements ServerConnection {
       GameEvents.PLAYER_INPUT.name,
       GameEvents.PLAYER_INPUT.getEvent(playerId, input, inputRequest)
     );
+  }
+
+  emitGetItemDetails(ids: number[]): Observable<ItemDetailResponse> {
+    const responseSubject = new Subject<ItemDetailResponse>()
+    this.socket.emit(
+      GameEvents.ITEM_DETAILS.name,
+      GameEvents.ITEM_DETAILS.getEvent(ids),
+      (response: ItemDetailResponse) => {
+        responseSubject.next(response)
+        responseSubject.complete()
+      }
+    )
+    return responseSubject
   }
 }

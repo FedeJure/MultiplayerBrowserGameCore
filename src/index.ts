@@ -107,18 +107,20 @@ export const InitClientGame = (
   originUrl: string
 ) => {
   const connectionWithServer = new SocketServerConnection(socket);
+  const hudScene = new GameplayHud(connectionWithServer)
+
   ClientProvider.Init(
     connectionWithServer,
     new LocalPlayerRepository(localPlayerId),
     originUrl
   );
-  const scene = new ClientGameScene(ClientProvider.collisionsDispatcher);
+  const scene = new ClientGameScene(ClientProvider.collisionsDispatcher, hudScene);
   const config = {
     ...PhaserClientConfig,
     scene: [
       new ClientLoadScene(originUrl),
       scene,
-      new GameplayHud(connectionWithServer),
+      hudScene,
     ],
   };
   new Phaser.Game(config);

@@ -16,7 +16,7 @@ export class ClientProvider {
   public static Init(
     serverConnection: SocketServerConnection,
     localPlayerRepository: LocalPlayerRepository,
-    originUrl: string
+    originUrl: string,
   ) {
     ClientProvider._serverConnection = serverConnection;
     ClientProvider._localPlayerRepository = localPlayerRepository;

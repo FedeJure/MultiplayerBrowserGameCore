@@ -1,7 +1,10 @@
 import { ProcessedMap } from "../../domain/environment/processedMap";
+import { Item } from "../../domain/items/item";
+import { PlayerInfo } from "../../domain/player/playerInfo";
 import { PlayerState } from "../../domain/player/playerState";
 import { PlayerInitialStateDto } from "../dtos/playerInitialStateDto";
 import { PlayerInputDto } from "../dtos/playerInputDto";
+import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
 
 export const GameEvents: {
   PLAYER_CONNECTED: {
@@ -42,6 +45,17 @@ export const GameEvents: {
       map: ProcessedMap,
       neighborMaps: ProcessedMap[]
     ) => MapUpdateEvent;
+  };
+  INVENTORY_UPDATED: {
+    name: string;
+    getEvent: (
+      playerId: PlayerInfo["id"],
+      inventory: PlayerInventoryDto
+    ) => InventoryUpdatedEvent;
+  };
+  ITEM_DETAILS: {
+    name: string;
+    getEvent: (ids: Item["id"][]) => ItemDetailEvent;
   };
 } = {
   PLAYER_CONNECTED: {
@@ -86,6 +100,21 @@ export const GameEvents: {
       neighborMaps,
     }),
   },
+  INVENTORY_UPDATED: {
+    name: "inventory_updated",
+    getEvent: (playerId: PlayerInfo["id"], inventory: PlayerInventoryDto) => ({
+      time: new Date(),
+      inventory,
+      playerId,
+    }),
+  },
+  ITEM_DETAILS: {
+    name: "item_details",
+    getEvent: (ids: Item["id"][]) => ({
+      itemIds: ids,
+      time: new Date()
+    }),
+  },
 };
 
 interface BaseEvent {
@@ -123,4 +152,17 @@ export interface PlayerInputEvent extends BaseEvent {
 export interface MapUpdateEvent extends BaseEvent {
   newMap: ProcessedMap;
   neighborMaps: ProcessedMap[];
+}
+
+export interface InventoryUpdatedEvent extends BaseEvent {
+  inventory: PlayerInventoryDto;
+  playerId: PlayerInfo["id"];
+}
+
+export interface ItemDetailEvent extends BaseEvent {
+  itemIds: Item["id"][];
+}
+
+export interface ItemDetailResponse extends BaseEvent {
+  items: Item[];
 }
