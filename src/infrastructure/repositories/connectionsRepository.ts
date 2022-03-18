@@ -1,7 +1,7 @@
 import { Subject } from "rxjs";
 import { ClientConnection } from "../../domain/clientConnection";
 
-type ConnectionId = string;
+type ConnectionId = ClientConnection['connectionId'];
 export class ConnectionsRepository {
   private connections = new Array<ClientConnection>();
   private mapConnections: { [key: ConnectionId]: ClientConnection } = {};

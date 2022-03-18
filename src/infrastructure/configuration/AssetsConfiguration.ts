@@ -25,14 +25,5 @@ export const AssetsConfiguration: {
     },
   ],
   spritesheets: [],
-  images: [
-    {
-      key: "background",
-      path: "assets/background.png",
-    },
-    {
-      key: "ground",
-      path: "assets/simple_platform.png",
-    },
-  ],
+  images: [],
 };

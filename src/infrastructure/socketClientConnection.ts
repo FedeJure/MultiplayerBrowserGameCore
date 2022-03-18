@@ -10,6 +10,7 @@ import { Log } from "./Logger";
 import { SocketIOEvents } from "./events/socketIoEvents";
 import { PlayerInitialStateDto } from "./dtos/playerInitialStateDto";
 import { ProcessedMap } from "../domain/environment/processedMap";
+import { PlayerInventory } from "../domain/items/playerInventory";
 
 export class SocketClientConnection implements ClientConnection {
   public readonly socket: Socket;
@@ -27,6 +28,14 @@ export class SocketClientConnection implements ClientConnection {
 
     this.listenEvents();
   }
+
+  sendInventoryEvent(inventory: PlayerInventory) {
+    this.socket.emit(
+      GameEvents.INVENTORY_UPDATED.name,
+      GameEvents.INVENTORY_UPDATED.getEvent({items: inventory.items.map(i => i.id)})
+    )
+  }
+
   sendMapUpdateEvent(
     newCurrentMap: ProcessedMap,
     neighborMaps: ProcessedMap[]

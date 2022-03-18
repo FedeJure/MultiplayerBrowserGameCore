@@ -1,6 +1,5 @@
 import { Player } from "../../domain/player/player";
 import { GameScene } from "../../view/scenes/GameScene";
-import { PlayerView } from "../../view/playerView";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { ClientConnection } from "../clientConnection";
 import { PlayerSocketInput } from "../../infrastructure/input/playerSocketInput";
@@ -11,24 +10,17 @@ import { ServerPresenterProvider } from "../../infrastructure/providers/serverPr
 import { ServerProvider } from "../../infrastructure/providers/serverProvider";
 import { DefaultPlayerState } from "../../infrastructure/configuration/DefaultPlayerState";
 import { ServerPlayerView } from "../../view/serverPlayerView";
+import { InventoryRepository } from "../items/inventoryRepository";
+import { DefaultPlayerInventory } from "../../infrastructure/configuration/DefaultPlayerInventory";
 
 export class CreatePlayerFromId {
-  private readonly infoRepository: PlayerInfoRepository;
-  private readonly stateRepository: PlayerStateRepository;
-  private readonly presenterProvider: ServerPresenterProvider;
-  private readonly connectedPlayersRepository: ConnectedPlayersRepository;
-
   constructor(
-    infoRepository: PlayerInfoRepository,
-    stateRepository: PlayerStateRepository,
-    presenterProvider: ServerPresenterProvider,
-    connectedPlayersRepository: ConnectedPlayersRepository
-  ) {
-    this.infoRepository = infoRepository;
-    this.stateRepository = stateRepository;
-    this.presenterProvider = presenterProvider;
-    this.connectedPlayersRepository = connectedPlayersRepository;
-  }
+    private infoRepository: PlayerInfoRepository,
+    private stateRepository: PlayerStateRepository,
+    private presenterProvider: ServerPresenterProvider,
+    private connectedPlayersRepository: ConnectedPlayersRepository,
+    private inventoryRepository: InventoryRepository
+  ) {}
 
   public execute(
     playerId: string,
@@ -43,6 +35,12 @@ export class CreatePlayerFromId {
     if (!playerState) {
       this.stateRepository.setPlayerState(playerId, DefaultPlayerState);
       playerState = DefaultPlayerState;
+    }
+
+    try {
+      this.inventoryRepository.get(playerId)
+    } catch (error) {
+      this.inventoryRepository.save(playerId, DefaultPlayerInventory)
     }
 
     const view = new ServerPlayerView(

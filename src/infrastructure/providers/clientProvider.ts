@@ -7,6 +7,10 @@ import { PlayerStateRepository } from "../repositories/playerStateRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
+import { InventoryRepository } from "../../domain/items/inventoryRepository";
+import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
+import { ItemsRepository } from "../../domain/items/itemsRepository";
+import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository";
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
@@ -54,6 +58,18 @@ export class ClientProvider {
     return DependencyManager.GetOrInstantiate<PlayerInputRequestRepository>(
       () => new PlayerInputRequestRepository()
     );
+  }
+
+  public static get inventoryRepository(): InventoryRepository {
+    return DependencyManager.GetOrInstantiate<InventoryRepository>(
+      () => new InMemoryInventoryRepository()
+    )
+  }
+
+  public static get itemsRepository(): ItemsRepository {
+    return DependencyManager.GetOrInstantiate<ItemsRepository>(
+      () => new InMemoryItemsRepository()
+    )
   }
 
   public static get originUrl(): string { return this._originUrl}

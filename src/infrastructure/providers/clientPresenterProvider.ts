@@ -17,6 +17,7 @@ import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { ClientPlayer } from "../../domain/player/localPlayer";
 import { PlayerInfoDelegator } from "../../domain/player/playerInfoDelegator";
 import { BackgroundDelegator } from "../../domain/environment/backgroundDelegator";
+import { ClientPlayerInventoryDelegator } from "../../domain/items/clientPlayerInventoryDelegator";
 export class ClientPresenterProvider {
   forLocalPlayer(input: PlayerInput, player: ClientPlayer): void {
     new ClientPlayerPresenter(ClientProvider.serverConnection, player, [
@@ -83,6 +84,12 @@ export class ClientPresenterProvider {
           ClientProvider.localPlayerRepository,
           ClientProvider.connectedPlayers
         ),
+        new ClientPlayerInventoryDelegator(
+          ClientProvider.localPlayerRepository.playerId,
+          ClientProvider.inventoryRepository,
+          ClientProvider.serverConnection,
+          ClientProvider.itemsRepository
+        )
       ]
     );
   }

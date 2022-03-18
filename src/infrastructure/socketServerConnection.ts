@@ -46,6 +46,9 @@ export class SocketServerConnection implements ServerConnection {
     socket.on(GameEvents.MAP_UPDATE.name, (data) =>
       this._onMapUpdated.next(data)
     );
+    socket.on(GameEvents.INVENTORY_UPDATED.name, (data) =>
+      this._onInventoryUpdated.next(data)
+    );
 
     var startTime = Date.now();
     socket.on(SocketIOEvents.PONG, (data) =>
@@ -104,15 +107,15 @@ export class SocketServerConnection implements ServerConnection {
   }
 
   emitGetItemDetails(ids: number[]): Observable<ItemDetailResponse> {
-    const responseSubject = new Subject<ItemDetailResponse>()
+    const responseSubject = new Subject<ItemDetailResponse>();
     this.socket.emit(
       GameEvents.ITEM_DETAILS.name,
       GameEvents.ITEM_DETAILS.getEvent(ids),
       (response: ItemDetailResponse) => {
-        responseSubject.next(response)
-        responseSubject.complete()
+        responseSubject.next(response);
+        responseSubject.complete();
       }
-    )
-    return responseSubject
+    );
+    return responseSubject;
   }
 }

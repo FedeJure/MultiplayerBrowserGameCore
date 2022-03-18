@@ -6,13 +6,11 @@ import { InventoryRepository } from "./inventoryRepository";
 import { InventoryView } from "./inventoryView";
 import { ItemsRepository } from "./itemsRepository";
 import { DefaultItem } from "./item";
-import { filter } from "rxjs";
 
 export class ClientPlayerInventoryDelegator implements Delegator {
   private disposer: Disposer = new Disposer();
   constructor(
     private playerId: PlayerInfo["id"],
-    private view: InventoryView,
     private repository: InventoryRepository,
     private connection: ServerConnection,
     private items: ItemsRepository
@@ -21,8 +19,8 @@ export class ClientPlayerInventoryDelegator implements Delegator {
   init(): void {
     this.disposer.add(
       this.connection.onInventoryUpdate
-        .pipe(filter((e) => e.playerId === this.playerId))
         .subscribe(({ inventory }) => {
+          console.log(inventory)
           const newItems = inventory.items.filter((i) => !this.items.get(i));
           this.connection.emitGetItemDetails(newItems).subscribe((response) => {
             const items = inventory.items.map(

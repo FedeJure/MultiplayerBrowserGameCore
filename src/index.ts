@@ -23,6 +23,7 @@ import { CompleteMapDelegator } from "./domain/environment/completeMapDelegator"
 import { MapsConfiguration } from "./infrastructure/configuration/MapsConfiguration";
 import { PlayerStateDelegator } from "./domain/gameState/playerStateDelegator";
 import { ServerPlayerCreatorDelegator } from "./domain/player/serverPlayerCreatorDelegator";
+import { ServerPlayerInventoryDelegator } from "./domain/items/serverPlayerInventoryDelegator";
 
 export const InitGame: (socket: Socket, originUrl: string) => void = (
   socket: Socket,
@@ -71,6 +72,11 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
         socket,
         ServerProvider.roomManager,
         ServerProvider.playerConnectionsRepository
+      ),
+      new ServerPlayerInventoryDelegator(
+        ServerProvider.playerConnectionsRepository,
+        ServerProvider.connectionsRepository,
+        ServerProvider.inventoryRepository
       ),
     ]);
     socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {

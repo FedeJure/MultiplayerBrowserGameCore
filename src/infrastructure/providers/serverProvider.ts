@@ -1,8 +1,10 @@
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
+import { InventoryRepository } from "../../domain/items/inventoryRepository";
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
 import { ConnectedPlayersRepository } from "../repositories/connectedPlayersRepository";
 import { ConnectionsRepository } from "../repositories/connectionsRepository";
+import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
 import { InMemoryPlayerRepository } from "../repositories/inMemoryPlayerRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
 import { MapRepository } from "../repositories/mapRepository";
@@ -53,18 +55,24 @@ export class ServerProvider {
   public static get mapRepository(): MapRepository {
     return DependencyManager.GetOrInstantiate<MapRepository>(
       () => new MapRepository()
-    )
+    );
   }
 
   public static get playerConnectionsRepository(): PlayerConnectionsRepository {
     return DependencyManager.GetOrInstantiate<PlayerConnectionsRepository>(
       () => new PlayerConnectionsRepository()
-    )
+    );
   }
 
   public static get roomManager(): RoomManager {
     return DependencyManager.GetOrInstantiate<RoomManager>(
       () => new SocketRoomManager(this.playerStateRepository)
-    )
+    );
+  }
+
+  public static get inventoryRepository(): InventoryRepository {
+    return DependencyManager.GetOrInstantiate<InMemoryInventoryRepository>(
+      () => new InMemoryInventoryRepository()
+    );
   }
 }

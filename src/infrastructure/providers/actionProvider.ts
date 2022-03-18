@@ -36,7 +36,8 @@ export class ActionProvider {
           ServerProvider.playerInfoRepository,
           ServerProvider.playerStateRepository,
           ServerProvider.presenterProvider,
-          ServerProvider.connectedPlayerRepository
+          ServerProvider.connectedPlayerRepository,
+          ServerProvider.inventoryRepository
         )
     );
   }

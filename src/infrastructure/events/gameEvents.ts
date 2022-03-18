@@ -1,6 +1,5 @@
 import { ProcessedMap } from "../../domain/environment/processedMap";
 import { Item } from "../../domain/items/item";
-import { PlayerInfo } from "../../domain/player/playerInfo";
 import { PlayerState } from "../../domain/player/playerState";
 import { PlayerInitialStateDto } from "../dtos/playerInitialStateDto";
 import { PlayerInputDto } from "../dtos/playerInputDto";
@@ -49,7 +48,6 @@ export const GameEvents: {
   INVENTORY_UPDATED: {
     name: string;
     getEvent: (
-      playerId: PlayerInfo["id"],
       inventory: PlayerInventoryDto
     ) => InventoryUpdatedEvent;
   };
@@ -102,10 +100,9 @@ export const GameEvents: {
   },
   INVENTORY_UPDATED: {
     name: "inventory_updated",
-    getEvent: (playerId: PlayerInfo["id"], inventory: PlayerInventoryDto) => ({
+    getEvent: (inventory: PlayerInventoryDto) => ({
       time: new Date(),
       inventory,
-      playerId,
     }),
   },
   ITEM_DETAILS: {
@@ -156,7 +153,6 @@ export interface MapUpdateEvent extends BaseEvent {
 
 export interface InventoryUpdatedEvent extends BaseEvent {
   inventory: PlayerInventoryDto;
-  playerId: PlayerInfo["id"];
 }
 
 export interface ItemDetailEvent extends BaseEvent {

@@ -4,5 +4,5 @@ import { PlayerInventory } from "./playerInventory";
 
 export interface InventoryRepository {
     save(playerId: PlayerInfo['id'], inventory: PlayerInventory)
-    contains(id: Item['id'])
+    get(playerId: PlayerInfo['id']): PlayerInventory
 }
