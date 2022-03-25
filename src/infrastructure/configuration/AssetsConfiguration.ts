@@ -25,5 +25,14 @@ export const AssetsConfiguration: {
     },
   ],
   spritesheets: [],
-  images: [],
+  images: [
+    {
+      key: "inventoryBackground",
+      path: "assets/ui/inventory_background.png",
+    },
+    {
+      key: "inventoryItemBackground",
+      path: "assets/ui/inventory_item_background.png",
+    },
+  ],
 };
