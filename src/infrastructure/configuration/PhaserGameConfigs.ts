@@ -2,18 +2,16 @@ import { GameConfig } from "../../view/gameConfig";
 import "phaser/plugins/spine/dist/SpinePlugin";
 
 const scaleOptions = {
-  mode: Phaser.Scale.RESIZE,
+  mode: Phaser.Scale.ScaleModes.RESIZE,
   autoCenter: Phaser.Scale.CENTER_BOTH,
   min: {
-    width: 1024,
+    width: 512,
     height: 576,
   },
   max: {
     width: 1366,
     height: 768,
   },
-
-  zoom: 1,
 };
 
 export const PhaserClientConfig: GameConfig = {

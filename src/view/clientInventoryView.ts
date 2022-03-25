@@ -20,7 +20,7 @@ export class ClientInventoryView
   }
 
   private get displayHeight() {
-    return this.height * InventoryItemView.SIZE + this.extraSpace
+    return this.height * InventoryItemView.SIZE + this.extraSpace * 2
 }
 
   constructor(scene: Scene, private userInput: PlayerInput) {
@@ -30,7 +30,6 @@ export class ClientInventoryView
     this.scene.add.group(this, { runChildUpdate: true });
     this.initBackgrounds();
     this.setupInventoryPosition()
-
     this.scene.scale.on(Phaser.Scale.Events.RESIZE, () => {
         this.setupInventoryPosition()
     })
@@ -38,7 +37,7 @@ export class ClientInventoryView
   }
 
   setupInventoryPosition() {
-    this.container.setPosition(this.scene.game.canvas.width - this.displayWidth * 1.5, this.scene.game.canvas.height / 2 - this.displayHeight / 2)
+    this.container.setPosition(this.scene.game.canvas.width - this.displayWidth * 1.25, this.scene.game.canvas.height / 2 - this.displayHeight / 2)
   }
 
   initBackgrounds() {
