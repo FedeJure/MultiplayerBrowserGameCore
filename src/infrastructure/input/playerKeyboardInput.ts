@@ -9,6 +9,7 @@ export class PlayerKeyBoardInput implements PlayerInput {
     left: Input.Keyboard.Key;
     right: Input.Keyboard.Key;
     jump: Input.Keyboard.Key;
+    inventory: Input.Keyboard.Key;
   };
 
   constructor(phaserInput: Input.Keyboard.KeyboardPlugin) {
@@ -18,12 +19,14 @@ export class PlayerKeyBoardInput implements PlayerInput {
       left: Input.Keyboard.KeyCodes.A,
       right: Input.Keyboard.KeyCodes.D,
       jump: Input.Keyboard.KeyCodes.SPACE,
+      inventory: Input.Keyboard.KeyCodes.I
     }) as {
       up: Input.Keyboard.Key;
       down: Input.Keyboard.Key;
       left: Input.Keyboard.Key;
       right: Input.Keyboard.Key;
       jump: Input.Keyboard.Key;
+      inventory: Input.Keyboard.Key;
     };
   }
   toDto(): PlayerInputDto {
@@ -50,5 +53,8 @@ export class PlayerKeyBoardInput implements PlayerInput {
   }
   get jump() {
     return this.input.jump.isDown;
+  }
+  get inventory() {
+    return this.input.inventory.isDown
   }
 }

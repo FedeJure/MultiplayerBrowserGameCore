@@ -45,7 +45,13 @@ export class ClientPresenterProvider {
         player,
         ClientProvider.playerStateRepository
       ),
-      new PlayerInfoDelegator(player)
+      new PlayerInfoDelegator(player),
+      new ClientPlayerInventoryDelegator(
+        ClientProvider.localPlayerRepository.playerId,
+        ClientProvider.inventoryRepository,
+        ClientProvider.serverConnection,
+        ClientProvider.itemsRepository
+      )
     ]);
   }
   forPlayer(player: ClientPlayer): void {
@@ -83,12 +89,6 @@ export class ClientPresenterProvider {
           ClientProvider.originUrl,
           ClientProvider.localPlayerRepository,
           ClientProvider.connectedPlayers
-        ),
-        new ClientPlayerInventoryDelegator(
-          ClientProvider.localPlayerRepository.playerId,
-          ClientProvider.inventoryRepository,
-          ClientProvider.serverConnection,
-          ClientProvider.itemsRepository
         )
       ]
     );

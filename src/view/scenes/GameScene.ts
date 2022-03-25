@@ -2,6 +2,7 @@ import { Observable, Subject } from "rxjs";
 import { Scene, Physics, GameObjects } from "phaser";
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
 import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
+import { SceneNames } from "./SceneNames";
 
 export class GameScene extends Scene {
   private _onUpdate = new Subject<{ time: number; delta: number }>();
@@ -13,7 +14,7 @@ export class GameScene extends Scene {
 
   constructor(protected collisionDispatcher: CollisionsDispatcher) {
     super({
-      key: "gameScene",
+      key: SceneNames.MainScene,
     });
     this.collisionDispatcher = collisionDispatcher;
   }

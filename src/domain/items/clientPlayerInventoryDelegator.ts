@@ -3,7 +3,6 @@ import { Disposer } from "../disposer";
 import { PlayerInfo } from "../player/playerInfo";
 import { ServerConnection } from "../serverConnection";
 import { InventoryRepository } from "./inventoryRepository";
-import { InventoryView } from "./inventoryView";
 import { ItemsRepository } from "./itemsRepository";
 import { DefaultItem } from "./item";
 

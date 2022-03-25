@@ -9,6 +9,7 @@ import { PlayerStateRepository } from "../../infrastructure/repositories/playerS
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
 import { ClientPlayerView } from "../../view/clientPlayerView";
 import { ClientPlayer } from "../player/localPlayer";
+import { ClientInventoryView } from "../../view/clientInventoryView";
 
 export class CreateLocalClientPlayer {
   private readonly presenterProvider: ClientPresenterProvider;
@@ -39,6 +40,7 @@ export class CreateLocalClientPlayer {
     );
     const player = new Player(info, state, view) as ClientPlayer;
     scene.addToLifecycle(view);
+    const inventory = new ClientInventoryView(scene, input)
     this.presenterProvider.forLocalPlayer(input, player);
     this.connectedPlayersRepository.savePlayer(info.id, player);
     this.playerStateRepository.setPlayerState(info.id, player.state);

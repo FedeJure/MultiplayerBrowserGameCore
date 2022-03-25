@@ -120,7 +120,8 @@ export const InitClientGame = (
   ClientProvider.Init(
     connectionWithServer,
     new LocalPlayerRepository(localPlayerId),
-    originUrl
+    originUrl,
+    hudScene
   );
   const scene = new ClientGameScene(
     ClientProvider.collisionsDispatcher,

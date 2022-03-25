@@ -1,3 +1,4 @@
+import { SceneNames } from "./SceneNames";
 
 export class LoadScene extends Phaser.Scene {
   constructor(protected originUrl: string) {
@@ -20,7 +21,7 @@ export class LoadScene extends Phaser.Scene {
     //   `${this.originUrl}/assets/level1/level1.json`
     // );
     // this.load.once("complete", () => this.scene.launch("gameScene"));
-    this.scene.launch("gameScene")
+    this.scene.launch(SceneNames.MainScene)
   }
 
   create() {

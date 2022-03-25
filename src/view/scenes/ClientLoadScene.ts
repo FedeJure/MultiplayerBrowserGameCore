@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
 import { AssetsConfiguration } from "../../infrastructure/configuration/AssetsConfiguration";
+import { SceneNames } from "./SceneNames";
 
 export class ClientLoadScene extends Scene {
   constructor(private originUrl: string) {
@@ -20,6 +21,6 @@ export class ClientLoadScene extends Scene {
     AssetsConfiguration.images.forEach((image) => {
       this.load.image({ ...image, url: `${this.originUrl}/${image.path}` });
     });
-    this.load.once("complete", () => this.scene.launch("gameScene"));
+    this.load.once("complete", () => this.scene.launch(SceneNames.MainScene));
   }
 }

@@ -7,4 +7,5 @@ export interface PlayerInput {
   right: boolean;
   jump: boolean;
   toDto(): PlayerInputDto;
+  inventory: boolean;
 }

@@ -28,6 +28,7 @@ export class PlayerSocketInput implements PlayerInput {
         inputRequestRepository.set(playerId, inputDto.inputNumber);
       });
   }
+  inventory: boolean = false;
 
   toDto(): PlayerInputDto {
     throw new Error("Method not implemented.");

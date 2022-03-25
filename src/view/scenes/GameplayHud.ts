@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
 import { SocketServerConnection } from "../../infrastructure/socketServerConnection";
+import { SceneNames } from "./SceneNames";
 
 export class GameplayHud extends Scene {
   readonly connection: SocketServerConnection;
@@ -9,7 +10,7 @@ export class GameplayHud extends Scene {
   pointerText: Phaser.GameObjects.Text | undefined;
 
   constructor(connection: SocketServerConnection) {
-    super({ key: "hud" });
+    super({ key: SceneNames.ClientHudScene });
     this.connection = connection;
   }
 

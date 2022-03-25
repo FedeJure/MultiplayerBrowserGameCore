@@ -11,20 +11,24 @@ import { InventoryRepository } from "../../domain/items/inventoryRepository";
 import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
 import { ItemsRepository } from "../../domain/items/itemsRepository";
 import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository";
+import { Scene } from "phaser";
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
   private static _localPlayerRepository: LocalPlayerRepository;
   private static _originUrl: string;
+  private static _hudScene: Scene;
 
   public static Init(
     serverConnection: SocketServerConnection,
     localPlayerRepository: LocalPlayerRepository,
     originUrl: string,
+    hudScene: Scene
   ) {
     ClientProvider._serverConnection = serverConnection;
     ClientProvider._localPlayerRepository = localPlayerRepository;
     ClientProvider._originUrl = originUrl
+    ClientProvider._hudScene = hudScene
   }
 
   public static get playerStateRepository(): PlayerStateRepository {
