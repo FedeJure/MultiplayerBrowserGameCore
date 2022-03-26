@@ -13,3 +13,10 @@ export const DefaultItem: Item = {
     icon: "Not founded item",
     model: "Not founded item"
 }
+
+export const TestItem: Item = {
+  id: 1,
+  types: [],
+  icon: 'testItemIcon',
+  model: ''
+}

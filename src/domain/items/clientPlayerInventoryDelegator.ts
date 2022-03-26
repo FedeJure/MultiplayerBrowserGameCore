@@ -19,7 +19,6 @@ export class ClientPlayerInventoryDelegator implements Delegator {
     this.disposer.add(
       this.connection.onInventoryUpdate
         .subscribe(({ inventory }) => {
-          console.log(inventory)
           const newItems = inventory.items.filter((i) => !this.items.get(i));
           this.connection.emitGetItemDetails(newItems).subscribe((response) => {
             const items = inventory.items.map(

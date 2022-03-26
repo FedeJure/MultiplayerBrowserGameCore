@@ -34,5 +34,9 @@ export const AssetsConfiguration: {
       key: "inventoryItemBackground",
       path: "assets/ui/inventory_item_background.png",
     },
+    {
+      key: "testItemIcon",
+      path: "assets/ui/testItem.png",
+    },
   ],
 };
