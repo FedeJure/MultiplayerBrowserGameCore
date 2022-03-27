@@ -10,7 +10,6 @@ type ItemDropPayload = {
 
 export class InventoryItemView extends GameObjects.Container {
   private _onItemDrop = new Subject<ItemDropPayload>();
-  private _onMouseOver = new Subject<null>();
   private _onDragStart = new Subject<null>();
   private item?: GameObjects.Image;
   private lastDragPosition: Phaser.Math.Vector2 | null = null
@@ -21,8 +20,6 @@ export class InventoryItemView extends GameObjects.Container {
       .setDisplaySize(InventoryItemView.SIZE, InventoryItemView.SIZE)
       .setOrigin(0, 0);
     this.add(background);
-    background.setInteractive();
-    background.on("pointerover", () => this._onMouseOver.next(null));
   }
 
   public static get SIZE() {
@@ -81,9 +78,6 @@ export class InventoryItemView extends GameObjects.Container {
     return this._onItemDrop;
   }
 
-  public get onMouseOn(): Observable<unknown> {
-    return this._onMouseOver;
-  }
   public get onDragStart(): Observable<unknown> {
     return this._onDragStart;
   }

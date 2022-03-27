@@ -15,7 +15,6 @@ export class ClientInventoryView
   private width: number = 5;
   private height: number = 7;
   private itemContainers: InventoryItemView[] = [];
-  private lastItemContainerPointed: InventoryItemView | null = null;
 
   private get displayWidth() {
     return this.width * InventoryItemView.SIZE + this.extraSpace;
@@ -68,10 +67,6 @@ export class ClientInventoryView
 
         inventoryItem.onDragStart.subscribe(() => {
           this.container.bringToTop(inventoryItem);
-        });
-
-        inventoryItem.onMouseOn.subscribe(() => {
-          this.lastItemContainerPointed = inventoryItem;
         });
 
         inventoryItem.onItemDrop.subscribe((item) => {
