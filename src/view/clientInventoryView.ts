@@ -59,45 +59,7 @@ export class ClientInventoryView
 
     for (let h = 0; h < this.height; h++) {
       for (let w = 0; w < this.width; w++) {
-        const inventoryItem = new InventoryItemView(
-          this.scene,
-          w * InventoryItemView.SIZE + this.extraSpace / 2,
-          h * InventoryItemView.SIZE + this.extraSpace / 2
-        );
-
-        inventoryItem.onDragStart.subscribe(() => {
-          this.container.bringToTop(inventoryItem);
-        });
-
-        inventoryItem.onItemDrop.subscribe((item) => {
-          if (!inventoryItem.isEmpty) {
-            inventoryItem.resetItemState();
-            return;
-          }
-          const vec = new Phaser.Math.Vector2(
-            item.gameObject.getBounds().centerX,
-            item.gameObject.getBounds().centerY
-          );
-
-          const nextItemContainer = this.itemContainers.sort(
-            (a, b) =>
-              new Phaser.Math.Vector2(
-                a.getBounds().centerX,
-                a.getBounds().centerY
-              ).distance(vec) -
-              new Phaser.Math.Vector2(
-                b.getBounds().centerX,
-                b.getBounds().centerY
-              ).distance(vec)
-          )[0];
-          if (nextItemContainer && nextItemContainer !== inventoryItem) {
-            inventoryItem.removeItem();
-            nextItemContainer.setItem(item.item);
-          } else inventoryItem.resetItemState();
-        });
-
-        this.itemContainers.push(inventoryItem);
-        this.container.add(inventoryItem);
+        this.createInventoryItem(w, h);
       }
     }
   }
@@ -114,5 +76,47 @@ export class ClientInventoryView
       return;
     }
     if (!this.userInput.inventory && !this.canChange) this.canChange = true;
+  }
+
+  createInventoryItem(x: number, y: number) {
+    const inventoryItem = new InventoryItemView(
+      this.scene,
+      x * InventoryItemView.SIZE + this.extraSpace / 2,
+      y * InventoryItemView.SIZE + this.extraSpace / 2
+    );
+
+    inventoryItem.onDragStart.subscribe(() => {
+      this.container.bringToTop(inventoryItem);
+    });
+
+    inventoryItem.onItemDrop.subscribe((item) => {
+      if (!inventoryItem.isEmpty) {
+        inventoryItem.resetItemState();
+        return;
+      }
+      const vec = new Phaser.Math.Vector2(
+        item.gameObject.getBounds().centerX,
+        item.gameObject.getBounds().centerY
+      );
+
+      const nextItemContainer = this.itemContainers.sort(
+        (a, b) =>
+          new Phaser.Math.Vector2(
+            a.getBounds().centerX,
+            a.getBounds().centerY
+          ).distance(vec) -
+          new Phaser.Math.Vector2(
+            b.getBounds().centerX,
+            b.getBounds().centerY
+          ).distance(vec)
+      )[0];
+      if (nextItemContainer && nextItemContainer !== inventoryItem) {
+        inventoryItem.removeItem();
+        nextItemContainer.setItem(item.item);
+      } else inventoryItem.resetItemState();
+    });
+
+    this.itemContainers.push(inventoryItem);
+    this.container.add(inventoryItem);
   }
 }
