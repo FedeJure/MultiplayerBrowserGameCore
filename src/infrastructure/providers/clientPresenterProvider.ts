@@ -1,6 +1,5 @@
 import { ClientProvider } from "./clientProvider";
 import { PlayerInput } from "../../domain/player/playerInput";
-import { ClientGamePresenter } from "../../presentation/clientGamePresenter";
 import { ActionProvider } from "./actionProvider";
 import { PlayerCollisionDelegator } from "../../domain/collisions/playerCollisionDelegator";
 import { PlayerMovementValidationDelegator } from "../../domain/movement/playerMovementValidationDelegator";
@@ -16,6 +15,7 @@ import { PlayerInfoDelegator } from "../../domain/player/playerInfoDelegator";
 import { BackgroundDelegator } from "../../domain/environment/backgroundDelegator";
 import { ClientPlayerInventoryDelegator } from "../../domain/items/clientPlayerInventoryDelegator";
 import { ViewPresenter } from "../../presentation/viewPresenter";
+import { ClientConnectionDelegator } from "../../domain/gameState/clientConnectionDelegator";
 export class ClientPresenterProvider {
   forLocalPlayer(input: PlayerInput, player: ClientPlayer): void {
     new ViewPresenter(player.view, [
@@ -68,27 +68,29 @@ export class ClientPresenterProvider {
   }
 
   forGameplay(scene: ClientGameScene): void {
-    new ClientGamePresenter(
-      ClientProvider.localPlayerRepository.playerId,
-      ClientProvider.serverConnection,
+    new ViewPresenter(
       scene,
-      ActionProvider.CreateClientPlayer,
-      ActionProvider.CreateLocalClientPlayer,
-      ClientProvider.connectedPlayers,
       [
-        new CurrentMapDelegator(
-          scene,
-          ClientProvider.serverConnection,
-          ClientProvider.originUrl
-        ),
-        new BackgroundDelegator(
-          scene,
-          ClientProvider.serverConnection,
-          ClientProvider.originUrl,
-          ClientProvider.localPlayerRepository,
-          ClientProvider.connectedPlayers
-        ),
-      ]
-    );
+      new CurrentMapDelegator(
+        scene,
+        ClientProvider.serverConnection,
+        ClientProvider.originUrl
+      ),
+      new BackgroundDelegator(
+        scene,
+        ClientProvider.serverConnection,
+        ClientProvider.originUrl,
+        ClientProvider.localPlayerRepository,
+        ClientProvider.connectedPlayers
+      ),
+      new ClientConnectionDelegator(
+        ClientProvider.localPlayerRepository.playerId,
+        ClientProvider.serverConnection,
+        scene,
+        ActionProvider.CreateClientPlayer,
+        ActionProvider.CreateLocalClientPlayer,
+        ClientProvider.connectedPlayers
+      ),
+    ]);
   }
 }

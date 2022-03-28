@@ -34,76 +34,77 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
     ...PhaserServerConfig,
     scene: [new LoadScene(originUrl), scene],
   };
-  const _ = new Phaser.Game(config);
+  const game = new Phaser.Game(config);
+  game.events.on(Phaser.Core.Events.READY, () => {
+    for (let i = 1; i <= 200; i++) {
+      ServerProvider.playerInfoRepository.addPlayer(i.toString(), {
+        id: i.toString(),
+        name: "Test Player " + i,
+      });
+      // ServerProvider.playerStateRepository.setPlayerState(
+      //   i.toString(),
+      //   DefaultPlayerState
+      // );
+    }
 
-  for (let i = 1; i <= 200; i++) {
-    ServerProvider.playerInfoRepository.addPlayer(i.toString(), {
-      id: i.toString(),
-      name: "Test Player " + i,
-    });
-    // ServerProvider.playerStateRepository.setPlayerState(
-    //   i.toString(),
-    //   DefaultPlayerState
-    // );
-  }
+    // const room = new SocketRoomConnection(socket, "main");
+    scene.onCreate.subscribe(() => {
+      const __ = new ServerGamePresenter(scene, [
+        new CompleteMapDelegator(
+          MapsConfiguration,
+          ServerProvider.playerStateRepository,
+          ServerProvider.connectionsRepository,
+          ServerProvider.playerConnectionsRepository,
+          scene,
+          originUrl,
+          ServerProvider.roomManager
+        ),
+        new PlayerStateDelegator(
+          ServerProvider.roomManager,
+          ServerProvider.playerStateRepository,
+          socket
+        ),
+        new ServerPlayerCreatorDelegator(
+          ServerProvider.connectionsRepository,
+          ActionProvider.CreatePlayerFromId,
+          scene,
+          ServerProvider.connectedPlayerRepository,
+          socket,
+          ServerProvider.roomManager,
+          ServerProvider.playerConnectionsRepository
+        ),
+        new ServerPlayerInventoryDelegator(
+          ServerProvider.playerConnectionsRepository,
+          ServerProvider.connectionsRepository,
+          ServerProvider.inventoryRepository
+        ),
+      ]);
+      socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
+        // const emitFn = clientSocket.emit;
 
-  // const room = new SocketRoomConnection(socket, "main");
-  scene.onCreate.subscribe(() => {
-    const __ = new ServerGamePresenter(scene, [
-      new CompleteMapDelegator(
-        MapsConfiguration,
-        ServerProvider.playerStateRepository,
-        ServerProvider.connectionsRepository,
-        ServerProvider.playerConnectionsRepository,
-        scene,
-        originUrl,
-        ServerProvider.roomManager
-      ),
-      new PlayerStateDelegator(
-        ServerProvider.roomManager,
-        ServerProvider.playerStateRepository,
-        socket
-      ),
-      new ServerPlayerCreatorDelegator(
-        ServerProvider.connectionsRepository,
-        ActionProvider.CreatePlayerFromId,
-        scene,
-        ServerProvider.connectedPlayerRepository,
-        socket,
-        ServerProvider.roomManager,
-        ServerProvider.playerConnectionsRepository
-      ),
-      new ServerPlayerInventoryDelegator(
-        ServerProvider.playerConnectionsRepository,
-        ServerProvider.connectionsRepository,
-        ServerProvider.inventoryRepository
-      ),
-    ]);
-    socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
-      // const emitFn = clientSocket.emit;
-
-      // clientSocket.emit = function (...args: [ev: string, ...args: any[]]) {
-      //   setTimeout(() => {
-      //     return emitFn.apply(clientSocket, args);
-      //   }, 500);
-      //   emitFn.apply(clientSocket, args)
-      //   return true;
-      // };
-      const connection = new SocketClientConnection(clientSocket);
-      ServerProvider.connectionsRepository.addConnection(connection);
-      Log(
-        "InitServerGame",
-        `[Event: ${SocketIOEvents.CONNECTION}] :: with connection id: ${clientSocket.id}`
-      );
-
-      clientSocket.on(SocketIOEvents.DISCONNECT, () => {
-        ServerProvider.connectionsRepository.removeConnection(
-          connection.connectionId
-        );
+        // clientSocket.emit = function (...args: [ev: string, ...args: any[]]) {
+        //   setTimeout(() => {
+        //     return emitFn.apply(clientSocket, args);
+        //   }, 500);
+        //   emitFn.apply(clientSocket, args)
+        //   return true;
+        // };
+        const connection = new SocketClientConnection(clientSocket);
+        ServerProvider.connectionsRepository.addConnection(connection);
         Log(
           "InitServerGame",
-          `[Event: ${SocketIOEvents.DISCONNECT}] :: with connection id: ${clientSocket.id}`
+          `[Event: ${SocketIOEvents.CONNECTION}] :: with connection id: ${clientSocket.id}`
         );
+
+        clientSocket.on(SocketIOEvents.DISCONNECT, () => {
+          ServerProvider.connectionsRepository.removeConnection(
+            connection.connectionId
+          );
+          Log(
+            "InitServerGame",
+            `[Event: ${SocketIOEvents.DISCONNECT}] :: with connection id: ${clientSocket.id}`
+          );
+        });
       });
     });
   });
@@ -131,6 +132,8 @@ export const InitClientGame = (
     ...PhaserClientConfig,
     scene: [new ClientLoadScene(originUrl), scene, hudScene],
   };
-  new Phaser.Game(config);
-  ClientProvider.presenterProvider.forGameplay(scene);
+  const game = new Phaser.Game(config);
+  game.events.on(Phaser.Core.Events.READY, () => {
+    ClientProvider.presenterProvider.forGameplay(scene);
+  });
 };
