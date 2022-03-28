@@ -1,10 +1,7 @@
 import { ClientProvider } from "./clientProvider";
 import { PlayerInput } from "../../domain/player/playerInput";
-import { ClientPlayerPresenter } from "../../presentation/clientPlayerPresenter";
-import { GameScene } from "../../view/scenes/GameScene";
 import { ClientGamePresenter } from "../../presentation/clientGamePresenter";
 import { ActionProvider } from "./actionProvider";
-import { Player } from "../../domain/player/player";
 import { PlayerCollisionDelegator } from "../../domain/collisions/playerCollisionDelegator";
 import { PlayerMovementValidationDelegator } from "../../domain/movement/playerMovementValidationDelegator";
 import { PlayerInputDelegator } from "../../domain/input/playerInputDelegator";
