@@ -2,24 +2,19 @@ import { BodyType } from "matter";
 import { GameObjects, Physics } from "phaser";
 import { Observable, Subject } from "rxjs";
 import { CollisionCategory } from "../domain/collisions/collisionTypes";
-import { IPlayerView } from "../presentation/playerView";
+import { IPlayerView } from "../domain/playerView";
 import { CollisionDetector } from "./collisionDetector";
 
 export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   //TODO: ver de crear interfaces en el dominio con todas las propiedades q se usen de Phaser, para aislar
   // el core de la dependencia del framework
-  private readonly _onUpdate = new Subject<{ time: number; delta: number }>();
-  private readonly _onPreUpdate = new Subject<{
-    time: number;
-    delta: number;
-  }>();
   protected readonly _container: GameObjects.Container;
   protected readonly _physicContainer: Physics.Matter.Sprite &
     GameObjects.Container;
   protected readonly _view: Physics.Matter.Sprite;
   public readonly body: BodyType;
   private readonly groundCollisionDetector: CollisionDetector;
-  private currentTween?: Phaser.Tweens.Tween
+  private currentTween?: Phaser.Tweens.Tween;
 
   constructor(
     view: Physics.Matter.Sprite,
@@ -29,6 +24,7 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     private width: number
   ) {
     super(view.scene, "player");
+    this.setName("Player View");
     this.scene.add.existing(this);
 
     this._view = view;
@@ -68,16 +64,15 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   }
   moveTo(x: number, y: number, time: number): void {
     if (this.currentTween) {
-      this.currentTween.stop()
-      this.currentTween.complete()
-      this.currentTween = undefined
+      this.currentTween.stop();
+      this.currentTween.complete();
+      this.currentTween = undefined;
     }
     this.currentTween = this.view.scene.tweens.add({
       targets: this._container,
       x,
       y,
       duration: time,
-      
     });
   }
   startFollowWithCam(): void {
@@ -124,31 +119,20 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
   }
 
   destroy() {
-    this._container.destroy();
-    this.scene.matter.world.remove(this._container);
-  }
-
-  preUpdate(time: number, delta: number) {
-    if (this._container.active) {
-      this._onPreUpdate.next({ time, delta });
-    }
+    try {
+      this._physicContainer.destroy();
+      this._container.removeAll();
+      this._container.destroy();
+      super.destroy();
+    } catch (error) {}
   }
 
   update(time: number, delta: number) {
     if (this._container.active) {
       this._container.update(time, delta);
       this._container.setAngle(0); //Prevents to gameobject rotate due Matter physics. Cant find another solution at the moment
-      this._onUpdate.next({ time, delta });
     }
   }
-
-  public get onUpdate(): Observable<{ time: number; delta: number }> {
-    return this._onUpdate;
-  }
-  public get onPreUpdate(): Observable<{ time: number; delta: number }> {
-    return this._onPreUpdate;
-  }
-
   public get matterBody() {
     return this._container.body as BodyType;
   }

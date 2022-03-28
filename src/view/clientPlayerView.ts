@@ -31,6 +31,11 @@ export class ClientPlayerView extends PlayerView {
     this.spine = spine;
   }
 
+  destroy(): void {
+      super.destroy()
+      this.spine.destroy()
+  }
+
   playAnimation(anim: string) {
     this.spine.setAnimation(0, anim, true, true);
   }

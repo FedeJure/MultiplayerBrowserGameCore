@@ -1,7 +1,6 @@
 import { Socket } from "socket.io";
 import * as Phaser from "phaser";
 
-import { ServerGamePresenter } from "./presentation/serverGamePresenter";
 import { SocketIOEvents } from "./infrastructure/events/socketIoEvents";
 import { ServerProvider } from "./infrastructure/providers/serverProvider";
 import { ClientProvider } from "./infrastructure/providers/clientProvider";
@@ -24,6 +23,8 @@ import { MapsConfiguration } from "./infrastructure/configuration/MapsConfigurat
 import { PlayerStateDelegator } from "./domain/gameState/playerStateDelegator";
 import { ServerPlayerCreatorDelegator } from "./domain/player/serverPlayerCreatorDelegator";
 import { ServerPlayerInventoryDelegator } from "./domain/items/serverPlayerInventoryDelegator";
+import { ViewPresenter } from "./presentation/viewPresenter";
+import { ScenePresenter } from "./presentation/scenePresenter";
 
 export const InitGame: (socket: Socket, originUrl: string) => void = (
   socket: Socket,
@@ -49,7 +50,7 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
 
     // const room = new SocketRoomConnection(socket, "main");
     scene.onCreate.subscribe(() => {
-      const __ = new ServerGamePresenter(scene, [
+      const __ = new ScenePresenter(scene, [
         new CompleteMapDelegator(
           MapsConfiguration,
           ServerProvider.playerStateRepository,

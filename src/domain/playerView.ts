@@ -16,8 +16,6 @@ export interface IPlayerView {
   moveTo(x: number, y: number, time: number): void;
   scene: Scene;
   destroy(): void;
-  get onUpdate(): Observable<{ time: number; delta: number }>;
-  get onPreUpdate(): Observable<{ time: number; delta: number }>;
   get matterBody(): BodyType;
   get velocity(): Vector;
   get position(): Vector;

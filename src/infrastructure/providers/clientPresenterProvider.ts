@@ -16,6 +16,8 @@ import { BackgroundDelegator } from "../../domain/environment/backgroundDelegato
 import { ClientPlayerInventoryDelegator } from "../../domain/items/clientPlayerInventoryDelegator";
 import { ViewPresenter } from "../../presentation/viewPresenter";
 import { ClientConnectionDelegator } from "../../domain/gameState/clientConnectionDelegator";
+import { ScenePresenter } from "../../presentation/scenePresenter";
+import { ClientPlayerConnectionDelegator } from "../../domain/player/clientPlayerConnectionDelegator";
 export class ClientPresenterProvider {
   forLocalPlayer(input: PlayerInput, player: ClientPlayer): void {
     new ViewPresenter(player.view, [
@@ -50,6 +52,10 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         ClientProvider.itemsRepository
       ),
+      new ClientPlayerConnectionDelegator(
+        ClientProvider.serverConnection,
+        player
+      ),
     ]);
   }
   forPlayer(player: ClientPlayer): void {
@@ -64,13 +70,15 @@ export class ClientPresenterProvider {
         ClientProvider.playerStateRepository
       ),
       new PlayerInfoDelegator(player),
+      new ClientPlayerConnectionDelegator(
+        ClientProvider.serverConnection,
+        player
+      ),
     ]);
   }
 
   forGameplay(scene: ClientGameScene): void {
-    new ViewPresenter(
-      scene,
-      [
+    new ScenePresenter(scene, [
       new CurrentMapDelegator(
         scene,
         ClientProvider.serverConnection,

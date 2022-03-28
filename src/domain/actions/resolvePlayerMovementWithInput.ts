@@ -1,4 +1,4 @@
-import { IPlayerView } from "../../presentation/playerView";
+import { IPlayerView } from "../playerView";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { PlayerInput } from "../player/playerInput";
 import { PlayerState } from "../player/playerState";

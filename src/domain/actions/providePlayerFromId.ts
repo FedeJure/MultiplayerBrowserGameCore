@@ -53,6 +53,7 @@ export class CreatePlayerFromId {
     scene.addToLifecycle(view);
     const player = new Player(playerInfo, playerState, view);
     this.presenterProvider.forPlayer(
+      view,
       player,
       new PlayerSocketInput(
         playerId,

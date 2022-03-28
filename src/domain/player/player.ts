@@ -1,6 +1,6 @@
 import { PlayerInfo } from "./playerInfo";
 import { PlayerState } from "./playerState";
-import { IPlayerView } from "../../presentation/playerView";
+import { IPlayerView } from "../playerView";
 
 export class Player {
   private _state: PlayerState;
