@@ -19,16 +19,5 @@ export class ClientPlayerPresenter {
     this.player = player;
     this.connection = connection;
     this.delegators = delegators;
-
-    this.connection.onPlayerDisconnected
-      .pipe(filter((p) => p.playerId === player.info.id))
-      .subscribe((_) => {
-        delegators.forEach((d) => d.stop());
-        player.view.destroy();
-      });
-    delegators.forEach((d) => d.init());
-    this.view.onUpdate.subscribe((data) => {
-      this.delegators.forEach((d) => d.update(data.time, data.delta));
-    });
   }
 }

@@ -18,9 +18,10 @@ import { ClientPlayer } from "../../domain/player/localPlayer";
 import { PlayerInfoDelegator } from "../../domain/player/playerInfoDelegator";
 import { BackgroundDelegator } from "../../domain/environment/backgroundDelegator";
 import { ClientPlayerInventoryDelegator } from "../../domain/items/clientPlayerInventoryDelegator";
+import { ViewPresenter } from "../../presentation/viewPresenter";
 export class ClientPresenterProvider {
   forLocalPlayer(input: PlayerInput, player: ClientPlayer): void {
-    new ClientPlayerPresenter(ClientProvider.serverConnection, player, [
+    new ViewPresenter(player.view, [
       new PlayerCollisionDelegator(
         player,
         ClientProvider.playerStateRepository
@@ -51,11 +52,11 @@ export class ClientPresenterProvider {
         ClientProvider.inventoryRepository,
         ClientProvider.serverConnection,
         ClientProvider.itemsRepository
-      )
+      ),
     ]);
   }
   forPlayer(player: ClientPlayer): void {
-    new ClientPlayerPresenter(ClientProvider.serverConnection, player, [
+    new ViewPresenter(player.view, [
       new RemotePlayerAnimationDelegator(
         player,
         ClientProvider.playerStateRepository
@@ -65,7 +66,7 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         ClientProvider.playerStateRepository
       ),
-      new PlayerInfoDelegator(player)
+      new PlayerInfoDelegator(player),
     ]);
   }
 
@@ -81,7 +82,7 @@ export class ClientPresenterProvider {
         new CurrentMapDelegator(
           scene,
           ClientProvider.serverConnection,
-          ClientProvider.originUrl,
+          ClientProvider.originUrl
         ),
         new BackgroundDelegator(
           scene,
@@ -89,7 +90,7 @@ export class ClientPresenterProvider {
           ClientProvider.originUrl,
           ClientProvider.localPlayerRepository,
           ClientProvider.connectedPlayers
-        )
+        ),
       ]
     );
   }
