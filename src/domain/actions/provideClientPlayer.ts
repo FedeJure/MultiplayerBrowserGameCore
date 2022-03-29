@@ -34,6 +34,5 @@ export class CreateClientPlayerAction {
     this.presenterProvider.forPlayer(player);
     this.connectedPlayersRepository.savePlayer(info.id, player);
     this.playerStateRepository.setPlayerState(info.id, player.state);
-    scene.addToLifecycle(view);
   }
 }

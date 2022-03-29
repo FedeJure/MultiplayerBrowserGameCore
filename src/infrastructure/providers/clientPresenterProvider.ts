@@ -18,6 +18,7 @@ import { ViewPresenter } from "../../presentation/viewPresenter";
 import { ClientConnectionDelegator } from "../../domain/gameState/clientConnectionDelegator";
 import { ScenePresenter } from "../../presentation/scenePresenter";
 import { ClientPlayerConnectionDelegator } from "../../domain/player/clientPlayerConnectionDelegator";
+import { PlayerAngleFixDelegator } from "../../domain/movement/playerAngleFixDelegator";
 export class ClientPresenterProvider {
   forLocalPlayer(input: PlayerInput, player: ClientPlayer): void {
     new ViewPresenter(player.view, [
@@ -56,6 +57,7 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         player
       ),
+      new PlayerAngleFixDelegator(player)
     ]);
   }
   forPlayer(player: ClientPlayer): void {
@@ -74,6 +76,7 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         player
       ),
+      new PlayerAngleFixDelegator(player)
     ]);
   }
 

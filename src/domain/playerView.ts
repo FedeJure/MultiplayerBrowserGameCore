@@ -10,6 +10,7 @@ export interface IPlayerView {
   setVelocity(x: number, y: number): void;
   setPosition(x: number, y: number): void;
   setScale(x: number, y: number): void;
+  setAngle(degreeAngle: number): void;
   lookToLeft(value: boolean): void;
   playAnimation(anim: string): void;
   startFollowWithCam(): void;

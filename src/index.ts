@@ -23,7 +23,6 @@ import { MapsConfiguration } from "./infrastructure/configuration/MapsConfigurat
 import { PlayerStateDelegator } from "./domain/gameState/playerStateDelegator";
 import { ServerPlayerCreatorDelegator } from "./domain/player/serverPlayerCreatorDelegator";
 import { ServerPlayerInventoryDelegator } from "./domain/items/serverPlayerInventoryDelegator";
-import { ViewPresenter } from "./presentation/viewPresenter";
 import { ScenePresenter } from "./presentation/scenePresenter";
 
 export const InitGame: (socket: Socket, originUrl: string) => void = (
@@ -36,7 +35,7 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
     scene: [new LoadScene(originUrl), scene],
   };
   const game = new Phaser.Game(config);
-  game.events.on(Phaser.Core.Events.READY, () => {
+  game.events.addListener(Phaser.Core.Events.READY, () => {
     for (let i = 1; i <= 200; i++) {
       ServerProvider.playerInfoRepository.addPlayer(i.toString(), {
         id: i.toString(),
@@ -49,7 +48,7 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
     }
 
     // const room = new SocketRoomConnection(socket, "main");
-    scene.onCreate.subscribe(() => {
+    scene.events.addListener(Phaser.Scenes.Events.CREATE, () => {
       const __ = new ScenePresenter(scene, [
         new CompleteMapDelegator(
           MapsConfiguration,
@@ -134,7 +133,7 @@ export const InitClientGame = (
     scene: [new ClientLoadScene(originUrl), scene, hudScene],
   };
   const game = new Phaser.Game(config);
-  game.events.on(Phaser.Core.Events.READY, () => {
+  game.events.addListener(Phaser.Core.Events.READY, () => {
     ClientProvider.presenterProvider.forGameplay(scene);
   });
 };

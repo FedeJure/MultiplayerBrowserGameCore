@@ -31,7 +31,7 @@ export class ClientInventoryView
     this.scene.add.group(this, { runChildUpdate: true });
     this.initBackgrounds();
     this.setupInventoryPosition();
-    this.scene.scale.on(Phaser.Scale.Events.RESIZE, () => {
+    this.scene.scale.addListener(Phaser.Scale.Events.RESIZE, () => {
       this.setupInventoryPosition();
     });
     this.initTestItem();

@@ -1,5 +1,6 @@
 import { ServerPlayerAnimationDelegator } from "../../domain/animations/serverPlayerAnimationDelegator";
 import { PlayerCollisionDelegator } from "../../domain/collisions/playerCollisionDelegator";
+import { PlayerAngleFixDelegator } from "../../domain/movement/playerAngleFixDelegator";
 import { Player } from "../../domain/player/player";
 import { PlayerInput } from "../../domain/player/playerInput";
 import { ServerPlayerStateUpdaterDelegator } from "../../domain/player/serverPlayerStateUpdaterDelegator";
@@ -29,6 +30,7 @@ export class ServerPresenterProvider {
         ServerProvider.playerStateRepository,
         ServerProvider.playerInputRequestRepository
       ),
+      new PlayerAngleFixDelegator(player),
     ]);
   }
 }

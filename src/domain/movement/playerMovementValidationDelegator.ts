@@ -1,10 +1,8 @@
-import { Math as PhaserMath } from "phaser";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
 import { Player } from "../player/player";
-import { PlayerState } from "../player/playerState";
 import { ServerConnection } from "../serverConnection";
 import { PlayerInput } from "../player/playerInput";
 

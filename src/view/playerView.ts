@@ -1,6 +1,6 @@
 import { BodyType } from "matter";
 import { GameObjects, Physics } from "phaser";
-import { Observable, Subject } from "rxjs";
+import { Observable } from "rxjs";
 import { CollisionCategory } from "../domain/collisions/collisionTypes";
 import { IPlayerView } from "../domain/playerView";
 import { CollisionDetector } from "./collisionDetector";
@@ -54,6 +54,10 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     );
 
     this.initCollisions();
+  }
+  setAngle(degreeAngle: number): void {
+    this._container.setAngle(degreeAngle);
+
   }
   add(children: GameObjects.GameObject): this {
     this._physicContainer.add(children);
@@ -125,14 +129,8 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
       this._container.destroy();
       super.destroy();
     } catch (error) {}
-  }
+  }  
 
-  update(time: number, delta: number) {
-    if (this._container.active) {
-      this._container.update(time, delta);
-      this._container.setAngle(0); //Prevents to gameobject rotate due Matter physics. Cant find another solution at the moment
-    }
-  }
   public get matterBody() {
     return this._container.body as BodyType;
   }

@@ -6,8 +6,8 @@ export class ScenePresenter {
     const onUpdate = (time, delta) => {
       delegators.forEach((d) => d.update(time, delta));
     };
-    scene.events.on(Phaser.Scenes.Events.UPDATE, onUpdate);
-    scene.events.on(Phaser.Scenes.Events.DESTROY, () => {
+    scene.events.addListener(Phaser.Scenes.Events.UPDATE, onUpdate);
+    scene.events.addListener(Phaser.Scenes.Events.DESTROY, () => {
       scene.events.off(Phaser.Scenes.Events.UPDATE, onUpdate);
 
       delegators.forEach((d) => d.stop());

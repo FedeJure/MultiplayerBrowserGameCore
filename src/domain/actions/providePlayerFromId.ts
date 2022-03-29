@@ -50,7 +50,6 @@ export class CreatePlayerFromId {
       DefaultConfiguration.height,
       DefaultConfiguration.width
     );
-    scene.addToLifecycle(view);
     const player = new Player(playerInfo, playerState, view);
     this.presenterProvider.forPlayer(
       view,

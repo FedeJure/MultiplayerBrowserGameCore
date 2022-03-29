@@ -39,7 +39,6 @@ export class CreateLocalClientPlayer {
       DefaultConfiguration.width
     );
     const player = new Player(info, state, view) as ClientPlayer;
-    scene.addToLifecycle(view);
     const inventory = new ClientInventoryView(scene, input)
     this.presenterProvider.forLocalPlayer(input, player);
     this.connectedPlayersRepository.savePlayer(info.id, player);
