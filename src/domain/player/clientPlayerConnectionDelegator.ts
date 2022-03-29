@@ -1,17 +1,24 @@
 import { filter } from "rxjs";
 import { Delegator } from "../delegator";
+import { Disposer } from "../disposer";
 import { ServerConnection } from "../serverConnection";
 import { Player } from "./player";
 
 export class ClientPlayerConnectionDelegator implements Delegator {
+  private disposer = new Disposer();
   constructor(private connection: ServerConnection, private player: Player) {}
   init(): void {
-    this.connection.onPlayerDisconnected
-      .pipe(filter((p) => p.playerId === this.player.info.id))
-      .subscribe((_) => {
-        this.player.view.destroy();
-      });
+    this.disposer.add(
+      this.connection.onPlayerDisconnected
+        .pipe(filter((p) => p.playerId === this.player.info.id))
+        .subscribe((_) => {
+          console.log("Player disconnected");
+          this.player.destroy();
+        })
+    );
   }
-  stop(): void {}
+  stop(): void {
+    this.disposer.dispose()
+  }
   update(time: number, delta: number): void {}
 }

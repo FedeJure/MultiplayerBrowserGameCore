@@ -25,10 +25,6 @@ export class PlayerRemoteMovementDelegator implements Delegator {
     this.disposer.add(
       this.connection.onPlayersStates.subscribe((event) => {
         const state = event.states[this.player.info.id];
-        if (!state) {
-          this.player.destroy();
-          return;
-        }
         this.playerStateRepository.setPlayerState(this.player.info.id, state);
       })
     );

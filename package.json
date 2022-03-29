@@ -12,6 +12,7 @@
   "author": "Federico Jure",
   "license": "ISC",
   "dependencies": {
+    "lodash.difference": "^4.5.0",
     "matter": "0.2.0",
     "phaser": "3.55.2",
     "phaser-matter-collision-plugin": "^1.0.0",
@@ -27,6 +28,7 @@
     "@fluffy-spoon/substitute": "^1.208.0",
     "@types/babel__core": "^7.1.16",
     "@types/jest": "^27.0.3",
+    "@types/lodash.difference": "^4.5.6",
     "@types/socket.io": "^3.0.0",
     "@types/socket.io-client": "^3.0.0",
     "jest": "^27.3.1",
