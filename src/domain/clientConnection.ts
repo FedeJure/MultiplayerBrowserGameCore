@@ -20,4 +20,5 @@ export interface ClientConnection {
     neighborMaps: ProcessedMap[]
   ): void;
   sendInventoryEvent(inventory: PlayerInventory)
+  sendConnectedPlayer(player: PlayerInitialStateDto)
 }

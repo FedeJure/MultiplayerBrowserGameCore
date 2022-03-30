@@ -50,7 +50,7 @@ export class CompleteMapDelegator implements Delegator {
             state.currentRooms
           );
           if (newRooms.length === 0) return;
-          const playerInfo = playersRepository.getPlayer(playerId);
+          const playerInfo = this.playersRepository.getPlayer(playerId);
           if (!playerInfo) return;
 
           socket.in(newRooms).emit(
@@ -62,7 +62,8 @@ export class CompleteMapDelegator implements Delegator {
             })
           );
 
-          //TODO: falta enviar la informacion de los jugadores que ya estan en la room (enviar el PlayerConnected event)
+          this.sendAlreadyConnectedPlayers(playerId, newRooms);
+
           const leavingRooms: string[] = difference(
             state.currentRooms,
             joinedRooms
@@ -77,6 +78,26 @@ export class CompleteMapDelegator implements Delegator {
         });
       }
     );
+  }
+
+  private sendAlreadyConnectedPlayers(playerId: string, newRooms: string[]) {
+    const connId = this.playerConnections.getConnection(playerId);
+    if (!connId) return;
+    const connection = this.connections.getConnection(connId);
+    newRooms.forEach((r) => {
+      const playerIds = this.roomManager.getPlayersByRoom()[r] ?? [];
+      playerIds.forEach((p) => {
+        try {
+          const state = this.playerStateRepository.getPlayerState(p)!;
+          const info = this.playersRepository.getPlayer(p)!;
+          connection?.sendConnectedPlayer({
+            id: info.id,
+            state,
+            info,
+          });
+        } catch (error) {}
+      });
+    });
   }
 
   private updateMapForPlayer(state: PlayerState, playerId: string) {

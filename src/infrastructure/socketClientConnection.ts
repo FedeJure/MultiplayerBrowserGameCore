@@ -11,6 +11,7 @@ import { SocketIOEvents } from "./events/socketIoEvents";
 import { PlayerInitialStateDto } from "./dtos/playerInitialStateDto";
 import { ProcessedMap } from "../domain/environment/processedMap";
 import { PlayerInventory } from "../domain/items/playerInventory";
+import { Player } from "../domain/player/player";
 
 export class SocketClientConnection implements ClientConnection {
   public readonly socket: Socket;
@@ -28,12 +29,20 @@ export class SocketClientConnection implements ClientConnection {
 
     this.listenEvents();
   }
+  sendConnectedPlayer(player: PlayerInitialStateDto) {
+    this.socket.emit(
+      GameEvents.NEW_PLAYER_CONNECTED.name,
+      GameEvents.NEW_PLAYER_CONNECTED.getEvent(player)
+    );
+  }
 
   sendInventoryEvent(inventory: PlayerInventory) {
     this.socket.emit(
       GameEvents.INVENTORY_UPDATED.name,
-      GameEvents.INVENTORY_UPDATED.getEvent({items: inventory.items.map(i => i.id)})
-    )
+      GameEvents.INVENTORY_UPDATED.getEvent({
+        items: inventory.items.map((i) => i.id),
+      })
+    );
   }
 
   sendMapUpdateEvent(
