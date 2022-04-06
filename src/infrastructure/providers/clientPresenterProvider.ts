@@ -19,6 +19,8 @@ import { ClientConnectionDelegator } from "../../domain/gameState/clientConnecti
 import { ScenePresenter } from "../../presentation/scenePresenter";
 import { ClientPlayerConnectionDelegator } from "../../domain/player/clientPlayerConnectionDelegator";
 import { PlayerAngleFixDelegator } from "../../domain/movement/playerAngleFixDelegator";
+import { ClientInventoryView } from "../../view/clientInventoryView";
+import { PlayerInfo } from "../../domain/player/playerInfo";
 export class ClientPresenterProvider {
   forLocalPlayer(input: PlayerInput, player: ClientPlayer): void {
     new ViewPresenter(player.view, [
@@ -47,17 +49,11 @@ export class ClientPresenterProvider {
         ClientProvider.playerStateRepository
       ),
       new PlayerInfoDelegator(player),
-      new ClientPlayerInventoryDelegator(
-        ClientProvider.localPlayerRepository.playerId,
-        ClientProvider.inventoryRepository,
-        ClientProvider.serverConnection,
-        ClientProvider.itemsRepository
-      ),
       new ClientPlayerConnectionDelegator(
         ClientProvider.serverConnection,
         player
       ),
-      new PlayerAngleFixDelegator(player)
+      new PlayerAngleFixDelegator(player),
     ]);
   }
   forPlayer(player: ClientPlayer): void {
@@ -76,7 +72,7 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         player
       ),
-      new PlayerAngleFixDelegator(player)
+      new PlayerAngleFixDelegator(player),
     ]);
   }
 
@@ -101,6 +97,17 @@ export class ClientPresenterProvider {
         ActionProvider.CreateClientPlayer,
         ActionProvider.CreateLocalClientPlayer,
         ClientProvider.connectedPlayers
+      ),
+    ]);
+  }
+  forInventory(playerId: PlayerInfo["id"], view: ClientInventoryView) {
+    new ViewPresenter(view, [
+      new ClientPlayerInventoryDelegator(
+        playerId,
+        ClientProvider.inventoryRepository,
+        ClientProvider.serverConnection,
+        ClientProvider.itemsRepository,
+        view
       ),
     ]);
   }

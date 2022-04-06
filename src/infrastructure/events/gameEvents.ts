@@ -47,13 +47,15 @@ export const GameEvents: {
   };
   INVENTORY_UPDATED: {
     name: string;
-    getEvent: (
-      inventory: PlayerInventoryDto
-    ) => InventoryUpdatedEvent;
+    getEvent: (inventory: PlayerInventoryDto) => InventoryUpdatedEvent;
   };
   ITEM_DETAILS: {
     name: string;
     getEvent: (ids: Item["id"][]) => ItemDetailEvent;
+  };
+  ITEM_DETAILS_RESPONSE: {
+    name: string;
+    getEvent: (items: Item[]) => ItemDetailResponse;
   };
 } = {
   PLAYER_CONNECTED: {
@@ -109,7 +111,14 @@ export const GameEvents: {
     name: "item_details",
     getEvent: (ids: Item["id"][]) => ({
       itemIds: ids,
-      time: new Date()
+      time: new Date(),
+    }),
+  },
+  ITEM_DETAILS_RESPONSE: {
+    name: "item_details_response",
+    getEvent: (items: Item[]) => ({
+      items,
+      time: new Date(),
     }),
   },
 };

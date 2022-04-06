@@ -1,10 +1,12 @@
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
 import { InventoryRepository } from "../../domain/items/inventoryRepository";
+import { ItemsRepository } from "../../domain/items/itemsRepository";
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
 import { ConnectedPlayersRepository } from "../repositories/connectedPlayersRepository";
 import { ConnectionsRepository } from "../repositories/connectionsRepository";
 import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
+import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository";
 import { InMemoryPlayerRepository } from "../repositories/inMemoryPlayerRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
 import { MapRepository } from "../repositories/mapRepository";
@@ -74,5 +76,11 @@ export class ServerProvider {
     return DependencyManager.GetOrInstantiate<InMemoryInventoryRepository>(
       () => new InMemoryInventoryRepository()
     );
+  }
+
+  public static get itemsRepository(): ItemsRepository {
+    return DependencyManager.GetOrInstantiate<ItemsRepository>(
+      () => new InMemoryItemsRepository()
+    )
   }
 }

@@ -40,6 +40,7 @@ export class CreateLocalClientPlayer {
     );
     const player = new Player(info, state, view) as ClientPlayer;
     const inventory = new ClientInventoryView(scene, input)
+    this.presenterProvider.forInventory(info.id, inventory)
     this.presenterProvider.forLocalPlayer(input, player);
     this.connectedPlayersRepository.savePlayer(info.id, player);
     this.playerStateRepository.setPlayerState(info.id, player.state);

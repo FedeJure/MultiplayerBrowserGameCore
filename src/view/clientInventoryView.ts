@@ -1,6 +1,6 @@
 import { GameObjects, Scene } from "phaser";
 import { InventoryView } from "../domain/items/inventoryView";
-import { TestItem } from "../domain/items/item";
+import { Item, TestItem } from "../domain/items/item";
 import { PlayerInput } from "../domain/player/playerInput";
 import { InventoryItemView } from "./clientInventoryItemView";
 import { SceneNames } from "./scenes/SceneNames";
@@ -34,7 +34,7 @@ export class ClientInventoryView
     this.scene.scale.addListener(Phaser.Scale.Events.RESIZE, () => {
       this.setupInventoryPosition();
     });
-    this.initTestItem();
+    // this.initTestItem();
   }
 
   setupInventoryPosition() {
@@ -62,6 +62,14 @@ export class ClientInventoryView
         this.createInventoryItem(w, h);
       }
     }
+  }
+
+  saveItems(items: Item[]) {
+    items.forEach((i) => {
+      const container = this.itemContainers.find((c) => c.isEmpty);
+      if (!container) throw new Error("Inventory Full");
+      container.setItem(i);
+    });
   }
 
   update(): void {

@@ -3,6 +3,8 @@ import { Socket } from "socket.io";
 import { ClientConnection } from "../domain/clientConnection";
 import {
   GameEvents,
+  ItemDetailEvent,
+  ItemDetailResponse,
   PlayerConnectedEvent,
   PlayerInputEvent,
 } from "./events/gameEvents";
@@ -11,7 +13,7 @@ import { SocketIOEvents } from "./events/socketIoEvents";
 import { PlayerInitialStateDto } from "./dtos/playerInitialStateDto";
 import { ProcessedMap } from "../domain/environment/processedMap";
 import { PlayerInventory } from "../domain/items/playerInventory";
-import { Player } from "../domain/player/player";
+import { callback } from "rxjs-observe";
 
 export class SocketClientConnection implements ClientConnection {
   public readonly socket: Socket;
@@ -20,6 +22,10 @@ export class SocketClientConnection implements ClientConnection {
 
   private onPlayerConnectionSubject = new Subject<{ playerId: string }>();
   private onInputSubject = new Subject<PlayerInputEvent>();
+  private onItemDetailRequestSubject = new Subject<{
+    ev: ItemDetailEvent;
+    callback: (ev: ItemDetailResponse) => {};
+  }>();
   private currentRooms: string[] = [];
 
   constructor(socket: Socket) {
@@ -29,6 +35,14 @@ export class SocketClientConnection implements ClientConnection {
 
     this.listenEvents();
   }
+
+  onItemDetailRequest(): Observable<{
+    ev: ItemDetailEvent;
+    callback: (ev: ItemDetailResponse) => {};
+  }> {
+    return this.onItemDetailRequestSubject;
+  }
+
   sendConnectedPlayer(player: PlayerInitialStateDto) {
     this.socket.emit(
       GameEvents.NEW_PLAYER_CONNECTED.name,
@@ -87,6 +101,12 @@ export class SocketClientConnection implements ClientConnection {
     this.socket.on(GameEvents.PLAYER_INPUT.name, (dto: PlayerInputEvent) => {
       this.onInputSubject.next(dto);
     });
+    this.socket.on(
+      GameEvents.ITEM_DETAILS.name,
+      (dto: ItemDetailEvent, callback: (ev: ItemDetailResponse) => {}) => {
+        this.onItemDetailRequestSubject.next({ev: dto, callback});
+      }
+    );
   }
 
   public sendInitialStateEvent(

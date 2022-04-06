@@ -6,4 +6,7 @@ export class InMemoryItemsRepository implements ItemsRepository {
   get(itemId: Item['id']): Item {
     return this.store[itemId];
   }
+  save(item: Item) {
+      this.store[item.id] = item
+  }
 }

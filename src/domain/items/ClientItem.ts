@@ -7,6 +7,7 @@ export class ClientItem implements Item {
   types: ItemType[];
   icon: string;
   model: string;
+  name: string
   constructor(
     readonly id: Item['id'],
     private repository: ItemsRepository,
@@ -17,6 +18,7 @@ export class ClientItem implements Item {
           this.types = item.types
           this.icon = item.icon
           this.model = item.model
+          this.name = item.name
       }
   }
 }
