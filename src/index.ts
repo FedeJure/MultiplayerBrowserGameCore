@@ -79,7 +79,6 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
           ServerProvider.playerConnectionsRepository,
           ServerProvider.connectionsRepository,
           ServerProvider.inventoryRepository,
-          socket,
           ServerProvider.itemsRepository
         ),
       ]);

@@ -1,9 +1,4 @@
-import { Socket } from "socket.io";
-import {
-  GameEvents,
-  ItemDetailEvent,
-  ItemDetailResponse,
-} from "../../infrastructure/events/gameEvents";
+import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { Log } from "../../infrastructure/Logger";
 import { ConnectionsRepository } from "../../infrastructure/repositories/connectionsRepository";
 import { PlayerConnectionsRepository } from "../../infrastructure/repositories/playerConnectionsRespository";
@@ -17,7 +12,6 @@ export class ServerPlayerInventoryDelegator implements Delegator {
     private playerConnectionRepository: PlayerConnectionsRepository,
     private connectionsRepository: ConnectionsRepository,
     private inventoryRepository: InventoryRepository,
-    private socket: Socket,
     private itemsRepository: ItemsRepository
   ) {}
   init(): void {
