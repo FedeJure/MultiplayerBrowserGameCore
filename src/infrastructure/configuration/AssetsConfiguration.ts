@@ -38,5 +38,9 @@ export const AssetsConfiguration: {
       key: "testItemIcon",
       path: "assets/ui/testItem.png",
     },
+    {
+      key: "testItemIcon1",
+      path: "assets/ui/testItem.png",
+    },
   ],
 };

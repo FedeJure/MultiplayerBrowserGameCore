@@ -13,7 +13,7 @@ export const DefaultPlayerInventory: PlayerInventory = {
       id: 2,
       name: "Default Item",
       types: [],
-      icon: "testItemIcon",
+      icon: "testItemIcon1",
       model: "",
     },
   ],

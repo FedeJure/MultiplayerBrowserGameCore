@@ -69,11 +69,12 @@ export class ClientInventoryView
   }
 
   saveItems(items: Item[]) {
-    items.forEach((i) => {
-      const container = this.itemContainers.find((c) => c.isEmpty);
-      if (!container) throw new Error("Inventory Full");
-      container.setItem(i);
+    this.itemContainers.forEach((container) => {
+      if (container.isEmpty && items.length > 0) {
+        container.setItem(items.pop()!);
+      }
     });
+    if (items.length > 0) throw new Error("Inventory Full");
   }
 
   update(): void {
@@ -98,7 +99,7 @@ export class ClientInventoryView
     );
 
     inventoryItem.onMouseOver.subscribe((item) => {
-      this.itemDetail.setItem(item)
+      this.itemDetail.setItem(item);
       this.itemDetail.setVisible(true);
       this.itemDetail.setPosition(inventoryItem.x, inventoryItem.y);
       this.container.bringToTop(this.itemDetail);
@@ -114,10 +115,6 @@ export class ClientInventoryView
     });
 
     inventoryItem.onItemDrop.subscribe((item) => {
-      if (!inventoryItem.isEmpty) {
-        inventoryItem.resetItemState();
-        return;
-      }
       const vec = new Phaser.Math.Vector2(
         item.gameObject.getBounds().centerX,
         item.gameObject.getBounds().centerY
@@ -135,8 +132,12 @@ export class ClientInventoryView
           ).distance(vec)
       )[0];
       if (nextItemContainer && nextItemContainer !== inventoryItem) {
-        inventoryItem.removeItem();
-        nextItemContainer.setItem(item.item);
+        try {
+          nextItemContainer.setItem(item.item);
+          inventoryItem.removeItem();
+        } catch (error) {
+          inventoryItem.resetItemState();
+        }
       } else inventoryItem.resetItemState();
     });
 
