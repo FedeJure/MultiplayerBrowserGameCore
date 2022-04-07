@@ -15,7 +15,7 @@ export class GameplayHud extends Scene {
   }
 
   create() {
-    this.pointerText = this.add.text(10, 90, 'Move the mouse', { font: "15px Arial", color: "#ffffff", resolution: 10 });
+    // this.pointerText = this.add.text(10, 90, 'Move the mouse', { font: "15px Arial", color: "#ffffff", resolution: 10 });
     this.pingText = new Phaser.GameObjects.Text(
       this,
       10,
@@ -39,15 +39,15 @@ export class GameplayHud extends Scene {
 
   update() {
     this.fpsText?.setText(this.getFpsText());
-    var pointer = this.input.activePointer;
-    this.pointerText?.setText([
-        'x: ' + pointer.x,
-        'y: ' + pointer.y,
-        'velocity x: ' + pointer.velocity.x,
-        'velocity y: ' + pointer.velocity.y,
-        'global X: ' + pointer.worldX,
-        'global Y: ' + pointer.worldY
-    ]);
+    // var pointer = this.input.activePointer;
+    // this.pointerText?.setText([
+    //     'x: ' + pointer.x,
+    //     'y: ' + pointer.y,
+    //     'velocity x: ' + pointer.velocity.x,
+    //     'velocity y: ' + pointer.velocity.y,
+    //     'global X: ' + pointer.worldX,
+    //     'global Y: ' + pointer.worldY
+    // ]);
   }
 
   getPingText(ping: number) {

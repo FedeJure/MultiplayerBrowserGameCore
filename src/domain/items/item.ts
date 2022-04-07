@@ -6,6 +6,7 @@ export interface Item {
   icon: string;
   model: string;
   name: string;
+  detail: string;
 }
 
 export const DefaultItem: Item = {
@@ -13,7 +14,8 @@ export const DefaultItem: Item = {
     types: [],
     icon: "Not founded item",
     model: "Not founded item",
-    name: "Default Item"
+    name: "Default Item",
+    detail: 'This item is showing due a load problem with the real item'
 }
 
 export const TestItem: Item = {
@@ -21,7 +23,8 @@ export const TestItem: Item = {
   types: [],
   icon: 'testItemIcon',
   model: '',
-  name: "Default Test Item"
+  name: "Default Test Item",
+  detail: "This is a Test item used only for testing purpose"
 }
 
 export const TestItem1: Item = {
@@ -29,5 +32,6 @@ export const TestItem1: Item = {
   types: [],
   icon: 'testItemIcon',
   model: '',
-  name: "Ring of Honor"
+  name: "Ring of Honor",
+  detail: "This is a Test item used only for testing purpose"
 }

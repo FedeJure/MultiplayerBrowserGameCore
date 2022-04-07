@@ -8,6 +8,8 @@ export const DefaultPlayerInventory: PlayerInventory = {
       types: [],
       icon: "testItemIcon",
       model: "",
+      detail: "This is a Test item used only for testing purpose"
+
     },
     {
       id: 2,
@@ -15,6 +17,7 @@ export const DefaultPlayerInventory: PlayerInventory = {
       types: [],
       icon: "testItemIcon1",
       model: "",
+      detail: "This is a Test item used only for testing purpose"
     },
   ],
 };
