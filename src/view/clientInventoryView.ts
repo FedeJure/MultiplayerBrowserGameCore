@@ -3,6 +3,7 @@ import { InventoryView } from "../domain/items/inventoryView";
 import { Item, TestItem } from "../domain/items/item";
 import { PlayerInput } from "../domain/player/playerInput";
 import { InventoryItemView } from "./clientInventoryItemView";
+import { ItemDetailView } from "./itemDetailView";
 import { SceneNames } from "./scenes/SceneNames";
 
 export class ClientInventoryView
@@ -15,6 +16,7 @@ export class ClientInventoryView
   private width: number = 5;
   private height: number = 7;
   private itemContainers: InventoryItemView[] = [];
+  private itemDetail: ItemDetailView;
 
   private get displayWidth() {
     return this.width * InventoryItemView.SIZE + this.extraSpace;
@@ -34,7 +36,9 @@ export class ClientInventoryView
     this.scene.scale.addListener(Phaser.Scale.Events.RESIZE, () => {
       this.setupInventoryPosition();
     });
-    // this.initTestItem();
+    this.itemDetail = new ItemDetailView(scene);
+    this.itemDetail.setVisible(false);
+    this.container.add(this.itemDetail);
   }
 
   setupInventoryPosition() {
@@ -93,7 +97,19 @@ export class ClientInventoryView
       y * InventoryItemView.SIZE + this.extraSpace / 2
     );
 
+    inventoryItem.onMouseOver.subscribe((item) => {
+      this.itemDetail.setItem(item)
+      this.itemDetail.setVisible(true);
+      this.itemDetail.setPosition(inventoryItem.x, inventoryItem.y);
+      this.container.bringToTop(this.itemDetail);
+    });
+
+    inventoryItem.onMouseExit.subscribe(() => {
+      this.itemDetail.setVisible(false);
+    });
+
     inventoryItem.onDragStart.subscribe(() => {
+      this.itemDetail.setVisible(false);
       this.container.bringToTop(inventoryItem);
     });
 

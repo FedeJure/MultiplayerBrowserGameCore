@@ -23,3 +23,11 @@ export const TestItem: Item = {
   model: '',
   name: "Default Test Item"
 }
+
+export const TestItem1: Item = {
+  id: 2,
+  types: [],
+  icon: 'testItemIcon',
+  model: '',
+  name: "Ring of Honor"
+}

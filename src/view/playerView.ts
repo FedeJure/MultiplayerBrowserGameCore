@@ -56,8 +56,7 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     this.initCollisions();
   }
   setAngle(degreeAngle: number): void {
-    this._container.setAngle(degreeAngle);
-
+    if (this._container.active) this._container.setAngle(degreeAngle);
   }
   add(children: GameObjects.GameObject): this {
     this._physicContainer.add(children);
@@ -129,7 +128,7 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
       this._container.destroy();
       super.destroy();
     } catch (error) {}
-  }  
+  }
 
   public get matterBody() {
     return this._container.body as BodyType;
