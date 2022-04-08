@@ -1,6 +1,6 @@
 import { BodyType } from 'matter'
 import { Observable, Subject } from 'rxjs'
-import { CollisionCategory } from '../domain/collisions/collisionTypes'
+import { CollisionCategory, CollisionGroups } from '../domain/collisions/collisionTypes'
 
 export class CollisionDetector  {
     private activeCollisions: {[key: number]: true} = {}
@@ -11,7 +11,7 @@ export class CollisionDetector  {
         body.label = "CollisionDetector"
         body.onCollideCallback = this.handleCollisionStart.bind(this)
         body.onCollideEndCallback = this.handleCollisionEnd.bind(this)
-        body.collisionFilter = { category: CollisionCategory.Player , group: 0, mask: CollisionCategory.StaticEnvironment}
+        body.collisionFilter = { category: CollisionCategory.Player , group: CollisionGroups.Player, mask: CollisionCategory.StaticEnvironment}
 
     }
 

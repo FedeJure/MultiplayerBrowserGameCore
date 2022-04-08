@@ -1,13 +1,11 @@
 import { BodyType } from "matter";
 import { GameObjects, Physics } from "phaser";
 import { Observable } from "rxjs";
-import { CollisionCategory } from "../domain/collisions/collisionTypes";
+import { CollisionCategory, CollisionGroups } from "../domain/collisions/collisionTypes";
 import { IPlayerView } from "../domain/playerView";
 import { CollisionDetector } from "./collisionDetector";
 
 export class PlayerView extends GameObjects.GameObject implements IPlayerView {
-  //TODO: ver de crear interfaces en el dominio con todas las propiedades q se usen de Phaser, para aislar
-  // el core de la dependencia del framework
   protected readonly _container: GameObjects.Container;
   protected readonly _physicContainer: Physics.Matter.Sprite &
     GameObjects.Container;
@@ -111,14 +109,9 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
     this._physicContainer.setExistingBody(body);
     this.matterBody.collisionFilter = body.collisionFilter = {
       category: CollisionCategory.Player,
-      group: 0,
+      group: CollisionGroups.Player,
       mask: CollisionCategory.StaticEnvironment | CollisionCategory.WorldBounds,
     };
-    // this._physicContainer.setCollisionCategory(CollisionCategory.Player);
-    // this._physicContainer.setCollidesWith([
-    //   CollisionCategory.StaticEnvironment,
-    //   CollisionCategory.WorldBounds,
-    // ]);
   }
 
   destroy() {

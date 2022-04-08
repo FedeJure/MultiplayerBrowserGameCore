@@ -2,8 +2,6 @@ import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Player } from "../player/player";
-import { DefaultConfiguration } from "../player/playerConfiguration";
-import { DefaultPlayerState } from "../../infrastructure/configuration/DefaultPlayerState";
 
 export class PlayerCollisionDelegator implements Delegator {
   private readonly player: Player;
