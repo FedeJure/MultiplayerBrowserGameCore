@@ -3,9 +3,11 @@ import { InventoryView } from "../domain/items/inventoryView";
 import { Item, TestItem } from "../domain/items/item";
 import { PlayerInput } from "../domain/player/playerInput";
 import { AssetsConfiguration } from "../infrastructure/configuration/AssetsConfiguration";
+import { AssetLoader } from "./AssetLoader";
 import { InventoryItemView } from "./clientInventoryItemView";
 import { ItemDetailView } from "./itemDetailView";
 import { SceneNames } from "./scenes/SceneNames";
+import { loadAssetAsync } from "./utils";
 
 export class ClientInventoryView
   extends GameObjects.GameObject
@@ -69,13 +71,22 @@ export class ClientInventoryView
     }
   }
 
-  saveItems(items: Item[]) {
-    this.itemContainers.forEach((container) => {
-      if (container.isEmpty && items.length > 0) {
-        container.setItem(items.pop()!);
-      }
+  async saveItems(items: Item[]) {
+    Promise.all(
+      items.map((i) =>
+        loadAssetAsync(this.scene, () =>
+          this.scene.load.image(i.icon, AssetLoader.resolveAssetPath(i.icon))
+        )
+      )
+    ).then(() => {
+      this.itemContainers.forEach((container) => {
+        if (container.isEmpty && items.length > 0) {
+          container.setItem(items.pop()!);
+        }
+      });
+      if (items.length > 0) throw new Error("Inventory Full");
     });
-    if (items.length > 0) throw new Error("Inventory Full");
+    
   }
 
   update(): void {
