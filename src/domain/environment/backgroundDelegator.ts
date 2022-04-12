@@ -14,7 +14,6 @@ export class BackgroundDelegator implements Delegator {
   public constructor(
     private scene: ClientGameScene,
     private connection: ServerConnection,
-    private originUrl: string,
     private localplayerRepository: LocalPlayerRepository,
     private playersRepository: ConnectedPlayersRepository
   ) {}
@@ -29,7 +28,7 @@ export class BackgroundDelegator implements Delegator {
 
   private async loadAssets(maps: ProcessedMap[]) {
     return Promise.all(
-      maps.map((m) => loadBackgroundAssets(this.originUrl, m, this.scene))
+      maps.map((m) => loadBackgroundAssets(m, this.scene))
     );
   }
 

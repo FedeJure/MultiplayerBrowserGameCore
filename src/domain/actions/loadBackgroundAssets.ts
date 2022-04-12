@@ -1,17 +1,17 @@
 import { Scene } from "phaser";
-import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
+import { AssetLoader } from "../../view/AssetLoader";
 import { ProcessedMap } from "../environment/processedMap";
 
 export async function loadBackgroundAssets(
-  originUrl: string,
   map: ProcessedMap,
   scene: Scene
 ) {
   return new Promise((res, _) => {
     map.config.backgroundFile.forEach((bg) => {
+
       scene.load.image({
         key: bg.key,
-        url: `${originUrl}${DefaultGameConfiguration.assetsPath}${bg.fileName}`,
+        url: AssetLoader.resolveAssetPath(bg.fileName),
       });
     });
 

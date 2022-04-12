@@ -86,7 +86,6 @@ export class ClientPresenterProvider {
       new BackgroundDelegator(
         scene,
         ClientProvider.serverConnection,
-        ClientProvider.originUrl,
         ClientProvider.localPlayerRepository,
         ClientProvider.connectedPlayers
       ),

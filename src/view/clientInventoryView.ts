@@ -2,6 +2,7 @@ import { GameObjects, Scene } from "phaser";
 import { InventoryView } from "../domain/items/inventoryView";
 import { Item, TestItem } from "../domain/items/item";
 import { PlayerInput } from "../domain/player/playerInput";
+import { AssetsConfiguration } from "../infrastructure/configuration/AssetsConfiguration";
 import { InventoryItemView } from "./clientInventoryItemView";
 import { ItemDetailView } from "./itemDetailView";
 import { SceneNames } from "./scenes/SceneNames";

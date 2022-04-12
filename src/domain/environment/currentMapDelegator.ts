@@ -89,7 +89,7 @@ export class CurrentMapDelegator implements Delegator {
     return Promise.all(
       maps
         .filter((m) => !loadedKeys.includes(m.id.toString()))
-        .map((m) => loadMapAssets(this.originUrl, m, this.scene))
+        .map((m) => loadMapAssets(m, this.scene))
     );
   }
 

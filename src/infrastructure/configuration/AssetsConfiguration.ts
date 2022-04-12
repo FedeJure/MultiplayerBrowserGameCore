@@ -13,34 +13,36 @@ interface SpineAsset {
 }
 
 export const AssetsConfiguration: {
+  assetsPath: string;
   spritesheets: SpriteSheet[];
   images: ImageAsset[];
   spines: SpineAsset[];
 } = {
+  assetsPath: '/assets/',
   spines: [
     {
       key: "hero",
-      jsonPath: "assets/hero.json",
-      atlasPath: "assets/hero.atlas",
+      jsonPath: "hero.json",
+      atlasPath: "hero.atlas",
     },
   ],
   spritesheets: [],
   images: [
     {
       key: "inventoryBackground",
-      path: "assets/ui/inventory_background.png",
+      path: "ui/inventory_background.png",
     },
     {
       key: "inventoryItemBackground",
-      path: "assets/ui/inventory_item_background.png",
+      path: "ui/inventory_item_background.png",
     },
     {
       key: "testItemIcon",
-      path: "assets/ui/testItem.png",
+      path: "ui/testItem.png",
     },
     {
       key: "testItemIcon1",
-      path: "assets/ui/testItem.png",
+      path: "ui/testItem.png",
     },
   ],
 };

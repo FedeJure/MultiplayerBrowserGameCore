@@ -28,7 +28,6 @@ export class CompleteMapDelegator implements Delegator {
     private connections: ConnectionsRepository,
     private playerConnections: PlayerConnectionsRepository,
     private scene: Scene,
-    private originUrl: string,
     private roomManager: RoomManager,
     private socket: Socket,
     private playersRepository: PlayerInfoRepository
@@ -174,7 +173,7 @@ export class CompleteMapDelegator implements Delegator {
   init(): void {
     Promise.all(
       CompleteMapDelegator.processedMapsAsList.map((m) =>
-        loadMapAssets(this.originUrl, m, this.scene)
+        loadMapAssets(m, this.scene)
       )
     ).then((_) =>
       CompleteMapDelegator.processedMapsAsList.forEach((m) =>

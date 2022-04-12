@@ -24,6 +24,8 @@ import { PlayerStateDelegator } from "./domain/gameState/playerStateDelegator";
 import { ServerPlayerCreatorDelegator } from "./domain/player/serverPlayerCreatorDelegator";
 import { ServerPlayerInventoryDelegator } from "./domain/items/serverPlayerInventoryDelegator";
 import { ScenePresenter } from "./presentation/scenePresenter";
+import { AssetLoader } from "./view/AssetLoader";
+import { AssetsConfiguration } from "./infrastructure/configuration/AssetsConfiguration";
 
 export const InitGame: (socket: Socket, originUrl: string) => void = (
   socket: Socket,
@@ -32,9 +34,10 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
   const scene = new GameScene(ServerProvider.collisionsDispatcher);
   const config = {
     ...PhaserServerConfig,
-    scene: [new LoadScene(originUrl), scene],
+    scene: [new LoadScene(), scene],
   };
   const game = new Phaser.Game(config);
+  AssetLoader.setBaseUrl( `${originUrl}${AssetsConfiguration.assetsPath}`)
   game.events.addListener(Phaser.Core.Events.READY, () => {
     for (let i = 1; i <= 200; i++) {
       ServerProvider.playerInfoRepository.addPlayer(i.toString(), {
@@ -56,7 +59,6 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
           ServerProvider.connectionsRepository,
           ServerProvider.playerConnectionsRepository,
           scene,
-          originUrl,
           ServerProvider.roomManager,
           socket,
           ServerProvider.playerInfoRepository
@@ -133,9 +135,11 @@ export const InitClientGame = (
   );
   const config = {
     ...PhaserClientConfig,
-    scene: [new ClientLoadScene(originUrl), scene, hudScene],
+    scene: [new ClientLoadScene(), scene, hudScene],
   };
   const game = new Phaser.Game(config);
+  AssetLoader.setBaseUrl( `${originUrl}${AssetsConfiguration.assetsPath}`)
+
   game.events.addListener(Phaser.Core.Events.READY, () => {
     ClientProvider.presenterProvider.forGameplay(scene);
   });
