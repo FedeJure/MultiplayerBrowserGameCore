@@ -9,7 +9,6 @@ import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRe
 import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository";
 import { InMemoryPlayerRepository } from "../repositories/inMemoryPlayerRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
-import { MapRepository } from "../repositories/mapRepository";
 import { PlayerConnectionsRepository } from "../repositories/playerConnectionsRespository";
 import { PlayerInfoRepository } from "../repositories/playerInfoRepository";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
@@ -51,12 +50,6 @@ export class ServerProvider {
   public static get playerInputRequestRepository(): PlayerInputRequestRepository {
     return DependencyManager.GetOrInstantiate<PlayerInputRequestRepository>(
       () => new PlayerInputRequestRepository()
-    );
-  }
-
-  public static get mapRepository(): MapRepository {
-    return DependencyManager.GetOrInstantiate<MapRepository>(
-      () => new MapRepository()
     );
   }
 

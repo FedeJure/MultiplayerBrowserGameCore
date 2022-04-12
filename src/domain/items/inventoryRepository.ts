@@ -1,7 +1,7 @@
+import { PlayerInventoryDto } from "../../infrastructure/dtos/playerInventoryDto";
 import { PlayerInfo } from "../player/playerInfo";
-import { PlayerInventory } from "./playerInventory";
 
 export interface InventoryRepository {
-    save(playerId: PlayerInfo['id'], inventory: PlayerInventory)
-    get(playerId: PlayerInfo['id']): PlayerInventory
+    save(playerId: PlayerInfo['id'], inventory: PlayerInventoryDto)
+    get(playerId: PlayerInfo['id']): PlayerInventoryDto
 }

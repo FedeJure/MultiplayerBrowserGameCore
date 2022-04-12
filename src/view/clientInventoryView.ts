@@ -1,8 +1,7 @@
 import { GameObjects, Scene } from "phaser";
 import { InventoryView } from "../domain/items/inventoryView";
-import { Item, TestItem } from "../domain/items/item";
+import { Item } from "../domain/items/item";
 import { PlayerInput } from "../domain/player/playerInput";
-import { AssetsConfiguration } from "../infrastructure/configuration/AssetsConfiguration";
 import { AssetLoader } from "./AssetLoader";
 import { InventoryItemView } from "./clientInventoryItemView";
 import { ItemDetailView } from "./itemDetailView";
@@ -49,12 +48,6 @@ export class ClientInventoryView
       this.scene.game.canvas.width - this.displayWidth * 1.25,
       this.scene.game.canvas.height / 2 - this.displayHeight / 2
     );
-  }
-
-  initTestItem() {
-    this.itemContainers[2].setItem(TestItem);
-    this.itemContainers[3].setItem(TestItem);
-    this.itemContainers[4].setItem(TestItem);
   }
 
   initBackgrounds() {

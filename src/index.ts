@@ -26,6 +26,7 @@ import { ServerPlayerInventoryDelegator } from "./domain/items/serverPlayerInven
 import { ScenePresenter } from "./presentation/scenePresenter";
 import { AssetLoader } from "./view/AssetLoader";
 import { AssetsConfiguration } from "./infrastructure/configuration/AssetsConfiguration";
+import { LoadServerRepositoriesWithMockData } from "./infrastructure/mockUtils";
 
 export const InitGame: (socket: Socket, originUrl: string) => void = (
   socket: Socket,
@@ -39,18 +40,8 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
   const game = new Phaser.Game(config);
   AssetLoader.setBaseUrl( `${originUrl}${AssetsConfiguration.assetsPath}`)
   game.events.addListener(Phaser.Core.Events.READY, () => {
-    for (let i = 1; i <= 200; i++) {
-      ServerProvider.playerInfoRepository.addPlayer(i.toString(), {
-        id: i.toString(),
-        name: "Test Player " + i,
-      });
-      // ServerProvider.playerStateRepository.setPlayerState(
-      //   i.toString(),
-      //   DefaultPlayerState
-      // );
-    }
+    LoadServerRepositoriesWithMockData()
 
-    // const room = new SocketRoomConnection(socket, "main");
     scene.events.addListener(Phaser.Scenes.Events.CREATE, () => {
       const __ = new ScenePresenter(scene, [
         new CompleteMapDelegator(
@@ -85,15 +76,6 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
         ),
       ]);
       socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
-        // const emitFn = clientSocket.emit;
-
-        // clientSocket.emit = function (...args: [ev: string, ...args: any[]]) {
-        //   setTimeout(() => {
-        //     return emitFn.apply(clientSocket, args);
-        //   }, 500);
-        //   emitFn.apply(clientSocket, args)
-        //   return true;
-        // };
         const connection = new SocketClientConnection(clientSocket);
         ServerProvider.connectionsRepository.addConnection(connection);
         Log(

@@ -1,23 +1,5 @@
-import { PlayerInventory } from "../../domain/items/playerInventory";
+import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
 
-export const DefaultPlayerInventory: PlayerInventory = {
-  items: [
-    {
-      id: 1,
-      name: "Default Item",
-      types: [],
-      icon: "testItemIcon",
-      model: "",
-      detail: "This is a Test item used only for testing purpose"
-
-    },
-    {
-      id: 2,
-      name: "Default Item",
-      types: [],
-      icon: "testItemIcon1",
-      model: "",
-      detail: "This is a Test item used only for testing purpose"
-    },
-  ],
+export const DefaultPlayerInventory: PlayerInventoryDto = {
+  items: [1,2],
 };

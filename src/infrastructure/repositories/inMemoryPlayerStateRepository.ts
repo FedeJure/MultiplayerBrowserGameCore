@@ -1,6 +1,5 @@
 import { Observable, Subject } from "rxjs";
 import { PlayerState } from "../../domain/player/playerState";
-import { DefaultPlayerState } from "../configuration/DefaultPlayerState";
 import { PlayerStateRepository } from "./playerStateRepository";
 
 export class InMemoryPlayerStateRepository implements PlayerStateRepository {

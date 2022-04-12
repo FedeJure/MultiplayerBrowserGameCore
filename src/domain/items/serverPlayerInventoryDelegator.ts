@@ -4,7 +4,7 @@ import { ConnectionsRepository } from "../../infrastructure/repositories/connect
 import { PlayerConnectionsRepository } from "../../infrastructure/repositories/playerConnectionsRespository";
 import { Delegator } from "../delegator";
 import { InventoryRepository } from "./inventoryRepository";
-import { DefaultItem, TestItem, TestItem1 } from "./item";
+import { DefaultItem } from "./item";
 import { ItemsRepository } from "./itemsRepository";
 
 export class ServerPlayerInventoryDelegator implements Delegator {
@@ -15,8 +15,7 @@ export class ServerPlayerInventoryDelegator implements Delegator {
     private itemsRepository: ItemsRepository
   ) {}
   init(): void {
-    this.itemsRepository.save(TestItem);
-    this.itemsRepository.save(TestItem1);
+
 
     this.playerConnectionRepository.onNewPlayerConnected.subscribe(
       ({ playerId, connectionId }) => {

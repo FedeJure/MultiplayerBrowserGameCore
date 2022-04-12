@@ -12,8 +12,7 @@ import { Log } from "./Logger";
 import { SocketIOEvents } from "./events/socketIoEvents";
 import { PlayerInitialStateDto } from "./dtos/playerInitialStateDto";
 import { ProcessedMap } from "../domain/environment/processedMap";
-import { PlayerInventory } from "../domain/items/playerInventory";
-import { callback } from "rxjs-observe";
+import { PlayerInventoryDto } from "./dtos/playerInventoryDto";
 
 export class SocketClientConnection implements ClientConnection {
   public readonly socket: Socket;
@@ -50,11 +49,11 @@ export class SocketClientConnection implements ClientConnection {
     );
   }
 
-  sendInventoryEvent(inventory: PlayerInventory) {
+  sendInventoryEvent(inventory: PlayerInventoryDto) {
     this.socket.emit(
       GameEvents.INVENTORY_UPDATED.name,
       GameEvents.INVENTORY_UPDATED.getEvent({
-        items: inventory.items.map((i) => i.id),
+        items: inventory.items,
       })
     );
   }

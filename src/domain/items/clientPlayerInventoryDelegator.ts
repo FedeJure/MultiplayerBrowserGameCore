@@ -6,7 +6,6 @@ import { InventoryRepository } from "./inventoryRepository";
 import { ItemsRepository } from "./itemsRepository";
 import { DefaultItem } from "./item";
 import { InventoryView } from "./inventoryView";
-import { loadAssetAsync } from "../../view/utils";
 
 export class ClientPlayerInventoryDelegator implements Delegator {
   private disposer: Disposer = new Disposer();
@@ -23,6 +22,7 @@ export class ClientPlayerInventoryDelegator implements Delegator {
     this.disposer.add(
       this.connection.onInventoryUpdate
         .subscribe(({ inventory }) => {
+          this.repository.save(this.playerId, inventory);
           const newItems = inventory.items.filter((i) => !this.items.get(i));
           this.connection.emitGetItemDetails(newItems).subscribe((response) => {
             const items = inventory.items.map(
@@ -31,7 +31,6 @@ export class ClientPlayerInventoryDelegator implements Delegator {
                 response.items.find((item) => item.id === id) ??
                 DefaultItem
             );
-            this.repository.save(this.playerId, { items });
             this.inventoryView.saveItems(items)
           });
         })
