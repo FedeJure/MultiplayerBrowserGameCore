@@ -1,3 +1,5 @@
+import { MapEnvironmentObject } from "./mapEnvironmentObject"
+
 export interface MapConfiguration {
     singleMapSize: { x: number, y: number },
     patronSizeInPixels: number,
@@ -15,6 +17,7 @@ export interface Map {
     jsonFile: {key: string, fileName: string}
     tilesSourceFiles: {key: string, fileName: string}
     objectsSourceFile: {key: string, fileName: string}
+    objects: MapEnvironmentObject[]
   }
   
 

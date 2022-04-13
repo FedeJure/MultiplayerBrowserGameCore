@@ -21,6 +21,7 @@ export const MapsConfiguration: MapConfiguration = {
             jsonFile: { key: "forest-0", fileName: "mapConfigFiles/forest/forest-0.json" },
             tilesSourceFiles: { key: "forest", fileName: "mapTiles/forest.png" },
             objectsSourceFile: { key: "farm", fileName: "mapStaticObjects/farm.png" },
+            objects: []
           },
           {
             id: 1,
@@ -36,6 +37,7 @@ export const MapsConfiguration: MapConfiguration = {
             jsonFile: { key: "forest-1", fileName: "mapConfigFiles/forest/forest-1.json" },
             tilesSourceFiles: { key: "forest", fileName: "mapTiles/forest.png" },
             objectsSourceFile: { key: "farm", fileName: "mapStaticObjects/farm.png" },
+            objects: []
           },
           {
             id: 2,
@@ -51,6 +53,7 @@ export const MapsConfiguration: MapConfiguration = {
             jsonFile: { key: "forest-2", fileName: "mapConfigFiles/forest/forest-2.json" },
             tilesSourceFiles: { key: "forest", fileName: "mapTiles/forest.png" },
             objectsSourceFile: { key: "farm", fileName: "mapStaticObjects/farm.png" },
+            objects: []
           },
           {
             id: 3,
@@ -66,6 +69,7 @@ export const MapsConfiguration: MapConfiguration = {
             jsonFile: { key: "forest-2", fileName: "mapConfigFiles/forest/forest-2.json" },
             tilesSourceFiles: { key: "forest", fileName: "mapTiles/forest.png" },
             objectsSourceFile: { key: "farm", fileName: "mapStaticObjects/farm.png" },
+            objects: []
           },
         ],
       ],

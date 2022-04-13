@@ -1,10 +1,12 @@
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
+import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { InventoryRepository } from "../../domain/items/inventoryRepository";
 import { ItemsRepository } from "../../domain/items/itemsRepository";
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
 import { ConnectedPlayersRepository } from "../repositories/connectedPlayersRepository";
 import { ConnectionsRepository } from "../repositories/connectionsRepository";
+import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
 import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
 import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository";
 import { InMemoryPlayerRepository } from "../repositories/inMemoryPlayerRepository";
@@ -74,6 +76,12 @@ export class ServerProvider {
   public static get itemsRepository(): ItemsRepository {
     return DependencyManager.GetOrInstantiate<ItemsRepository>(
       () => new InMemoryItemsRepository()
+    )
+  }
+
+  public static get environmentObjectsRepository(): EnvironmentObjectRepository {
+    return DependencyManager.GetOrInstantiate<EnvironmentObjectRepository>(
+      () => new InMemoryEnvironmentObjectRepository()
     )
   }
 }
