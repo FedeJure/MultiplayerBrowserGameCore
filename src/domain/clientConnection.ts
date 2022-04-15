@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { PlayerInitialStateDto } from "../infrastructure/dtos/playerInitialStateDto";
 import { PlayerInventoryDto } from "../infrastructure/dtos/playerInventoryDto";
-import { ItemDetailEvent, ItemDetailResponse, PlayerInputEvent } from "../infrastructure/events/gameEvents";
+import { ItemDetailRequest, ItemDetailResponse, PlayerInputEvent } from "../infrastructure/events/gameEvents";
 import { ProcessedMap } from "./environment/processedMap";
 
 export interface ClientConnection {
@@ -22,7 +22,7 @@ export interface ClientConnection {
   sendInventoryEvent(inventory: PlayerInventoryDto)
   sendConnectedPlayer(player: PlayerInitialStateDto)
   onItemDetailRequest(): Observable<{
-    ev: ItemDetailEvent;
+    ev: ItemDetailRequest;
     callback: (ev: ItemDetailResponse) => {};
   }>
 }

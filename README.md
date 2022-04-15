@@ -5,6 +5,8 @@
 
 # Assets
 * Every asset path property of any object/item/map, etc. Its relative to the asset root described on AssetConfiguration (default value is `/assets/`) 
+### For Atlas:
+* We use [Texture Packer](https://www.codeandweb.com/texturepacker) for item icons and environment objects
 
 # Maps
 

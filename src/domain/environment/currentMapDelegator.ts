@@ -1,10 +1,10 @@
-import { BodyType } from "matter";
 import { GameObjects } from "phaser";
 import { MapUpdateEvent } from "../../infrastructure/events/gameEvents";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { createMapOnScene } from "../actions/createMapOnScene";
 import { loadMapAssets } from "../actions/loadMapAssets";
 import { Delegator } from "../delegator";
+import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
 import { ServerConnection } from "../serverConnection";
 import { ProcessedMap } from "./processedMap";
 
@@ -20,7 +20,8 @@ export class CurrentMapDelegator implements Delegator {
   public constructor(
     private scene: ClientGameScene,
     private connection: ServerConnection,
-    private originUrl: string
+    private originUrl: string,
+    private envObjectsRepository: EnvironmentObjectRepository
   ) {}
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {
@@ -101,7 +102,7 @@ export class CurrentMapDelegator implements Delegator {
         maps
           .filter((m) => !loadedKeys.includes(m.id.toString()))
           .map((m) => {
-            return createMapOnScene(m, this.scene).then((createdObjects) => {
+            return createMapOnScene(m, this.scene, this.envObjectsRepository).then((createdObjects) => {
               this.loadedMaps[m.id] = { map: m, createdObjects };
               return createdObjects;
             });

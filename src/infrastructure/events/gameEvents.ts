@@ -1,4 +1,5 @@
 import { ProcessedMap } from "../../domain/environment/processedMap";
+import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
 import { Item } from "../../domain/items/item";
 import { PlayerState } from "../../domain/player/playerState";
 import { PlayerInitialStateDto } from "../dtos/playerInitialStateDto";
@@ -51,12 +52,20 @@ export const GameEvents: {
   };
   ITEM_DETAILS: {
     name: string;
-    getEvent: (ids: Item["id"][]) => ItemDetailEvent;
+    getEvent: (ids: Item["id"][]) => ItemDetailRequest;
   };
   ITEM_DETAILS_RESPONSE: {
     name: string;
     getEvent: (items: Item[]) => ItemDetailResponse;
   };
+  ENVIRONMENT_OBJECT_DETAILS_REQUEST: {
+    name: string;
+    getEvent: (ids: EnvironmentObject['id'][]) => EnvironmentObjectDetailsRequest;
+  }
+  ENVIRONMENT_OBJECT_DETAILS_RESPONSE: {
+    name: string;
+    getEvent: (objects: EnvironmentObject[]) => EnvironmentObjectDetailsResponse
+  }
 } = {
   PLAYER_CONNECTED: {
     name: "player_connected",
@@ -121,6 +130,20 @@ export const GameEvents: {
       time: new Date(),
     }),
   },
+  ENVIRONMENT_OBJECT_DETAILS_REQUEST: {
+    name: 'environment_object_details_request',
+    getEvent: (ids: EnvironmentObject['id'][]) => ({
+      objectIds: ids,
+      time: new Date()
+    })
+  },
+  ENVIRONMENT_OBJECT_DETAILS_RESPONSE: {
+    name: 'environment_object_details_response',
+    getEvent: (objects: EnvironmentObject[]) => ({
+      objects,
+      time: new Date()
+    })
+  }
 };
 
 interface BaseEvent {
@@ -164,10 +187,18 @@ export interface InventoryUpdatedEvent extends BaseEvent {
   inventory: PlayerInventoryDto;
 }
 
-export interface ItemDetailEvent extends BaseEvent {
+export interface ItemDetailRequest extends BaseEvent {
   itemIds: Item["id"][];
 }
 
 export interface ItemDetailResponse extends BaseEvent {
   items: Item[];
+}
+
+export interface EnvironmentObjectDetailsResponse extends BaseEvent {
+  objects: EnvironmentObject[]
+}
+
+export interface EnvironmentObjectDetailsRequest extends BaseEvent {
+  objectIds: EnvironmentObject['id'][]
 }

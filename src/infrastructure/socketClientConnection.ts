@@ -3,7 +3,7 @@ import { Socket } from "socket.io";
 import { ClientConnection } from "../domain/clientConnection";
 import {
   GameEvents,
-  ItemDetailEvent,
+  ItemDetailRequest,
   ItemDetailResponse,
   PlayerConnectedEvent,
   PlayerInputEvent,
@@ -22,7 +22,7 @@ export class SocketClientConnection implements ClientConnection {
   private onPlayerConnectionSubject = new Subject<{ playerId: string }>();
   private onInputSubject = new Subject<PlayerInputEvent>();
   private onItemDetailRequestSubject = new Subject<{
-    ev: ItemDetailEvent;
+    ev: ItemDetailRequest;
     callback: (ev: ItemDetailResponse) => {};
   }>();
   private currentRooms: string[] = [];
@@ -36,7 +36,7 @@ export class SocketClientConnection implements ClientConnection {
   }
 
   onItemDetailRequest(): Observable<{
-    ev: ItemDetailEvent;
+    ev: ItemDetailRequest;
     callback: (ev: ItemDetailResponse) => {};
   }> {
     return this.onItemDetailRequestSubject;
@@ -102,7 +102,7 @@ export class SocketClientConnection implements ClientConnection {
     });
     this.socket.on(
       GameEvents.ITEM_DETAILS.name,
-      (dto: ItemDetailEvent, callback: (ev: ItemDetailResponse) => {}) => {
+      (dto: ItemDetailRequest, callback: (ev: ItemDetailResponse) => {}) => {
         this.onItemDetailRequestSubject.next({ev: dto, callback});
       }
     );

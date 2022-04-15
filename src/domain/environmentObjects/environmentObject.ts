@@ -3,5 +3,6 @@ export interface EnvironmentObject {
   pivotOrigin: { x: number; y: number };
   height: number;
   width: number;
-  imagePath: string;
+  textureName: string;
+  atlasPath: string;
 }

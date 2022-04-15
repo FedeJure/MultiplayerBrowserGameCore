@@ -12,6 +12,8 @@ import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRe
 import { ItemsRepository } from "../../domain/items/itemsRepository";
 import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository";
 import { Scene } from "phaser";
+import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
+import { RemoteEnvironmentObjectRepository } from "../repositories/remoteEnvironmentObjectRepository";
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
@@ -73,6 +75,12 @@ export class ClientProvider {
   public static get itemsRepository(): ItemsRepository {
     return DependencyManager.GetOrInstantiate<ItemsRepository>(
       () => new InMemoryItemsRepository()
+    )
+  }
+
+  public static get environmentObjectRepository(): EnvironmentObjectRepository {
+    return DependencyManager.GetOrInstantiate<EnvironmentObjectRepository>(
+      () => new RemoteEnvironmentObjectRepository(this.serverConnection)
     )
   }
 

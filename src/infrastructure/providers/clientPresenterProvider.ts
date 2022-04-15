@@ -81,7 +81,8 @@ export class ClientPresenterProvider {
       new CurrentMapDelegator(
         scene,
         ClientProvider.serverConnection,
-        ClientProvider.originUrl
+        ClientProvider.originUrl,
+        ClientProvider.environmentObjectRepository
       ),
       new BackgroundDelegator(
         scene,

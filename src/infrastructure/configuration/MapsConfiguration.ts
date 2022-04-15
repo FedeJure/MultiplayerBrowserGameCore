@@ -2,6 +2,11 @@ import { MapConfiguration } from "../../domain/environment/mapConfiguration";
 export const MapsConfiguration: MapConfiguration = {
   singleMapSize: { x: 64, y: 64 },
   patronSizeInPixels: 32,
+  layerNames: { //Those are the layers on Tiled
+    colliders: 'colliders', 
+    ground: 'ground',
+    objects: 'objects'
+  },
   mapLayers: [
     {
       id: 0,

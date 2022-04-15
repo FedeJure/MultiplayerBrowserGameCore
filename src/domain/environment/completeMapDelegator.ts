@@ -13,6 +13,7 @@ import { ProcessedMap } from "./processedMap";
 import { Socket } from "socket.io";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { PlayerInfoRepository } from "../../infrastructure/repositories/playerInfoRepository";
+import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
 
 export class CompleteMapDelegator implements Delegator {
   private readonly maxWorldWidht = 10000;
@@ -30,7 +31,8 @@ export class CompleteMapDelegator implements Delegator {
     private scene: Scene,
     private roomManager: RoomManager,
     private socket: Socket,
-    private playersRepository: PlayerInfoRepository
+    private playersRepository: PlayerInfoRepository,
+    private envObjectsRepository: EnvironmentObjectRepository
   ) {
     mapConfig.mapLayers.forEach((layer) => {
       this.processLayer(layer);
@@ -177,7 +179,7 @@ export class CompleteMapDelegator implements Delegator {
       )
     ).then((_) =>
       CompleteMapDelegator.processedMapsAsList.forEach((m) =>
-        createMapOnScene(m, this.scene)
+        createMapOnScene(m, this.scene, this.envObjectsRepository)
       )
     );
   }

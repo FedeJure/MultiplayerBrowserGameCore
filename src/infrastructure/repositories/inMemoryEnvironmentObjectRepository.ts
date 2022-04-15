@@ -6,10 +6,9 @@ export class InMemoryEnvironmentObjectRepository implements EnvironmentObjectRep
     save(object: EnvironmentObject) {
         this.store[object.id] = object
     }
-    get(id:  EnvironmentObject['id']): EnvironmentObject {
+    get(id:  EnvironmentObject['id']): Promise<EnvironmentObject> {
         if (!this.store[id]) throw new Error(`Object with id: ${id} not founded`);
-        return this.store[id]
-        
+        return Promise.resolve(this.store[id])
     }
 
 }

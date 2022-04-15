@@ -18,22 +18,19 @@ export class ClientPlayerInventoryDelegator implements Delegator {
   ) {}
 
   init(): void {
-    
     this.disposer.add(
-      this.connection.onInventoryUpdate
-        .subscribe(({ inventory }) => {
-          this.repository.save(this.playerId, inventory);
-          const newItems = inventory.items.filter((i) => !this.items.get(i));
-          this.connection.emitGetItemDetails(newItems).subscribe((response) => {
-            const items = inventory.items.map(
-              (id) =>
-                this.items.get(id) ??
-                response.items.find((item) => item.id === id) ??
-                DefaultItem
-            );
-            this.inventoryView.saveItems(items)
-          });
-        })
+      this.connection.onInventoryUpdate.subscribe(async ({ inventory }) => {
+        this.repository.save(this.playerId, inventory);
+        const newItems = inventory.items.filter((i) => !this.items.get(i));
+        const response = await this.connection.emitGetItemDetails(newItems);
+        const items = inventory.items.map(
+          (id) =>
+            this.items.get(id) ??
+            response.items.find((item) => item.id === id) ??
+            DefaultItem
+        );
+        this.inventoryView.saveItems(items);
+      })
     );
   }
 

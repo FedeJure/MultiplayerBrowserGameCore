@@ -4,6 +4,11 @@ export interface MapConfiguration {
     singleMapSize: { x: number, y: number },
     patronSizeInPixels: number,
     mapLayers: MapLayer[],
+    layerNames: {
+        colliders: string,
+        ground: string,
+        objects: string
+    }
 }
 
 export interface MapLayer {

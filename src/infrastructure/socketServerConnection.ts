@@ -1,9 +1,11 @@
 import { Observable, Subject } from "rxjs";
 import { Socket } from "socket.io-client";
+import { EnvironmentObjectRepository } from "../domain/environmentObjects/environmentObjectRepository";
 
 import { ServerConnection } from "../domain/serverConnection";
 import { PlayerInputDto } from "./dtos/playerInputDto";
 import {
+  EnvironmentObjectDetailsResponse,
   GameEvents,
   InitialGameStateEvent,
   InventoryUpdatedEvent,
@@ -60,6 +62,18 @@ export class SocketServerConnection implements ServerConnection {
     }, 2000);
   }
 
+  emitGetEnvironmentObjectsDetails(ids: number[]): Promise<EnvironmentObjectDetailsResponse> {
+    return new Promise((res) => {
+      this.socket.emit(
+        GameEvents.ENVIRONMENT_OBJECT_DETAILS_REQUEST.name,
+        GameEvents.ENVIRONMENT_OBJECT_DETAILS_REQUEST.getEvent(ids),
+        (response: EnvironmentObjectDetailsResponse) => {
+          res(response);
+        }
+      );
+    });
+  }
+
   get onInventoryUpdate() {
     return this._onInventoryUpdated;
   }
@@ -106,16 +120,15 @@ export class SocketServerConnection implements ServerConnection {
     );
   }
 
-  emitGetItemDetails(ids: number[]): Observable<ItemDetailResponse> {
-    const responseSubject = new Subject<ItemDetailResponse>();
-    this.socket.emit(
-      GameEvents.ITEM_DETAILS.name,
-      GameEvents.ITEM_DETAILS.getEvent(ids),
-      (response: ItemDetailResponse) => {
-        responseSubject.next(response);
-        responseSubject.complete();
-      }
-    );
-    return responseSubject;
+  emitGetItemDetails(ids: number[]): Promise<ItemDetailResponse> {
+    return new Promise((res) => {
+      this.socket.emit(
+        GameEvents.ITEM_DETAILS.name,
+        GameEvents.ITEM_DETAILS.getEvent(ids),
+        (response: ItemDetailResponse) => {
+          res(response);
+        }
+      );
+    });
   }
 }

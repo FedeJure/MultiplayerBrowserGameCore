@@ -52,7 +52,8 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
           scene,
           ServerProvider.roomManager,
           socket,
-          ServerProvider.playerInfoRepository
+          ServerProvider.playerInfoRepository,
+          ServerProvider.environmentObjectsRepository
         ),
         new PlayerStateDelegator(
           ServerProvider.roomManager,
