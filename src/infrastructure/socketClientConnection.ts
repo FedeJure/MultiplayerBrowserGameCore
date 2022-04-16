@@ -2,6 +2,8 @@ import { Observable, Subject } from "rxjs";
 import { Socket } from "socket.io";
 import { ClientConnection } from "../domain/clientConnection";
 import {
+  EnvironmentObjectDetailsRequest,
+  EnvironmentObjectDetailsResponse,
   GameEvents,
   ItemDetailRequest,
   ItemDetailResponse,
@@ -23,7 +25,11 @@ export class SocketClientConnection implements ClientConnection {
   private onInputSubject = new Subject<PlayerInputEvent>();
   private onItemDetailRequestSubject = new Subject<{
     ev: ItemDetailRequest;
-    callback: (ev: ItemDetailResponse) => {};
+    callback: (ev: ItemDetailResponse) => void;
+  }>();
+  private onEnvironmentObjectDetailRequestSubject = new Subject<{
+    ev: EnvironmentObjectDetailsRequest;
+    callback: (ev: EnvironmentObjectDetailsResponse) => void;
   }>();
   private currentRooms: string[] = [];
 
@@ -37,9 +43,16 @@ export class SocketClientConnection implements ClientConnection {
 
   onItemDetailRequest(): Observable<{
     ev: ItemDetailRequest;
-    callback: (ev: ItemDetailResponse) => {};
+    callback: (ev: ItemDetailResponse) => void;
   }> {
     return this.onItemDetailRequestSubject;
+  }
+
+  onEnvironmentObjectRequest(): Observable<{
+    ev: EnvironmentObjectDetailsRequest;
+    callback: (ev: EnvironmentObjectDetailsResponse) => void;
+  }> {
+    return this.onEnvironmentObjectDetailRequestSubject;
   }
 
   sendConnectedPlayer(player: PlayerInitialStateDto) {
@@ -103,7 +116,14 @@ export class SocketClientConnection implements ClientConnection {
     this.socket.on(
       GameEvents.ITEM_DETAILS.name,
       (dto: ItemDetailRequest, callback: (ev: ItemDetailResponse) => {}) => {
-        this.onItemDetailRequestSubject.next({ev: dto, callback});
+        this.onItemDetailRequestSubject.next({ ev: dto, callback });
+      }
+    );
+
+    this.socket.on(
+      GameEvents.ENVIRONMENT_OBJECT_DETAILS_REQUEST.name,
+      (dto: EnvironmentObjectDetailsRequest, callback: (ev: EnvironmentObjectDetailsResponse) => void) => {
+        this.onEnvironmentObjectDetailRequestSubject.next({ ev: dto, callback });
       }
     );
   }

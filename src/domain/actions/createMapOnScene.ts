@@ -100,11 +100,13 @@ export function createMapOnScene(
         MapsConfiguration.layerNames.objects
       );
       if (objectLayers) {
-        objectLayers.objects.forEach(obj => {
-          const objId = Number(obj.name)
-          if (!objId) return 
-          const foundedObj = envObjectsRepository.get(objId)
-        });
+        Promise.all(objectLayers.objects
+          .map((obj) => Number(obj.name))
+          .filter(id => !isNaN(id))
+          .map(envObjectsRepository.get.bind(envObjectsRepository)))
+          .then(objs => {
+            // Load objects on scene
+          }).catch(console.log)
       }
       await Promise.all([
         createColliders(colLayer, map, scene, createdObjects),

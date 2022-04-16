@@ -27,6 +27,7 @@ import { ScenePresenter } from "./presentation/scenePresenter";
 import { AssetLoader } from "./view/AssetLoader";
 import { AssetsConfiguration } from "./infrastructure/configuration/AssetsConfiguration";
 import { LoadServerRepositoriesWithMockData } from "./infrastructure/mockUtils";
+import { EnvironmentObjectDetailsDispatcherDelegator } from "./domain/environmentObjects/environmentObjectDetailsDispatcherDelegator";
 
 export const InitGame: (socket: Socket, originUrl: string) => void = (
   socket: Socket,
@@ -38,9 +39,9 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
     scene: [new LoadScene(), scene],
   };
   const game = new Phaser.Game(config);
-  AssetLoader.setBaseUrl( `${originUrl}${AssetsConfiguration.assetsPath}`)
+  AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
   game.events.addListener(Phaser.Core.Events.READY, () => {
-    LoadServerRepositoriesWithMockData()
+    LoadServerRepositoriesWithMockData();
 
     scene.events.addListener(Phaser.Scenes.Events.CREATE, () => {
       const __ = new ScenePresenter(scene, [
@@ -75,6 +76,10 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
           ServerProvider.inventoryRepository,
           ServerProvider.itemsRepository
         ),
+        new EnvironmentObjectDetailsDispatcherDelegator(
+          ServerProvider.environmentObjectsRepository,
+          ServerProvider.connectionsRepository
+        ), 
       ]);
       socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
         const connection = new SocketClientConnection(clientSocket);
@@ -83,7 +88,6 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
           "InitServerGame",
           `[Event: ${SocketIOEvents.CONNECTION}] :: with connection id: ${clientSocket.id}`
         );
-
         clientSocket.on(SocketIOEvents.DISCONNECT, () => {
           ServerProvider.connectionsRepository.removeConnection(
             connection.connectionId
@@ -121,7 +125,7 @@ export const InitClientGame = (
     scene: [new ClientLoadScene(), scene, hudScene],
   };
   const game = new Phaser.Game(config);
-  AssetLoader.setBaseUrl( `${originUrl}${AssetsConfiguration.assetsPath}`)
+  AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
 
   game.events.addListener(Phaser.Core.Events.READY, () => {
     ClientProvider.presenterProvider.forGameplay(scene);

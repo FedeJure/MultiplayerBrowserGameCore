@@ -14,9 +14,10 @@ export class RemoteEnvironmentObjectRepository
     return this.serverConnection
       .emitGetEnvironmentObjectsDetails([id])
       .then((response) => {
-        const object = response.objects.find((o) => object?.id === id);
-        if (!object) throw new Error(`Object with id ${id} not founded remotely`);
-        
+        const object = response.objects.find((o) => o?.id === id);
+        if (!object)
+          throw new Error(`Object with id ${id} not founded remotely`);
+
         return object;
       });
   }

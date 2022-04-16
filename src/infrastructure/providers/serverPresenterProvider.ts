@@ -30,7 +30,7 @@ export class ServerPresenterProvider {
         ServerProvider.playerStateRepository,
         ServerProvider.playerInputRequestRepository
       ),
-      new PlayerAngleFixDelegator(player),
+      new PlayerAngleFixDelegator(player)
     ]);
   }
 }

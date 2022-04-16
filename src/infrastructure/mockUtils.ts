@@ -27,4 +27,13 @@ export const LoadServerRepositoriesWithMockData = () => {
     name: "Ring of Honor",
     detail: "This is a Test item used only for testing purpose",
   });
+
+  ServerProvider.environmentObjectsRepository.save({
+    id: 1,
+    pivotOrigin: { x: 0.5, y: 1 },
+    height: 100,
+    width: 100,
+    textureName: 'coin',
+    atlasPath: '/atlasPath'
+  })
 };
