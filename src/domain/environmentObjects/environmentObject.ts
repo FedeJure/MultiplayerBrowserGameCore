@@ -1,3 +1,5 @@
+import { EnvironmentObjectVariant } from "./environmentObjectVariant";
+
 export interface EnvironmentObject {
   id: number;
   pivotOrigin: { x: number; y: number };
@@ -6,6 +8,7 @@ export interface EnvironmentObject {
   textureName: string;
   atlasPath?: string;
   assetType: EnvironmentObjectAssetType
+  objectVariant: EnvironmentObjectVariant
 }
 
 export enum EnvironmentObjectAssetType {

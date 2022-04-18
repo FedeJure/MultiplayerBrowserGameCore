@@ -21,6 +21,12 @@ import { ClientPlayerConnectionDelegator } from "../../domain/player/clientPlaye
 import { PlayerAngleFixDelegator } from "../../domain/movement/playerAngleFixDelegator";
 import { ClientInventoryView } from "../../view/clientInventoryView";
 import { PlayerInfo } from "../../domain/player/playerInfo";
+import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
+import { EnvironmentObjectVariant } from "../../domain/environmentObjects/environmentObjectVariant";
+import { Delegator } from "../../domain/delegator";
+import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
+import { GameObjects } from "phaser";
+
 export class ClientPresenterProvider {
   forLocalPlayer(input: PlayerInput, player: ClientPlayer): void {
     new ViewPresenter(player.view, [
@@ -110,5 +116,14 @@ export class ClientPresenterProvider {
         view
       ),
     ]);
+  }
+  forEnvironmentObject(object: EnvironmentObject, view: GameObjects.GameObject) {
+    const delegators: Delegator[] = [];
+    switch (object.objectVariant) {
+      case EnvironmentObjectVariant.decorative:
+        delegators.push(new AnimatedDecorativeObjectDelegator(view));
+        break;
+    }
+    new ViewPresenter(view, delegators);
   }
 }

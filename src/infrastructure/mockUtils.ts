@@ -1,4 +1,5 @@
 import { EnvironmentObjectAssetType } from "../domain/environmentObjects/environmentObject";
+import { EnvironmentObjectVariant } from "../domain/environmentObjects/environmentObjectVariant";
 import { ServerProvider } from "../infrastructure/providers/serverProvider";
 
 export const LoadServerRepositoriesWithMockData = () => {
@@ -35,6 +36,7 @@ export const LoadServerRepositoriesWithMockData = () => {
     height: 30,
     width: 30,
     textureName: '/objects/coin-pro',
-    assetType: EnvironmentObjectAssetType.spine
+    assetType: EnvironmentObjectAssetType.spine,
+    objectVariant: EnvironmentObjectVariant.decorative
   })
 };

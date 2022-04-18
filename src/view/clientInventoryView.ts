@@ -67,8 +67,12 @@ export class ClientInventoryView
   async saveItems(items: Item[]) {
     Promise.all(
       items.map((i) =>
-        loadAssetAsync(this.scene, () =>
+        loadAssetAsync(this.scene, () => {
+          if (this.scene.textures.exists(i.icon)) return false;
           this.scene.load.image(i.icon, AssetLoader.resolveAssetPath(i.icon))
+          return true
+        }
+          
         )
       )
     ).then(() => {

@@ -1,5 +1,6 @@
 import { GameObjects } from "phaser";
 import { MapUpdateEvent } from "../../infrastructure/events/gameEvents";
+import { ClientProvider } from "../../infrastructure/providers/clientProvider";
 import { ClientEnvironmentObjectFactory } from "../../view/environmentObjects/clientEnvironmentObjectFactory";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { createMapOnScene } from "../actions/createMapOnScene";
@@ -103,7 +104,7 @@ export class CurrentMapDelegator implements Delegator {
         maps
           .filter((m) => !loadedKeys.includes(m.id.toString()))
           .map((m) => {
-            return createMapOnScene(m, this.scene, this.envObjectsRepository, new ClientEnvironmentObjectFactory(this.scene)).then((createdObjects) => {
+            return createMapOnScene(m, this.scene, this.envObjectsRepository, new ClientEnvironmentObjectFactory(this.scene, ClientProvider.presenterProvider)).then((createdObjects) => {
               this.loadedMaps[m.id] = { map: m, createdObjects };
               return createdObjects;
             });

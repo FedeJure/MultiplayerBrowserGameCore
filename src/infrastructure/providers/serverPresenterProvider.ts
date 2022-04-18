@@ -1,5 +1,10 @@
+import { GameObjects } from "phaser";
 import { ServerPlayerAnimationDelegator } from "../../domain/animations/serverPlayerAnimationDelegator";
 import { PlayerCollisionDelegator } from "../../domain/collisions/playerCollisionDelegator";
+import { Delegator } from "../../domain/delegator";
+import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
+import { EnvironmentObjectVariant } from "../../domain/environmentObjects/environmentObjectVariant";
+import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
 import { PlayerAngleFixDelegator } from "../../domain/movement/playerAngleFixDelegator";
 import { Player } from "../../domain/player/player";
 import { PlayerInput } from "../../domain/player/playerInput";
@@ -30,7 +35,16 @@ export class ServerPresenterProvider {
         ServerProvider.playerStateRepository,
         ServerProvider.playerInputRequestRepository
       ),
-      new PlayerAngleFixDelegator(player)
+      new PlayerAngleFixDelegator(player),
     ]);
+  }
+  forEnvironmentObject(object: EnvironmentObject, view: GameObjects.GameObject) {
+    const delegators: Delegator[] = [];
+    switch (object.objectVariant) {
+      case EnvironmentObjectVariant.decorative:
+        delegators.push(new AnimatedDecorativeObjectDelegator(view));
+        break;
+    }
+    new ViewPresenter(view, delegators);
   }
 }
