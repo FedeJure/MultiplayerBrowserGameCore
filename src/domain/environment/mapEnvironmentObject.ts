@@ -1,6 +1,6 @@
 import { EnvironmentObject } from "../environmentObjects/environmentObject";
 
 export interface MapEnvironmentObject {
-  objectId: EnvironmentObject["id"];
+  object: EnvironmentObject;
   position: { x: number; y: number };
 }

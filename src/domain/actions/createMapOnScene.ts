@@ -1,64 +1,16 @@
 import { GameObjects, Scene } from "phaser";
 import { MapsConfiguration } from "../../infrastructure/configuration/MapsConfiguration";
 import { CollisionCategory } from "../collisions/collisionTypes";
+import { MapEnvironmentObject } from "../environment/mapEnvironmentObject";
 import { ProcessedMap } from "../environment/processedMap";
+import { EnvironmentObjectFactory } from "../environmentObjects/environmentobjectFactory";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
-
-function createBounds(map: ProcessedMap, scene: Scene) {
-  const boundSize = 32;
-  if (map.leftMapId === undefined) {
-    addBound(
-      map.originX,
-      map.originY + map.height / 2,
-      boundSize,
-      map.height + boundSize,
-      scene
-    );
-  }
-  if (map.rightMapId === undefined) {
-    addBound(
-      map.originX + map.width,
-      map.originY + map.height / 2,
-      boundSize,
-      map.height + boundSize,
-      scene
-    );
-  }
-  if (map.topMapId === undefined) {
-    addBound(map.originX, map.originY, map.width + boundSize, boundSize, scene);
-  }
-  if (map.bottomMapId === undefined) {
-    addBound(
-      map.originX,
-      map.originY + map.height,
-      map.width + boundSize,
-      boundSize,
-      scene
-    );
-  }
-}
-
-function addBound(
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  scene: Scene
-) {
-  scene.matter.add.rectangle(x, y, width, height, {
-    isStatic: true,
-    label: "Bound Wall",
-  }).collisionFilter = {
-    group: 0,
-    mask: CollisionCategory.Player,
-    category: CollisionCategory.WorldBounds,
-  };
-}
 
 export function createMapOnScene(
   map: ProcessedMap,
   scene: Scene,
-  envObjectsRepository: EnvironmentObjectRepository
+  envObjectsRepository: EnvironmentObjectRepository,
+  objectsFactory: EnvironmentObjectFactory
 ) {
   return new Promise<(GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[]>(
     async (res, _) => {
@@ -71,23 +23,16 @@ export function createMapOnScene(
         key: map.config.jsonFile.key,
       });
       createdObjects.push(tilemap);
+
+      //solo en front
       tilemap.addTilesetImage(
         map.config.tilesSourceFiles.key,
         map.config.tilesSourceFiles.key
       );
-      tilemap.addTilesetImage(
-        map.config.objectsSourceFile.key,
-        map.config.objectsSourceFile.key
-      );
+
       tilemap.createLayer(
         MapsConfiguration.layerNames.ground,
         map.config.tilesSourceFiles.key,
-        map.originX,
-        map.originY
-      );
-      tilemap.createLayer(
-        MapsConfiguration.layerNames.objects,
-        map.config.objectsSourceFile.key,
         map.originX,
         map.originY
       );
@@ -100,13 +45,17 @@ export function createMapOnScene(
         MapsConfiguration.layerNames.objects
       );
       if (objectLayers) {
-        Promise.all(objectLayers.objects
-          .map((obj) => Number(obj.name))
-          .filter(id => !isNaN(id))
-          .map(envObjectsRepository.get.bind(envObjectsRepository)))
-          .then(objs => {
-            // Load objects on scene
-          }).catch(console.log)
+        Promise.all<MapEnvironmentObject>(
+          objectLayers.objects
+            .map((o) => [o.properties?.find(p => p.name === 'id')?.value, o.x, o.y])
+            .map(([id, x, y]) => [Number(id), x, y])
+            .filter(([id, x,y]) => !isNaN(id))
+            .map(([id, x,y]) => envObjectsRepository.get(id).then(obj => ({object: obj, position: {x, y}})))
+        )
+          .then((objs) => {
+            objectsFactory.createObjects(objs);
+          })
+          .catch(console.log);
       }
       await Promise.all([
         createColliders(colLayer, map, scene, createdObjects),
@@ -184,4 +133,55 @@ async function createColliders(
       res(createdObjects);
     });
   });
+}
+
+function createBounds(map: ProcessedMap, scene: Scene) {
+  const boundSize = 32;
+  if (map.leftMapId === undefined) {
+    addBound(
+      map.originX,
+      map.originY + map.height / 2,
+      boundSize,
+      map.height + boundSize,
+      scene
+    );
+  }
+  if (map.rightMapId === undefined) {
+    addBound(
+      map.originX + map.width,
+      map.originY + map.height / 2,
+      boundSize,
+      map.height + boundSize,
+      scene
+    );
+  }
+  if (map.topMapId === undefined) {
+    addBound(map.originX, map.originY, map.width + boundSize, boundSize, scene);
+  }
+  if (map.bottomMapId === undefined) {
+    addBound(
+      map.originX,
+      map.originY + map.height,
+      map.width + boundSize,
+      boundSize,
+      scene
+    );
+  }
+}
+
+function addBound(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  scene: Scene
+) {
+  scene.matter.add.rectangle(x, y, width, height, {
+    isStatic: true,
+    label: "Bound Wall",
+  }).collisionFilter = {
+    group: 0,
+    mask: CollisionCategory.Player,
+    category: CollisionCategory.WorldBounds,
+  };
 }

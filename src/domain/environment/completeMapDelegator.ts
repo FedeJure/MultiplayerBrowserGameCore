@@ -14,6 +14,7 @@ import { Socket } from "socket.io";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { PlayerInfoRepository } from "../../infrastructure/repositories/playerInfoRepository";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
+import { ServerEnvironmentObjectFactory } from "../../view/environmentObjects/serverEnvironmentObjectFactory";
 
 export class CompleteMapDelegator implements Delegator {
   private readonly maxWorldWidht = 10000;
@@ -179,7 +180,7 @@ export class CompleteMapDelegator implements Delegator {
       )
     ).then((_) =>
       CompleteMapDelegator.processedMapsAsList.forEach((m) =>
-        createMapOnScene(m, this.scene, this.envObjectsRepository)
+        createMapOnScene(m, this.scene, this.envObjectsRepository, new ServerEnvironmentObjectFactory(this.scene))
       )
     );
   }

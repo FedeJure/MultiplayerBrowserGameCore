@@ -4,5 +4,11 @@ export interface EnvironmentObject {
   height: number;
   width: number;
   textureName: string;
-  atlasPath: string;
+  atlasPath?: string;
+  assetType: EnvironmentObjectAssetType
+}
+
+export enum EnvironmentObjectAssetType {
+  spine = 'spine',
+  spriteAtlas = 'spriteAtlas'
 }

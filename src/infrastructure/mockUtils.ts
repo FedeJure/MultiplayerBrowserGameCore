@@ -1,3 +1,4 @@
+import { EnvironmentObjectAssetType } from "../domain/environmentObjects/environmentObject";
 import { ServerProvider } from "../infrastructure/providers/serverProvider";
 
 export const LoadServerRepositoriesWithMockData = () => {
@@ -30,10 +31,10 @@ export const LoadServerRepositoriesWithMockData = () => {
 
   ServerProvider.environmentObjectsRepository.save({
     id: 1,
-    pivotOrigin: { x: 0.5, y: 1 },
-    height: 100,
-    width: 100,
-    textureName: 'coin',
-    atlasPath: '/atlasPath'
+    pivotOrigin: { x: 0.5, y: 0 },
+    height: 30,
+    width: 30,
+    textureName: '/objects/coin-pro',
+    assetType: EnvironmentObjectAssetType.spine
   })
 };
