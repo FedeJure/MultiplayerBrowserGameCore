@@ -5,7 +5,6 @@ export const loadAssetAsync = async (scene: Scene, func: () => boolean) => {
 
     const response = func();
     if (!response) {
-      console.log("Asdasd")
       res(false)
       return
     }

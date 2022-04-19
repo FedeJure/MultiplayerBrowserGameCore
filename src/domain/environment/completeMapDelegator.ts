@@ -14,6 +14,8 @@ import { Socket } from "socket.io";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { PlayerInfoRepository } from "../../infrastructure/repositories/playerInfoRepository";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
+import { ClientEnvironmentObjectFactory } from "../../view/environmentObjects/clientEnvironmentObjectFactory";
+import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { ServerEnvironmentObjectFactory } from "../../view/environmentObjects/serverEnvironmentObjectFactory";
 
 export class CompleteMapDelegator implements Delegator {
@@ -33,7 +35,8 @@ export class CompleteMapDelegator implements Delegator {
     private roomManager: RoomManager,
     private socket: Socket,
     private playersRepository: PlayerInfoRepository,
-    private envObjectsRepository: EnvironmentObjectRepository
+    private envObjectsRepository: EnvironmentObjectRepository,
+    private presenterProvider: ServerPresenterProvider
   ) {
     mapConfig.mapLayers.forEach((layer) => {
       this.processLayer(layer);
@@ -180,7 +183,7 @@ export class CompleteMapDelegator implements Delegator {
       )
     ).then((_) =>
       CompleteMapDelegator.processedMapsAsList.forEach((m) =>
-        createMapOnScene(m, this.scene, this.envObjectsRepository, new ServerEnvironmentObjectFactory(this.scene))
+        createMapOnScene(m, this.scene, this.envObjectsRepository, new ServerEnvironmentObjectFactory(this.scene, this.presenterProvider))
       )
     );
   }
