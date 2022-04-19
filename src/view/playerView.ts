@@ -116,11 +116,8 @@ export class PlayerView extends GameObjects.GameObject implements IPlayerView {
 
   destroy() {
     try {
-      this._physicContainer.destroy();
-      this._container.removeAll();
-      this._container.destroy();
-      super.destroy();
-    } catch (error) {}
+      this._physicContainer.destroy(true);
+    } catch (error) {console.error(error)}
   }
 
   public get matterBody() {
