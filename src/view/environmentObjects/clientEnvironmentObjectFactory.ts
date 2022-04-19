@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 import { MapEnvironmentObject } from "../../domain/environment/mapEnvironmentObject";
 import { EnvironmentObjectAssetType } from "../../domain/environmentObjects/environmentObject";
-import { EnvironmentObjectFactory } from "../../domain/environmentObjects/environmentobjectFactory";
+import { EnvironmentObjectFactory } from "../../domain/environmentObjects/environmentObjectFactory";
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { AssetLoader } from "../AssetLoader";
@@ -27,14 +27,13 @@ export class ClientEnvironmentObjectFactory
       })
         .then(() => {
           if (ob.object.assetType === EnvironmentObjectAssetType.spine) {
-            //Is spine
             let view = this.scene.add.spine(
               ob.position.x,
               ob.position.y,
               ob.object.textureName,
             ) as unknown as Phaser.GameObjects.Sprite;
 
-            this.scene.matter.add.gameObject(view, {
+            this.scene.matter.add.gameObject(view as Phaser.GameObjects.GameObject, {
               ignoreGravity: true,
               isStatic: true,
             })
@@ -46,7 +45,6 @@ export class ClientEnvironmentObjectFactory
               newPos[0] + view.width * ob.object.pivotOrigin.x,
               newPos[1] + view.height * ob.object.pivotOrigin.y
             );
-            console.log(ob)
             this.presenterProvider.forEnvironmentObject(
               ob.object,
               view

@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 import { MapEnvironmentObject } from "../../domain/environment/mapEnvironmentObject";
-import { EnvironmentObjectFactory } from "../../domain/environmentObjects/environmentobjectFactory";
+import { EnvironmentObjectFactory } from "../../domain/environmentObjects/environmentObjectFactory";
 
 export class ServerEnvironmentObjectFactory implements EnvironmentObjectFactory {
     constructor(private scene: Scene) {

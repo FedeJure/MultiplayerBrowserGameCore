@@ -1,9 +1,9 @@
 import { GameObjects, Scene } from "phaser";
 import { MapsConfiguration } from "../../infrastructure/configuration/MapsConfiguration";
 import { CollisionCategory } from "../collisions/collisionTypes";
-import { MapEnvironmentObject } from "../environment/mapEnvironmentObject";
+
 import { ProcessedMap } from "../environment/processedMap";
-import { EnvironmentObjectFactory } from "../environmentObjects/environmentobjectFactory";
+import { EnvironmentObjectFactory } from "../environmentObjects/environmentObjectFactory";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
 
 export function createMapOnScene(
@@ -45,25 +45,20 @@ export function createMapOnScene(
         MapsConfiguration.layerNames.objects
       );
       if (objectLayers) {
-        objectLayers.objects.forEach(async o => {
-          const id = o.properties?.find(p => p.name === 'id')?.value as number | undefined
+        objectLayers.objects.forEach(async (o) => {
+          const id = o.properties?.find((p) => p.name === "id")?.value as
+            | number
+            | undefined;
 
-          if (!id) return
-          const object = await envObjectsRepository.get(id)
-          objectsFactory.createObjects([{ object, position: {x: o.x!, y: o.y!}}]);
-        })
-        
-        // Promise.all<MapEnvironmentObject>(
-        //   objectLayers.objects
-        //     .map((o) => [o.properties?.find(p => p.name === 'id')?.value, o.x, o.y])
-        //     .map(([id, x, y]) => [Number(id), x, y])
-        //     .filter(([id, x,y]) => !isNaN(id))
-        //     .map(([id, x,y]) => envObjectsRepository.get(id).then(obj => ({object: obj, position: {x, y}})))
-        // )
-        //   .then((objs) => {
-        //     objectsFactory.createObjects(objs);
-        //   })
-        //   .catch(console.log);
+          if (!id) return;
+          const object = await envObjectsRepository.get(id);
+          objectsFactory.createObjects([
+            {
+              object,
+              position: { x: o.x! + map.originX, y: o.y! + map.originY },
+            },
+          ]);
+        });
       }
       await Promise.all([
         createColliders(colLayer, map, scene, createdObjects),
