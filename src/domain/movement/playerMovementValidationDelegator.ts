@@ -27,7 +27,7 @@ export class PlayerMovementValidationDelegator implements Delegator {
   update(time: number, delta: number): void {
     const localState = this.stateRepository.getPlayerState(this.player.info.id);
     if (localState) {
-      const currentPosition = this.player.view.position;
+      const currentPosition = this.player.view.positionVector;
       const x = Phaser.Math.Interpolation.SmoothStep(
         0.5,
         currentPosition.x,

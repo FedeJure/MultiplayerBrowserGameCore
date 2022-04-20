@@ -1,5 +1,6 @@
 import { GameObjects, Scene } from "phaser";
 import { MapsConfiguration } from "../../infrastructure/configuration/MapsConfiguration";
+import { ExistentDepths } from "../../view/existentDepths";
 import { CollisionCategory } from "../collisions/collisionTypes";
 
 import { ProcessedMap } from "../environment/processedMap";
@@ -29,10 +30,9 @@ export function createMapOnScene(
       });
       const tilesets = map.config.sourceFiles.map((s) => s.key);
       tilemap.layers.forEach((l) => {
-        tilemap.createLayer(l.name, tilesets, map.originX, map.originY);
+        tilemap.createLayer(l.name, tilesets, map.originX, map.originY).setDepth(ExistentDepths.GROUND_BACKGROUND);
       });
 
-      console.log(tilemap);
       createBounds(map, scene);
 
       const colLayer = tilemap.getObjectLayer(

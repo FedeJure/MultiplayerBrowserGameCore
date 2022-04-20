@@ -1,6 +1,7 @@
 import { GameObjects } from "phaser";
 import { ConnectedPlayersRepository } from "../../infrastructure/repositories/connectedPlayersRepository";
 import { LocalPlayerRepository } from "../../infrastructure/repositories/localPlayerRepository";
+import { ExistentDepths } from "../../view/existentDepths";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { loadBackgroundAssets } from "../actions/loadBackgroundAssets";
 import { Delegator } from "../delegator";
@@ -56,7 +57,7 @@ export class BackgroundDelegator implements Delegator {
               .image(nm.originX, nm.originY - nm.height * 0.2, nb.key)
               .setScrollFactor(factor, factor / 10)
               .setOrigin(0.5, 0)
-              .setDepth(-1);
+              .setDepth(ExistentDepths.BACKGROUND);
             this.createdBackgroundsMap[nb.key] = createdNeighbor;
             this.createdBackgrounds.push(createdNeighbor);
           });
@@ -74,7 +75,7 @@ export class BackgroundDelegator implements Delegator {
             )
             .setScrollFactor(factor, factor / 10)
             .setOrigin(0.5, 0)
-            .setDepth(-1);
+            .setDepth(ExistentDepths.BACKGROUND);
   
           this.createdBackgroundsMap[bg.key] = currentBg;
           this.createdBackgrounds.push(currentBg);

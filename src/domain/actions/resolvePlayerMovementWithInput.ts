@@ -54,7 +54,7 @@ export class ResolvePlayerMovementWithInputs {
         y: Number(newVelY.toPrecision(2)),
       },
       jumpsAvailable: availableJumps,
-      position: view.position,
+      position: view.positionVector,
       canJump,
       side,
       jumping,

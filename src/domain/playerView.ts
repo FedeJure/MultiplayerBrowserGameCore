@@ -14,13 +14,12 @@ export interface IPlayerView {
   lookToLeft(value: boolean): void;
   playAnimation(anim: string): void;
   startFollowWithCam(): void;
-  moveTo(x: number, y: number, time: number): void;
   scene: Scene;
   destroy(): void;
   get matterBody(): BodyType;
   get velocity(): Vector;
-  get position(): Vector;
-  get gameObject(): Phaser.GameObjects.GameObject
+  get positionVector(): Vector;
   add(children: GameObjects.GameObject): this
   get onGroundCollideChange(): Observable<boolean>
+  get active(): boolean
 }

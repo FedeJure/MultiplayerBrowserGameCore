@@ -16,7 +16,7 @@ export class ServerPlayerStateUpdaterDelegator implements Delegator {
   init(): void {}
   stop(): void {}
   update(time: number, delta: number): void {
-    if (!this.player.view.gameObject.active) return
+    if (!this.player.view.active) return
     const oldState = this.playerStates.getPlayerState(this.player.info.id);
     if (oldState) {
       const newState = this.resolveMovement.execute(
