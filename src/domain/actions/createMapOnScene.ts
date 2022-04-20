@@ -24,18 +24,15 @@ export function createMapOnScene(
       });
       createdObjects.push(tilemap);
 
-      //solo en front
-      tilemap.addTilesetImage(
-        map.config.tilesSourceFiles.key,
-        map.config.tilesSourceFiles.key
-      );
+      map.config.sourceFiles.forEach((sourceFile) => {
+        tilemap.addTilesetImage(sourceFile.key, sourceFile.key);
+      });
+      const tilesets = map.config.sourceFiles.map((s) => s.key);
+      tilemap.layers.forEach((l) => {
+        tilemap.createLayer(l.name, tilesets, map.originX, map.originY);
+      });
 
-      tilemap.createLayer(
-        MapsConfiguration.layerNames.ground,
-        map.config.tilesSourceFiles.key,
-        map.originX,
-        map.originY
-      );
+      console.log(tilemap);
       createBounds(map, scene);
 
       const colLayer = tilemap.getObjectLayer(

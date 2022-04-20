@@ -13,6 +13,7 @@
     - `ground` : A tile layer where will be place all the simple ground tiles
     - `colliders` : An object layer composed by rectangles where you want to have ground collisions
     - `objects` : An object layer composed by `Points` objects (detailed on Environment items section) 
+    - `tile layer with any name`(optional): You can setup any tile layer you want to setup static objects
 
 ### Tiles source File and Object source File (image) 
 * Must have the same key in `MapConfiguration.ts` than inside of Tiled

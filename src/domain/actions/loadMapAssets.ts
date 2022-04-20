@@ -7,15 +7,12 @@ export async function loadMapAssets(
   scene: Scene
 ) {
   return new Promise((res, _) => {
-
-    scene.load.image({
-      key: map.config.objectsSourceFile.key,
-      url: AssetLoader.resolveAssetPath(map.config.objectsSourceFile.fileName),
-    });
-    scene.load.image({
-      key: map.config.tilesSourceFiles.key,
-      url: AssetLoader.resolveAssetPath(map.config.tilesSourceFiles.fileName),
-    });
+    map.config.sourceFiles.forEach(sourceFile => {
+      scene.load.image({
+        key: sourceFile.key,
+        url: AssetLoader.resolveAssetPath(sourceFile.fileName),
+      });
+    })
     scene.load.tilemapTiledJSON({
       key: map.config.jsonFile.key,
       url: AssetLoader.resolveAssetPath(map.config.jsonFile.fileName),

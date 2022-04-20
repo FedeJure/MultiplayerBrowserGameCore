@@ -2,10 +2,11 @@ import { MapConfiguration } from "../../domain/environment/mapConfiguration";
 export const MapsConfiguration: MapConfiguration = {
   singleMapSize: { x: 64, y: 64 },
   patronSizeInPixels: 32,
-  layerNames: { //Those are the layers on Tiled
-    colliders: 'colliders', 
-    ground: 'ground',
-    objects: 'objects'
+  layerNames: {
+    //Those are the layers on Tiled
+    colliders: "colliders",
+    ground: "ground",
+    objects: "objects",
   },
   mapLayers: [
     {
@@ -23,10 +24,15 @@ export const MapsConfiguration: MapConfiguration = {
               { key: "forest-05", fileName: "mapsBgs/forest-05.png" },
               { key: "forest-06", fileName: "mapsBgs/forest-06.png" },
             ],
-            jsonFile: { key: "forest-0", fileName: "mapConfigFiles/forest/forest-0.json" },
-            tilesSourceFiles: { key: "forest", fileName: "mapTiles/forest.png" },
-            objectsSourceFile: { key: "farm", fileName: "mapStaticObjects/farm.png" },
-            objects: []
+            jsonFile: {
+              key: "forest-0",
+              fileName: "mapConfigFiles/forest/forest-0.json",
+            },
+            sourceFiles: [
+              { key: "forest", fileName: "mapTiles/forest.png" },
+              { key: "farm", fileName: "mapStaticObjects/farm.png" },
+            ],
+            objects: [],
           },
           {
             id: 1,
@@ -39,10 +45,15 @@ export const MapsConfiguration: MapConfiguration = {
               { key: "forest-15", fileName: "mapsBgs/forest-05.png" },
               { key: "forest-16", fileName: "mapsBgs/forest-06.png" },
             ],
-            jsonFile: { key: "forest-1", fileName: "mapConfigFiles/forest/forest-1.json" },
-            tilesSourceFiles: { key: "forest", fileName: "mapTiles/forest.png" },
-            objectsSourceFile: { key: "farm", fileName: "mapStaticObjects/farm.png" },
-            objects: []
+            jsonFile: {
+              key: "forest-1",
+              fileName: "mapConfigFiles/forest/forest-1.json",
+            },
+            sourceFiles: [
+              { key: "forest", fileName: "mapTiles/forest.png" },
+              { key: "farm", fileName: "mapStaticObjects/farm.png" },
+            ],
+            objects: [],
           },
           {
             id: 2,
@@ -55,10 +66,15 @@ export const MapsConfiguration: MapConfiguration = {
               { key: "forest-25", fileName: "mapsBgs/forest-05.png" },
               { key: "forest-26", fileName: "mapsBgs/forest-06.png" },
             ],
-            jsonFile: { key: "forest-2", fileName: "mapConfigFiles/forest/forest-2.json" },
-            tilesSourceFiles: { key: "forest", fileName: "mapTiles/forest.png" },
-            objectsSourceFile: { key: "farm", fileName: "mapStaticObjects/farm.png" },
-            objects: []
+            jsonFile: {
+              key: "forest-2",
+              fileName: "mapConfigFiles/forest/forest-2.json",
+            },
+            sourceFiles: [
+              { key: "forest", fileName: "mapTiles/forest.png" },
+              { key: "farm", fileName: "mapStaticObjects/farm.png" },
+            ],
+            objects: [],
           },
           {
             id: 3,
@@ -71,10 +87,15 @@ export const MapsConfiguration: MapConfiguration = {
               { key: "forest-35", fileName: "mapsBgs/forest-05.png" },
               { key: "forest-36", fileName: "mapsBgs/forest-06.png" },
             ],
-            jsonFile: { key: "forest-2", fileName: "mapConfigFiles/forest/forest-2.json" },
-            tilesSourceFiles: { key: "forest", fileName: "mapTiles/forest.png" },
-            objectsSourceFile: { key: "farm", fileName: "mapStaticObjects/farm.png" },
-            objects: []
+            jsonFile: {
+              key: "forest-2",
+              fileName: "mapConfigFiles/forest/forest-2.json",
+            },
+            sourceFiles: [
+              { key: "forest", fileName: "mapTiles/forest.png" },
+              { key: "farm", fileName: "mapStaticObjects/farm.png" },
+            ],
+            objects: [],
           },
         ],
       ],
