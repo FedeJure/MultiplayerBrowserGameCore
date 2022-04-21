@@ -13,13 +13,13 @@ import { ServerPlayerView } from "../../view/serverPlayerView";
 import { ClientConnection } from "../clientConnection";
 import { Delegator } from "../delegator";
 import { CompleteMapDelegator } from "../environment/completeMapDelegator";
-import { InventoryRepository } from "../items/inventoryRepository";
 import { RoomManager } from "../roomManager";
 import { DefaultConfiguration } from "./playerConfiguration";
 import { InGamePlayersRepository } from "./inGamePlayersRepository";
 import { ServerPlayer } from "./serverPlayer";
 import { AsyncRepository } from "../repository";
 import { PlayerInfo } from "./playerInfo";
+import { PlayerInventoryDto } from "../../infrastructure/dtos/playerInventoryDto";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -29,7 +29,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private roomManager: RoomManager,
     private playerInfoRepository: AsyncRepository<PlayerInfo>,
     private playerStateRepository: PlayerStateRepository,
-    private inventoryRepository: InventoryRepository,
+    private inventoryRepository: AsyncRepository<PlayerInventoryDto>,
     private presenterProvider: ServerPresenterProvider,
     private inGamePlayersRepository: InGamePlayersRepository<ServerPlayer>
   ) {}

@@ -1,14 +1,14 @@
 import { AsyncRepository, SimpleRepository } from "../../domain/repository";
 
-export class InMemoryRepository<T extends { id: string }>
+export class InMemoryRepository<T>
   implements SimpleRepository<T>
 {
   private store: Map<string, T> = new Map();
   get(id: string): T | undefined {
     return this.store.get(id);
   }
-  save(obj: T) {
-    this.store.set(obj.id, obj);
+  save(id: string, obj: T) {
+    this.store.set(id, obj);
   }
   getAll(filter?: Partial<T>): T[] {
     const values = Array.from(this.store.values());
@@ -19,20 +19,20 @@ export class InMemoryRepository<T extends { id: string }>
   update(id: string, payload: Partial<T>) {
     const obj = this.get(id);
     if (obj) {
-      this.save({ ...obj, ...payload });
+      this.save(id, { ...obj, ...payload });
     }
   }
 }
 
-export class InMemoryAsyncRepository<T extends { id: string }>
+export class InMemoryAsyncRepository<T>
   implements AsyncRepository<T>
 {
   private store: Map<string, T> = new Map();
   get(id: string): Promise<T | undefined> {
     return Promise.resolve(this.store.get(id));
   }
-  save(obj: T): Promise<void> {
-    this.store.set(obj.id, obj);
+  save(id: string, obj: T): Promise<void> {
+    this.store.set(id, obj);
     return Promise.resolve();
   }
   getAll(filter?: Partial<T>): Promise<T[]> {
@@ -45,7 +45,7 @@ export class InMemoryAsyncRepository<T extends { id: string }>
   }
   update(id: string, payload: Partial<T>): Promise<void> {
     return this.get(id).then((obj) =>
-      obj ? this.save({ ...obj, ...payload }) : Promise.resolve()
+      obj ? this.save(id, { ...obj, ...payload }) : Promise.resolve()
     );
   }
 }

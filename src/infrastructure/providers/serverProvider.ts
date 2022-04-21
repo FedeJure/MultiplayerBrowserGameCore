@@ -1,6 +1,5 @@
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
-import { InventoryRepository } from "../../domain/items/inventoryRepository";
 import { Item } from "../../domain/items/item";
 import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
 import { PlayerInfo } from "../../domain/player/playerInfo";
@@ -8,10 +7,10 @@ import { ServerPlayer } from "../../domain/player/serverPlayer";
 import { AsyncRepository } from "../../domain/repository";
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
+import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
 import { ConnectionsRepository } from "../repositories/connectionsRepository";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
 import { InMemoryInGameServerPlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
-import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
 import { InMemoryAsyncRepository } from "../repositories/InMemoryRepository";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
@@ -58,9 +57,9 @@ export class ServerProvider {
     );
   }
 
-  public static get inventoryRepository(): InventoryRepository {
-    return DependencyManager.GetOrInstantiate<InMemoryInventoryRepository>(
-      () => new InMemoryInventoryRepository()
+  public static get inventoryRepository(): AsyncRepository<PlayerInventoryDto> {
+    return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerInventoryDto>>(
+      () => new InMemoryAsyncRepository<PlayerInventoryDto>()
     );
   }
 
