@@ -1,8 +1,8 @@
-import { Player } from "../player/player";
+import { ClientPlayer } from "../player/player";
 import { ServerPlayerAnimationDelegator } from "./serverPlayerAnimationDelegator";
 
 export class PlayerAnimationDelegator extends ServerPlayerAnimationDelegator {
-  constructor(player: Player) {
+  constructor(player: ClientPlayer) {
     super(player);
   }
   init(): void {}

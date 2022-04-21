@@ -1,9 +1,9 @@
 import { Observable } from "rxjs";
-import { Player } from "./player";
+import { ClientPlayer } from "./player";
 import { PlayerInfo } from "./playerInfo";
 import { ServerPlayer } from "./serverPlayer";
 
-export interface InGamePlayersRepository<T extends Player | ServerPlayer> {
+export interface InGamePlayersRepository<T extends ClientPlayer | ServerPlayer> {
     get(id: PlayerInfo['id']): T | undefined
     save(player: T)
     remove(id: PlayerInfo['id'])

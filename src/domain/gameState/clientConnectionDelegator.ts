@@ -5,7 +5,7 @@ import { ClientInventoryView } from "../../view/clientInventoryView";
 import { ClientPlayerView } from "../../view/clientPlayerView";
 import { GameScene } from "../../view/scenes/GameScene";
 import { Delegator } from "../delegator";
-import { Player } from "../player/player";
+import { ClientPlayer } from "../player/player";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { InGamePlayersRepository } from "../player/inGamePlayersRepository";
 import { ServerConnection } from "../serverConnection";
@@ -18,7 +18,7 @@ export class ClientConnectionDelegator implements Delegator {
     private connection: ServerConnection,
     private scene: GameScene,
     private presenterProvider: ClientPresenterProvider,
-    private inGamePlayersRepository: InGamePlayersRepository<Player>
+    private inGamePlayersRepository: InGamePlayersRepository<ClientPlayer>
   ) {}
   init(): void {
     this.connection.onInitialGameState.subscribe((data) => {
@@ -34,7 +34,7 @@ export class ClientConnectionDelegator implements Delegator {
             DefaultConfiguration.width
           );
           const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
-          const player = new Player(dto.info, dto.state, view);
+          const player = new ClientPlayer(dto.info, dto.state, view);
           const inventory = new ClientInventoryView(this.scene, input);
           this.presenterProvider.forInventory(dto.info.id, inventory);
           this.presenterProvider.forLocalPlayer(input, player, view);
@@ -73,7 +73,7 @@ export class ClientConnectionDelegator implements Delegator {
       DefaultConfiguration.height,
       DefaultConfiguration.width
     );
-    const player = new Player(info, state, view);
+    const player = new ClientPlayer(info, state, view);
     this.presenterProvider.forPlayer(player, view);
     this.inGamePlayersRepository.save(player);
   }

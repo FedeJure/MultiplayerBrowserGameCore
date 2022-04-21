@@ -1,8 +1,8 @@
 import { Delegator } from "../delegator";
-import { Player } from "./player";
+import { ClientPlayer } from "./player";
 
 export class PlayerInfoDelegator implements Delegator {
-  constructor(private player: Player) {}
+  constructor(private player: ClientPlayer) {}
   init(): void {
     this.player.view.setDisplayName(this.player.info.name);
   }

@@ -1,4 +1,4 @@
-import { Player } from "../../domain/player/player";
+import { ClientPlayer } from "../../domain/player/player";
 import { PlayerInfo } from "../../domain/player/playerInfo";
 import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
 import { Subject } from "rxjs";
@@ -26,20 +26,20 @@ export class InMemoryInGameServerPlayerRepository implements InGamePlayersReposi
   }
 }
 
-export class InMemoryInGameClientPlayerRepository implements InGamePlayersRepository<Player> {
-  private _onNewPlayer = new Subject<Player>();
-  private store: Map<PlayerInfo["id"], Player> = new Map();
-  get(id: PlayerInfo["id"]): Player | undefined {
+export class InMemoryInGameClientPlayerRepository implements InGamePlayersRepository<ClientPlayer> {
+  private _onNewPlayer = new Subject<ClientPlayer>();
+  private store: Map<PlayerInfo["id"], ClientPlayer> = new Map();
+  get(id: PlayerInfo["id"]): ClientPlayer | undefined {
     return this.store.get(id);
   }
-  save(player: Player) {
+  save(player: ClientPlayer) {
     this.store.set(player.info.id, player);
     this._onNewPlayer.next(player);
   }
   remove(id: PlayerInfo["id"]) {
     this.store.delete(id)
   }
-  getAll(): Map<string, Player> {
+  getAll(): Map<string, ClientPlayer> {
     return this.store;
   }
 

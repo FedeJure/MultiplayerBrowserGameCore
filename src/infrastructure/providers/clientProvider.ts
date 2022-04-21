@@ -15,7 +15,7 @@ import { EnvironmentObjectRepository } from "../../domain/environmentObjects/env
 import { RemoteEnvironmentObjectRepository } from "../repositories/remoteEnvironmentObjectRepository";
 import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
 import { InMemoryInGameClientPlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
-import { Player } from "../../domain/player/player";
+import { ClientPlayer } from "../../domain/player/player";
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
@@ -82,8 +82,8 @@ export class ClientProvider {
     )
   }
 
-  public static get inGamePlayersRepository(): InGamePlayersRepository<Player> {
-    return DependencyManager.GetOrInstantiate<InGamePlayersRepository<Player>>(
+  public static get inGamePlayersRepository(): InGamePlayersRepository<ClientPlayer> {
+    return DependencyManager.GetOrInstantiate<InGamePlayersRepository<ClientPlayer>>(
       () => new InMemoryInGameClientPlayerRepository()
     )
   }

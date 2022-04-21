@@ -1,12 +1,12 @@
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
-import { Player } from "../player/player";
+import { ClientPlayer } from "../player/player";
 
 export class PlayerCollisionDelegator implements Delegator {
 
   private readonly disposer: Disposer = new Disposer();
 
-  constructor(private player: Player) {
+  constructor(private player: ClientPlayer) {
   }
   update(time: number, delta: number): void {}
 

@@ -3,11 +3,11 @@ import { PlayerInfoRepository } from "../../infrastructure/repositories/playerIn
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ClientConnection } from "../clientConnection";
 import { IPlayerView } from "../playerView";
-import { Player } from "./player";
+import { ClientPlayer } from "./player";
 import { PlayerInfo } from "./playerInfo";
 import { PlayerState } from "./playerState";
 
-export class ServerPlayer extends Player {
+export class ServerPlayer extends ClientPlayer {
   private _onStateChange: Subject<PlayerState> = new Subject();
   constructor(
     info: PlayerInfo,

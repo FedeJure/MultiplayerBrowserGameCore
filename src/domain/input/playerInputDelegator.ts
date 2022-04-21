@@ -6,7 +6,7 @@ import { resolvePlayerMovementWithInput } from "../actions/resolvePlayerMovement
 import { PlayerState } from "../player/playerState";
 import { Side } from "../side";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
-import { Player } from "../player/player";
+import { ClientPlayer } from "../player/player";
 
 export class PlayerInputDelegator implements Delegator {
   private currentInput: PlayerInputDto | undefined;
@@ -14,7 +14,7 @@ export class PlayerInputDelegator implements Delegator {
   private savedState: PlayerState | undefined;
 
   constructor(
-    private player: Player,
+    private player: ClientPlayer,
     private input: PlayerInput,
     private connection: ServerConnection,
     private inputRequestRepository: PlayerInputRequestRepository
