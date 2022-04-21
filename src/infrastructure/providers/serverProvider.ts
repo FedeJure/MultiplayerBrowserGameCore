@@ -3,6 +3,7 @@ import { EnvironmentObjectRepository } from "../../domain/environmentObjects/env
 import { InventoryRepository } from "../../domain/items/inventoryRepository";
 import { Item } from "../../domain/items/item";
 import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
+import { PlayerInfo } from "../../domain/player/playerInfo";
 import { ServerPlayer } from "../../domain/player/serverPlayer";
 import { AsyncRepository } from "../../domain/repository";
 import { RoomManager } from "../../domain/roomManager";
@@ -11,10 +12,8 @@ import { ConnectionsRepository } from "../repositories/connectionsRepository";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
 import { InMemoryInGameServerPlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
 import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
-import { InMemoryPlayerRepository } from "../repositories/inMemoryPlayerRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
 import { InMemoryAsyncRepository } from "../repositories/InMemoryRepository";
-import { PlayerInfoRepository } from "../repositories/playerInfoRepository";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
 import { PlayerStateRepository } from "../repositories/playerStateRepository";
 import { SocketRoomManager } from "../SocketRoomManager";
@@ -26,9 +25,9 @@ export class ServerProvider {
       () => new ConnectionsRepository()
     );
   }
-  public static get playerInfoRepository(): PlayerInfoRepository {
-    return DependencyManager.GetOrInstantiate<PlayerInfoRepository>(
-      () => new InMemoryPlayerRepository()
+  public static get playerInfoRepository(): AsyncRepository<PlayerInfo> {
+    return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerInfo>>(
+      () => new InMemoryAsyncRepository<PlayerInfo>()
     );
   }
   public static get playerStateRepository(): PlayerStateRepository {

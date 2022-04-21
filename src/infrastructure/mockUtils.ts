@@ -3,10 +3,9 @@ import { EnvironmentObjectVariant } from "../domain/environmentObjects/environme
 import { ServerProvider } from "../infrastructure/providers/serverProvider";
 
 export const LoadServerRepositoriesWithMockData = () => {
-
   //Mock players
   for (let i = 1; i <= 200; i++) {
-    ServerProvider.playerInfoRepository.save(i.toString(), {
+    ServerProvider.playerInfoRepository.save({
       id: i.toString(),
       name: "Test Player " + i,
     });
@@ -14,7 +13,7 @@ export const LoadServerRepositoriesWithMockData = () => {
 
   // Load existent items
   ServerProvider.itemsRepository.save({
-    id: '1',
+    id: "1",
     types: [],
     icon: "ui/testItem.png",
     model: "",
@@ -22,7 +21,7 @@ export const LoadServerRepositoriesWithMockData = () => {
     detail: "This is a Test item used only for testing purpose",
   });
   ServerProvider.itemsRepository.save({
-    id: '2',
+    id: "2",
     types: [],
     icon: "ui/testItem.png",
     model: "",
@@ -35,8 +34,8 @@ export const LoadServerRepositoriesWithMockData = () => {
     pivotOrigin: { x: 0.5, y: 0 },
     height: 30,
     width: 30,
-    textureName: '/objects/coin-pro',
+    textureName: "/objects/coin-pro",
     assetType: EnvironmentObjectAssetType.spine,
-    objectVariant: EnvironmentObjectVariant.decorative
-  })
+    objectVariant: EnvironmentObjectVariant.decorative,
+  });
 };

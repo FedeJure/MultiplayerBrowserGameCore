@@ -7,7 +7,6 @@ import { Log } from "../../infrastructure/Logger";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { ServerProvider } from "../../infrastructure/providers/serverProvider";
 import { ConnectionsRepository } from "../../infrastructure/repositories/connectionsRepository";
-import { PlayerInfoRepository } from "../../infrastructure/repositories/playerInfoRepository";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { GameScene } from "../../view/scenes/GameScene";
 import { ServerPlayerView } from "../../view/serverPlayerView";
@@ -19,6 +18,8 @@ import { RoomManager } from "../roomManager";
 import { DefaultConfiguration } from "./playerConfiguration";
 import { InGamePlayersRepository } from "./inGamePlayersRepository";
 import { ServerPlayer } from "./serverPlayer";
+import { AsyncRepository } from "../repository";
+import { PlayerInfo } from "./playerInfo";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -26,7 +27,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private gameScene: GameScene,
     private socket: Socket,
     private roomManager: RoomManager,
-    private playerInfoRepository: PlayerInfoRepository,
+    private playerInfoRepository: AsyncRepository<PlayerInfo>,
     private playerStateRepository: PlayerStateRepository,
     private inventoryRepository: InventoryRepository,
     private presenterProvider: ServerPresenterProvider,

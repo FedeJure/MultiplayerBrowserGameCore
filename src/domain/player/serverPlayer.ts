@@ -1,8 +1,8 @@
 import { Observable, Subject } from "rxjs";
-import { PlayerInfoRepository } from "../../infrastructure/repositories/playerInfoRepository";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ClientConnection } from "../clientConnection";
 import { IPlayerView } from "../playerView";
+import { AsyncRepository } from "../repository";
 import { ClientPlayer } from "./player";
 import { PlayerInfo } from "./playerInfo";
 import { PlayerState } from "./playerState";
@@ -14,7 +14,7 @@ export class ServerPlayer extends ClientPlayer {
     state: PlayerState,
     view: IPlayerView,
     private _connection: ClientConnection,
-    private playerInfoRepository: PlayerInfoRepository,
+    private playerInfoRepository: AsyncRepository<PlayerInfo>,
     private playerStateRepository: PlayerStateRepository
   ) {
     super(info, state, view);
