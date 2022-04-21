@@ -1,27 +1,27 @@
+import { ClientConnection } from "../../domain/clientConnection";
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { Item } from "../../domain/items/item";
 import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
 import { PlayerInfo } from "../../domain/player/playerInfo";
 import { ServerPlayer } from "../../domain/player/serverPlayer";
-import { AsyncRepository } from "../../domain/repository";
+import { AsyncRepository, SimpleRepository } from "../../domain/repository";
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
 import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
-import { ConnectionsRepository } from "../repositories/connectionsRepository";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
 import { InMemoryInGameServerPlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
-import { InMemoryAsyncRepository } from "../repositories/InMemoryRepository";
+import { InMemoryAsyncRepository, InMemoryRepository } from "../repositories/InMemoryRepository";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
 import { PlayerStateRepository } from "../repositories/playerStateRepository";
 import { SocketRoomManager } from "../SocketRoomManager";
 import { ServerPresenterProvider } from "./serverPresenterProvider";
 
 export class ServerProvider {
-  public static get connectionsRepository(): ConnectionsRepository {
-    return DependencyManager.GetOrInstantiate<ConnectionsRepository>(
-      () => new ConnectionsRepository()
+  public static get connectionsRepository(): SimpleRepository<ClientConnection> {
+    return DependencyManager.GetOrInstantiate<SimpleRepository<ClientConnection>>(
+      () => new InMemoryRepository<ClientConnection>()
     );
   }
   public static get playerInfoRepository(): AsyncRepository<PlayerInfo> {

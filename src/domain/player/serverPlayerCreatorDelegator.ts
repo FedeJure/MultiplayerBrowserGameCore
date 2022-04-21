@@ -6,7 +6,6 @@ import { PlayerSocketInput } from "../../infrastructure/input/playerSocketInput"
 import { Log } from "../../infrastructure/Logger";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { ServerProvider } from "../../infrastructure/providers/serverProvider";
-import { ConnectionsRepository } from "../../infrastructure/repositories/connectionsRepository";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { GameScene } from "../../view/scenes/GameScene";
 import { ServerPlayerView } from "../../view/serverPlayerView";
@@ -17,13 +16,13 @@ import { RoomManager } from "../roomManager";
 import { DefaultConfiguration } from "./playerConfiguration";
 import { InGamePlayersRepository } from "./inGamePlayersRepository";
 import { ServerPlayer } from "./serverPlayer";
-import { AsyncRepository } from "../repository";
+import { AsyncRepository, SimpleRepository } from "../repository";
 import { PlayerInfo } from "./playerInfo";
 import { PlayerInventoryDto } from "../../infrastructure/dtos/playerInventoryDto";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
-    private connectionsRepository: ConnectionsRepository,
+    private connectionsRepository: SimpleRepository<ClientConnection>,
     private gameScene: GameScene,
     private socket: Socket,
     private roomManager: RoomManager,
@@ -34,7 +33,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private inGamePlayersRepository: InGamePlayersRepository<ServerPlayer>
   ) {}
   init(): void {
-    this.connectionsRepository.onNewConnection().subscribe((connection) => {
+    this.connectionsRepository.onSave.subscribe((connection) => {
       connection.onPlayerConnection().subscribe(async ({ playerId }) => {
         try {
           const player = await this.createPlayerInGame(
@@ -85,7 +84,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       });
     });
 
-    this.connectionsRepository.onDisconnection().subscribe((connection) => {
+    this.connectionsRepository.onRemove.subscribe((connection) => {
       const playerId = connection.playerId
       if (playerId) {
         const player = this.inGamePlayersRepository.get(playerId);

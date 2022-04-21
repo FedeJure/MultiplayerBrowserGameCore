@@ -81,15 +81,16 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
       ]);
       socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
         const connection = new SocketClientConnection(clientSocket);
-        ServerProvider.connectionsRepository.addConnection(connection);
+        ServerProvider.connectionsRepository.save(
+          connection.connectionId,
+          connection
+        );
         Log(
           "InitServerGame",
           `[Event: ${SocketIOEvents.CONNECTION}] :: with connection id: ${clientSocket.id}`
         );
         clientSocket.on(SocketIOEvents.DISCONNECT, () => {
-          ServerProvider.connectionsRepository.removeConnection(
-            connection.connectionId
-          );
+          ServerProvider.connectionsRepository.remove(connection.connectionId);
           Log(
             "InitServerGame",
             `[Event: ${SocketIOEvents.DISCONNECT}] :: with connection id: ${clientSocket.id}`
