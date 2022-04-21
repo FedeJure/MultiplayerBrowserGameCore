@@ -120,7 +120,7 @@ export class SocketServerConnection implements ServerConnection {
     );
   }
 
-  emitGetItemDetails(ids: number[]): Promise<ItemDetailResponse> {
+  emitGetItemDetails(ids: string[]): Promise<ItemDetailResponse> {
     return new Promise((res) => {
       this.socket.emit(
         GameEvents.ITEM_DETAILS.name,

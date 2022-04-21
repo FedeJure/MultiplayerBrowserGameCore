@@ -3,9 +3,9 @@ import { Disposer } from "../disposer";
 import { PlayerInfo } from "../player/playerInfo";
 import { ServerConnection } from "../serverConnection";
 import { InventoryRepository } from "./inventoryRepository";
-import { ItemsRepository } from "./itemsRepository";
-import { DefaultItem } from "./item";
+import { DefaultItem, Item } from "./item";
 import { InventoryView } from "./inventoryView";
+import { SimpleRepository } from "../repository";
 
 export class ClientPlayerInventoryDelegator implements Delegator {
   private disposer: Disposer = new Disposer();
@@ -13,7 +13,7 @@ export class ClientPlayerInventoryDelegator implements Delegator {
     private playerId: PlayerInfo["id"],
     private repository: InventoryRepository,
     private connection: ServerConnection,
-    private items: ItemsRepository,
+    private items: SimpleRepository<Item>,
     private inventoryView: InventoryView
   ) {}
 

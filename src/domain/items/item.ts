@@ -1,7 +1,7 @@
 import { ItemType } from "./itemType";
 
 export interface Item {
-  id: number;
+  id: string;
   types: ItemType[];
   icon: string;
   model: string;
@@ -10,7 +10,7 @@ export interface Item {
 }
 
 export const DefaultItem: Item = {
-  id: 1,
+  id: "1",
   types: [],
   icon: "Not founded item",
   model: "Not founded item",

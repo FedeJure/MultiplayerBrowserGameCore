@@ -1,18 +1,19 @@
 import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { InventoryRepository } from "../../domain/items/inventoryRepository";
-import { ItemsRepository } from "../../domain/items/itemsRepository";
+import { Item } from "../../domain/items/item";
 import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
 import { ServerPlayer } from "../../domain/player/serverPlayer";
+import { AsyncRepository } from "../../domain/repository";
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
 import { ConnectionsRepository } from "../repositories/connectionsRepository";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
 import { InMemoryInGameServerPlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
 import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
-import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository";
 import { InMemoryPlayerRepository } from "../repositories/inMemoryPlayerRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
+import { InMemoryAsyncRepository } from "../repositories/InMemoryRepository";
 import { PlayerInfoRepository } from "../repositories/playerInfoRepository";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
 import { PlayerStateRepository } from "../repositories/playerStateRepository";
@@ -64,9 +65,9 @@ export class ServerProvider {
     );
   }
 
-  public static get itemsRepository(): ItemsRepository {
-    return DependencyManager.GetOrInstantiate<ItemsRepository>(
-      () => new InMemoryItemsRepository()
+  public static get itemsRepository(): AsyncRepository<Item> {
+    return DependencyManager.GetOrInstantiate<AsyncRepository<Item>>(
+      () => new InMemoryAsyncRepository<Item>()
     )
   }
 

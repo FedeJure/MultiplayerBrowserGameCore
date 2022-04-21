@@ -14,7 +14,7 @@ export const LoadServerRepositoriesWithMockData = () => {
 
   // Load existent items
   ServerProvider.itemsRepository.save({
-    id: 1,
+    id: '1',
     types: [],
     icon: "ui/testItem.png",
     model: "",
@@ -22,7 +22,7 @@ export const LoadServerRepositoriesWithMockData = () => {
     detail: "This is a Test item used only for testing purpose",
   });
   ServerProvider.itemsRepository.save({
-    id: 2,
+    id: '2',
     types: [],
     icon: "ui/testItem.png",
     model: "",

@@ -8,14 +8,15 @@ import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatch
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
 import { InventoryRepository } from "../../domain/items/inventoryRepository";
 import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
-import { ItemsRepository } from "../../domain/items/itemsRepository";
-import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository";
 import { Scene } from "phaser";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { RemoteEnvironmentObjectRepository } from "../repositories/remoteEnvironmentObjectRepository";
 import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
 import { InMemoryInGameClientPlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
 import { ClientPlayer } from "../../domain/player/player";
+import { SimpleRepository } from "../../domain/repository";
+import { InMemoryRepository } from "../repositories/InMemoryRepository";
+import { Item } from "../../domain/items/item";
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
@@ -70,9 +71,9 @@ export class ClientProvider {
     )
   }
 
-  public static get itemsRepository(): ItemsRepository {
-    return DependencyManager.GetOrInstantiate<ItemsRepository>(
-      () => new InMemoryItemsRepository()
+  public static get itemsRepository(): SimpleRepository<Item> {
+    return DependencyManager.GetOrInstantiate<SimpleRepository<Item>>(
+      () => new InMemoryRepository<Item>()
     )
   }
 
