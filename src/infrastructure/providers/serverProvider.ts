@@ -6,7 +6,7 @@ import { InGamePlayersRepository } from "../../domain/player/inGamePlayersReposi
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
 import { ConnectionsRepository } from "../repositories/connectionsRepository";
-import { InMemoryInGamePlayerRepository } from "../repositories/inGamePlayerRepository";
+import { InMemoryInGamePlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
 import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
 import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository";

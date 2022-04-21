@@ -17,9 +17,9 @@ import { Delegator } from "../delegator";
 import { CompleteMapDelegator } from "../environment/completeMapDelegator";
 import { InventoryRepository } from "../items/inventoryRepository";
 import { RoomManager } from "../roomManager";
-import { Player } from "./player";
 import { DefaultConfiguration } from "./playerConfiguration";
 import { InGamePlayersRepository } from "./inGamePlayersRepository";
+import { ServerPlayer } from "./serverPlayer";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -43,8 +43,11 @@ export class ServerPlayerCreatorDelegator implements Delegator {
             this.gameScene,
             connection
           );
+
           const { foundedMap, neighborMaps } =
             CompleteMapDelegator.getMapForPlayer(player.state);
+            console.log(Array.from(this.inGamePlayersRepository.getAll()))
+
           connection.sendInitialStateEvent(
             Array.from(this.inGamePlayersRepository.getAll()).map((player) => ({
               id: player[0],
@@ -54,7 +57,9 @@ export class ServerPlayerCreatorDelegator implements Delegator {
             foundedMap,
             neighborMaps
           );
+
           if (!foundedMap || !neighborMaps) return;
+
           //WARNING duplicated code
           //TODO: convert completeMapDelegator into MapManager and move all logic there
           const joinedRooms = await this.roomManager.joinToRoom(
@@ -75,6 +80,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
             playerId,
             connection.connectionId
           );
+
           Log(
             this,
             `[Game addPlayer] player added to scene with id: ${playerId}`
@@ -112,44 +118,52 @@ export class ServerPlayerCreatorDelegator implements Delegator {
   stop(): void {}
   update(time: number, delta: number): void {}
 
-  async createPlayerInGame(playerId: string,
+  async createPlayerInGame(
+    playerId: string,
     scene: GameScene,
-    connection: ClientConnection) {
-      const playerInfo = await this.playerInfoRepository.get(playerId);
-      if (playerInfo === undefined)
-        throw new Error(`Player with ID: ${playerId} not found`);
-  
-      let playerState = this.playerStateRepository.get(playerId);
-      if (!playerState) {
-        this.playerStateRepository.save(playerId, DefaultPlayerState);
-        playerState = DefaultPlayerState;
-      }
-  
-      try {
-        this.inventoryRepository.get(playerId)
-      } catch (error) {
-        this.inventoryRepository.save(playerId, DefaultPlayerInventory)
-      }
-  
-      const view = new ServerPlayerView(
-        scene,
-        playerState.position.x,
-        playerState.position.y,
-        DefaultConfiguration.height,
-        DefaultConfiguration.width
-      );
-      const player = new Player(playerInfo, playerState, view);
-      this.presenterProvider.forPlayer(
-        view,
-        player,
-        new PlayerSocketInput(
-          playerId,
-          connection,
-          ServerProvider.playerInputRequestRepository
-        )
-      );
-  
-      this.inGamePlayersRepository.save(player);
-      return player;
+    connection: ClientConnection
+  ) {
+    const playerInfo = await this.playerInfoRepository.get(playerId);
+    if (playerInfo === undefined)
+      throw new Error(`Player with ID: ${playerId} not found`);
+
+    let playerState = this.playerStateRepository.get(playerId);
+    if (!playerState) {
+      this.playerStateRepository.save(playerId, DefaultPlayerState);
+      playerState = DefaultPlayerState;
+    }
+
+    try {
+      this.inventoryRepository.get(playerId);
+    } catch (error) {
+      this.inventoryRepository.save(playerId, DefaultPlayerInventory);
+    }
+
+    const view = new ServerPlayerView(
+      scene,
+      playerState.position.x,
+      playerState.position.y,
+      DefaultConfiguration.height,
+      DefaultConfiguration.width
+    );
+    const player = new ServerPlayer(
+      playerInfo,
+      playerState,
+      view,
+      this.playerInfoRepository,
+      this.playerStateRepository
+    );
+    this.presenterProvider.forPlayer(
+      view,
+      player,
+      new PlayerSocketInput(
+        playerId,
+        connection,
+        ServerProvider.playerInputRequestRepository
+      )
+    );
+
+    this.inGamePlayersRepository.save(player);
+    return player;
   }
 }

@@ -14,7 +14,7 @@ import { Scene } from "phaser";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { RemoteEnvironmentObjectRepository } from "../repositories/remoteEnvironmentObjectRepository";
 import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
-import { InMemoryInGamePlayerRepository } from "../repositories/inGamePlayerRepository";
+import { InMemoryInGamePlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
