@@ -1,9 +1,9 @@
 import { Delegator } from "../delegator";
-import { Player2_0 } from "../player/player2.0";
+import { Player } from "../player/player2.0";
 
 export class RemotePlayerAnimationDelegator implements Delegator {
 
-  constructor(private player: Player2_0) {
+  constructor(private player: Player) {
   }
   init(): void {}
   stop(): void {}

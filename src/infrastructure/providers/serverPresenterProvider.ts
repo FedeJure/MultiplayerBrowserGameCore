@@ -6,7 +6,7 @@ import { EnvironmentObject } from "../../domain/environmentObjects/environmentOb
 import { EnvironmentObjectVariant } from "../../domain/environmentObjects/environmentObjectVariant";
 import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
 import { PlayerAngleFixDelegator } from "../../domain/movement/playerAngleFixDelegator";
-import { Player2_0 } from "../../domain/player/player2.0";
+import { Player } from "../../domain/player/player2.0";
 import { PlayerInput } from "../../domain/player/playerInput";
 import { ServerPlayerStateUpdaterDelegator } from "../../domain/player/serverPlayerStateUpdaterDelegator";
 import { ViewPresenter } from "../../presentation/viewPresenter";
@@ -16,7 +16,7 @@ import { ServerProvider } from "./serverProvider";
 export class ServerPresenterProvider {
   forPlayer(
     view: Phaser.GameObjects.GameObject,
-    player: Player2_0,
+    player: Player,
     input: PlayerInput
   ): void {
     new ViewPresenter(view, [

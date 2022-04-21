@@ -1,11 +1,11 @@
 import { Delegator } from "../delegator";
-import { Player2_0 } from "../player/player2.0";
+import { Player } from "../player/player2.0";
 import { PlayerState } from "../player/playerState";
 import { AnimationCode } from "./animations";
 
 export class ServerPlayerAnimationDelegator implements Delegator {
 
-  constructor(protected player: Player2_0) {
+  constructor(protected player: Player) {
   }
   init(): void {}
   stop(): void {}

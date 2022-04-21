@@ -2,11 +2,11 @@ import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatch
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { InventoryRepository } from "../../domain/items/inventoryRepository";
 import { ItemsRepository } from "../../domain/items/itemsRepository";
-import { PlayersRepository2_0 } from "../../domain/player/playersRepository2.0";
+import { InGamePlayersRepository } from "../../domain/player/playersRepository2.0";
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
 import { ConnectionsRepository } from "../repositories/connectionsRepository";
-import { InGamePlayerRepository } from "../repositories/inGamePlayerRepository";
+import { InMemoryInGamePlayerRepository } from "../repositories/inGamePlayerRepository";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
 import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
 import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository";
@@ -82,9 +82,9 @@ export class ServerProvider {
     )
   }
 
-  public static get inGamePlayerRepository(): PlayersRepository2_0 {
-    return DependencyManager.GetOrInstantiate<PlayersRepository2_0>(
-      () => new InGamePlayerRepository()
+  public static get inGamePlayerRepository(): InGamePlayersRepository {
+    return DependencyManager.GetOrInstantiate<InGamePlayersRepository>(
+      () => new InMemoryInGamePlayerRepository()
     )
   }
 }

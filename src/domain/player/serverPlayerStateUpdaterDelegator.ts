@@ -1,12 +1,12 @@
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
 import { ResolvePlayerMovementWithInputs } from "../actions/resolvePlayerMovementWithInput";
 import { Delegator } from "../delegator";
-import { Player2_0 } from "./player2.0";
+import { Player } from "./player2.0";
 import { PlayerInput } from "./playerInput";
 
 export class ServerPlayerStateUpdaterDelegator implements Delegator {
   constructor(
-    private player: Player2_0,
+    private player: Player,
     private input: PlayerInput,
     private resolveMovement: ResolvePlayerMovementWithInputs,
     private inputRepository: PlayerInputRequestRepository

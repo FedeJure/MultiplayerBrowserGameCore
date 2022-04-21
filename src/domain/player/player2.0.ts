@@ -2,7 +2,7 @@ import { IPlayerView } from "../playerView";
 import { PlayerInfo } from "./playerInfo";
 import { PlayerState } from "./playerState";
 
-export class Player2_0 {
+export class Player {
   constructor(
     private _info: PlayerInfo,
     private _state: PlayerState,

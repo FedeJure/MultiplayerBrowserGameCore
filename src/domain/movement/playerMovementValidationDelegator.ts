@@ -3,7 +3,7 @@ import { PlayerStateRepository } from "../../infrastructure/repositories/playerS
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
 import { ServerConnection } from "../serverConnection";
-import { Player2_0 } from "../player/player2.0";
+import { Player } from "../player/player2.0";
 
 export class PlayerMovementValidationDelegator implements Delegator {
   private readonly disposer: Disposer = new Disposer();
@@ -12,7 +12,7 @@ export class PlayerMovementValidationDelegator implements Delegator {
 
 
   constructor(
-    private readonly player: Player2_0,
+    private readonly player: Player,
     private readonly connection: ServerConnection,
     private readonly stateRepository: PlayerStateRepository,
     private readonly inputRepository: PlayerInputRequestRepository,

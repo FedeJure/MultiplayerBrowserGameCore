@@ -17,9 +17,9 @@ import { Delegator } from "../delegator";
 import { CompleteMapDelegator } from "../environment/completeMapDelegator";
 import { InventoryRepository } from "../items/inventoryRepository";
 import { RoomManager } from "../roomManager";
-import { Player2_0 } from "./player2.0";
+import { Player } from "./player2.0";
 import { DefaultConfiguration } from "./playerConfiguration";
-import { PlayersRepository2_0 } from "./playersRepository2.0";
+import { InGamePlayersRepository } from "./playersRepository2.0";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -32,7 +32,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private playerStateRepository: PlayerStateRepository,
     private inventoryRepository: InventoryRepository,
     private presenterProvider: ServerPresenterProvider,
-    private inGamePlayersRepository: PlayersRepository2_0
+    private inGamePlayersRepository: InGamePlayersRepository
   ) {}
   init(): void {
     this.connectionsRepository.onNewConnection().subscribe((connection) => {
@@ -138,7 +138,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
         DefaultConfiguration.height,
         DefaultConfiguration.width
       );
-      const player = new Player2_0(playerInfo, playerState, view);
+      const player = new Player(playerInfo, playerState, view);
       this.presenterProvider.forPlayer(
         view,
         player,

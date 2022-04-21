@@ -1,20 +1,20 @@
-import { Player2_0 } from "../../domain/player/player2.0";
+import { Player } from "../../domain/player/player2.0";
 import { PlayerInfo } from "../../domain/player/playerInfo";
-import { PlayersRepository2_0 } from "../../domain/player/playersRepository2.0";
+import { InGamePlayersRepository } from "../../domain/player/playersRepository2.0";
 
-export class InGamePlayerRepository implements PlayersRepository2_0 {
+export class InMemoryInGamePlayerRepository implements InGamePlayersRepository {
 
-  private store: Map<PlayerInfo['id'], Player2_0> = new Map();
-  get(id: PlayerInfo["id"]): Player2_0 | undefined {
+  private store: Map<PlayerInfo['id'], Player> = new Map();
+  get(id: PlayerInfo["id"]): Player | undefined {
     return this.store[id];
   }
-  save(player: Player2_0) {
+  save(player: Player) {
     this.store[player.info.id] = player;
   }
   remove(id: PlayerInfo["id"]) {
     delete this.store[id];
   }
-  getAll(): Map<string, Player2_0> {
+  getAll(): Map<string, Player> {
     return this.store
 }
 }

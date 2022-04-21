@@ -1,7 +1,7 @@
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
-import { Player2_0 } from "../player/player2.0";
+import { Player } from "../player/player2.0";
 import { ServerConnection } from "../serverConnection";
 import { Side } from "../side";
 
@@ -10,7 +10,7 @@ export class PlayerRemoteMovementDelegator implements Delegator {
 
   private readonly disposer: Disposer = new Disposer();
 
-  constructor(private player: Player2_0, connection: ServerConnection) {
+  constructor(private player: Player, connection: ServerConnection) {
     this.connection = connection;
   }
   init(): void {
