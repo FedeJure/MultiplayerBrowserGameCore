@@ -1,11 +1,13 @@
 import { ClientConnection } from "../domain/clientConnection";
 import { ProcessedMap } from "../domain/environment/processedMap";
+import { InGamePlayersRepository } from "../domain/player/inGamePlayersRepository";
 import { RoomManager, PlayerId, RoomId } from "../domain/roomManager";
-import { PlayerStateRepository } from "./repositories/playerStateRepository";
 
 export class SocketRoomManager implements RoomManager {
   private playersByRoom: { [key: RoomId]: PlayerId[] | undefined } = {};
-  constructor(private readonly playerStateRepository: PlayerStateRepository) {}
+  constructor(
+    private readonly inGamePlayersRepository: InGamePlayersRepository
+  ) {}
 
   private getRoomId(map: ProcessedMap) {
     return map.id.toString();
@@ -29,7 +31,7 @@ export class SocketRoomManager implements RoomManager {
       if (!this.playersByRoom[r]) this.playersByRoom[r] = [];
       this.playersByRoom[r]?.push(playerId);
     });
-    this.playerStateRepository.update(playerId, {
+    this.inGamePlayersRepository.get(playerId)?.updateState({
       currentRooms: roomIds,
     });
     return roomIds;

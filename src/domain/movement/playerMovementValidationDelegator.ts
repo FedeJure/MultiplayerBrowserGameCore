@@ -1,5 +1,4 @@
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
-import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
 import { ServerConnection } from "../serverConnection";
@@ -10,20 +9,17 @@ export class PlayerMovementValidationDelegator implements Delegator {
   private lastInputValidated: number = 0;
   private remotePosition: { x: number; y: number } = Phaser.Math.Vector2.ZERO;
 
-
   constructor(
     private readonly player: Player,
     private readonly connection: ServerConnection,
-    private readonly stateRepository: PlayerStateRepository,
-    private readonly inputRepository: PlayerInputRequestRepository,
+    private readonly inputRepository: PlayerInputRequestRepository
   ) {
     this.player = player;
     this.connection = connection;
-    this.stateRepository = stateRepository;
     this.inputRepository = inputRepository;
   }
   update(time: number, delta: number): void {
-    const localState = this.stateRepository.get(this.player.info.id);
+    const localState = this.player.state;
     if (localState) {
       const currentPosition = this.player.view.positionVector;
       const x = Phaser.Math.Interpolation.SmoothStep(
@@ -44,7 +40,7 @@ export class PlayerMovementValidationDelegator implements Delegator {
     this.disposer.add(
       this.connection.onPlayersStates.subscribe((event) => {
         const state = event.states[this.player.info.id];
-        if (!state) return
+        if (!state) return;
         this.remotePosition = state.position;
         if (
           state &&

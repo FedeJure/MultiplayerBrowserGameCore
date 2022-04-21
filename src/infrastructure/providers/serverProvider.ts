@@ -60,7 +60,7 @@ export class ServerProvider {
 
   public static get roomManager(): RoomManager {
     return DependencyManager.GetOrInstantiate<RoomManager>(
-      () => new SocketRoomManager(this.playerStateRepository)
+      () => new SocketRoomManager(this.inGamePlayerRepository)
     );
   }
 
