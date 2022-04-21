@@ -14,7 +14,8 @@ import { Scene } from "phaser";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { RemoteEnvironmentObjectRepository } from "../repositories/remoteEnvironmentObjectRepository";
 import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
-import { InMemoryInGamePlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
+import { InMemoryInGameClientPlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
+import { Player } from "../../domain/player/player";
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
@@ -81,9 +82,9 @@ export class ClientProvider {
     )
   }
 
-  public static get inGamePlayersRepository(): InGamePlayersRepository {
-    return DependencyManager.GetOrInstantiate<InGamePlayersRepository>(
-      () => new InMemoryInGamePlayerRepository()
+  public static get inGamePlayersRepository(): InGamePlayersRepository<Player> {
+    return DependencyManager.GetOrInstantiate<InGamePlayersRepository<Player>>(
+      () => new InMemoryInGameClientPlayerRepository()
     )
   }
 

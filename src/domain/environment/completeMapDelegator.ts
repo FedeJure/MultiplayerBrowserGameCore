@@ -30,7 +30,7 @@ export class CompleteMapDelegator implements Delegator {
     private socket: Socket,
     private envObjectsRepository: EnvironmentObjectRepository,
     private presenterProvider: ServerPresenterProvider,
-    private inGamePlayersRepository: InGamePlayersRepository
+    private inGamePlayersRepository: InGamePlayersRepository<ServerPlayer>
   ) {
     mapConfig.mapLayers.forEach((layer) => {
       this.processLayer(layer);

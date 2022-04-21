@@ -18,7 +18,7 @@ export class ClientConnectionDelegator implements Delegator {
     private connection: ServerConnection,
     private scene: GameScene,
     private presenterProvider: ClientPresenterProvider,
-    private inGamePlayersRepository: InGamePlayersRepository
+    private inGamePlayersRepository: InGamePlayersRepository<Player>
   ) {}
   init(): void {
     this.connection.onInitialGameState.subscribe((data) => {

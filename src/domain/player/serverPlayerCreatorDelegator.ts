@@ -30,7 +30,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private playerStateRepository: PlayerStateRepository,
     private inventoryRepository: InventoryRepository,
     private presenterProvider: ServerPresenterProvider,
-    private inGamePlayersRepository: InGamePlayersRepository
+    private inGamePlayersRepository: InGamePlayersRepository<ServerPlayer>
   ) {}
   init(): void {
     this.connectionsRepository.onNewConnection().subscribe((connection) => {

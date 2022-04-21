@@ -2,12 +2,13 @@ import { Socket } from "socket.io";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { Delegator } from "../delegator";
 import { InGamePlayersRepository } from "../player/inGamePlayersRepository";
+import { ServerPlayer } from "../player/serverPlayer";
 import { RoomManager } from "../roomManager";
 
 export class PlayerStateDelegator implements Delegator {
   constructor(
     private roomManager: RoomManager,
-    private inGamePlayersRepository: InGamePlayersRepository,
+    private inGamePlayersRepository: InGamePlayersRepository<ServerPlayer>,
     private socket: Socket
   ) {}
   init(): void {}

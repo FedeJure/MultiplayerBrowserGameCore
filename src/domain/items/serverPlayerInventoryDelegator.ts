@@ -11,13 +11,12 @@ export class ServerPlayerInventoryDelegator implements Delegator {
   constructor(
     private inventoryRepository: InventoryRepository,
     private itemsRepository: ItemsRepository,
-    private inGamePlayersRepository: InGamePlayersRepository
+    private inGamePlayersRepository: InGamePlayersRepository<ServerPlayer>
   ) {}
   init(): void {
     this.inGamePlayersRepository.onNewPlayer.subscribe((player) => {
       try {
-        const serverPlayer = player as ServerPlayer
-        const connection = serverPlayer.connection;
+        const connection = player.connection;
         if (!connection) return;
         connection.onItemDetailRequest().subscribe((ev) => {
           const items = ev.ev.itemIds.map(
@@ -25,7 +24,7 @@ export class ServerPlayerInventoryDelegator implements Delegator {
           );
           ev.callback(GameEvents.ITEM_DETAILS_RESPONSE.getEvent(items));
         });
-        const inventory = this.inventoryRepository.get(serverPlayer.info.id);
+        const inventory = this.inventoryRepository.get(player.info.id);
 
         connection.sendInventoryEvent(inventory);
       } catch (error: any) {
