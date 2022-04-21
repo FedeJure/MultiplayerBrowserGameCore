@@ -7,7 +7,6 @@ import { Log } from "../../infrastructure/Logger";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { ServerProvider } from "../../infrastructure/providers/serverProvider";
 import { ConnectionsRepository } from "../../infrastructure/repositories/connectionsRepository";
-import { PlayerConnectionsRepository } from "../../infrastructure/repositories/playerConnectionsRespository";
 import { PlayerInfoRepository } from "../../infrastructure/repositories/playerInfoRepository";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { GameScene } from "../../view/scenes/GameScene";
@@ -27,7 +26,6 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private gameScene: GameScene,
     private socket: Socket,
     private roomManager: RoomManager,
-    private playerConnectionsRepository: PlayerConnectionsRepository,
     private playerInfoRepository: PlayerInfoRepository,
     private playerStateRepository: PlayerStateRepository,
     private inventoryRepository: InventoryRepository,
@@ -75,10 +73,6 @@ export class ServerPlayerCreatorDelegator implements Delegator {
               state: player.state,
             })
           );
-          this.playerConnectionsRepository.addConnection(
-            playerId,
-            connection.connectionId
-          );
 
           Log(
             this,
@@ -91,9 +85,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     });
 
     this.connectionsRepository.onDisconnection().subscribe((connection) => {
-      const playerId = this.playerConnectionsRepository.getPlayer(
-        connection.connectionId
-      );
+      const playerId = connection.playerId
       if (playerId) {
         const player = this.inGamePlayersRepository.get(playerId);
 
@@ -107,10 +99,6 @@ export class ServerPlayerCreatorDelegator implements Delegator {
           player.destroy();
           this.inGamePlayersRepository.remove(playerId);
         }
-        this.playerConnectionsRepository.removeConnection(
-          playerId,
-          connection.connectionId
-        );
       }
     });
   }
@@ -149,6 +137,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       playerInfo,
       playerState,
       view,
+      connection,
       this.playerInfoRepository,
       this.playerStateRepository
     );

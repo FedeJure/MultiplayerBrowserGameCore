@@ -40,6 +40,10 @@ export class SocketClientConnection implements ClientConnection {
 
     this.listenEvents();
   }
+  playerId?: string;
+  setPlayerId(playerId: string) {
+    playerId;
+  }
 
   onItemDetailRequest(): Observable<{
     ev: ItemDetailRequest;
@@ -122,8 +126,14 @@ export class SocketClientConnection implements ClientConnection {
 
     this.socket.on(
       GameEvents.ENVIRONMENT_OBJECT_DETAILS_REQUEST.name,
-      (dto: EnvironmentObjectDetailsRequest, callback: (ev: EnvironmentObjectDetailsResponse) => void) => {
-        this.onEnvironmentObjectDetailRequestSubject.next({ ev: dto, callback });
+      (
+        dto: EnvironmentObjectDetailsRequest,
+        callback: (ev: EnvironmentObjectDetailsResponse) => void
+      ) => {
+        this.onEnvironmentObjectDetailRequestSubject.next({
+          ev: dto,
+          callback,
+        });
       }
     );
   }

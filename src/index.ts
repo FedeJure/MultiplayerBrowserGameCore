@@ -46,8 +46,6 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
       const __ = new ScenePresenter(scene, [
         new CompleteMapDelegator(
           MapsConfiguration,
-          ServerProvider.connectionsRepository,
-          ServerProvider.playerConnectionsRepository,
           scene,
           ServerProvider.roomManager,
           socket,
@@ -65,7 +63,6 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
           scene,
           socket,
           ServerProvider.roomManager,
-          ServerProvider.playerConnectionsRepository,
           ServerProvider.playerInfoRepository,
           ServerProvider.playerStateRepository,
           ServerProvider.inventoryRepository,
@@ -73,10 +70,9 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
           ServerProvider.inGamePlayerRepository
         ),
         new ServerPlayerInventoryDelegator(
-          ServerProvider.playerConnectionsRepository,
-          ServerProvider.connectionsRepository,
           ServerProvider.inventoryRepository,
-          ServerProvider.itemsRepository
+          ServerProvider.itemsRepository,
+          ServerProvider.inGamePlayerRepository
         ),
         new EnvironmentObjectDetailsDispatcherDelegator(
           ServerProvider.environmentObjectsRepository,

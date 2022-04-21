@@ -6,13 +6,12 @@ import { InGamePlayersRepository } from "../../domain/player/inGamePlayersReposi
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
 import { ConnectionsRepository } from "../repositories/connectionsRepository";
-import { InMemoryInGamePlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
+import { InMemoryInGamePlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
 import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
 import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository";
 import { InMemoryPlayerRepository } from "../repositories/inMemoryPlayerRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
-import { PlayerConnectionsRepository } from "../repositories/playerConnectionsRespository";
 import { PlayerInfoRepository } from "../repositories/playerInfoRepository";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
 import { PlayerStateRepository } from "../repositories/playerStateRepository";
@@ -49,12 +48,6 @@ export class ServerProvider {
   public static get playerInputRequestRepository(): PlayerInputRequestRepository {
     return DependencyManager.GetOrInstantiate<PlayerInputRequestRepository>(
       () => new PlayerInputRequestRepository()
-    );
-  }
-
-  public static get playerConnectionsRepository(): PlayerConnectionsRepository {
-    return DependencyManager.GetOrInstantiate<PlayerConnectionsRepository>(
-      () => new PlayerConnectionsRepository()
     );
   }
 

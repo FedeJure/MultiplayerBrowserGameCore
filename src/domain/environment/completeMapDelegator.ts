@@ -1,7 +1,5 @@
 import { Scene } from "phaser";
 import difference from "lodash.difference";
-import { ConnectionsRepository } from "../../infrastructure/repositories/connectionsRepository";
-import { PlayerConnectionsRepository } from "../../infrastructure/repositories/playerConnectionsRespository";
 import { createMapOnScene } from "../actions/createMapOnScene";
 import { loadMapAssets } from "../actions/loadMapAssets";
 import { Delegator } from "../delegator";
@@ -16,7 +14,6 @@ import { ServerPresenterProvider } from "../../infrastructure/providers/serverPr
 import { ServerEnvironmentObjectFactory } from "../../view/environmentObjects/serverEnvironmentObjectFactory";
 import { InGamePlayersRepository } from "../player/inGamePlayersRepository";
 import { ServerPlayer } from "../player/serverPlayer";
-import { Player } from "../player/player";
 
 export class CompleteMapDelegator implements Delegator {
   private readonly maxWorldWidht = 10000;
@@ -28,8 +25,6 @@ export class CompleteMapDelegator implements Delegator {
   private currentY = 0;
   public constructor(
     private mapConfig: MapConfiguration,
-    private connections: ConnectionsRepository,
-    private playerConnections: PlayerConnectionsRepository,
     private scene: Scene,
     private roomManager: RoomManager,
     private socket: Socket,
@@ -41,10 +36,11 @@ export class CompleteMapDelegator implements Delegator {
       this.processLayer(layer);
     });
     this.inGamePlayersRepository.onNewPlayer.subscribe((player) => {
-      this.updateMapForPlayer(player);
       const serverPlayer = player as ServerPlayer;
+      this.updateMapForPlayer(serverPlayer);
+
       serverPlayer.onStateChange.subscribe((state) => {
-        this.updateMapForPlayer(player).then(async (joinedRooms) => {
+        this.updateMapForPlayer(serverPlayer).then(async (joinedRooms) => {
           const newRooms: string[] = difference(
             joinedRooms,
             state.currentRooms
@@ -79,12 +75,10 @@ export class CompleteMapDelegator implements Delegator {
   }
 
   private async sendAlreadyConnectedPlayers(
-    player: Player,
+    player: ServerPlayer,
     newRooms: string[]
   ) {
-    const connId = this.playerConnections.getConnection(player.info.id);
-    if (!connId) return;
-    const connection = this.connections.getConnection(connId);
+    const connection = player.connection;
     newRooms.forEach((r) => {
       const playerIds = this.roomManager.getPlayersByRoom()[r] ?? [];
       playerIds.forEach(async (p) => {
@@ -99,7 +93,7 @@ export class CompleteMapDelegator implements Delegator {
     });
   }
 
-  private updateMapForPlayer(player: Player) {
+  private updateMapForPlayer(player: ServerPlayer) {
     const { foundedMap, neighborMaps } = CompleteMapDelegator.getMapForPlayer(
       player.state
     );
@@ -111,16 +105,13 @@ export class CompleteMapDelegator implements Delegator {
       player.updateState({
         map: { mapId: foundedMap.id },
       });
-      const connectionId = this.playerConnections.getConnection(player.info.id);
-      if (connectionId) {
-        const connection = this.connections.getConnection(connectionId);
-        if (connection) {
-          connection.sendMapUpdateEvent(foundedMap, neighborMaps);
-          return this.roomManager.joinToRoom(player.info.id, connection, [
-            foundedMap,
-            ...neighborMaps,
-          ]);
-        }
+      const connection = player.connection;
+      if (connection) {
+        connection.sendMapUpdateEvent(foundedMap, neighborMaps);
+        return this.roomManager.joinToRoom(player.info.id, connection, [
+          foundedMap,
+          ...neighborMaps,
+        ]);
       }
     }
     return Promise.resolve(player.state.currentRooms);

@@ -1,6 +1,7 @@
 import { Observable, Subject } from "rxjs";
 import { PlayerInfoRepository } from "../../infrastructure/repositories/playerInfoRepository";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
+import { ClientConnection } from "../clientConnection";
 import { IPlayerView } from "../playerView";
 import { Player } from "./player";
 import { PlayerInfo } from "./playerInfo";
@@ -12,6 +13,7 @@ export class ServerPlayer extends Player {
     info: PlayerInfo,
     state: PlayerState,
     view: IPlayerView,
+    private _connection: ClientConnection,
     private playerInfoRepository: PlayerInfoRepository,
     private playerStateRepository: PlayerStateRepository
   ) {
@@ -33,6 +35,10 @@ export class ServerPlayer extends Player {
   }
 
   get onStateChange(): Observable<PlayerState> {
-    return this._onStateChange
+    return this._onStateChange;
+  }
+
+  get connection(): ClientConnection {
+    return this._connection;
   }
 }

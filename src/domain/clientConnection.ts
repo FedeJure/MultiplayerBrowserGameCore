@@ -7,6 +7,7 @@ import { ProcessedMap } from "./environment/processedMap";
 export interface ClientConnection {
   connectionId: string;
   connectionTime: Date;
+  playerId?: string
   onPlayerConnection(): Observable<{ playerId: string }>;
   sendInitialStateEvent(
     players: PlayerInitialStateDto[],
@@ -29,4 +30,5 @@ export interface ClientConnection {
     ev: EnvironmentObjectDetailsRequest;
     callback: (ev: EnvironmentObjectDetailsResponse) => void;
   }>
+  setPlayerId(playerId: string)
 }

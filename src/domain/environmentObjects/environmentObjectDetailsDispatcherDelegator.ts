@@ -20,7 +20,6 @@ export class EnvironmentObjectDetailsDispatcherDelegator implements Delegator {
     });
   }
   stop(): void {
-    throw new Error("Method not implemented.");
   }
   update(): void {}
 }
