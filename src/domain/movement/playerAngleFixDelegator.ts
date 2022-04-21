@@ -1,8 +1,8 @@
 import { Delegator } from "../delegator";
-import { Player } from "../player/player";
+import { Player2_0 } from "../player/player2.0";
 
 export class PlayerAngleFixDelegator implements Delegator {
-  constructor(private player: Player) {}
+  constructor(private player: Player2_0) {}
   init(): void {}
   stop(): void {}
   update(time: number, delta: number): void {

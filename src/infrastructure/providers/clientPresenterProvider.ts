@@ -10,7 +10,6 @@ import { PlayerAnimationDelegator } from "../../domain/animations/playerAnimatio
 import { RemotePlayerAnimationDelegator } from "../../domain/animations/remotePlayerAnimationDelegator";
 import { CurrentMapDelegator } from "../../domain/environment/currentMapDelegator";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
-import { ClientPlayer } from "../../domain/player/localPlayer";
 import { PlayerInfoDelegator } from "../../domain/player/playerInfoDelegator";
 import { BackgroundDelegator } from "../../domain/environment/backgroundDelegator";
 import { ClientPlayerInventoryDelegator } from "../../domain/items/clientPlayerInventoryDelegator";
@@ -26,20 +25,21 @@ import { EnvironmentObjectVariant } from "../../domain/environmentObjects/enviro
 import { Delegator } from "../../domain/delegator";
 import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
 import { GameObjects } from "phaser";
+import { Player2_0 } from "../../domain/player/player2.0";
 
 export class ClientPresenterProvider {
-  forLocalPlayer(input: PlayerInput, player: ClientPlayer): void {
-    new ViewPresenter(player.view, [
-      new PlayerCollisionDelegator(
-        player,
-        ClientProvider.playerStateRepository
-      ),
+  forLocalPlayer(
+    input: PlayerInput,
+    player: Player2_0,
+    view: GameObjects.GameObject
+  ): void {
+    new ViewPresenter(view, [
+      new PlayerCollisionDelegator(player),
       new PlayerMovementValidationDelegator(
         player,
         ClientProvider.serverConnection,
         ClientProvider.playerStateRepository,
-        ClientProvider.playerInputRequestRepository,
-        input
+        ClientProvider.playerInputRequestRepository
       ),
       new PlayerInputDelegator(
         player,
@@ -50,10 +50,7 @@ export class ClientPresenterProvider {
         ClientProvider.playerInputRequestRepository
       ),
       new LocalPlayerRenderDelegator(player),
-      new PlayerAnimationDelegator(
-        player,
-        ClientProvider.playerStateRepository
-      ),
+      new PlayerAnimationDelegator(player),
       new PlayerInfoDelegator(player),
       new ClientPlayerConnectionDelegator(
         ClientProvider.serverConnection,
@@ -62,16 +59,12 @@ export class ClientPresenterProvider {
       new PlayerAngleFixDelegator(player),
     ]);
   }
-  forPlayer(player: ClientPlayer): void {
-    new ViewPresenter(player.view, [
-      new RemotePlayerAnimationDelegator(
-        player,
-        ClientProvider.playerStateRepository
-      ),
+  forPlayer(player: Player2_0, view: GameObjects.GameObject): void {
+    new ViewPresenter(view, [
+      new RemotePlayerAnimationDelegator(player),
       new PlayerRemoteMovementDelegator(
         player,
-        ClientProvider.serverConnection,
-        ClientProvider.playerStateRepository
+        ClientProvider.serverConnection
       ),
       new PlayerInfoDelegator(player),
       new ClientPlayerConnectionDelegator(
@@ -94,15 +87,15 @@ export class ClientPresenterProvider {
         scene,
         ClientProvider.serverConnection,
         ClientProvider.localPlayerRepository,
-        ClientProvider.connectedPlayers
+        ClientProvider.inGamePlayersRepository
       ),
       new ClientConnectionDelegator(
         ClientProvider.localPlayerRepository.playerId,
         ClientProvider.serverConnection,
         scene,
         ActionProvider.CreateClientPlayer,
-        ActionProvider.CreateLocalClientPlayer,
-        ClientProvider.connectedPlayers
+        ClientProvider.presenterProvider,
+        ClientProvider.inGamePlayersRepository
       ),
     ]);
   }
@@ -117,7 +110,10 @@ export class ClientPresenterProvider {
       ),
     ]);
   }
-  forEnvironmentObject(object: EnvironmentObject, view: GameObjects.GameObject) {
+  forEnvironmentObject(
+    object: EnvironmentObject,
+    view: GameObjects.GameObject
+  ) {
     const delegators: Delegator[] = [];
     switch (object.objectVariant) {
       case EnvironmentObjectVariant.decorative:

@@ -22,4 +22,7 @@ export interface IPlayerView {
   add(children: GameObjects.GameObject): this
   get onGroundCollideChange(): Observable<boolean>
   get active(): boolean
+  get x(): number
+  get y(): number
+  setDisplayName(name: string)
 }

@@ -2,9 +2,8 @@ import { PlayerInputRequestRepository } from "../../infrastructure/repositories/
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
-import { Player } from "../player/player";
 import { ServerConnection } from "../serverConnection";
-import { PlayerInput } from "../player/playerInput";
+import { Player2_0 } from "../player/player2.0";
 
 export class PlayerMovementValidationDelegator implements Delegator {
   private readonly disposer: Disposer = new Disposer();
@@ -13,11 +12,10 @@ export class PlayerMovementValidationDelegator implements Delegator {
 
 
   constructor(
-    private readonly player: Player,
+    private readonly player: Player2_0,
     private readonly connection: ServerConnection,
     private readonly stateRepository: PlayerStateRepository,
     private readonly inputRepository: PlayerInputRequestRepository,
-    private readonly input: PlayerInput
   ) {
     this.player = player;
     this.connection = connection;

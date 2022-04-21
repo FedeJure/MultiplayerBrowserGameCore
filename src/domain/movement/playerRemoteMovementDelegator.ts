@@ -1,31 +1,22 @@
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
-import { Player } from "../player/player";
+import { Player2_0 } from "../player/player2.0";
 import { ServerConnection } from "../serverConnection";
 import { Side } from "../side";
 
 export class PlayerRemoteMovementDelegator implements Delegator {
-  private readonly player: Player;
   private readonly connection: ServerConnection;
-  private readonly playerStateRepository: PlayerStateRepository;
 
   private readonly disposer: Disposer = new Disposer();
 
-  constructor(
-    player: Player,
-    connection: ServerConnection,
-    playerStateRepository: PlayerStateRepository
-  ) {
-    this.player = player;
+  constructor(private player: Player2_0, connection: ServerConnection) {
     this.connection = connection;
-    this.playerStateRepository = playerStateRepository;
   }
   init(): void {
     this.disposer.add(
       this.connection.onPlayersStates.subscribe((event) => {
-        const state = event.states[this.player.info.id];
-        this.playerStateRepository.setPlayerState(this.player.info.id, state);
+        this.player.updateState(event.states[this.player.info.id]);
       })
     );
   }
@@ -34,14 +25,15 @@ export class PlayerRemoteMovementDelegator implements Delegator {
   }
 
   update(time: number, delta: number): void {
-    const state = this.playerStateRepository.getPlayerState(
-      this.player.info.id
+    const view = this.player.view;
+    view.lookToLeft(this.player.state.side === Side.LEFT);
+    view.setPosition(
+      this.player.state.position.x,
+      this.player.state.position.y
     );
-    if (state) {
-      const view = this.player.view;
-      view.lookToLeft(state.side === Side.LEFT);
-      view.setPosition(state.position.x, state.position.y);
-      view.setVelocity(state.velocity.x, state.velocity.y);
-    }
+    view.setVelocity(
+      this.player.state.velocity.x,
+      this.player.state.velocity.y
+    );
   }
 }

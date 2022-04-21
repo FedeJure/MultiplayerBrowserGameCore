@@ -7,6 +7,7 @@ import {
 } from "../domain/collisions/collisionTypes";
 import { IPlayerView } from "../domain/playerView";
 import { CollisionDetector } from "./collisionDetector";
+import { ExistentDepths } from "./existentDepths";
 
 export class PlayerView extends GameObjects.Container implements IPlayerView {
   protected readonly _view: Physics.Matter.Sprite;
@@ -42,10 +43,11 @@ export class PlayerView extends GameObjects.Container implements IPlayerView {
       )
     );
 
-    this.setDepth(10)
+    this.setDepth(ExistentDepths.GROUND);
 
     this.initCollisions();
   }
+  setDisplayName(name: string) {}
 
   get positionVector(): MatterJS.Vector {
     return { x: this.x, y: this.y };

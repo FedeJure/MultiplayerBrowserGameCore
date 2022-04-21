@@ -2,10 +2,11 @@ import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatch
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { InventoryRepository } from "../../domain/items/inventoryRepository";
 import { ItemsRepository } from "../../domain/items/itemsRepository";
+import { PlayersRepository2_0 } from "../../domain/player/playersRepository2.0";
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
-import { ConnectedPlayersRepository } from "../repositories/connectedPlayersRepository";
 import { ConnectionsRepository } from "../repositories/connectionsRepository";
+import { InGamePlayerRepository } from "../repositories/inGamePlayerRepository";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
 import { InMemoryInventoryRepository } from "../repositories/inMemoryInventoryRepository";
 import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository";
@@ -39,11 +40,7 @@ export class ServerProvider {
       () => new ServerPresenterProvider()
     );
   }
-  public static get connectedPlayerRepository(): ConnectedPlayersRepository {
-    return DependencyManager.GetOrInstantiate<ConnectedPlayersRepository>(
-      () => new ConnectedPlayersRepository()
-    );
-  }
+
   public static get collisionsDispatcher(): CollisionsDispatcher {
     return DependencyManager.GetOrInstantiate<CollisionsDispatcher>(
       () => new CollisionsDispatcher()
@@ -82,6 +79,12 @@ export class ServerProvider {
   public static get environmentObjectsRepository(): EnvironmentObjectRepository {
     return DependencyManager.GetOrInstantiate<EnvironmentObjectRepository>(
       () => new InMemoryEnvironmentObjectRepository()
+    )
+  }
+
+  public static get inGamePlayerRepository(): PlayersRepository2_0 {
+    return DependencyManager.GetOrInstantiate<PlayersRepository2_0>(
+      () => new InGamePlayerRepository()
     )
   }
 }

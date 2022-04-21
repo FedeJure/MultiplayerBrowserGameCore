@@ -1,27 +1,19 @@
-import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
-import { Player } from "../player/player";
+import { Player2_0 } from "../player/player2.0";
 import { PlayerState } from "../player/playerState";
 import { AnimationCode } from "./animations";
 
 export class ServerPlayerAnimationDelegator implements Delegator {
-  protected readonly statesRepository: PlayerStateRepository;
-  protected readonly player: Player;
 
-  constructor(player: Player, statesRepository: PlayerStateRepository) {
-    this.statesRepository = statesRepository;
-    this.player = player;
+  constructor(protected player: Player2_0) {
   }
   init(): void {}
   stop(): void {}
   update(time: number, delta: number): void {
-    const state = this.statesRepository.getPlayerState(this.player.info.id);
-    if (state) {
-      const currentAnim = this.getAnimation(state);
+      const currentAnim = this.getAnimation(this.player.state);
       if (currentAnim) {
-        this.statesRepository.updateStateOf(this.player.info.id, {anim: currentAnim})
+        this.player.updateState({anim: currentAnim})
       }
-    }
   }
 
   protected getAnimation(state: PlayerState) {

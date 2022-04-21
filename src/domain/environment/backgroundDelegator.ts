@@ -1,10 +1,10 @@
 import { GameObjects } from "phaser";
-import { ConnectedPlayersRepository } from "../../infrastructure/repositories/connectedPlayersRepository";
 import { LocalPlayerRepository } from "../../infrastructure/repositories/localPlayerRepository";
 import { ExistentDepths } from "../../view/existentDepths";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { loadBackgroundAssets } from "../actions/loadBackgroundAssets";
 import { Delegator } from "../delegator";
+import { PlayersRepository2_0 } from "../player/playersRepository2.0";
 import { ServerConnection } from "../serverConnection";
 import { ProcessedMap } from "./processedMap";
 
@@ -16,7 +16,7 @@ export class BackgroundDelegator implements Delegator {
     private scene: ClientGameScene,
     private connection: ServerConnection,
     private localplayerRepository: LocalPlayerRepository,
-    private playersRepository: ConnectedPlayersRepository
+    private inGamePlayersRepository: PlayersRepository2_0
   ) {}
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {
@@ -38,7 +38,7 @@ export class BackgroundDelegator implements Delegator {
     neighborMaps: ProcessedMap[]
   ) {
     try {
-      const localPlayer = this.playersRepository.getPlayer(this.localplayerRepository.playerId)
+      const localPlayer = this.inGamePlayersRepository.get(this.localplayerRepository.playerId)
 
       if (localPlayer) {
         currentMap.config.backgroundFile.forEach((bg, i) => {

@@ -1,6 +1,5 @@
 import { ClientPresenterProvider } from "./clientPresenterProvider";
 import { DependencyManager } from "../dependencyManager";
-import { ConnectedPlayersRepository } from "../repositories/connectedPlayersRepository";
 import { LocalPlayerRepository } from "../repositories/localPlayerRepository";
 import { SocketServerConnection } from "../socketServerConnection";
 import { PlayerStateRepository } from "../repositories/playerStateRepository";
@@ -14,6 +13,8 @@ import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository"
 import { Scene } from "phaser";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { RemoteEnvironmentObjectRepository } from "../repositories/remoteEnvironmentObjectRepository";
+import { PlayersRepository2_0 } from "../../domain/player/playersRepository2.0";
+import { InGamePlayerRepository } from "../repositories/inGamePlayerRepository";
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
@@ -50,11 +51,7 @@ export class ClientProvider {
   public static get localPlayerRepository(): LocalPlayerRepository {
     return ClientProvider._localPlayerRepository;
   }
-  public static get connectedPlayers(): ConnectedPlayersRepository {
-    return DependencyManager.GetOrInstantiate<ConnectedPlayersRepository>(
-      () => new ConnectedPlayersRepository()
-    );
-  }
+
   public static get collisionsDispatcher(): CollisionsDispatcher {
     return DependencyManager.GetOrInstantiate<CollisionsDispatcher>(
       () => new CollisionsDispatcher()
@@ -81,6 +78,12 @@ export class ClientProvider {
   public static get environmentObjectRepository(): EnvironmentObjectRepository {
     return DependencyManager.GetOrInstantiate<EnvironmentObjectRepository>(
       () => new RemoteEnvironmentObjectRepository(this.serverConnection)
+    )
+  }
+
+  public static get inGamePlayersRepository(): PlayersRepository2_0 {
+    return DependencyManager.GetOrInstantiate<PlayersRepository2_0>(
+      () => new InGamePlayerRepository()
     )
   }
 

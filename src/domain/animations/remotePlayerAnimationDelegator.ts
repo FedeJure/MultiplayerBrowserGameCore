@@ -1,19 +1,13 @@
-import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
-import { Player } from "../player/player";
+import { Player2_0 } from "../player/player2.0";
 
 export class RemotePlayerAnimationDelegator implements Delegator {
-  protected readonly statesRepository: PlayerStateRepository;
-  protected readonly player: Player;
 
-  constructor(player: Player, statesRepository: PlayerStateRepository) {
-    this.statesRepository = statesRepository;
-    this.player = player;
+  constructor(private player: Player2_0) {
   }
   init(): void {}
   stop(): void {}
   update(time: number, delta: number) {
-    const state = this.statesRepository.getPlayerState(this.player.info.id);
-    if (state) this.player.view.playAnimation(state.anim);
+    this.player.view.playAnimation(this.player.state.anim);
   }
 }

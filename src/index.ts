@@ -64,12 +64,15 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
         ),
         new ServerPlayerCreatorDelegator(
           ServerProvider.connectionsRepository,
-          ActionProvider.CreatePlayerFromId,
           scene,
-          ServerProvider.connectedPlayerRepository,
           socket,
           ServerProvider.roomManager,
-          ServerProvider.playerConnectionsRepository
+          ServerProvider.playerConnectionsRepository,
+          ServerProvider.playerInfoRepository,
+          ServerProvider.playerStateRepository,
+          ServerProvider.inventoryRepository,
+          ServerProvider.presenterProvider,
+          ServerProvider.inGamePlayerRepository
         ),
         new ServerPlayerInventoryDelegator(
           ServerProvider.playerConnectionsRepository,
@@ -80,7 +83,7 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
         new EnvironmentObjectDetailsDispatcherDelegator(
           ServerProvider.environmentObjectsRepository,
           ServerProvider.connectionsRepository
-        ), 
+        ),
       ]);
       socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
         const connection = new SocketClientConnection(clientSocket);

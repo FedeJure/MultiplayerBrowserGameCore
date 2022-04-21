@@ -1,35 +1,30 @@
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
-import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ResolvePlayerMovementWithInputs } from "../actions/resolvePlayerMovementWithInput";
 import { Delegator } from "../delegator";
-import { Player } from "./player";
+import { Player2_0 } from "./player2.0";
 import { PlayerInput } from "./playerInput";
 
 export class ServerPlayerStateUpdaterDelegator implements Delegator {
   constructor(
-    private player: Player,
+    private player: Player2_0,
     private input: PlayerInput,
     private resolveMovement: ResolvePlayerMovementWithInputs,
-    private playerStates: PlayerStateRepository,
     private inputRepository: PlayerInputRequestRepository
   ) {}
   init(): void {}
   stop(): void {}
   update(time: number, delta: number): void {
-    if (!this.player.view.active) return
-    const oldState = this.playerStates.getPlayerState(this.player.info.id);
-    if (oldState) {
-      const newState = this.resolveMovement.execute(
-        this.input,
-        this.player.view,
-        oldState,
-        delta
-      );
-      this.playerStates.updateStateOf(this.player.info.id, {
-        ...newState,
-        inputNumber: this.inputRepository.getOrCreate(this.player.info.id),
-      });
-      this.player.view.setVelocity(newState.velocity.x, newState.velocity.y);
-    }
+    if (!this.player.view.active) return;
+    const newState = this.resolveMovement.execute(
+      this.input,
+      this.player.view,
+      this.player.state,
+      delta
+    );
+    this.player.updateState({
+      ...newState,
+      inputNumber: this.inputRepository.getOrCreate(this.player.info.id),
+    });
+    this.player.view.setVelocity(newState.velocity.x, newState.velocity.y);
   }
 }

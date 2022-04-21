@@ -1,6 +1,5 @@
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
-import { Player } from "../player/player";
 import { ServerConnection } from "../serverConnection";
 import { PlayerInput } from "../player/playerInput";
 import { PlayerInputDto } from "../../infrastructure/dtos/playerInputDto";
@@ -8,34 +7,21 @@ import { ResolvePlayerMovementWithInputs } from "../actions/resolvePlayerMovemen
 import { PlayerState } from "../player/playerState";
 import { Side } from "../side";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
+import { Player2_0 } from "../player/player2.0";
 
 export class PlayerInputDelegator implements Delegator {
-  private readonly connection: ServerConnection;
-  private readonly statesRepository: PlayerStateRepository;
-  private readonly player: Player;
-  private readonly input: PlayerInput;
-  private readonly resolveMovement: ResolvePlayerMovementWithInputs;
-  private readonly inputRequestRepository: PlayerInputRequestRepository;
-
   private currentInput: PlayerInputDto | undefined;
   private lastInputSended: string = "";
   private savedState: PlayerState | undefined;
 
   constructor(
-    player: Player,
-    input: PlayerInput,
-    connection: ServerConnection,
-    statesRepository: PlayerStateRepository,
-    resolveMovement: ResolvePlayerMovementWithInputs,
-    inputRequestRepository: PlayerInputRequestRepository
-  ) {
-    this.player = player;
-    this.connection = connection;
-    this.statesRepository = statesRepository;
-    this.input = input;
-    this.resolveMovement = resolveMovement;
-    this.inputRequestRepository = inputRequestRepository;
-  }
+    private player: Player2_0,
+    private input: PlayerInput,
+    private connection: ServerConnection,
+    private statesRepository: PlayerStateRepository,
+    private resolveMovement: ResolvePlayerMovementWithInputs,
+    private inputRequestRepository: PlayerInputRequestRepository
+  ) {}
   init(): void {}
   stop(): void {}
   update(time: number, delta: number): void {

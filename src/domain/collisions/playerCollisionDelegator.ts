@@ -1,26 +1,19 @@
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
-import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
-import { Player } from "../player/player";
+import { Player2_0 } from "../player/player2.0";
 
 export class PlayerCollisionDelegator implements Delegator {
-  private readonly player: Player;
-  private readonly statesRepository: PlayerStateRepository;
 
   private readonly disposer: Disposer = new Disposer();
 
-  constructor(player: Player, statesRepository: PlayerStateRepository) {
-    this.player = player;
-    this.statesRepository = statesRepository;
+  constructor(private player: Player2_0) {
   }
   update(time: number, delta: number): void {}
 
   init(): void {
     this.disposer.add(
       this.player.view.onGroundCollideChange.subscribe((grounded) => {
-        this.statesRepository.updateStateOf(this.player.info.id, {
-          grounded,
-        });
+        this.player.updateState({grounded})
       })
     );
   }
