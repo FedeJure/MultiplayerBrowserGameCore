@@ -2,7 +2,7 @@ import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatch
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { InventoryRepository } from "../../domain/items/inventoryRepository";
 import { ItemsRepository } from "../../domain/items/itemsRepository";
-import { InGamePlayersRepository } from "../../domain/player/playersRepository2.0";
+import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
 import { ConnectionsRepository } from "../repositories/connectionsRepository";

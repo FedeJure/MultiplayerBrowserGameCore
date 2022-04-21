@@ -6,9 +6,9 @@ import { ClientPlayerView } from "../../view/clientPlayerView";
 import { GameScene } from "../../view/scenes/GameScene";
 import { CreateClientPlayerAction } from "../actions/provideClientPlayer";
 import { Delegator } from "../delegator";
-import { Player } from "../player/player2.0";
+import { Player } from "../player/player";
 import { DefaultConfiguration } from "../player/playerConfiguration";
-import { InGamePlayersRepository } from "../player/playersRepository2.0";
+import { InGamePlayersRepository } from "../player/inGamePlayersRepository";
 import { ServerConnection } from "../serverConnection";
 
 export class ClientConnectionDelegator implements Delegator {

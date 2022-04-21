@@ -2,7 +2,7 @@ import { filter } from "rxjs";
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
 import { ServerConnection } from "../serverConnection";
-import { Player } from "./player2.0";
+import { Player } from "./player";
 
 export class ClientPlayerConnectionDelegator implements Delegator {
   private disposer = new Disposer();

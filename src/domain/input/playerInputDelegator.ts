@@ -7,7 +7,7 @@ import { ResolvePlayerMovementWithInputs } from "../actions/resolvePlayerMovemen
 import { PlayerState } from "../player/playerState";
 import { Side } from "../side";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
-import { Player } from "../player/player2.0";
+import { Player } from "../player/player";
 
 export class PlayerInputDelegator implements Delegator {
   private currentInput: PlayerInputDto | undefined;

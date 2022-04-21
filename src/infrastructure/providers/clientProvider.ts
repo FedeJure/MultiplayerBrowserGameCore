@@ -13,7 +13,7 @@ import { InMemoryItemsRepository } from "../repositories/inMemoryItemRepository"
 import { Scene } from "phaser";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { RemoteEnvironmentObjectRepository } from "../repositories/remoteEnvironmentObjectRepository";
-import { InGamePlayersRepository } from "../../domain/player/playersRepository2.0";
+import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
 import { InMemoryInGamePlayerRepository } from "../repositories/inGamePlayerRepository";
 
 export class ClientProvider {

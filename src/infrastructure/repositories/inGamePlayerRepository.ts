@@ -1,6 +1,6 @@
-import { Player } from "../../domain/player/player2.0";
+import { Player } from "../../domain/player/player";
 import { PlayerInfo } from "../../domain/player/playerInfo";
-import { InGamePlayersRepository } from "../../domain/player/playersRepository2.0";
+import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
 
 export class InMemoryInGamePlayerRepository implements InGamePlayersRepository {
 

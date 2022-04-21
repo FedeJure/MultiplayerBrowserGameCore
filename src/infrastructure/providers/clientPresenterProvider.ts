@@ -25,7 +25,7 @@ import { EnvironmentObjectVariant } from "../../domain/environmentObjects/enviro
 import { Delegator } from "../../domain/delegator";
 import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
 import { GameObjects } from "phaser";
-import { Player } from "../../domain/player/player2.0";
+import { Player } from "../../domain/player/player";
 
 export class ClientPresenterProvider {
   forLocalPlayer(

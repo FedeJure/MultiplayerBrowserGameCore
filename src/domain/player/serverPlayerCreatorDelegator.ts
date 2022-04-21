@@ -17,9 +17,9 @@ import { Delegator } from "../delegator";
 import { CompleteMapDelegator } from "../environment/completeMapDelegator";
 import { InventoryRepository } from "../items/inventoryRepository";
 import { RoomManager } from "../roomManager";
-import { Player } from "./player2.0";
+import { Player } from "./player";
 import { DefaultConfiguration } from "./playerConfiguration";
-import { InGamePlayersRepository } from "./playersRepository2.0";
+import { InGamePlayersRepository } from "./inGamePlayersRepository";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(

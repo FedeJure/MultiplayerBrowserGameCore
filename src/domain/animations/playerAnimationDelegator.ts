@@ -1,4 +1,4 @@
-import { Player } from "../player/player2.0";
+import { Player } from "../player/player";
 import { ServerPlayerAnimationDelegator } from "./serverPlayerAnimationDelegator";
 
 export class PlayerAnimationDelegator extends ServerPlayerAnimationDelegator {

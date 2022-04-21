@@ -1,5 +1,5 @@
 import { Delegator } from "../delegator";
-import { Player } from "./player2.0";
+import { Player } from "./player";
 
 export class PlayerInfoDelegator implements Delegator {
   constructor(private player: Player) {}

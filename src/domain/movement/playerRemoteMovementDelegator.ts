@@ -1,7 +1,7 @@
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
-import { Player } from "../player/player2.0";
+import { Player } from "../player/player";
 import { ServerConnection } from "../serverConnection";
 import { Side } from "../side";
 

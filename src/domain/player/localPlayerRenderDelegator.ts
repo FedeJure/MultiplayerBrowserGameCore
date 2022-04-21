@@ -1,5 +1,5 @@
 import { Delegator } from "../delegator";
-import { Player } from "./player2.0";
+import { Player } from "./player";
 
 export class LocalPlayerRenderDelegator implements Delegator {
   private readonly maxZoom = 1.6;

@@ -1,6 +1,6 @@
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
-import { Player } from "../player/player2.0";
+import { Player } from "../player/player";
 
 export class PlayerCollisionDelegator implements Delegator {
 

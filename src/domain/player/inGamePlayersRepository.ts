@@ -1,4 +1,4 @@
-import { Player } from "./player2.0";
+import { Player } from "./player";
 import { PlayerInfo } from "./playerInfo";
 
 export interface InGamePlayersRepository {

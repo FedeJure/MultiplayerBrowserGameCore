@@ -5,8 +5,8 @@ import { PlayerState } from "../player/playerState";
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ClientPlayerView } from "../../view/clientPlayerView";
-import { Player } from "../player/player2.0";
-import { InGamePlayersRepository } from "../player/playersRepository2.0";
+import { Player } from "../player/player";
+import { InGamePlayersRepository } from "../player/inGamePlayersRepository";
 export class CreateClientPlayerAction {
   constructor(
     private presenterProvider: ClientPresenterProvider,

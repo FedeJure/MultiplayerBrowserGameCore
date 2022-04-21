@@ -1,5 +1,5 @@
 import { Delegator } from "../delegator";
-import { Player } from "../player/player2.0";
+import { Player } from "../player/player";
 import { PlayerState } from "../player/playerState";
 import { AnimationCode } from "./animations";
 
