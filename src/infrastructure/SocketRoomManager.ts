@@ -29,7 +29,7 @@ export class SocketRoomManager implements RoomManager {
       if (!this.playersByRoom[r]) this.playersByRoom[r] = [];
       this.playersByRoom[r]?.push(playerId);
     });
-    this.playerStateRepository.updateStateOf(playerId, {
+    this.playerStateRepository.update(playerId, {
       currentRooms: roomIds,
     });
     return roomIds;

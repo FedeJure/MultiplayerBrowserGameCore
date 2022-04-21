@@ -38,7 +38,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     this.connectionsRepository.onNewConnection().subscribe((connection) => {
       connection.onPlayerConnection().subscribe(async ({ playerId }) => {
         try {
-          const player = this.createPlayerInGame(
+          const player = await this.createPlayerInGame(
             playerId,
             this.gameScene,
             connection
@@ -112,16 +112,16 @@ export class ServerPlayerCreatorDelegator implements Delegator {
   stop(): void {}
   update(time: number, delta: number): void {}
 
-  createPlayerInGame(playerId: string,
+  async createPlayerInGame(playerId: string,
     scene: GameScene,
     connection: ClientConnection) {
-      const playerInfo = this.playerInfoRepository.getPlayer(playerId);
+      const playerInfo = await this.playerInfoRepository.get(playerId);
       if (playerInfo === undefined)
         throw new Error(`Player with ID: ${playerId} not found`);
   
-      let playerState = this.playerStateRepository.getPlayerState(playerId);
+      let playerState = this.playerStateRepository.get(playerId);
       if (!playerState) {
-        this.playerStateRepository.setPlayerState(playerId, DefaultPlayerState);
+        this.playerStateRepository.save(playerId, DefaultPlayerState);
         playerState = DefaultPlayerState;
       }
   

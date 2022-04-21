@@ -25,6 +25,6 @@ export class CreateClientPlayerAction {
     const player = new Player(info, state, view);
     this.presenterProvider.forPlayer(player, view);
     this.inGamePlayersRepository.save(player);
-    this.playerStateRepository.setPlayerState(info.id, player.state);
+    this.playerStateRepository.save(info.id, player.state);
   }
 }

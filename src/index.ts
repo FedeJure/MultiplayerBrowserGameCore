@@ -47,15 +47,14 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
       const __ = new ScenePresenter(scene, [
         new CompleteMapDelegator(
           MapsConfiguration,
-          ServerProvider.playerStateRepository,
           ServerProvider.connectionsRepository,
           ServerProvider.playerConnectionsRepository,
           scene,
           ServerProvider.roomManager,
           socket,
-          ServerProvider.playerInfoRepository,
           ServerProvider.environmentObjectsRepository,
-          ServerProvider.presenterProvider
+          ServerProvider.presenterProvider,
+          ServerProvider.inGamePlayerRepository
         ),
         new PlayerStateDelegator(
           ServerProvider.roomManager,

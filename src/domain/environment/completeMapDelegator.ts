@@ -2,7 +2,6 @@ import { Scene } from "phaser";
 import difference from "lodash.difference";
 import { ConnectionsRepository } from "../../infrastructure/repositories/connectionsRepository";
 import { PlayerConnectionsRepository } from "../../infrastructure/repositories/playerConnectionsRespository";
-import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { createMapOnScene } from "../actions/createMapOnScene";
 import { loadMapAssets } from "../actions/loadMapAssets";
 import { Delegator } from "../delegator";
@@ -12,11 +11,12 @@ import { MapConfiguration, MapLayer } from "./mapConfiguration";
 import { ProcessedMap } from "./processedMap";
 import { Socket } from "socket.io";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
-import { PlayerInfoRepository } from "../../infrastructure/repositories/playerInfoRepository";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
-import { ClientEnvironmentObjectFactory } from "../../view/environmentObjects/clientEnvironmentObjectFactory";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { ServerEnvironmentObjectFactory } from "../../view/environmentObjects/serverEnvironmentObjectFactory";
+import { InGamePlayersRepository } from "../player/inGamePlayersRepository";
+import { ServerPlayer } from "../player/serverPlayer";
+import { Player } from "../player/player";
 
 export class CompleteMapDelegator implements Delegator {
   private readonly maxWorldWidht = 10000;
@@ -28,46 +28,39 @@ export class CompleteMapDelegator implements Delegator {
   private currentY = 0;
   public constructor(
     private mapConfig: MapConfiguration,
-    private playerStateRepository: PlayerStateRepository,
     private connections: ConnectionsRepository,
     private playerConnections: PlayerConnectionsRepository,
     private scene: Scene,
     private roomManager: RoomManager,
     private socket: Socket,
-    private playersRepository: PlayerInfoRepository,
     private envObjectsRepository: EnvironmentObjectRepository,
-    private presenterProvider: ServerPresenterProvider
+    private presenterProvider: ServerPresenterProvider,
+    private inGamePlayersRepository: InGamePlayersRepository
   ) {
     mapConfig.mapLayers.forEach((layer) => {
       this.processLayer(layer);
     });
-
-    playerConnections.onNewPlayerConnected.subscribe(({ playerId }) => {
-      const state = playerStateRepository.getPlayerState(playerId);
-      if (!state) return;
-      this.updateMapForPlayer(state, playerId);
-    });
-    playerStateRepository.onPlayerStateChange.subscribe(
-      ({ playerId, state }) => {
-        this.updateMapForPlayer(state, playerId).then((joinedRooms) => {
+    this.inGamePlayersRepository.onNewPlayer.subscribe((player) => {
+      this.updateMapForPlayer(player);
+      const serverPlayer = player as ServerPlayer;
+      serverPlayer.onStateChange.subscribe((state) => {
+        this.updateMapForPlayer(player).then(async (joinedRooms) => {
           const newRooms: string[] = difference(
             joinedRooms,
             state.currentRooms
           );
           if (newRooms.length === 0) return;
-          const playerInfo = this.playersRepository.getPlayer(playerId);
-          if (!playerInfo) return;
 
           socket.in(newRooms).emit(
             GameEvents.NEW_PLAYER_CONNECTED.name,
             GameEvents.NEW_PLAYER_CONNECTED.getEvent({
-              id: playerId,
-              info: playerInfo,
+              id: serverPlayer.info.id,
+              info: serverPlayer.info,
               state: state,
             })
           );
 
-          this.sendAlreadyConnectedPlayers(playerId, newRooms);
+          this.sendAlreadyConnectedPlayers(serverPlayer, newRooms);
 
           const leavingRooms: string[] = difference(
             state.currentRooms,
@@ -78,53 +71,59 @@ export class CompleteMapDelegator implements Delegator {
             .in(leavingRooms)
             .emit(
               GameEvents.PLAYER_DISCONNECTED.name,
-              GameEvents.PLAYER_DISCONNECTED.getEvent(playerId)
+              GameEvents.PLAYER_DISCONNECTED.getEvent(serverPlayer.info.id)
             );
         });
-      }
-    );
+      });
+    });
   }
 
-  private sendAlreadyConnectedPlayers(playerId: string, newRooms: string[]) {
-    const connId = this.playerConnections.getConnection(playerId);
+  private async sendAlreadyConnectedPlayers(
+    player: Player,
+    newRooms: string[]
+  ) {
+    const connId = this.playerConnections.getConnection(player.info.id);
     if (!connId) return;
     const connection = this.connections.getConnection(connId);
     newRooms.forEach((r) => {
       const playerIds = this.roomManager.getPlayersByRoom()[r] ?? [];
-      playerIds.forEach((p) => {
+      playerIds.forEach(async (p) => {
         try {
-          const state = this.playerStateRepository.getPlayerState(p)!;
-          const info = this.playersRepository.getPlayer(p)!;
           connection?.sendConnectedPlayer({
-            id: info.id,
-            state,
-            info,
+            id: player.info.id,
+            state: player.state,
+            info: player.info,
           });
         } catch (error) {}
       });
     });
   }
 
-  private updateMapForPlayer(state: PlayerState, playerId: string) {
-    const { foundedMap, neighborMaps } =
-      CompleteMapDelegator.getMapForPlayer(state);
-    if (foundedMap && neighborMaps && foundedMap.id !== state.map.mapId) {
-      this.playerStateRepository.updateStateOf(playerId, {
+  private updateMapForPlayer(player: Player) {
+    const { foundedMap, neighborMaps } = CompleteMapDelegator.getMapForPlayer(
+      player.state
+    );
+    if (
+      foundedMap &&
+      neighborMaps &&
+      foundedMap.id !== player.state.map.mapId
+    ) {
+      player.updateState({
         map: { mapId: foundedMap.id },
       });
-      const connectionId = this.playerConnections.getConnection(playerId);
+      const connectionId = this.playerConnections.getConnection(player.info.id);
       if (connectionId) {
         const connection = this.connections.getConnection(connectionId);
         if (connection) {
           connection.sendMapUpdateEvent(foundedMap, neighborMaps);
-          return this.roomManager.joinToRoom(playerId, connection, [
+          return this.roomManager.joinToRoom(player.info.id, connection, [
             foundedMap,
             ...neighborMaps,
           ]);
         }
       }
     }
-    return Promise.resolve(state.currentRooms);
+    return Promise.resolve(player.state.currentRooms);
   }
 
   private static isInside(x: number, y: number, map: ProcessedMap) {
@@ -183,7 +182,12 @@ export class CompleteMapDelegator implements Delegator {
       )
     ).then((_) =>
       CompleteMapDelegator.processedMapsAsList.forEach((m) =>
-        createMapOnScene(m, this.scene, this.envObjectsRepository, new ServerEnvironmentObjectFactory(this.scene, this.presenterProvider))
+        createMapOnScene(
+          m,
+          this.scene,
+          this.envObjectsRepository,
+          new ServerEnvironmentObjectFactory(this.scene, this.presenterProvider)
+        )
       )
     );
   }

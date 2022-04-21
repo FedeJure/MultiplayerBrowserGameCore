@@ -15,11 +15,11 @@ export class InMemoryPlayerStateRepository implements PlayerStateRepository {
   }
   store: { [key: string]: PlayerState } = {};
 
-  getPlayerState(id: string): PlayerState | undefined {
+  get(id: string): PlayerState | undefined {
     return this.store[id];
   }
 
-  setPlayerState(id: string, state: PlayerState): void {
+  save(id: string, state: PlayerState): void {
     this.store[id] = state;
     this._onPlayerStateChange.next({ playerId: id, state });
   }
@@ -28,9 +28,9 @@ export class InMemoryPlayerStateRepository implements PlayerStateRepository {
     return this.store;
   }
 
-  updateStateOf(id: string, newValues: Partial<PlayerState>) {
-    const state = this.getPlayerState(id);
+  update(id: string, newValues: Partial<PlayerState>) {
+    const state = this.get(id);
     if (!state) return;
-    this.setPlayerState(id, { ...state, ...newValues });
+    this.save(id, { ...state, ...newValues });
   }
 }

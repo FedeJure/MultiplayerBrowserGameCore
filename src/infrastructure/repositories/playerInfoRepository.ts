@@ -1,6 +1,7 @@
 import { PlayerInfo } from "../../domain/player/playerInfo";
 
 export interface PlayerInfoRepository {
-  getPlayer: (id: string) => PlayerInfo | undefined;
-  addPlayer: (id: string, info: PlayerInfo) => void;
+  get(id: string) : Promise<PlayerInfo | undefined>;
+  save(id: string, info: PlayerInfo): Promise<void>;
+  update(id: string, info: Partial<PlayerInfo>): Promise<void>
 }

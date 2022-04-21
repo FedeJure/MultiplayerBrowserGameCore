@@ -21,7 +21,7 @@ export class PlayerStateDelegator implements Delegator {
 
         for (let i = 0; i < players.length; i++) {
           const p = players[i];
-          const state = this.playerStates.getPlayerState(p);
+          const state = this.playerStates.get(p);
           if (state) states[p] = state;
         }
 

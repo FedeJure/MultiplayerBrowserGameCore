@@ -27,7 +27,7 @@ export class PlayerInputDelegator implements Delegator {
   update(time: number, delta: number): void {
     const currentInput = this.input.toDto();
     this.currentInput = currentInput;
-    const oldState = this.statesRepository.getPlayerState(this.player.info.id);
+    const oldState = this.statesRepository.get(this.player.info.id);
 
     if (
       [this.inputHasChange(), ...Object.values(currentInput)].some((a) => a) ||
@@ -52,7 +52,7 @@ export class PlayerInputDelegator implements Delegator {
       this.player.view.setVelocity(newState.velocity.x, newState.velocity.y);
       this.player.view.setPosition(newState.position.x, newState.position.y);
       this.player.view.lookToLeft(newState.side == Side.LEFT);
-      this.statesRepository.setPlayerState(this.player.info.id, newState);
+      this.statesRepository.save(this.player.info.id, newState);
       this.savedState = newState;
     }
 

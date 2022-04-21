@@ -1,3 +1,4 @@
+import { Observable } from "rxjs";
 import { Player } from "./player";
 import { PlayerInfo } from "./playerInfo";
 
@@ -6,4 +7,5 @@ export interface InGamePlayersRepository {
     save(player: Player)
     remove(id: PlayerInfo['id'])
     getAll(): Map<PlayerInfo['id'], Player>
+    onNewPlayer: Observable<Player>
 }
