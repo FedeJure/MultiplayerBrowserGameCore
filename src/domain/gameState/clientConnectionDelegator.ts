@@ -4,21 +4,21 @@ import { ClientPresenterProvider } from "../../infrastructure/providers/clientPr
 import { ClientInventoryView } from "../../view/clientInventoryView";
 import { ClientPlayerView } from "../../view/clientPlayerView";
 import { GameScene } from "../../view/scenes/GameScene";
-import { CreateClientPlayerAction } from "../actions/provideClientPlayer";
 import { Delegator } from "../delegator";
 import { Player } from "../player/player";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { InGamePlayersRepository } from "../player/inGamePlayersRepository";
 import { ServerConnection } from "../serverConnection";
+import { PlayerState } from "../player/playerState";
+import { PlayerInfo } from "../player/playerInfo";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
     private localPlayerId: string,
     private connection: ServerConnection,
     private scene: GameScene,
-    private createClientPlayerAction: CreateClientPlayerAction,
     private presenterProvider: ClientPresenterProvider,
-    private inGamePlayersRepository: InGamePlayersRepository,
+    private inGamePlayersRepository: InGamePlayersRepository
   ) {}
   init(): void {
     this.connection.onInitialGameState.subscribe((data) => {
@@ -33,33 +33,27 @@ export class ClientConnectionDelegator implements Delegator {
             DefaultConfiguration.height,
             DefaultConfiguration.width
           );
-          const input = new PlayerKeyBoardInput(this.scene.input.keyboard)
-          const player = new Player(dto.info, dto.state, view, );
-          const inventory = new ClientInventoryView(this.scene, input)
-          this.presenterProvider.forInventory(dto.info.id, inventory)
+          const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
+          const player = new Player(dto.info, dto.state, view);
+          const inventory = new ClientInventoryView(this.scene, input);
+          this.presenterProvider.forInventory(dto.info.id, inventory);
           this.presenterProvider.forLocalPlayer(input, player, view);
           this.inGamePlayersRepository.save(player);
-        }
-        else
-          this.createClientPlayerAction.execute(
-            dto.info,
-            dto.state,
-            this.scene
-          );
+        } else this.createClientPlayer(dto.state, dto.info);
       }
 
       this.connection.onNewPlayerConnected.subscribe((data) => {
         if (this.inGamePlayersRepository.get(data.player.id)) return;
-        this.createClientPlayerAction.execute(
-          data.player.info,
+        this.createClientPlayer(
           data.player.state,
-          this.scene
+
+          data.player.info
         );
       });
 
       this.connection.onPlayerDisconnected.subscribe((data) => {
-        const player = this.inGamePlayersRepository.get(data.playerId)
-        if (player) player.destroy()
+        const player = this.inGamePlayersRepository.get(data.playerId);
+        if (player) player.destroy();
         this.inGamePlayersRepository.remove(data.playerId);
       });
     });
@@ -70,4 +64,17 @@ export class ClientConnectionDelegator implements Delegator {
   }
   stop(): void {}
   update(time: number, delta: number): void {}
+
+  createClientPlayer(state: PlayerState, info: PlayerInfo) {
+    const view = new ClientPlayerView(
+      this.scene,
+      state.position.x,
+      state.position.y,
+      DefaultConfiguration.height,
+      DefaultConfiguration.width
+    );
+    const player = new Player(info, state, view);
+    this.presenterProvider.forPlayer(player, view);
+    this.inGamePlayersRepository.save(player);
+  }
 }

@@ -1,6 +1,5 @@
 import { ClientProvider } from "./clientProvider";
 import { PlayerInput } from "../../domain/player/playerInput";
-import { ActionProvider } from "./actionProvider";
 import { PlayerCollisionDelegator } from "../../domain/collisions/playerCollisionDelegator";
 import { PlayerMovementValidationDelegator } from "../../domain/movement/playerMovementValidationDelegator";
 import { PlayerInputDelegator } from "../../domain/input/playerInputDelegator";
@@ -46,7 +45,6 @@ export class ClientPresenterProvider {
         input,
         ClientProvider.serverConnection,
         ClientProvider.playerStateRepository,
-        ActionProvider.ResolvePlayerMovementWithInputs,
         ClientProvider.playerInputRequestRepository
       ),
       new LocalPlayerRenderDelegator(player),
@@ -93,7 +91,6 @@ export class ClientPresenterProvider {
         ClientProvider.localPlayerRepository.playerId,
         ClientProvider.serverConnection,
         scene,
-        ActionProvider.CreateClientPlayer,
         ClientProvider.presenterProvider,
         ClientProvider.inGamePlayersRepository
       ),

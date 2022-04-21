@@ -3,7 +3,7 @@ import { Delegator } from "../delegator";
 import { ServerConnection } from "../serverConnection";
 import { PlayerInput } from "../player/playerInput";
 import { PlayerInputDto } from "../../infrastructure/dtos/playerInputDto";
-import { ResolvePlayerMovementWithInputs } from "../actions/resolvePlayerMovementWithInput";
+import { resolvePlayerMovementWithInput } from "../actions/resolvePlayerMovementWithInput";
 import { PlayerState } from "../player/playerState";
 import { Side } from "../side";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
@@ -19,7 +19,6 @@ export class PlayerInputDelegator implements Delegator {
     private input: PlayerInput,
     private connection: ServerConnection,
     private statesRepository: PlayerStateRepository,
-    private resolveMovement: ResolvePlayerMovementWithInputs,
     private inputRequestRepository: PlayerInputRequestRepository
   ) {}
   init(): void {}
@@ -43,7 +42,7 @@ export class PlayerInputDelegator implements Delegator {
       this.inputRequestRepository.set(this.player.info.id, newInputRequest);
     }
     if (oldState) {
-      const newState = this.resolveMovement.execute(
+      const newState = resolvePlayerMovementWithInput(
         this.input,
         this.player.view,
         oldState,

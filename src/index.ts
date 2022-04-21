@@ -15,7 +15,6 @@ import { SocketServerConnection } from "./infrastructure/socketServerConnection"
 import { Log } from "./infrastructure/Logger";
 import { GameplayHud } from "./view/scenes/GameplayHud";
 import { LocalPlayerRepository } from "./infrastructure/repositories/localPlayerRepository";
-import { ActionProvider } from "./infrastructure/providers/actionProvider";
 import { ClientLoadScene } from "./view/scenes/ClientLoadScene";
 import { ClientGameScene } from "./view/scenes/ClientGameScene";
 import { CompleteMapDelegator } from "./domain/environment/completeMapDelegator";
@@ -58,7 +57,7 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
         ),
         new PlayerStateDelegator(
           ServerProvider.roomManager,
-          ServerProvider.playerStateRepository,
+          ServerProvider.inGamePlayerRepository,
           socket
         ),
         new ServerPlayerCreatorDelegator(

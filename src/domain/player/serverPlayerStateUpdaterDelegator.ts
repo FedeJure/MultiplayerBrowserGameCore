@@ -1,5 +1,5 @@
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
-import { ResolvePlayerMovementWithInputs } from "../actions/resolvePlayerMovementWithInput";
+import { resolvePlayerMovementWithInput } from "../actions/resolvePlayerMovementWithInput";
 import { Delegator } from "../delegator";
 import { Player } from "./player";
 import { PlayerInput } from "./playerInput";
@@ -8,14 +8,13 @@ export class ServerPlayerStateUpdaterDelegator implements Delegator {
   constructor(
     private player: Player,
     private input: PlayerInput,
-    private resolveMovement: ResolvePlayerMovementWithInputs,
     private inputRepository: PlayerInputRequestRepository
   ) {}
   init(): void {}
   stop(): void {}
   update(time: number, delta: number): void {
     if (!this.player.view.active) return;
-    const newState = this.resolveMovement.execute(
+    const newState = resolvePlayerMovementWithInput(
       this.input,
       this.player.view,
       this.player.state,

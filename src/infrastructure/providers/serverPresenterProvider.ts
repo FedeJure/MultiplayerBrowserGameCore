@@ -10,7 +10,6 @@ import { Player } from "../../domain/player/player";
 import { PlayerInput } from "../../domain/player/playerInput";
 import { ServerPlayerStateUpdaterDelegator } from "../../domain/player/serverPlayerStateUpdaterDelegator";
 import { ViewPresenter } from "../../presentation/viewPresenter";
-import { ActionProvider } from "./actionProvider";
 import { ServerProvider } from "./serverProvider";
 
 export class ServerPresenterProvider {
@@ -25,7 +24,6 @@ export class ServerPresenterProvider {
       new ServerPlayerStateUpdaterDelegator(
         player,
         input,
-        ActionProvider.ResolvePlayerMovementWithInputs,
         ServerProvider.playerInputRequestRepository
       ),
       new PlayerAngleFixDelegator(player),
