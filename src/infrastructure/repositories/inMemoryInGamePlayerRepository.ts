@@ -7,14 +7,14 @@ export class InMemoryInGamePlayerRepository implements InGamePlayersRepository {
   private _onNewPlayer = new Subject<Player>();
   private store: Map<PlayerInfo["id"], Player> = new Map();
   get(id: PlayerInfo["id"]): Player | undefined {
-    return this.store[id];
+    return this.store.get(id);
   }
   save(player: Player) {
-    this.store[player.info.id] = player;
+    this.store.set(player.info.id, player);
     this._onNewPlayer.next(player);
   }
   remove(id: PlayerInfo["id"]) {
-    delete this.store[id];
+    this.store.delete(id)
   }
   getAll(): Map<string, Player> {
     return this.store;

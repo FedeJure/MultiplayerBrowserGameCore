@@ -46,7 +46,6 @@ export class ServerPlayerCreatorDelegator implements Delegator {
 
           const { foundedMap, neighborMaps } =
             CompleteMapDelegator.getMapForPlayer(player.state);
-            console.log(Array.from(this.inGamePlayersRepository.getAll()))
 
           connection.sendInitialStateEvent(
             Array.from(this.inGamePlayersRepository.getAll()).map((player) => ({
