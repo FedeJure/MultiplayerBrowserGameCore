@@ -14,7 +14,6 @@ import { Delegator } from "../delegator";
 import { CompleteMapDelegator } from "../environment/completeMapDelegator";
 import { RoomManager } from "../roomManager";
 import { DefaultConfiguration } from "./playerConfiguration";
-import { InGamePlayersRepository } from "./inGamePlayersRepository";
 import { ServerPlayer } from "./serverPlayer";
 import { AsyncRepository, SimpleRepository } from "../repository";
 import { PlayerInfo } from "./playerInfo";
@@ -30,62 +29,58 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private playerStateRepository: PlayerStateRepository,
     private inventoryRepository: AsyncRepository<PlayerInventoryDto>,
     private presenterProvider: ServerPresenterProvider,
-    private inGamePlayersRepository: InGamePlayersRepository<ServerPlayer>
+    private inGamePlayersRepository: SimpleRepository<ServerPlayer>
   ) {}
   init(): void {
     this.connectionsRepository.onSave.subscribe((connection) => {
       connection.onPlayerConnection().subscribe(async ({ playerId }) => {
-        try {
-          const player = await this.createPlayerInGame(
-            playerId,
-            this.gameScene,
-            connection
-          );
+        const player = await this.createPlayerInGame(
+          playerId,
+          this.gameScene,
+          connection
+        );
 
-          const { foundedMap, neighborMaps } =
-            CompleteMapDelegator.getMapForPlayer(player.state);
+        const { foundedMap, neighborMaps } =
+          CompleteMapDelegator.getMapForPlayer(player.state);
 
-          connection.sendInitialStateEvent(
-            Array.from(this.inGamePlayersRepository.getAll()).map((player) => ({
-              id: player[0],
-              state: player[1].state,
-              info: player[1].info,
-            })),
-            foundedMap,
-            neighborMaps
-          );
+        connection.sendInitialStateEvent(
+          this.inGamePlayersRepository.getAll().map((player) => ({
+            id: player.info.id,
+            state: player.state,
+            info: player.info,
+          })),
+          foundedMap,
+          neighborMaps
+        );
 
-          if (!foundedMap || !neighborMaps) return;
+        if (!foundedMap || !neighborMaps) return;
 
-          //WARNING duplicated code
-          //TODO: convert completeMapDelegator into MapManager and move all logic there
-          const joinedRooms = await this.roomManager.joinToRoom(
-            playerId,
-            connection,
-            [foundedMap, ...neighborMaps]
-          );
-          connection.sendMapUpdateEvent(foundedMap, neighborMaps);
-          this.socket.in(joinedRooms).emit(
-            GameEvents.NEW_PLAYER_CONNECTED.name,
-            GameEvents.NEW_PLAYER_CONNECTED.getEvent({
-              id: player.info.id,
-              info: player.info,
-              state: player.state,
-            })
-          );
+        //WARNING duplicated code
+        //TODO: convert completeMapDelegator into MapManager and move all logic there
+        const joinedRooms = await this.roomManager.joinToRoom(
+          playerId,
+          connection,
+          [foundedMap, ...neighborMaps]
+        );
+        connection.sendMapUpdateEvent(foundedMap, neighborMaps);
+        this.socket.in(joinedRooms).emit(
+          GameEvents.NEW_PLAYER_CONNECTED.name,
+          GameEvents.NEW_PLAYER_CONNECTED.getEvent({
+            id: player.info.id,
+            info: player.info,
+            state: player.state,
+          })
+        );
 
-          Log(
-            this,
-            `[Game addPlayer] player added to scene with id: ${playerId}`
-          );
-        } catch (error) {
-          Log(this, `[Game addPlayer] ERROR: ${error}`);
-        }
+        Log(
+          this,
+          `[Game addPlayer] player added to scene with id: ${playerId}`
+        );
       });
     });
 
     this.connectionsRepository.onRemove.subscribe((connection) => {
-      const playerId = connection.playerId
+      const playerId = connection.playerId;
       if (playerId) {
         const player = this.inGamePlayersRepository.get(playerId);
 
@@ -151,7 +146,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       )
     );
 
-    this.inGamePlayersRepository.save(player);
+    this.inGamePlayersRepository.save(player.info.id, player);
     return player;
   }
 }

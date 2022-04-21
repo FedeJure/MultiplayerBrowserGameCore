@@ -9,13 +9,15 @@ import { PlayerInputRequestRepository } from "../repositories/playerInputRequest
 import { Scene } from "phaser";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { RemoteEnvironmentObjectRepository } from "../repositories/remoteEnvironmentObjectRepository";
-import { InGamePlayersRepository } from "../../domain/player/inGamePlayersRepository";
-import { InMemoryInGameClientPlayerRepository } from "../repositories/inMemoryInGamePlayerRepository";
 import { ClientPlayer } from "../../domain/player/player";
 import { SimpleRepository } from "../../domain/repository";
 import { InMemoryRepository } from "../repositories/InMemoryRepository";
 import { Item } from "../../domain/items/item";
 import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
+
+class InventoryRepository extends InMemoryRepository<PlayerInventoryDto>{}
+class ItemRepository extends InMemoryRepository<Item>{}
+
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
@@ -31,8 +33,8 @@ export class ClientProvider {
   ) {
     ClientProvider._serverConnection = serverConnection;
     ClientProvider._localPlayerRepository = localPlayerRepository;
-    ClientProvider._originUrl = originUrl
-    ClientProvider._hudScene = hudScene
+    ClientProvider._originUrl = originUrl;
+    ClientProvider._hudScene = hudScene;
   }
 
   public static get playerStateRepository(): PlayerStateRepository {
@@ -65,28 +67,30 @@ export class ClientProvider {
   }
 
   public static get inventoryRepository(): SimpleRepository<PlayerInventoryDto> {
-    return DependencyManager.GetOrInstantiate<SimpleRepository<PlayerInventoryDto>>(
-      () => new InMemoryRepository<PlayerInventoryDto>()
-    )
+    return DependencyManager.GetOrInstantiate<
+      SimpleRepository<PlayerInventoryDto>
+    >(() => new InventoryRepository());
   }
 
   public static get itemsRepository(): SimpleRepository<Item> {
     return DependencyManager.GetOrInstantiate<SimpleRepository<Item>>(
-      () => new InMemoryRepository<Item>()
-    )
+      () => new ItemRepository()
+    );
   }
 
   public static get environmentObjectRepository(): EnvironmentObjectRepository {
     return DependencyManager.GetOrInstantiate<EnvironmentObjectRepository>(
       () => new RemoteEnvironmentObjectRepository(this.serverConnection)
-    )
+    );
   }
 
-  public static get inGamePlayersRepository(): InGamePlayersRepository<ClientPlayer> {
-    return DependencyManager.GetOrInstantiate<InGamePlayersRepository<ClientPlayer>>(
-      () => new InMemoryInGameClientPlayerRepository()
-    )
+  public static get inGamePlayersRepository(): SimpleRepository<ClientPlayer> {
+    return DependencyManager.GetOrInstantiate<SimpleRepository<ClientPlayer>>(
+      () => new InMemoryRepository<ClientPlayer>()
+    );
   }
 
-  public static get originUrl(): string { return this._originUrl}
+  public static get originUrl(): string {
+    return this._originUrl;
+  }
 }

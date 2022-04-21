@@ -1,13 +1,13 @@
 import { ClientConnection } from "../domain/clientConnection";
 import { ProcessedMap } from "../domain/environment/processedMap";
-import { InGamePlayersRepository } from "../domain/player/inGamePlayersRepository";
 import { ServerPlayer } from "../domain/player/serverPlayer";
+import { SimpleRepository } from "../domain/repository";
 import { RoomManager, PlayerId, RoomId } from "../domain/roomManager";
 
 export class SocketRoomManager implements RoomManager {
   private playersByRoom: { [key: RoomId]: PlayerId[] | undefined } = {};
   constructor(
-    private readonly inGamePlayersRepository: InGamePlayersRepository<ServerPlayer>
+    private readonly inGamePlayersRepository: SimpleRepository<ServerPlayer>
   ) {}
 
   private getRoomId(map: ProcessedMap) {

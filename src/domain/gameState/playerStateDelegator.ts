@@ -1,14 +1,14 @@
 import { Socket } from "socket.io";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { Delegator } from "../delegator";
-import { InGamePlayersRepository } from "../player/inGamePlayersRepository";
 import { ServerPlayer } from "../player/serverPlayer";
+import { SimpleRepository } from "../repository";
 import { RoomManager } from "../roomManager";
 
 export class PlayerStateDelegator implements Delegator {
   constructor(
     private roomManager: RoomManager,
-    private inGamePlayersRepository: InGamePlayersRepository<ServerPlayer>,
+    private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
     private socket: Socket
   ) {}
   init(): void {}
@@ -22,7 +22,7 @@ export class PlayerStateDelegator implements Delegator {
 
         for (let i = 0; i < players.length; i++) {
           const p = players[i];
-          const player = this.inGamePlayersRepository.get(p)
+          const player = this.inGamePlayersRepository.get(p);
           if (player) states[p] = player.state;
         }
 

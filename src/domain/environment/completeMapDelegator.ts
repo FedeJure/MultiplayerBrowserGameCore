@@ -12,8 +12,8 @@ import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { ServerEnvironmentObjectFactory } from "../../view/environmentObjects/serverEnvironmentObjectFactory";
-import { InGamePlayersRepository } from "../player/inGamePlayersRepository";
 import { ServerPlayer } from "../player/serverPlayer";
+import { SimpleRepository } from "../repository";
 
 export class CompleteMapDelegator implements Delegator {
   private readonly maxWorldWidht = 10000;
@@ -30,12 +30,12 @@ export class CompleteMapDelegator implements Delegator {
     private socket: Socket,
     private envObjectsRepository: EnvironmentObjectRepository,
     private presenterProvider: ServerPresenterProvider,
-    private inGamePlayersRepository: InGamePlayersRepository<ServerPlayer>
+    private inGamePlayersRepository: SimpleRepository<ServerPlayer>
   ) {
     mapConfig.mapLayers.forEach((layer) => {
       this.processLayer(layer);
     });
-    this.inGamePlayersRepository.onNewPlayer.subscribe((player) => {
+    this.inGamePlayersRepository.onSave.subscribe((player) => {
       const serverPlayer = player as ServerPlayer;
       this.updateMapForPlayer(serverPlayer);
 

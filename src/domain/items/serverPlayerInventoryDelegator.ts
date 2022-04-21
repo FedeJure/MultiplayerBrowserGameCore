@@ -1,20 +1,22 @@
-import { DefaultPlayerInventoryDto, PlayerInventoryDto } from "../../infrastructure/dtos/playerInventoryDto";
+import {
+  DefaultPlayerInventoryDto,
+  PlayerInventoryDto,
+} from "../../infrastructure/dtos/playerInventoryDto";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { Log } from "../../infrastructure/Logger";
 import { Delegator } from "../delegator";
-import { InGamePlayersRepository } from "../player/inGamePlayersRepository";
 import { ServerPlayer } from "../player/serverPlayer";
-import { AsyncRepository } from "../repository";
+import { AsyncRepository, SimpleRepository } from "../repository";
 import { DefaultItem, Item } from "./item";
 
 export class ServerPlayerInventoryDelegator implements Delegator {
   constructor(
     private inventoryRepository: AsyncRepository<PlayerInventoryDto>,
     private itemsRepository: AsyncRepository<Item>,
-    private inGamePlayersRepository: InGamePlayersRepository<ServerPlayer>
+    private inGamePlayersRepository: SimpleRepository<ServerPlayer>
   ) {}
   init(): void {
-    this.inGamePlayersRepository.onNewPlayer.subscribe(async (player) => {
+    this.inGamePlayersRepository.onSave.subscribe(async (player) => {
       try {
         const connection = player.connection;
         if (!connection) return;

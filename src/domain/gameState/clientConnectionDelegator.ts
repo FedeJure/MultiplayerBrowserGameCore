@@ -7,10 +7,10 @@ import { GameScene } from "../../view/scenes/GameScene";
 import { Delegator } from "../delegator";
 import { ClientPlayer } from "../player/player";
 import { DefaultConfiguration } from "../player/playerConfiguration";
-import { InGamePlayersRepository } from "../player/inGamePlayersRepository";
 import { ServerConnection } from "../serverConnection";
 import { PlayerState } from "../player/playerState";
 import { PlayerInfo } from "../player/playerInfo";
+import { SimpleRepository } from "../repository";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -18,7 +18,7 @@ export class ClientConnectionDelegator implements Delegator {
     private connection: ServerConnection,
     private scene: GameScene,
     private presenterProvider: ClientPresenterProvider,
-    private inGamePlayersRepository: InGamePlayersRepository<ClientPlayer>
+    private inGamePlayersRepository: SimpleRepository<ClientPlayer>
   ) {}
   init(): void {
     this.connection.onInitialGameState.subscribe((data) => {
@@ -38,7 +38,7 @@ export class ClientConnectionDelegator implements Delegator {
           const inventory = new ClientInventoryView(this.scene, input);
           this.presenterProvider.forInventory(dto.info.id, inventory);
           this.presenterProvider.forLocalPlayer(input, player, view);
-          this.inGamePlayersRepository.save(player);
+          this.inGamePlayersRepository.save(player.info.id, player);
         } else this.createClientPlayer(dto.state, dto.info);
       }
 
@@ -75,6 +75,6 @@ export class ClientConnectionDelegator implements Delegator {
     );
     const player = new ClientPlayer(info, state, view);
     this.presenterProvider.forPlayer(player, view);
-    this.inGamePlayersRepository.save(player);
+    this.inGamePlayersRepository.save(player.info.id, player);
   }
 }

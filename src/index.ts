@@ -39,8 +39,8 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
   };
   const game = new Phaser.Game(config);
   AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
-  game.events.addListener(Phaser.Core.Events.READY, () => {
-    LoadServerRepositoriesWithMockData();
+  game.events.addListener(Phaser.Core.Events.READY, async () => {
+    await LoadServerRepositoriesWithMockData();
 
     scene.events.addListener(Phaser.Scenes.Events.CREATE, () => {
       const __ = new ScenePresenter(scene, [
