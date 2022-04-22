@@ -1,4 +1,4 @@
-import { Observable, Subject } from "rxjs";
+import { Subject } from "rxjs";
 import { AsyncRepository, SimpleRepository } from "../../domain/repository";
 
 export class InMemoryRepository<T> implements SimpleRepository<T> {
@@ -25,7 +25,11 @@ export class InMemoryRepository<T> implements SimpleRepository<T> {
     }
   }
   remove(id: string) {
-    this.store.delete(id);
+    const value = this.get(id);
+    if (value) {
+      this.store.delete(id);
+      this._onRemove.next(value);
+    }
   }
   get onSave() {
     return this._onSave;

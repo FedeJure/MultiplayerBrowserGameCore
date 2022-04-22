@@ -42,7 +42,7 @@ export class SocketClientConnection implements ClientConnection {
   }
   playerId?: string;
   setPlayerId(playerId: string) {
-    playerId;
+    this.playerId = playerId;
   }
 
   onItemDetailRequest(): Observable<{
