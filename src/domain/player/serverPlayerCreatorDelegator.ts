@@ -83,7 +83,6 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       const playerId = connection.playerId;
       if (playerId) {
         const player = this.inGamePlayersRepository.get(playerId);
-
         if (player) {
           this.socket
             .in(player.state.currentRooms)

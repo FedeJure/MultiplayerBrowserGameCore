@@ -15,6 +15,7 @@ import { InMemoryRepository } from "../repositories/InMemoryRepository";
 import { Item } from "../../domain/items/item";
 import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
 
+//This is necessary because the dependency manager not work with generics
 class InventoryRepository extends InMemoryRepository<PlayerInventoryDto>{}
 class ItemRepository extends InMemoryRepository<Item>{}
 

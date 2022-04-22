@@ -19,6 +19,8 @@ import { PlayerStateRepository } from "../repositories/playerStateRepository";
 import { SocketRoomManager } from "../SocketRoomManager";
 import { ServerPresenterProvider } from "./serverPresenterProvider";
 
+
+//This is necessary because the dependency manager not work with generics
 class ClientConnectionRepository extends InMemoryRepository<ClientConnection> {}
 class InGamePlayerRepository extends InMemoryRepository<ServerPlayer> {}
 class PlayerInfoRepository extends InMemoryAsyncRepository<PlayerInfo> {}
