@@ -1,5 +1,5 @@
 import { PlayerView } from "./playerView";
-import { GameScene } from "./scenes/GameScene";
+import { GameScene } from "../scenes/GameScene";
 
 export class ServerPlayerView extends PlayerView {
   private readonly spine: SpineGameObject;

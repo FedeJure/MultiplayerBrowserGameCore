@@ -4,10 +4,10 @@ import { Observable } from "rxjs";
 import {
   CollisionCategory,
   CollisionGroups,
-} from "../domain/collisions/collisionTypes";
-import { IPlayerView } from "../domain/playerView";
+} from "../../domain/collisions/collisionTypes";
+import { IPlayerView } from "../../domain/playerView";
 import { CollisionDetector } from "./collisionDetector";
-import { ExistentDepths } from "./existentDepths";
+import { ExistentDepths } from "../existentDepths";
 
 export class PlayerView extends GameObjects.Container implements IPlayerView {
   protected readonly _view: Physics.Matter.Sprite;

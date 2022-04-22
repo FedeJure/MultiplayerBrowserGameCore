@@ -2,7 +2,7 @@ import { PlayerKeyBoardInput } from "../../infrastructure/input/playerKeyboardIn
 import { Log } from "../../infrastructure/Logger";
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
 import { ClientInventoryView } from "../../view/clientInventoryView";
-import { ClientPlayerView } from "../../view/clientPlayerView";
+import { ClientPlayerView } from "../../view/player/clientPlayerView";
 import { GameScene } from "../../view/scenes/GameScene";
 import { Delegator } from "../delegator";
 import { ClientPlayer } from "../player/player";

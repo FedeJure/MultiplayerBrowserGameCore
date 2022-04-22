@@ -3,7 +3,7 @@ import { Observable, Subject } from "rxjs";
 import {
   CollisionCategory,
   CollisionGroups,
-} from "../domain/collisions/collisionTypes";
+} from "../../domain/collisions/collisionTypes";
 
 const LABEL = "CollisionDetector";
 

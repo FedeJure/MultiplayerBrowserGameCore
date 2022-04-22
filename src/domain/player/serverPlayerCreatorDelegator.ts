@@ -8,7 +8,7 @@ import { ServerPresenterProvider } from "../../infrastructure/providers/serverPr
 import { ServerProvider } from "../../infrastructure/providers/serverProvider";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { GameScene } from "../../view/scenes/GameScene";
-import { ServerPlayerView } from "../../view/serverPlayerView";
+import { ServerPlayerView } from "../../view/player/serverPlayerView";
 import { ClientConnection } from "../clientConnection";
 import { Delegator } from "../delegator";
 import { CompleteMapDelegator } from "../environment/completeMapDelegator";

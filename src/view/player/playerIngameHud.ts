@@ -1,7 +1,8 @@
 import { BodyType } from "matter";
 import { GameObjects } from "phaser";
-import { FontSize, FONT_RESOLUTION } from "./Fonts";
-import { GameScene } from "./scenes/GameScene";
+import { FontSize, FONT_RESOLUTION } from "../Fonts";
+import { GameScene } from "../scenes/GameScene";
+import { LifeBar } from "./lifeBar";
 
 export class PlayerIngameHud extends GameObjects.Container {
   private nameText: GameObjects.Text;
@@ -17,7 +18,9 @@ export class PlayerIngameHud extends GameObjects.Container {
       .setFontSize(FontSize.SMALL)
       .setFontStyle('bold')
       .setOrigin(0.5, 4)
-    this.add([this.nameText]);
+
+    const lifeBar = new LifeBar(this.scene,0,-width * 1.1, width * 1.5)
+    this.add([this.nameText, lifeBar]);
 
     scene.add.existing(this);
   }

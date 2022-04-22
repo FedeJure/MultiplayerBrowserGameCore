@@ -1,9 +1,9 @@
 import { Vector } from "matter";
 import { Physics } from "phaser";
-import { AnimationCode } from "../domain/animations/animations";
+import { AnimationCode } from "../../domain/animations/animations";
 import { PlayerIngameHud } from "./playerIngameHud";
 import { PlayerView } from "./playerView";
-import { GameScene } from "./scenes/GameScene";
+import { GameScene } from "../scenes/GameScene";
 
 export class ClientPlayerView extends PlayerView {
   private readonly spine: SpineGameObject;
