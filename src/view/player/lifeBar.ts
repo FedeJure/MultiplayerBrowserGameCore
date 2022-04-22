@@ -7,9 +7,9 @@ enum LifeColors {
 }
 
 export class LifeBar extends GameObjects.Container {
-  private fullColor = Phaser.Display.Color.HexStringToColor("00FF3A").color;
-  private middleColor = Phaser.Display.Color.HexStringToColor("FFD500").color;
-  private lowColor = Phaser.Display.Color.HexStringToColor("FF0000").color;
+  private fullColor = Phaser.Display.Color.HexStringToColor(LifeColors.full).color;
+  private middleColor = Phaser.Display.Color.HexStringToColor(LifeColors.middle).color;
+  private lowColor = Phaser.Display.Color.HexStringToColor(LifeColors.low).color;
   private maxWidth: number;
   private lifeBar: GameObjects.Rectangle
   constructor(scene: Phaser.Scene, x: number, y: number, width: number) {
