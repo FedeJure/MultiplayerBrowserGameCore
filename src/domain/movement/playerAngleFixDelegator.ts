@@ -6,6 +6,8 @@ export class PlayerAngleFixDelegator implements Delegator {
   init(): void {}
   stop(): void {}
   update(time: number, delta: number): void {
-    this.player.view.setAngle(0);
+    try {
+      this.player.view.setAngle(0);
+    } catch (error) {}
   }
 }

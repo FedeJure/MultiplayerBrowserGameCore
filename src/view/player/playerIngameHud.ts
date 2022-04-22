@@ -3,10 +3,10 @@ import { GameObjects } from "phaser";
 import { FontSize, FONT_RESOLUTION } from "../Fonts";
 import { GameScene } from "../scenes/GameScene";
 import { LifeBar } from "./lifeBar";
-
 export class PlayerIngameHud extends GameObjects.Container {
   private nameText: GameObjects.Text;
   public readonly matterBody: BodyType;
+  p = 100
   constructor(scene: GameScene, height: number, width: number) {
     super(scene, 0, 0);
     this.setSize(width, height);

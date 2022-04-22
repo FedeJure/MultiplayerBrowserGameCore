@@ -2,7 +2,7 @@ import { Delegator } from "../delegator";
 import { ClientPlayer } from "./player";
 
 export class LocalPlayerRenderDelegator implements Delegator {
-  private readonly maxZoom = 1.6;
+  private readonly maxZoom = 3.5;
   private readonly minZoom = 0.6;
   private readonly startZoom = 1.6;
 
