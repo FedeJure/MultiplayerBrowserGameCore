@@ -8,7 +8,10 @@ import { PlayerInfo } from "./playerInfo";
 import { PlayerState } from "./playerState";
 
 export class ServerPlayer extends ClientPlayer {
-  private _onStateChange: Subject<PlayerState> = new Subject();
+  private _onStateChange: Subject<{
+    state: PlayerState;
+    change: Partial<PlayerState>;
+  }> = new Subject();
   constructor(
     info: PlayerInfo,
     state: PlayerState,
@@ -26,6 +29,7 @@ export class ServerPlayer extends ClientPlayer {
 
   updateState(newState: Partial<PlayerState>): void {
     super.updateState(newState);
+    this._onStateChange.next({ state: this.state, change: newState });
     this.playerStateRepository.update(this.info.id, newState);
   }
 
@@ -34,7 +38,10 @@ export class ServerPlayer extends ClientPlayer {
     this._onStateChange.complete();
   }
 
-  get onStateChange(): Observable<PlayerState> {
+  get onStateChange(): Observable<{
+    state: PlayerState;
+    change: Partial<PlayerState>;
+  }> {
     return this._onStateChange;
   }
 

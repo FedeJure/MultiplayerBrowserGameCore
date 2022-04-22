@@ -14,6 +14,7 @@ import { ServerPresenterProvider } from "../../infrastructure/providers/serverPr
 import { ServerEnvironmentObjectFactory } from "../../view/environmentObjects/serverEnvironmentObjectFactory";
 import { ServerPlayer } from "../player/serverPlayer";
 import { SimpleRepository } from "../repository";
+import { filter } from "rxjs";
 
 export class CompleteMapDelegator implements Delegator {
   private readonly maxWorldWidht = 10000;
@@ -39,38 +40,40 @@ export class CompleteMapDelegator implements Delegator {
       const serverPlayer = player as ServerPlayer;
       this.updateMapForPlayer(serverPlayer);
 
-      serverPlayer.onStateChange.subscribe((state) => {
-        this.updateMapForPlayer(serverPlayer).then(async (joinedRooms) => {
-          const newRooms: string[] = difference(
-            joinedRooms,
-            state.currentRooms
-          );
-          if (newRooms.length === 0) return;
-
-          socket.in(newRooms).emit(
-            GameEvents.NEW_PLAYER_CONNECTED.name,
-            GameEvents.NEW_PLAYER_CONNECTED.getEvent({
-              id: serverPlayer.info.id,
-              info: serverPlayer.info,
-              state: state,
-            })
-          );
-
-          this.sendAlreadyConnectedPlayers(serverPlayer, newRooms);
-
-          const leavingRooms: string[] = difference(
-            state.currentRooms,
-            joinedRooms
-          );
-          if (leavingRooms.length === 0) return;
-          this.socket
-            .in(leavingRooms)
-            .emit(
-              GameEvents.PLAYER_DISCONNECTED.name,
-              GameEvents.PLAYER_DISCONNECTED.getEvent(serverPlayer.info.id)
+      serverPlayer.onStateChange
+        .pipe(filter(({ change }) => change.position !== undefined))
+        .subscribe(({ state }) => {
+          this.updateMapForPlayer(serverPlayer).then(async (joinedRooms) => {
+            const newRooms: string[] = difference(
+              joinedRooms,
+              state.currentRooms
             );
+            if (newRooms.length === 0) return;
+
+            socket.in(newRooms).emit(
+              GameEvents.NEW_PLAYER_CONNECTED.name,
+              GameEvents.NEW_PLAYER_CONNECTED.getEvent({
+                id: serverPlayer.info.id,
+                info: serverPlayer.info,
+                state: state,
+              })
+            );
+
+            this.sendAlreadyConnectedPlayers(serverPlayer, newRooms);
+
+            const leavingRooms: string[] = difference(
+              state.currentRooms,
+              joinedRooms
+            );
+            if (leavingRooms.length === 0) return;
+            this.socket
+              .in(leavingRooms)
+              .emit(
+                GameEvents.PLAYER_DISCONNECTED.name,
+                GameEvents.PLAYER_DISCONNECTED.getEvent(serverPlayer.info.id)
+              );
+          });
         });
-      });
     });
   }
 
