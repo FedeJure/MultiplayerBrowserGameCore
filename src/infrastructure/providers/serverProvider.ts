@@ -1,5 +1,4 @@
 import { ClientConnection } from "../../domain/clientConnection";
-import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { Item } from "../../domain/items/item";
 import { PlayerInfo } from "../../domain/player/playerInfo";
@@ -18,7 +17,6 @@ import { PlayerInputRequestRepository } from "../repositories/playerInputRequest
 import { PlayerStateRepository } from "../repositories/playerStateRepository";
 import { SocketRoomManager } from "../SocketRoomManager";
 import { ServerPresenterProvider } from "./serverPresenterProvider";
-
 
 //This is necessary because the dependency manager not work with generics
 class ClientConnectionRepository extends InMemoryRepository<ClientConnection> {}
@@ -49,11 +47,6 @@ export class ServerProvider {
     );
   }
 
-  public static get collisionsDispatcher(): CollisionsDispatcher {
-    return DependencyManager.GetOrInstantiate<CollisionsDispatcher>(
-      () => new CollisionsDispatcher()
-    );
-  }
   public static get playerInputRequestRepository(): PlayerInputRequestRepository {
     return DependencyManager.GetOrInstantiate<PlayerInputRequestRepository>(
       () => new PlayerInputRequestRepository()

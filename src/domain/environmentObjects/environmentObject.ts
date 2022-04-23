@@ -13,5 +13,5 @@ export interface EnvironmentObject {
 
 export enum EnvironmentObjectAssetType {
   spine = 'spine',
-  spriteAtlas = 'spriteAtlas'
+  tiledTile = 'tiledTile'
 }

@@ -3,7 +3,6 @@ import { Log } from "../../infrastructure/Logger";
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
 import { ClientInventoryView } from "../../view/clientInventoryView";
 import { ClientPlayerView } from "../../view/player/clientPlayerView";
-import { GameScene } from "../../view/scenes/GameScene";
 import { Delegator } from "../delegator";
 import { ClientPlayer } from "../player/player";
 import { DefaultConfiguration } from "../player/playerConfiguration";
@@ -11,12 +10,13 @@ import { ServerConnection } from "../serverConnection";
 import { PlayerState } from "../player/playerState";
 import { PlayerInfo } from "../player/playerInfo";
 import { SimpleRepository } from "../repository";
+import { Scene } from "phaser";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
     private localPlayerId: string,
     private connection: ServerConnection,
-    private scene: GameScene,
+    private scene: Scene,
     private presenterProvider: ClientPresenterProvider,
     private inGamePlayersRepository: SimpleRepository<ClientPlayer>
   ) {}

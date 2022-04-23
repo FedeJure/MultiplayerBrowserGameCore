@@ -2,6 +2,7 @@ import { Scene } from "phaser";
 import { MapEnvironmentObject } from "../../domain/environment/mapEnvironmentObject";
 import { EnvironmentObjectAssetType } from "../../domain/environmentObjects/environmentObject";
 import { EnvironmentObjectFactory } from "../../domain/environmentObjects/environmentObjectFactory";
+import { EnvironmentObjectVariant } from "../../domain/environmentObjects/environmentObjectVariant";
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { AssetLoader } from "../AssetLoader";
@@ -21,22 +22,25 @@ export class ClientEnvironmentObjectFactory
         if (!ob.object.atlasPath) {
           const config = AssetLoader.resolveSpineConfig(ob.object.textureName);
           this.scene.load.spine(config.key, config.jsonUrl, config.atlasUrl);
-          return true
+          return true;
         }
-        return false
+        return false;
       })
         .then(() => {
           if (ob.object.assetType === EnvironmentObjectAssetType.spine) {
             let view = this.scene.add.spine(
               ob.position.x,
               ob.position.y,
-              ob.object.textureName,
+              ob.object.textureName
             ) as unknown as Phaser.GameObjects.Sprite;
 
-            this.scene.matter.add.gameObject(view as Phaser.GameObjects.GameObject, {
-              ignoreGravity: true,
-              isStatic: true,
-            })
+            this.scene.matter.add.gameObject(
+              view as Phaser.GameObjects.GameObject,
+              {
+                ignoreGravity: true,
+                isStatic: true,
+              }
+            );
 
             view.setDisplaySize(ob.object.width, ob.object.height);
             view.setSize(ob.object.width, ob.object.height);
@@ -45,10 +49,27 @@ export class ClientEnvironmentObjectFactory
               newPos[0] + view.width * ob.object.pivotOrigin.x,
               newPos[1] + view.height * ob.object.pivotOrigin.y
             );
-            this.presenterProvider.forEnvironmentObject(
-              ob.object,
-              view
+            this.presenterProvider.forEnvironmentObject(ob.object, view);
+          } else if (
+            ob.object.objectVariant !== EnvironmentObjectVariant.decorative &&
+            ob.object.assetType === EnvironmentObjectAssetType.tiledTile
+          ) {
+            let view = this.scene.matter.add.sprite(
+              ob.position.x,
+              ob.position.y,
+              "",
+              undefined,
+              { ignoreGravity: true, isStatic: true }
             );
+
+            view.setDisplaySize(ob.object.width, ob.object.height);
+            view.setSize(ob.object.width, ob.object.height);
+            const newPos = [view.x - view.width / 2, view.y - view.height / 2];
+            view.setPosition(
+              newPos[0] + view.width * ob.object.pivotOrigin.x,
+              newPos[1] + view.height * ob.object.pivotOrigin.y
+            );
+            this.presenterProvider.forEnvironmentObject(ob.object, view);
           }
         })
         .catch(console.log);

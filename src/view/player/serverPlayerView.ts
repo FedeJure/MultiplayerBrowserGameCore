@@ -1,10 +1,10 @@
 import { PlayerView } from "./playerView";
-import { GameScene } from "../scenes/GameScene";
+import { Scene } from "phaser";
 
 export class ServerPlayerView extends PlayerView {
   private readonly spine: SpineGameObject;
   constructor(
-    scene: GameScene,
+    scene: Scene,
     x: number,
     y: number,
     height: number,

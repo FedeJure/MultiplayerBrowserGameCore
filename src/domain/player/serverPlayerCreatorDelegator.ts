@@ -7,7 +7,6 @@ import { Log } from "../../infrastructure/Logger";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { ServerProvider } from "../../infrastructure/providers/serverProvider";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
-import { GameScene } from "../../view/scenes/GameScene";
 import { ServerPlayerView } from "../../view/player/serverPlayerView";
 import { ClientConnection } from "../clientConnection";
 import { Delegator } from "../delegator";
@@ -18,11 +17,12 @@ import { ServerPlayer } from "./serverPlayer";
 import { AsyncRepository, SimpleRepository } from "../repository";
 import { PlayerInfo } from "./playerInfo";
 import { PlayerInventoryDto } from "../../infrastructure/dtos/playerInventoryDto";
+import { Scene } from "phaser";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
     private connectionsRepository: SimpleRepository<ClientConnection>,
-    private gameScene: GameScene,
+    private gameScene: Scene,
     private socket: Socket,
     private roomManager: RoomManager,
     private playerInfoRepository: AsyncRepository<PlayerInfo>,
@@ -102,7 +102,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
 
   async createPlayerInGame(
     playerId: string,
-    scene: GameScene,
+    scene: Scene,
     connection: ClientConnection
   ) {
     const playerInfo = await this.playerInfoRepository.get(playerId);

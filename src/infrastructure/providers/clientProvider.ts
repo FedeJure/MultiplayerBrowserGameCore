@@ -4,7 +4,6 @@ import { LocalPlayerRepository } from "../repositories/localPlayerRepository";
 import { SocketServerConnection } from "../socketServerConnection";
 import { PlayerStateRepository } from "../repositories/playerStateRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
-import { CollisionsDispatcher } from "../../domain/collisions/collisionsDispatcher";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
 import { Scene } from "phaser";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
@@ -16,9 +15,8 @@ import { Item } from "../../domain/items/item";
 import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
 
 //This is necessary because the dependency manager not work with generics
-class InventoryRepository extends InMemoryRepository<PlayerInventoryDto>{}
-class ItemRepository extends InMemoryRepository<Item>{}
-
+class InventoryRepository extends InMemoryRepository<PlayerInventoryDto> {}
+class ItemRepository extends InMemoryRepository<Item> {}
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
@@ -56,11 +54,6 @@ export class ClientProvider {
     return ClientProvider._localPlayerRepository;
   }
 
-  public static get collisionsDispatcher(): CollisionsDispatcher {
-    return DependencyManager.GetOrInstantiate<CollisionsDispatcher>(
-      () => new CollisionsDispatcher()
-    );
-  }
   public static get playerInputRequestRepository(): PlayerInputRequestRepository {
     return DependencyManager.GetOrInstantiate<PlayerInputRequestRepository>(
       () => new PlayerInputRequestRepository()

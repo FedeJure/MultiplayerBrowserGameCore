@@ -32,7 +32,7 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
   socket: Socket,
   originUrl: string
 ) => {
-  const scene = new GameScene(ServerProvider.collisionsDispatcher);
+  const scene = new GameScene();
   const config = {
     ...PhaserServerConfig,
     scene: [new LoadScene(), scene],
@@ -115,10 +115,7 @@ export const InitClientGame = (
     originUrl,
     hudScene
   );
-  const scene = new ClientGameScene(
-    ClientProvider.collisionsDispatcher,
-    hudScene
-  );
+  const scene = new ClientGameScene(hudScene);
   const config = {
     ...PhaserClientConfig,
     scene: [new ClientLoadScene(), scene, hudScene],
