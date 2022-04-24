@@ -8,4 +8,12 @@ export interface PlayerInput {
   jump: boolean;
   toDto(): PlayerInputDto;
   inventory: boolean;
+  stats: boolean;
+  menu: boolean;
+  basicAttack: boolean;
+  defend: boolean;
+  skill1: boolean;
+  skill2: boolean;
+  skill3: boolean;
+  skill4: boolean;
 }

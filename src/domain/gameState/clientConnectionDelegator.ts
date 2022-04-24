@@ -11,6 +11,8 @@ import { PlayerState } from "../player/playerState";
 import { PlayerInfo } from "../player/playerInfo";
 import { SimpleRepository } from "../repository";
 import { Scene } from "phaser";
+import { CombatSystem } from "../player/combat/combatSystem";
+import { SimpleForwardPunchCombatAction } from "../player/combat/actions/SimpleForwardPunchCombatAction";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -34,7 +36,16 @@ export class ClientConnectionDelegator implements Delegator {
             DefaultConfiguration.width
           );
           const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
-          const player = new ClientPlayer(dto.info, dto.state, view);
+          const combatSystem = new CombatSystem(
+            [new SimpleForwardPunchCombatAction(),
+            new SimpleForwardPunchCombatAction()]
+          );
+          const player = new ClientPlayer(
+            dto.info,
+            dto.state,
+            view,
+            combatSystem
+          );
           const inventory = new ClientInventoryView(this.scene, input);
           this.presenterProvider.forInventory(dto.info.id, inventory);
           this.presenterProvider.forLocalPlayer(input, player, view);
@@ -73,7 +84,11 @@ export class ClientConnectionDelegator implements Delegator {
       DefaultConfiguration.height,
       DefaultConfiguration.width
     );
-    const player = new ClientPlayer(info, state, view);
+    const combatSystem = new CombatSystem(
+      [new SimpleForwardPunchCombatAction(),
+      new SimpleForwardPunchCombatAction()]
+    );
+    const player = new ClientPlayer(info, state, view, combatSystem);
     this.presenterProvider.forPlayer(player, view);
     this.inGamePlayersRepository.save(player.info.id, player);
   }

@@ -14,16 +14,7 @@ export class ServerPlayerStateUpdaterDelegator implements Delegator {
   stop(): void {}
   update(time: number, delta: number): void {
     if (!this.player.view.active) return;
-    const newState = resolvePlayerMovementWithInput(
-      this.input,
-      this.player.view,
-      this.player.state,
-      delta
-    );
-    this.player.updateState({
-      ...newState,
-      inputNumber: this.inputRepository.getOrCreate(this.player.info.id),
-    });
-    this.player.view.setVelocity(newState.velocity.x, newState.velocity.y);
+    this.player.processCombat(this.input);
+    this.player.processMovement(this.input, delta);
   }
 }

@@ -17,4 +17,5 @@ export interface PlayerState {
   readonly map: currentMapState;
   readonly currentRooms: string[]
   readonly jumping: boolean
+  readonly attacking: boolean
 }

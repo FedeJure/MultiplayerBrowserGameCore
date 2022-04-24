@@ -2,9 +2,7 @@ import { Delegator } from "../delegator";
 import { ServerConnection } from "../serverConnection";
 import { PlayerInput } from "../player/playerInput";
 import { PlayerInputDto } from "../../infrastructure/dtos/playerInputDto";
-import { resolvePlayerMovementWithInput } from "../actions/resolvePlayerMovementWithInput";
 import { PlayerState } from "../player/playerState";
-import { Side } from "../side";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
 import { ClientPlayer } from "../player/player";
 
@@ -24,11 +22,10 @@ export class PlayerInputDelegator implements Delegator {
   update(time: number, delta: number): void {
     const currentInput = this.input.toDto();
     this.currentInput = currentInput;
-    const oldState = this.player.state;
 
     if (
       [this.inputHasChange(), ...Object.values(currentInput)].some((a) => a) ||
-      oldState != this.savedState
+      this.player.state != this.savedState
     ) {
       const newInputRequest =
         this.inputRequestRepository.getOrCreate(this.player.info.id) + 1;
@@ -39,19 +36,9 @@ export class PlayerInputDelegator implements Delegator {
       );
       this.inputRequestRepository.set(this.player.info.id, newInputRequest);
     }
-    if (oldState) {
-      const newState = resolvePlayerMovementWithInput(
-        this.input,
-        this.player.view,
-        oldState,
-        delta
-      );
-      this.player.view.setVelocity(newState.velocity.x, newState.velocity.y);
-      this.player.view.setPosition(newState.position.x, newState.position.y);
-      this.player.view.lookToLeft(newState.side == Side.LEFT);
-      this.player.updateState(newState)
-      this.savedState = newState;
-    }
+      this.player.processCombat(this.input)
+      this.player.processMovement(this.input, delta)
+      this.savedState = this.player.state;
 
     this.lastInputSended = JSON.stringify(currentInput);
   }

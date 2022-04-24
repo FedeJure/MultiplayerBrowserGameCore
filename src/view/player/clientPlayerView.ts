@@ -2,9 +2,9 @@ import { Vector } from "matter";
 import { Physics, Scene } from "phaser";
 import { AnimationCode } from "../../domain/animations/animations";
 import { PlayerIngameHud } from "./playerIngameHud";
-import { PlayerView } from "./playerView";
+import { PhaserPlayerView } from "./phaserPlayerView";
 
-export class ClientPlayerView extends PlayerView {
+export class ClientPlayerView extends PhaserPlayerView {
   private readonly spine: SpineGameObject;
   private readonly hud: PlayerIngameHud;
 

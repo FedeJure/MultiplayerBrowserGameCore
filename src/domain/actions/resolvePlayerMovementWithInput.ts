@@ -1,19 +1,20 @@
-import { IPlayerView } from "../playerView";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { PlayerInput } from "../player/playerInput";
 import { PlayerState } from "../player/playerState";
 import { Side } from "../side";
+import { ServerPlayer } from "../player/serverPlayer";
+import { ClientPlayer } from "../player/player";
 
 export function resolvePlayerMovementWithInput(
   input: PlayerInput,
-  view: IPlayerView,
+  player: ServerPlayer | ClientPlayer,
   state: PlayerState,
   deltaTime: number
 ) {
-  let newVelX = view.velocity.x;
-  let newVelY = view.velocity.y;
+  let newVelX = player.view.velocity.x;
+  let newVelY = player.view.velocity.y;
   let velocity = 0.05;
-  let maxRunVelocity = DefaultConfiguration.runVelocity;
+  let maxRunVelocity = DefaultConfiguration.runVelocity * (state.attacking ? 0.5 : 1);
   let availableJumps = state.grounded
     ? DefaultConfiguration.initialJumps
     : state.jumpsAvailable;
@@ -50,7 +51,7 @@ export function resolvePlayerMovementWithInput(
       y: Number(newVelY.toPrecision(2)),
     },
     jumpsAvailable: availableJumps,
-    position: view.positionVector,
+    position: player.view.positionVector,
     canJump,
     side,
     jumping,

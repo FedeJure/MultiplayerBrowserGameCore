@@ -2,7 +2,7 @@ import { BodyType, Vector } from "matter";
 import { GameObjects, Scene } from "phaser";
 import { Observable } from "rxjs";
 
-export interface IPlayerView {
+export interface PlayerView {
   body: {
     position: { x: number; y: number };
     velocity: { x: number; y: number };

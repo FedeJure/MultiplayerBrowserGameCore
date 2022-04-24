@@ -4,4 +4,10 @@ export interface PlayerInputDto {
   left: boolean;
   right: boolean;
   jump: boolean;
+  basicAttack: boolean;
+  defend: boolean;
+  skill1: boolean;
+  skill2: boolean;
+  skill3: boolean;
+  skill4: boolean;
 }

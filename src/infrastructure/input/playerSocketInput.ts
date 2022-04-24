@@ -10,7 +10,15 @@ export class PlayerSocketInput implements PlayerInput {
   private _left: boolean = false;
   private _right: boolean = false;
   private _jump: boolean = false;
-
+  private _stats: boolean = false;
+  private _menu: boolean = false;
+  private _basicAttack: boolean = false;
+  private _defend: boolean = false;
+  private _skill1: boolean = false;
+  private _skill2: boolean = false;
+  private _skill3: boolean = false;
+  private _skill4: boolean = false;
+  private _inventory: boolean = false;
   constructor(
     playerId: string,
     connection: ClientConnection,
@@ -25,13 +33,26 @@ export class PlayerSocketInput implements PlayerInput {
         this._left = inputDto.input.left;
         this._right = inputDto.input.right;
         this._jump = inputDto.input.jump;
+        this._basicAttack = inputDto.input.basicAttack;
+        this._defend = inputDto.input.defend;
         inputRequestRepository.set(playerId, inputDto.inputNumber);
       });
   }
-  inventory: boolean = false;
 
   toDto(): PlayerInputDto {
-    throw new Error("Method not implemented.");
+    return {
+      up: this.up,
+      down: this.down,
+      left: this.left,
+      right: this.right,
+      jump: this.jump,
+      basicAttack: this.basicAttack,
+      defend: this.defend,
+      skill1: this.skill1,
+      skill2: this.skill2,
+      skill3: this.skill3,
+      skill4: this.skill4,
+    };
   }
 
   get up() {
@@ -48,5 +69,32 @@ export class PlayerSocketInput implements PlayerInput {
   }
   get jump() {
     return this._jump;
+  }
+  get inventory() {
+    return this._inventory;
+  }
+  get stats() {
+    return this._stats;
+  }
+  get menu() {
+    return this._menu;
+  }
+  get basicAttack() {
+    return this._basicAttack;
+  }
+  get defend() {
+    return this._defend;
+  }
+  get skill1() {
+    return this._skill1;
+  }
+  get skill2() {
+    return this._skill2;
+  }
+  get skill3() {
+    return this._skill3;
+  }
+  get skill4() {
+    return this._skill4;
   }
 }

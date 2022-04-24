@@ -5,11 +5,14 @@ import {
   CollisionCategory,
   CollisionGroups,
 } from "../../domain/collisions/collisionTypes";
-import { IPlayerView } from "../../domain/playerView";
+import { PlayerView } from "../../domain/playerView";
 import { CollisionDetector } from "./collisionDetector";
 import { ExistentDepths } from "../existentDepths";
 
-export class PlayerView extends GameObjects.Container implements IPlayerView {
+export class PhaserPlayerView
+  extends GameObjects.Container
+  implements PlayerView
+{
   protected readonly _view: Physics.Matter.Sprite;
   private readonly groundCollisionDetector: CollisionDetector;
 

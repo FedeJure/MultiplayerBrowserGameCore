@@ -1,12 +1,17 @@
-import { IPlayerView } from "../playerView";
+import { resolvePlayerMovementWithInput } from "../actions/resolvePlayerMovementWithInput";
+import { PlayerView } from "../playerView";
+import { Side } from "../side";
+import { CombatSystem } from "./combat/combatSystem";
 import { PlayerInfo } from "./playerInfo";
+import { PlayerInput } from "./playerInput";
 import { PlayerState } from "./playerState";
 
 export class ClientPlayer {
   constructor(
     private _info: PlayerInfo,
     private _state: PlayerState,
-    private _view: IPlayerView
+    private _view: PlayerView,
+    private _combatSystem: CombatSystem
   ) {}
 
   updateInfo(newInfo: Partial<PlayerInfo>) {
@@ -14,11 +19,19 @@ export class ClientPlayer {
   }
 
   updateState(newState: Partial<PlayerState>) {
+    if (newState.velocity)
+      this.view.setVelocity(newState.velocity.x, newState.velocity.y);
+
+    if (newState.position)
+      this.view.setPosition(newState.position.x, newState.position.y);
+
+    if (newState.side !== undefined)
+      this.view.lookToLeft(newState.side === Side.LEFT);
     this._state = { ...this.state, ...newState };
   }
 
   destroy() {
-    this._view.destroy()
+    this._view.destroy();
   }
 
   get info() {
@@ -29,5 +42,19 @@ export class ClientPlayer {
   }
   get view() {
     return this._view;
+  }
+
+  processCombat(input: PlayerInput) {
+    this._combatSystem.processCombat(this, input);
+  }
+
+  processMovement(input: PlayerInput, deltaTime: number) {
+    const newState = resolvePlayerMovementWithInput(
+      input,
+      this,
+      this.state,
+      deltaTime
+    );
+    this.updateState(newState);
   }
 }

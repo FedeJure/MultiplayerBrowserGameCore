@@ -1,7 +1,7 @@
-import { PlayerView } from "./playerView";
+import { PhaserPlayerView } from "./phaserPlayerView";
 import { Scene } from "phaser";
 
-export class ServerPlayerView extends PlayerView {
+export class ServerPlayerView extends PhaserPlayerView {
   private readonly spine: SpineGameObject;
   constructor(
     scene: Scene,

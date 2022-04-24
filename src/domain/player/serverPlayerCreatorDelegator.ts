@@ -18,6 +18,8 @@ import { AsyncRepository, SimpleRepository } from "../repository";
 import { PlayerInfo } from "./playerInfo";
 import { PlayerInventoryDto } from "../../infrastructure/dtos/playerInventoryDto";
 import { Scene } from "phaser";
+import { CombatSystem } from "./combat/combatSystem";
+import { SimpleForwardPunchCombatAction } from "./combat/actions/SimpleForwardPunchCombatAction";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -132,6 +134,10 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       playerInfo,
       playerState,
       view,
+      new CombatSystem([
+        new SimpleForwardPunchCombatAction(),
+        new SimpleForwardPunchCombatAction(),
+      ]),
       connection,
       this.playerInfoRepository,
       this.playerStateRepository

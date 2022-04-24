@@ -1,8 +1,9 @@
 import { Observable, Subject } from "rxjs";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ClientConnection } from "../clientConnection";
-import { IPlayerView } from "../playerView";
+import { PlayerView } from "../playerView";
 import { AsyncRepository } from "../repository";
+import { CombatSystem } from "./combat/combatSystem";
 import { ClientPlayer } from "./player";
 import { PlayerInfo } from "./playerInfo";
 import { PlayerState } from "./playerState";
@@ -15,12 +16,13 @@ export class ServerPlayer extends ClientPlayer {
   constructor(
     info: PlayerInfo,
     state: PlayerState,
-    view: IPlayerView,
+    view: PlayerView,
+    combatSystem: CombatSystem,
     private _connection: ClientConnection,
     private playerInfoRepository: AsyncRepository<PlayerInfo>,
     private playerStateRepository: PlayerStateRepository
   ) {
-    super(info, state, view);
+    super(info, state, view, combatSystem);
   }
   updateInfo(newInfo: Omit<Partial<PlayerInfo>, "id">): void {
     super.updateInfo(newInfo);
