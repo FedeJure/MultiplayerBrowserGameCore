@@ -11,7 +11,7 @@ export class ClientPlayer {
     private _info: PlayerInfo,
     private _state: PlayerState,
     private _view: PlayerView,
-    private _combatSystem: CombatSystem
+    private _combatSystem: CombatSystem,
   ) {}
 
   updateInfo(newInfo: Partial<PlayerInfo>) {
@@ -19,15 +19,11 @@ export class ClientPlayer {
   }
 
   updateState(newState: Partial<PlayerState>) {
-    if (newState.velocity)
-      this.view.setVelocity(newState.velocity.x, newState.velocity.y);
-
-    if (newState.position)
-      this.view.setPosition(newState.position.x, newState.position.y);
-
-    if (newState.side !== undefined)
-      this.view.lookToLeft(newState.side === Side.LEFT);
-    this._state = { ...this.state, ...newState };
+    try {
+      this._state = { ...this.state, ...newState };
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   destroy() {
@@ -55,6 +51,8 @@ export class ClientPlayer {
       this.state,
       deltaTime
     );
+    this.view.setVelocity(newState.velocity.x, newState.velocity.y);
+    this.view.lookToLeft(newState.side === Side.LEFT);
     this.updateState(newState);
   }
 }

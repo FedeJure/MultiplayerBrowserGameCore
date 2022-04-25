@@ -1,8 +1,8 @@
-import { Delegator } from "../delegator";
-import { Disposer } from "../disposer";
-import { ClientPlayer } from "../player/player";
-import { ServerConnection } from "../serverConnection";
-import { Side } from "../side";
+import { Delegator } from "../../delegator";
+import { Disposer } from "../../disposer";
+import { ClientPlayer } from "../player";
+import { ServerConnection } from "../../serverConnection";
+import { Side } from "../../side";
 
 export class PlayerRemoteMovementDelegator implements Delegator {
   private readonly connection: ServerConnection;

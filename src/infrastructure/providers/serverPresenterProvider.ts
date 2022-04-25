@@ -5,7 +5,7 @@ import { Delegator } from "../../domain/delegator";
 import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
 import { EnvironmentObjectVariant } from "../../domain/environmentObjects/environmentObjectVariant";
 import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
-import { PlayerAngleFixDelegator } from "../../domain/movement/playerAngleFixDelegator";
+import { PlayerAngleFixDelegator } from "../../domain/player/movement/playerAngleFixDelegator";
 import { ClientPlayer } from "../../domain/player/player";
 import { PlayerInput } from "../../domain/player/playerInput";
 import { ServerPlayerStateUpdaterDelegator } from "../../domain/player/serverPlayerStateUpdaterDelegator";

@@ -36,15 +36,16 @@ export class ClientConnectionDelegator implements Delegator {
             DefaultConfiguration.width
           );
           const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
-          const combatSystem = new CombatSystem(
-            [new SimpleForwardPunchCombatAction(),
-            new SimpleForwardPunchCombatAction()]
-          );
+          const combatSystem = new CombatSystem([
+            new SimpleForwardPunchCombatAction(),
+            new SimpleForwardPunchCombatAction(),
+          ]);
+
           const player = new ClientPlayer(
             dto.info,
             dto.state,
             view,
-            combatSystem
+            combatSystem,
           );
           const inventory = new ClientInventoryView(this.scene, input);
           this.presenterProvider.forInventory(dto.info.id, inventory);
@@ -84,11 +85,16 @@ export class ClientConnectionDelegator implements Delegator {
       DefaultConfiguration.height,
       DefaultConfiguration.width
     );
-    const combatSystem = new CombatSystem(
-      [new SimpleForwardPunchCombatAction(),
-      new SimpleForwardPunchCombatAction()]
+    const combatSystem = new CombatSystem([
+      new SimpleForwardPunchCombatAction(),
+      new SimpleForwardPunchCombatAction(),
+    ]);
+    const player = new ClientPlayer(
+      info,
+      state,
+      view,
+      combatSystem,
     );
-    const player = new ClientPlayer(info, state, view, combatSystem);
     this.presenterProvider.forPlayer(player, view);
     this.inGamePlayersRepository.save(player.info.id, player);
   }

@@ -1,8 +1,8 @@
-import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
-import { Delegator } from "../delegator";
-import { Disposer } from "../disposer";
-import { ServerConnection } from "../serverConnection";
-import { ClientPlayer } from "../player/player";
+import { PlayerInputRequestRepository } from "../../../infrastructure/repositories/playerInputRequestRepository";
+import { Delegator } from "../../delegator";
+import { Disposer } from "../../disposer";
+import { ServerConnection } from "../../serverConnection";
+import { ClientPlayer } from "../player";
 
 export class PlayerMovementValidationDelegator implements Delegator {
   private readonly disposer: Disposer = new Disposer();

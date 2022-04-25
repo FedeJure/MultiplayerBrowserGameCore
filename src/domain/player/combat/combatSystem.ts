@@ -1,6 +1,6 @@
 import { ClientPlayer } from "../player";
 import { PlayerInput } from "../playerInput";
-import { CombatAction } from "./combatAction";
+import { CombatAction } from "./actions/combatAction";
 
 export class CombatSystem {
     constructor(private actions: CombatAction[]) {

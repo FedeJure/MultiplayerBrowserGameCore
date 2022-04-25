@@ -1,7 +1,7 @@
 import { AnimationCode } from "../../../animations/animations";
 import { ClientPlayer } from "../../player";
 import { PlayerInput } from "../../playerInput";
-import { CombatAction } from "../combatAction";
+import { CombatAction } from "./combatAction";
 
 export class SimpleForwardPunchCombatAction implements CombatAction {
   execute(player: ClientPlayer, input: PlayerInput) {

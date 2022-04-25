@@ -1,5 +1,4 @@
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
-import { resolvePlayerMovementWithInput } from "../actions/resolvePlayerMovementWithInput";
 import { Delegator } from "../delegator";
 import { ClientPlayer } from "./player";
 import { PlayerInput } from "./playerInput";
