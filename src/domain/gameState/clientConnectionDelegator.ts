@@ -13,6 +13,10 @@ import { SimpleRepository } from "../repository";
 import { Scene } from "phaser";
 import { CombatSystem } from "../player/combat/combatSystem";
 import { SimpleForwardPunchCombatAction } from "../player/combat/actions/SimpleForwardPunchCombatAction";
+import { ClientPlayer } from "../player/players/clientPlayer";
+import { Player } from "../player/players/player";
+import { MovementSystem } from "../player/movement/movementSystem";
+import { AnimationSystem } from "../player/animations/animationSystem";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -20,7 +24,7 @@ export class ClientConnectionDelegator implements Delegator {
     private connection: ServerConnection,
     private scene: Scene,
     private presenterProvider: ClientPresenterProvider,
-    private inGamePlayersRepository: SimpleRepository<LocalClientPlayer>
+    private inGamePlayersRepository: SimpleRepository<Player>
   ) {}
   init(): void {
     this.connection.onInitialGameState.subscribe((data) => {
@@ -41,11 +45,15 @@ export class ClientConnectionDelegator implements Delegator {
             new SimpleForwardPunchCombatAction(),
           ]);
 
+          const movementSystem = new MovementSystem()
           const player = new LocalClientPlayer(
             dto.info,
             dto.state,
             view,
             combatSystem,
+            movementSystem,
+            new AnimationSystem(),
+            input
           );
           const inventory = new ClientInventoryView(this.scene, input);
           this.presenterProvider.forInventory(dto.info.id, inventory);
@@ -85,15 +93,10 @@ export class ClientConnectionDelegator implements Delegator {
       DefaultConfiguration.height,
       DefaultConfiguration.width
     );
-    const combatSystem = new CombatSystem([
-      new SimpleForwardPunchCombatAction(),
-      new SimpleForwardPunchCombatAction(),
-    ]);
-    const player = new LocalClientPlayer(
+    const player = new ClientPlayer(
       info,
       state,
       view,
-      combatSystem,
     );
     this.presenterProvider.forPlayer(player, view);
     this.inGamePlayersRepository.save(player.info.id, player);

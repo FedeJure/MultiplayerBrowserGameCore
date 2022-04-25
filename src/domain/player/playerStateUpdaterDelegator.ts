@@ -1,11 +1,9 @@
 import { Delegator } from "../delegator";
-import { PlayerInput } from "./playerInput";
 import { Player } from "./players/player";
 
-export class ServerPlayerStateUpdaterDelegator implements Delegator {
+export class PlayerStateUpdaterDelegator implements Delegator {
   constructor(
-    private player: Player,
-    private input: PlayerInput,
+    private player: Player
   ) {}
   init(): void {}
   stop(): void {}

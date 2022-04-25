@@ -1,11 +1,11 @@
-import { PlayerInput } from "../playerInput";
 import { CombatAction } from "./actions/combatAction";
-import { Player } from "../players/player";
+import { ServerPlayer } from "../players/serverPlayer";
+import { LocalClientPlayer } from "../players/localClientPlayer";
 
 export class CombatSystem {
     constructor(private actions: CombatAction[]) {}
 
-    processCombat(player: Player, input: PlayerInput) {
-        this.actions.forEach(action => action.execute(player, input))
+    processCombat(player: LocalClientPlayer | ServerPlayer, delta: number) {
+        this.actions.forEach(action => action.execute(player))
     }
 }

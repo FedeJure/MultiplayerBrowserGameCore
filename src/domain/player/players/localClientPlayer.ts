@@ -1,20 +1,24 @@
-import { resolveMovementAnimationForPlayer } from "../../actions/resolveMovementAnimationForPlayer";
-import { resolvePlayerMovementWithInput } from "../../actions/resolvePlayerMovementWithInput";
 import { PlayerView } from "../../playerView";
-import { Side } from "../../side";
+import { AnimationSystem } from "../animations/animationSystem";
 import { CombatSystem } from "../combat/combatSystem";
+import { MovementSystem } from "../movement/movementSystem";
 import { PlayerInfo } from "../playerInfo";
 import { PlayerInput } from "../playerInput";
-import { Player } from "./player";
 import { PlayerState } from "../playerState";
+import { ClientPlayer } from "./clientPlayer";
 
-export class LocalClientPlayer implements Player{
+export class LocalClientPlayer extends ClientPlayer {
   constructor(
-    private _info: PlayerInfo,
-    private _state: PlayerState,
-    private _view: PlayerView,
-    private _combatSystem: CombatSystem
-  ) {}
+    _info: PlayerInfo,
+    _state: PlayerState,
+    _view: PlayerView,
+    private _combatSystem: CombatSystem,
+    private _movementSystem: MovementSystem,
+    private _animationSystem: AnimationSystem,
+    private _input: PlayerInput
+  ) {
+    super(_info, _state, _view)
+  }
 
   updateInfo(newInfo: Partial<PlayerInfo>) {
     this._info = { ...this.info, ...newInfo };
@@ -37,25 +41,14 @@ export class LocalClientPlayer implements Player{
     return this._view;
   }
 
-  processCombat(input: PlayerInput) {
-    this._combatSystem.processCombat(this, input);
+  get input() {
+    return this._input
   }
 
-  processMovement(input: PlayerInput, deltaTime: number) {
-    const newState = resolvePlayerMovementWithInput(
-      input,
-      this,
-      this.state,
-      deltaTime
-    );
-    if (newState.velocity)
-      this.view.setVelocity(newState.velocity.x, newState.velocity.y);
-    this.view.lookToLeft(newState.side === Side.LEFT);
-    this.updateState({
-      ...newState,
-      anim: resolveMovementAnimationForPlayer(newState),
-    });
+  update(time: number, delta: number) {
+    this._combatSystem.processCombat(this, delta)
+    this._movementSystem.processMovement(this, delta)
+    this._animationSystem.processAnimation(this)
+    super.update(time, delta)
   }
-
-  update(time: number, delta: number) {}
 }

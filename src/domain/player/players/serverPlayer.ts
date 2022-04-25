@@ -7,6 +7,9 @@ import { CombatSystem } from "../combat/combatSystem";
 import { LocalClientPlayer } from "./localClientPlayer";
 import { PlayerInfo } from "../playerInfo";
 import { PlayerState } from "../playerState";
+import { PlayerInput } from "../playerInput";
+import { MovementSystem } from "../movement/movementSystem";
+import { AnimationSystem } from "../animations/animationSystem";
 
 export class ServerPlayer extends LocalClientPlayer {
   private _onStateChange: Subject<{
@@ -18,11 +21,22 @@ export class ServerPlayer extends LocalClientPlayer {
     state: PlayerState,
     view: PlayerView,
     combatSystem: CombatSystem,
+    movementSystem: MovementSystem,
+    animationSystem: AnimationSystem,
+    input: PlayerInput,
     private _connection: ClientConnection,
     private playerInfoRepository: AsyncRepository<PlayerInfo>,
     private playerStateRepository: PlayerStateRepository
   ) {
-    super(info, state, view, combatSystem);
+    super(
+      info,
+      state,
+      view,
+      combatSystem,
+      movementSystem,
+      animationSystem,
+      input
+    );
   }
   updateInfo(newInfo: Omit<Partial<PlayerInfo>, "id">): void {
     super.updateInfo(newInfo);

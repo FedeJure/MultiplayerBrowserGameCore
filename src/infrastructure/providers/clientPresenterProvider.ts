@@ -24,6 +24,7 @@ import { Delegator } from "../../domain/delegator";
 import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
 import { GameObjects } from "phaser";
 import { Player } from "../../domain/player/players/player";
+import { PlayerStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
 
 export class ClientPresenterProvider {
   forLocalPlayer(
@@ -52,6 +53,7 @@ export class ClientPresenterProvider {
         player
       ),
       new PlayerAngleFixDelegator(player),
+      new PlayerStateUpdaterDelegator(player)
     ]);
   }
   forPlayer(player: Player, view: GameObjects.GameObject): void {
@@ -67,6 +69,8 @@ export class ClientPresenterProvider {
         player
       ),
       new PlayerAngleFixDelegator(player),
+      new PlayerStateUpdaterDelegator(player)
+
     ]);
   }
 

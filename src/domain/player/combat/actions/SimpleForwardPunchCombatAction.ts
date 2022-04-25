@@ -1,10 +1,11 @@
 import { AnimationCode } from "../../../animations/animations";
-import { PlayerInput } from "../../playerInput";
 import { CombatAction } from "./combatAction";
-import { Player } from "../../players/player";
+import { LocalClientPlayer } from "../../players/localClientPlayer";
+import { ServerPlayer } from "../../players/serverPlayer";
 
 export class SimpleForwardPunchCombatAction implements CombatAction {
-  execute(player: Player, input: PlayerInput) {
+  execute(player: LocalClientPlayer | ServerPlayer) {
+    const { input } = player;
     if (
       !player.state.attacking &&
       input.basicAttack &&
@@ -16,7 +17,7 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
           velocity: { x: 0, y: 0 },
         });
         player.view.setVelocity(0, 0);
-      } 
+      }
 
       player.updateState({
         anim: AnimationCode.BASIC_ATTACK,

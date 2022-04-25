@@ -1,6 +1,6 @@
-import { PlayerInput } from "../../playerInput";
-import { Player } from "../../players/player";
+import { LocalClientPlayer } from "../../players/localClientPlayer";
+import { ServerPlayer } from "../../players/serverPlayer";
 
 export interface CombatAction {
-    execute(player: Player, input: PlayerInput)
+    execute(player: LocalClientPlayer | ServerPlayer)
 }

@@ -20,6 +20,8 @@ import { PlayerInventoryDto } from "../../infrastructure/dtos/playerInventoryDto
 import { Scene } from "phaser";
 import { CombatSystem } from "./combat/combatSystem";
 import { SimpleForwardPunchCombatAction } from "./combat/actions/SimpleForwardPunchCombatAction";
+import { MovementSystem } from "./movement/movementSystem";
+import { AnimationSystem } from "./animations/animationSystem";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -130,6 +132,11 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       DefaultConfiguration.height,
       DefaultConfiguration.width
     );
+    const input = new PlayerSocketInput(
+      playerId,
+      connection,
+      ServerProvider.playerInputRequestRepository
+    );
     const player = new ServerPlayer(
       playerInfo,
       playerState,
@@ -138,20 +145,15 @@ export class ServerPlayerCreatorDelegator implements Delegator {
         new SimpleForwardPunchCombatAction(),
         new SimpleForwardPunchCombatAction(),
       ]),
+      new MovementSystem(),
+      new AnimationSystem(),
+      input,
       connection,
       this.playerInfoRepository,
       this.playerStateRepository
     );
     connection.setPlayerId(player.info.id);
-    this.presenterProvider.forPlayer(
-      view,
-      player,
-      new PlayerSocketInput(
-        playerId,
-        connection,
-        ServerProvider.playerInputRequestRepository
-      )
-    );
+    this.presenterProvider.forPlayer(view, player);
 
     this.inGamePlayersRepository.save(player.info.id, player);
     return player;
