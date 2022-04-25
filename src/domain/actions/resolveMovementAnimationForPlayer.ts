@@ -1,22 +1,7 @@
-import { Delegator } from "../delegator";
-import { ClientPlayer } from "../player/player";
+import { AnimationCode } from "../animations/animations";
 import { PlayerState } from "../player/playerState";
-import { AnimationCode } from "./animations";
 
-export class ServerPlayerAnimationDelegator implements Delegator {
-
-  constructor(protected player: ClientPlayer) {
-  }
-  init(): void {}
-  stop(): void {}
-  update(time: number, delta: number): void {
-      const currentAnim = this.getAnimation(this.player.state);
-      if (currentAnim) {
-        this.player.updateState({anim: currentAnim})
-      }
-  }
-
-  protected getAnimation(state: PlayerState) {
+export function resolveMovementAnimationForPlayer(state: PlayerState): AnimationCode {
     const absVelx = Math.abs(state.velocity.x);
     const absVely = Math.abs(state.velocity.y);
     const velY = state.velocity.y;
@@ -32,5 +17,4 @@ export class ServerPlayerAnimationDelegator implements Delegator {
 
     
     return AnimationCode.IDLE;
-  }
 }

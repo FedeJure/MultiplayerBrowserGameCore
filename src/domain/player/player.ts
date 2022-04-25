@@ -1,3 +1,4 @@
+import { resolveMovementAnimationForPlayer } from "../actions/resolveMovementAnimationForPlayer";
 import { resolvePlayerMovementWithInput } from "../actions/resolvePlayerMovementWithInput";
 import { PlayerView } from "../playerView";
 import { Side } from "../side";
@@ -11,7 +12,7 @@ export class ClientPlayer {
     private _info: PlayerInfo,
     private _state: PlayerState,
     private _view: PlayerView,
-    private _combatSystem: CombatSystem,
+    private _combatSystem: CombatSystem
   ) {}
 
   updateInfo(newInfo: Partial<PlayerInfo>) {
@@ -19,11 +20,7 @@ export class ClientPlayer {
   }
 
   updateState(newState: Partial<PlayerState>) {
-    try {
-      this._state = { ...this.state, ...newState };
-    } catch (error) {
-      console.log(error);
-    }
+    this._state = { ...this.state, ...newState };
   }
 
   destroy() {
@@ -53,6 +50,9 @@ export class ClientPlayer {
     );
     this.view.setVelocity(newState.velocity.x, newState.velocity.y);
     this.view.lookToLeft(newState.side === Side.LEFT);
-    this.updateState(newState);
+    this.updateState({
+      ...newState,
+      anim: resolveMovementAnimationForPlayer(newState),
+    });
   }
 }

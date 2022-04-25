@@ -1,5 +1,4 @@
 import { GameObjects } from "phaser";
-import { ServerPlayerAnimationDelegator } from "../../domain/animations/serverPlayerAnimationDelegator";
 import { PlayerCollisionDelegator } from "../../domain/collisions/playerCollisionDelegator";
 import { Delegator } from "../../domain/delegator";
 import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
@@ -20,7 +19,6 @@ export class ServerPresenterProvider {
   ): void {
     new ViewPresenter(view, [
       new PlayerCollisionDelegator(player),
-      new ServerPlayerAnimationDelegator(player),
       new ServerPlayerStateUpdaterDelegator(
         player,
         input,

@@ -1,13 +1,13 @@
+import { Delegator } from "../delegator";
 import { ClientPlayer } from "../player/player";
-import { ServerPlayerAnimationDelegator } from "./serverPlayerAnimationDelegator";
 
-export class PlayerAnimationDelegator extends ServerPlayerAnimationDelegator {
-  constructor(player: ClientPlayer) {
-    super(player);
+export class PlayerAnimationDelegator implements Delegator {
+
+  constructor(private player: ClientPlayer) {
   }
   init(): void {}
   stop(): void {}
-  update(time: number, delta: number): void {
-    this.player.view.playAnimation(this.getAnimation(this.player.state));
+  update(time: number, delta: number) {
+    this.player.view.playAnimation(this.player.state.anim);
   }
 }

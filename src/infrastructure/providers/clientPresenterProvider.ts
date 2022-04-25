@@ -6,7 +6,6 @@ import { PlayerInputDelegator } from "../../domain/input/playerInputDelegator";
 import { LocalPlayerRenderDelegator } from "../../domain/player/localPlayerRenderDelegator";
 import { PlayerRemoteMovementDelegator } from "../../domain/player/movement/playerRemoteMovementDelegator";
 import { PlayerAnimationDelegator } from "../../domain/animations/playerAnimationDelegator";
-import { RemotePlayerAnimationDelegator } from "../../domain/animations/remotePlayerAnimationDelegator";
 import { CurrentMapDelegator } from "../../domain/environment/currentMapDelegator";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { PlayerInfoDelegator } from "../../domain/player/playerInfoDelegator";
@@ -57,7 +56,7 @@ export class ClientPresenterProvider {
   }
   forPlayer(player: ClientPlayer, view: GameObjects.GameObject): void {
     new ViewPresenter(view, [
-      new RemotePlayerAnimationDelegator(player),
+      new PlayerAnimationDelegator(player),
       new PlayerRemoteMovementDelegator(
         player,
         ClientProvider.serverConnection
