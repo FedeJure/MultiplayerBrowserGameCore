@@ -4,7 +4,7 @@ import { PlayerInput } from "../player/playerInput";
 import { PlayerInputDto } from "../../infrastructure/dtos/playerInputDto";
 import { PlayerState } from "../player/playerState";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
-import { ClientPlayer } from "../player/player";
+import { Player } from "../player/players/player";
 
 export class PlayerInputDelegator implements Delegator {
   private currentInput: PlayerInputDto | undefined;
@@ -12,7 +12,7 @@ export class PlayerInputDelegator implements Delegator {
   private savedState: PlayerState | undefined;
 
   constructor(
-    private player: ClientPlayer,
+    private player: Player,
     private input: PlayerInput,
     private connection: ServerConnection,
     private inputRequestRepository: PlayerInputRequestRepository
@@ -36,9 +36,7 @@ export class PlayerInputDelegator implements Delegator {
       );
       this.inputRequestRepository.set(this.player.info.id, newInputRequest);
     }
-      this.player.processCombat(this.input)
-      this.player.processMovement(this.input, delta)
-      this.savedState = this.player.state;
+    this.savedState = this.player.state;
 
     this.lastInputSended = JSON.stringify(currentInput);
   }

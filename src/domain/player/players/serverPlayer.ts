@@ -1,14 +1,14 @@
 import { Observable, Subject } from "rxjs";
-import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
-import { ClientConnection } from "../clientConnection";
-import { PlayerView } from "../playerView";
-import { AsyncRepository } from "../repository";
-import { CombatSystem } from "./combat/combatSystem";
-import { ClientPlayer } from "./player";
-import { PlayerInfo } from "./playerInfo";
-import { PlayerState } from "./playerState";
+import { PlayerStateRepository } from "../../../infrastructure/repositories/playerStateRepository";
+import { ClientConnection } from "../../clientConnection";
+import { PlayerView } from "../../playerView";
+import { AsyncRepository } from "../../repository";
+import { CombatSystem } from "../combat/combatSystem";
+import { LocalClientPlayer } from "./localClientPlayer";
+import { PlayerInfo } from "../playerInfo";
+import { PlayerState } from "../playerState";
 
-export class ServerPlayer extends ClientPlayer {
+export class ServerPlayer extends LocalClientPlayer {
   private _onStateChange: Subject<{
     state: PlayerState;
     change: Partial<PlayerState>;

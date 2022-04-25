@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { Delegator } from "../delegator";
-import { ServerPlayer } from "../player/serverPlayer";
+import { ServerPlayer } from "../player/players/serverPlayer";
 import { SimpleRepository } from "../repository";
 import { RoomManager } from "../roomManager";
 

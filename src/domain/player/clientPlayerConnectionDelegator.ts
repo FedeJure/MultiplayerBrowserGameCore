@@ -2,11 +2,11 @@ import { filter } from "rxjs";
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
 import { ServerConnection } from "../serverConnection";
-import { ClientPlayer } from "./player";
+import { Player } from "./players/player";
 
 export class ClientPlayerConnectionDelegator implements Delegator {
   private disposer = new Disposer();
-  constructor(private connection: ServerConnection, private player: ClientPlayer) {}
+  constructor(private connection: ServerConnection, private player: Player) {}
   init(): void {
     this.disposer.add(
       this.connection.onPlayerDisconnected
@@ -18,7 +18,7 @@ export class ClientPlayerConnectionDelegator implements Delegator {
     );
   }
   stop(): void {
-    this.disposer.dispose()
+    this.disposer.dispose();
   }
   update(time: number, delta: number): void {}
 }

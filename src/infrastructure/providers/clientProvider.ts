@@ -8,7 +8,7 @@ import { PlayerInputRequestRepository } from "../repositories/playerInputRequest
 import { Scene } from "phaser";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { RemoteEnvironmentObjectRepository } from "../repositories/remoteEnvironmentObjectRepository";
-import { ClientPlayer } from "../../domain/player/player";
+import { LocalClientPlayer } from "../../domain/player/players/localClientPlayer";
 import { SimpleRepository } from "../../domain/repository";
 import { InMemoryRepository } from "../repositories/InMemoryRepository";
 import { Item } from "../../domain/items/item";
@@ -78,9 +78,9 @@ export class ClientProvider {
     );
   }
 
-  public static get inGamePlayersRepository(): SimpleRepository<ClientPlayer> {
-    return DependencyManager.GetOrInstantiate<SimpleRepository<ClientPlayer>>(
-      () => new InMemoryRepository<ClientPlayer>()
+  public static get inGamePlayersRepository(): SimpleRepository<LocalClientPlayer> {
+    return DependencyManager.GetOrInstantiate<SimpleRepository<LocalClientPlayer>>(
+      () => new InMemoryRepository<LocalClientPlayer>()
     );
   }
 

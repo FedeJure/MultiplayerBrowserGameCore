@@ -1,6 +1,6 @@
-import { ClientPlayer } from "../../player";
 import { PlayerInput } from "../../playerInput";
+import { Player } from "../../players/player";
 
 export interface CombatAction {
-    execute(player: ClientPlayer, input: PlayerInput)
+    execute(player: Player, input: PlayerInput)
 }

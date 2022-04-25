@@ -4,7 +4,7 @@ import { ExistentDepths } from "../../view/existentDepths";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { loadBackgroundAssets } from "../actions/loadBackgroundAssets";
 import { Delegator } from "../delegator";
-import { ClientPlayer } from "../player/player";
+import { LocalClientPlayer } from "../player/players/localClientPlayer";
 import { SimpleRepository } from "../repository";
 import { ServerConnection } from "../serverConnection";
 import { ProcessedMap } from "./processedMap";
@@ -17,7 +17,7 @@ export class BackgroundDelegator implements Delegator {
     private scene: ClientGameScene,
     private connection: ServerConnection,
     private localplayerRepository: LocalPlayerRepository,
-    private inGamePlayersRepository: SimpleRepository<ClientPlayer>
+    private inGamePlayersRepository: SimpleRepository<LocalClientPlayer>
   ) {}
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {

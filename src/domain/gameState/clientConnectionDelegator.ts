@@ -4,7 +4,7 @@ import { ClientPresenterProvider } from "../../infrastructure/providers/clientPr
 import { ClientInventoryView } from "../../view/clientInventoryView";
 import { ClientPlayerView } from "../../view/player/clientPlayerView";
 import { Delegator } from "../delegator";
-import { ClientPlayer } from "../player/player";
+import { LocalClientPlayer } from "../player/players/localClientPlayer";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { ServerConnection } from "../serverConnection";
 import { PlayerState } from "../player/playerState";
@@ -20,7 +20,7 @@ export class ClientConnectionDelegator implements Delegator {
     private connection: ServerConnection,
     private scene: Scene,
     private presenterProvider: ClientPresenterProvider,
-    private inGamePlayersRepository: SimpleRepository<ClientPlayer>
+    private inGamePlayersRepository: SimpleRepository<LocalClientPlayer>
   ) {}
   init(): void {
     this.connection.onInitialGameState.subscribe((data) => {
@@ -41,7 +41,7 @@ export class ClientConnectionDelegator implements Delegator {
             new SimpleForwardPunchCombatAction(),
           ]);
 
-          const player = new ClientPlayer(
+          const player = new LocalClientPlayer(
             dto.info,
             dto.state,
             view,
@@ -89,7 +89,7 @@ export class ClientConnectionDelegator implements Delegator {
       new SimpleForwardPunchCombatAction(),
       new SimpleForwardPunchCombatAction(),
     ]);
-    const player = new ClientPlayer(
+    const player = new LocalClientPlayer(
       info,
       state,
       view,

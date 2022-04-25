@@ -1,5 +1,5 @@
 import { Delegator } from "../delegator";
-import { ClientPlayer } from "./player";
+import { Player } from "./players/player";
 
 export class LocalPlayerRenderDelegator implements Delegator {
   private readonly maxZoom = 3.5;
@@ -7,7 +7,7 @@ export class LocalPlayerRenderDelegator implements Delegator {
   private readonly startZoom = 1.6;
 
   private zoom = this.startZoom;
-  constructor(private player: ClientPlayer) {
+  constructor(private player: Player) {
     this.player = player;
   }
   init(): void {

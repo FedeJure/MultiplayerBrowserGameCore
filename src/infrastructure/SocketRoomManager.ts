@@ -1,6 +1,6 @@
 import { ClientConnection } from "../domain/clientConnection";
 import { ProcessedMap } from "../domain/environment/processedMap";
-import { ServerPlayer } from "../domain/player/serverPlayer";
+import { ServerPlayer } from "../domain/player/players/serverPlayer";
 import { SimpleRepository } from "../domain/repository";
 import { RoomManager, PlayerId, RoomId } from "../domain/roomManager";
 

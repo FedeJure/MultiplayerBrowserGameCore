@@ -12,7 +12,7 @@ import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { ServerEnvironmentObjectFactory } from "../../view/environmentObjects/serverEnvironmentObjectFactory";
-import { ServerPlayer } from "../player/serverPlayer";
+import { ServerPlayer } from "../player/players/serverPlayer";
 import { SimpleRepository } from "../repository";
 import { filter } from "rxjs";
 
@@ -36,8 +36,7 @@ export class CompleteMapDelegator implements Delegator {
     mapConfig.mapLayers.forEach((layer) => {
       this.processLayer(layer);
     });
-    this.inGamePlayersRepository.onSave.subscribe((player) => {
-      const serverPlayer = player as ServerPlayer;
+    this.inGamePlayersRepository.onSave.subscribe((serverPlayer) => {
       this.updateMapForPlayer(serverPlayer);
 
       serverPlayer.onStateChange

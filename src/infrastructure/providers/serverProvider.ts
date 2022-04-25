@@ -2,7 +2,7 @@ import { ClientConnection } from "../../domain/clientConnection";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { Item } from "../../domain/items/item";
 import { PlayerInfo } from "../../domain/player/playerInfo";
-import { ServerPlayer } from "../../domain/player/serverPlayer";
+import { ServerPlayer } from "../../domain/player/players/serverPlayer";
 import { AsyncRepository, SimpleRepository } from "../../domain/repository";
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";

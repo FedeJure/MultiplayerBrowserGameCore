@@ -1,15 +1,15 @@
 import { Delegator } from "../../delegator";
 import { Disposer } from "../../disposer";
-import { ClientPlayer } from "../player";
 import { ServerConnection } from "../../serverConnection";
 import { Side } from "../../side";
+import { Player } from "../players/player";
 
 export class PlayerRemoteMovementDelegator implements Delegator {
   private readonly connection: ServerConnection;
 
   private readonly disposer: Disposer = new Disposer();
 
-  constructor(private player: ClientPlayer, connection: ServerConnection) {
+  constructor(private player: Player, connection: ServerConnection) {
     this.connection = connection;
   }
   init(): void {

@@ -2,19 +2,19 @@ import { DefaultConfiguration } from "../player/playerConfiguration";
 import { PlayerInput } from "../player/playerInput";
 import { PlayerState } from "../player/playerState";
 import { Side } from "../side";
-import { ServerPlayer } from "../player/serverPlayer";
-import { ClientPlayer } from "../player/player";
+import { Player } from "../player/players/player";
 
 export function resolvePlayerMovementWithInput(
   input: PlayerInput,
-  player: ServerPlayer | ClientPlayer,
+  player: Player,
   state: PlayerState,
   deltaTime: number
 ) {
   let newVelX = player.view.velocity.x;
   let newVelY = player.view.velocity.y;
   let velocity = 0.05;
-  let maxRunVelocity = DefaultConfiguration.runVelocity * (state.attacking ? 0.5 : 1);
+  let maxRunVelocity =
+    DefaultConfiguration.runVelocity * (state.attacking ? 0.5 : 1);
   let availableJumps = state.grounded
     ? DefaultConfiguration.initialJumps
     : state.jumpsAvailable;

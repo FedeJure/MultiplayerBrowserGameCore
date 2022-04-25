@@ -1,13 +1,14 @@
-import { resolveMovementAnimationForPlayer } from "../actions/resolveMovementAnimationForPlayer";
-import { resolvePlayerMovementWithInput } from "../actions/resolvePlayerMovementWithInput";
-import { PlayerView } from "../playerView";
-import { Side } from "../side";
-import { CombatSystem } from "./combat/combatSystem";
-import { PlayerInfo } from "./playerInfo";
-import { PlayerInput } from "./playerInput";
-import { PlayerState } from "./playerState";
+import { resolveMovementAnimationForPlayer } from "../../actions/resolveMovementAnimationForPlayer";
+import { resolvePlayerMovementWithInput } from "../../actions/resolvePlayerMovementWithInput";
+import { PlayerView } from "../../playerView";
+import { Side } from "../../side";
+import { CombatSystem } from "../combat/combatSystem";
+import { PlayerInfo } from "../playerInfo";
+import { PlayerInput } from "../playerInput";
+import { Player } from "./player";
+import { PlayerState } from "../playerState";
 
-export class ClientPlayer {
+export class LocalClientPlayer implements Player{
   constructor(
     private _info: PlayerInfo,
     private _state: PlayerState,
@@ -26,7 +27,6 @@ export class ClientPlayer {
   destroy() {
     this._view.destroy();
   }
-
   get info() {
     return this._info;
   }
@@ -48,11 +48,14 @@ export class ClientPlayer {
       this.state,
       deltaTime
     );
-    this.view.setVelocity(newState.velocity.x, newState.velocity.y);
+    if (newState.velocity)
+      this.view.setVelocity(newState.velocity.x, newState.velocity.y);
     this.view.lookToLeft(newState.side === Side.LEFT);
     this.updateState({
       ...newState,
       anim: resolveMovementAnimationForPlayer(newState),
     });
   }
+
+  update(time: number, delta: number) {}
 }

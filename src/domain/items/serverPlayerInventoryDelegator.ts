@@ -5,7 +5,7 @@ import {
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { Log } from "../../infrastructure/Logger";
 import { Delegator } from "../delegator";
-import { ServerPlayer } from "../player/serverPlayer";
+import { ServerPlayer } from "../player/players/serverPlayer";
 import { AsyncRepository, SimpleRepository } from "../repository";
 import { DefaultItem, Item } from "./item";
 
