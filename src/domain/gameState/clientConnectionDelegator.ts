@@ -9,7 +9,7 @@ import { DefaultConfiguration } from "../player/playerConfiguration";
 import { ServerConnection } from "../serverConnection";
 import { PlayerState } from "../player/playerState";
 import { PlayerInfo } from "../player/playerInfo";
-import { SimpleRepository } from "../repository";
+import { AsyncRepository, SimpleRepository } from "../repository";
 import { Scene } from "phaser";
 import { CombatSystem } from "../player/combat/combatSystem";
 import { SimpleForwardPunchCombatAction } from "../player/combat/actions/SimpleForwardPunchCombatAction";
@@ -17,6 +17,7 @@ import { ClientPlayer } from "../player/players/clientPlayer";
 import { Player } from "../player/players/player";
 import { MovementSystem } from "../player/movement/movementSystem";
 import { AnimationSystem } from "../player/animations/animationSystem";
+import { DefaultPlayerStats, PlayerStats } from "../player/playerStats";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -27,48 +28,22 @@ export class ClientConnectionDelegator implements Delegator {
     private inGamePlayersRepository: SimpleRepository<Player>
   ) {}
   init(): void {
-    this.connection.onInitialGameState.subscribe((data) => {
+    this.connection.onInitialGameState.subscribe(async (data) => {
       Log(this, "Initial Game State Event", data);
+      this.createLocalClientPlayer(
+        data.localPlayer.state,
+        data.localPlayer.info,
+        data.localPlayer.stats
+      );
       for (let i = 0; i < data.players.length; i++) {
         const dto = data.players[i];
-        if (dto.id === this.localPlayerId) {
-          const view = new ClientPlayerView(
-            this.scene,
-            dto.state.position.x,
-            dto.state.position.y,
-            DefaultConfiguration.height,
-            DefaultConfiguration.width
-          );
-          const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
-          const combatSystem = new CombatSystem([
-            new SimpleForwardPunchCombatAction(),
-            new SimpleForwardPunchCombatAction(),
-          ]);
-
-          const movementSystem = new MovementSystem()
-          const player = new LocalClientPlayer(
-            dto.info,
-            dto.state,
-            view,
-            combatSystem,
-            movementSystem,
-            new AnimationSystem(),
-            input
-          );
-          const inventory = new ClientInventoryView(this.scene, input);
-          this.presenterProvider.forInventory(dto.info.id, inventory);
-          this.presenterProvider.forLocalPlayer(input, player, view);
-          this.inGamePlayersRepository.save(player.info.id, player);
-        } else this.createClientPlayer(dto.state, dto.info);
+        if (dto.id === data.localPlayer.id) continue;
+        this.createClientPlayer(dto.state, dto.info);
       }
 
       this.connection.onNewPlayerConnected.subscribe((data) => {
         if (this.inGamePlayersRepository.get(data.player.id)) return;
-        this.createClientPlayer(
-          data.player.state,
-
-          data.player.info
-        );
+        this.createClientPlayer(data.player.state, data.player.info);
       });
 
       this.connection.onPlayerDisconnected.subscribe((data) => {
@@ -93,12 +68,43 @@ export class ClientConnectionDelegator implements Delegator {
       DefaultConfiguration.height,
       DefaultConfiguration.width
     );
-    const player = new ClientPlayer(
+    const player = new ClientPlayer(info, state, view);
+    this.presenterProvider.forPlayer(player, view);
+    this.inGamePlayersRepository.save(player.info.id, player);
+  }
+
+  createLocalClientPlayer(
+    state: PlayerState,
+    info: PlayerInfo,
+    stats: PlayerStats
+  ) {
+    const view = new ClientPlayerView(
+      this.scene,
+      state.position.x,
+      state.position.y,
+      DefaultConfiguration.height,
+      DefaultConfiguration.width
+    );
+    const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
+    const combatSystem = new CombatSystem([
+      new SimpleForwardPunchCombatAction(),
+      new SimpleForwardPunchCombatAction(),
+    ]);
+
+    const movementSystem = new MovementSystem();
+    const player = new LocalClientPlayer(
       info,
       state,
       view,
+      stats ?? DefaultPlayerStats,
+      combatSystem,
+      movementSystem,
+      new AnimationSystem(),
+      input
     );
-    this.presenterProvider.forPlayer(player, view);
+    const inventory = new ClientInventoryView(this.scene, input);
+    this.presenterProvider.forInventory(info.id, inventory);
+    this.presenterProvider.forLocalPlayer(input, player, view);
     this.inGamePlayersRepository.save(player.info.id, player);
   }
 }

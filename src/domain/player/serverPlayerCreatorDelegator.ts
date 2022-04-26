@@ -22,6 +22,7 @@ import { CombatSystem } from "./combat/combatSystem";
 import { SimpleForwardPunchCombatAction } from "./combat/actions/SimpleForwardPunchCombatAction";
 import { MovementSystem } from "./movement/movementSystem";
 import { AnimationSystem } from "./animations/animationSystem";
+import { DefaultPlayerStats, PlayerStats } from "./playerStats";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -33,7 +34,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private playerStateRepository: PlayerStateRepository,
     private inventoryRepository: AsyncRepository<PlayerInventoryDto>,
     private presenterProvider: ServerPresenterProvider,
-    private inGamePlayersRepository: SimpleRepository<ServerPlayer>
+    private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
+    private playerStatsRepository: AsyncRepository<PlayerStats>
   ) {}
   init(): void {
     this.connectionsRepository.onSave.subscribe((connection) => {
@@ -48,6 +50,12 @@ export class ServerPlayerCreatorDelegator implements Delegator {
           CompleteMapDelegator.getMapForPlayer(player.state);
 
         connection.sendInitialStateEvent(
+          {
+            id: player.info.id,
+            state: player.state,
+            stats: player.stats,
+            info: player.info,
+          },
           this.inGamePlayersRepository.getAll().map((player) => ({
             id: player.info.id,
             state: player.state,
@@ -119,11 +127,13 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       playerState = DefaultPlayerState;
     }
 
-    try {
-      this.inventoryRepository.get(playerId);
-    } catch (error) {
-      this.inventoryRepository.save(playerId, DefaultPlayerInventory);
-    }
+    const inventory = await this.inventoryRepository.get(playerId);
+    if (!inventory)
+      await this.inventoryRepository.save(playerId, DefaultPlayerInventory);
+
+    const stats = await this.playerStatsRepository.get(playerId);
+    if (!stats)
+      await this.playerStatsRepository.save(playerId, DefaultPlayerStats);
 
     const view = new ServerPlayerView(
       scene,
@@ -148,6 +158,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       new MovementSystem(),
       new AnimationSystem(),
       input,
+      stats ?? DefaultPlayerStats,
       connection,
       this.playerInfoRepository,
       this.playerStateRepository

@@ -15,6 +15,7 @@ import { SocketIOEvents } from "./events/socketIoEvents";
 import { PlayerInitialStateDto } from "./dtos/playerInitialStateDto";
 import { ProcessedMap } from "../domain/environment/processedMap";
 import { PlayerInventoryDto } from "./dtos/playerInventoryDto";
+import { LocalPlayerInitialStateDto } from "./dtos/localPlayerInitialStateDto";
 
 export class SocketClientConnection implements ClientConnection {
   public readonly socket: Socket;
@@ -139,13 +140,14 @@ export class SocketClientConnection implements ClientConnection {
   }
 
   public sendInitialStateEvent(
+    localPlayer: LocalPlayerInitialStateDto,
     players: PlayerInitialStateDto[],
     currentMap: ProcessedMap | undefined,
     neighborMaps: ProcessedMap[] | undefined
   ) {
     this.socket.emit(
       GameEvents.INITIAL_GAME_STATE.name,
-      GameEvents.INITIAL_GAME_STATE.getEvent(players, currentMap, neighborMaps)
+      GameEvents.INITIAL_GAME_STATE.getEvent(localPlayer, players, currentMap, neighborMaps)
     );
   }
 

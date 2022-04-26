@@ -2,6 +2,7 @@ import { ProcessedMap } from "../../domain/environment/processedMap";
 import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
 import { Item } from "../../domain/items/item";
 import { PlayerState } from "../../domain/player/playerState";
+import { LocalPlayerInitialStateDto } from "../dtos/localPlayerInitialStateDto";
 import { PlayerInitialStateDto } from "../dtos/playerInitialStateDto";
 import { PlayerInputDto } from "../dtos/playerInputDto";
 import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
@@ -18,6 +19,7 @@ export const GameEvents: {
   INITIAL_GAME_STATE: {
     name: string;
     getEvent: (
+      localPlayer: LocalPlayerInitialStateDto,
       players: PlayerInitialStateDto[],
       currentMap: ProcessedMap | undefined,
       neighborMaps: ProcessedMap[] | undefined
@@ -60,12 +62,16 @@ export const GameEvents: {
   };
   ENVIRONMENT_OBJECT_DETAILS_REQUEST: {
     name: string;
-    getEvent: (ids: EnvironmentObject['id'][]) => EnvironmentObjectDetailsRequest;
-  }
+    getEvent: (
+      ids: EnvironmentObject["id"][]
+    ) => EnvironmentObjectDetailsRequest;
+  };
   ENVIRONMENT_OBJECT_DETAILS_RESPONSE: {
     name: string;
-    getEvent: (objects: EnvironmentObject[]) => EnvironmentObjectDetailsResponse
-  }
+    getEvent: (
+      objects: EnvironmentObject[]
+    ) => EnvironmentObjectDetailsResponse;
+  };
 } = {
   PLAYER_CONNECTED: {
     name: "player_connected",
@@ -77,7 +83,8 @@ export const GameEvents: {
   },
   INITIAL_GAME_STATE: {
     name: "initial_game_state",
-    getEvent: (players, currentMap, neighborMaps) => ({
+    getEvent: (localPlayer, players, currentMap, neighborMaps) => ({
+      localPlayer,
       players,
       currentMap,
       neighborMaps,
@@ -131,19 +138,19 @@ export const GameEvents: {
     }),
   },
   ENVIRONMENT_OBJECT_DETAILS_REQUEST: {
-    name: 'environment_object_details_request',
-    getEvent: (ids: EnvironmentObject['id'][]) => ({
+    name: "environment_object_details_request",
+    getEvent: (ids: EnvironmentObject["id"][]) => ({
       objectIds: ids,
-      time: new Date()
-    })
+      time: new Date(),
+    }),
   },
   ENVIRONMENT_OBJECT_DETAILS_RESPONSE: {
-    name: 'environment_object_details_response',
+    name: "environment_object_details_response",
     getEvent: (objects: EnvironmentObject[]) => ({
       objects,
-      time: new Date()
-    })
-  }
+      time: new Date(),
+    }),
+  },
 };
 
 interface BaseEvent {
@@ -160,6 +167,7 @@ export interface PlayerStatesEvent extends BaseEvent {
 
 export interface InitialGameStateEvent extends BaseEvent {
   players: PlayerInitialStateDto[];
+  localPlayer: LocalPlayerInitialStateDto;
   currentMap: ProcessedMap | undefined;
   neighborMaps: ProcessedMap[] | undefined;
 }
@@ -196,9 +204,9 @@ export interface ItemDetailResponse extends BaseEvent {
 }
 
 export interface EnvironmentObjectDetailsResponse extends BaseEvent {
-  objects: EnvironmentObject[]
+  objects: EnvironmentObject[];
 }
 
 export interface EnvironmentObjectDetailsRequest extends BaseEvent {
-  objectIds: EnvironmentObject['id'][]
+  objectIds: EnvironmentObject["id"][];
 }

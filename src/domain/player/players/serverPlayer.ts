@@ -10,6 +10,7 @@ import { PlayerState } from "../playerState";
 import { PlayerInput } from "../playerInput";
 import { MovementSystem } from "../movement/movementSystem";
 import { AnimationSystem } from "../animations/animationSystem";
+import { PlayerStats } from "../playerStats";
 
 export class ServerPlayer extends LocalClientPlayer {
   private _onStateChange: Subject<{
@@ -24,6 +25,7 @@ export class ServerPlayer extends LocalClientPlayer {
     movementSystem: MovementSystem,
     animationSystem: AnimationSystem,
     input: PlayerInput,
+    stats: PlayerStats,
     private _connection: ClientConnection,
     private playerInfoRepository: AsyncRepository<PlayerInfo>,
     private playerStateRepository: PlayerStateRepository
@@ -32,6 +34,7 @@ export class ServerPlayer extends LocalClientPlayer {
       info,
       state,
       view,
+      stats,
       combatSystem,
       movementSystem,
       animationSystem,

@@ -1,5 +1,4 @@
 import { Side } from "../../side";
-import { DefaultConfiguration } from "../playerConfiguration";
 import { LocalClientPlayer } from "../players/localClientPlayer";
 import { ServerPlayer } from "../players/serverPlayer";
 
@@ -10,16 +9,15 @@ export class MovementSystem {
     let newVelY = player.view.velocity.y;
     let velocity = 0.05;
     let maxRunVelocity =
-      DefaultConfiguration.runVelocity *
-      (state.attacking && state.grounded ? 0.5 : 1);
+      player.stats.runSpeed * (state.attacking && state.grounded ? 0.5 : 1);
     let availableJumps = state.grounded
-      ? DefaultConfiguration.initialJumps
+      ? player.stats.maxJumps
       : state.jumpsAvailable;
     let canJump = state.canJump;
     let jumping = state.jumping;
 
     if (canJump && availableJumps > 0 && input.jump) {
-      newVelY = -DefaultConfiguration.jumpVelocity * deltaTime;
+      newVelY = -player.stats.jumpPower * deltaTime;
       availableJumps--;
       canJump = false;
       jumping = true;

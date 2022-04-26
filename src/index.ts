@@ -67,7 +67,8 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
           ServerProvider.playerStateRepository,
           ServerProvider.inventoryRepository,
           ServerProvider.presenterProvider,
-          ServerProvider.inGamePlayerRepository
+          ServerProvider.inGamePlayerRepository,
+          ServerProvider.playerStatsRepository
         ),
         new ServerPlayerInventoryDelegator(
           ServerProvider.inventoryRepository,

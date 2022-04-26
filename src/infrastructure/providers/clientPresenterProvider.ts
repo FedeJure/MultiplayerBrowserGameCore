@@ -90,7 +90,7 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         scene,
         ClientProvider.presenterProvider,
-        ClientProvider.inGamePlayersRepository
+        ClientProvider.inGamePlayersRepository,
       ),
     ]);
   }

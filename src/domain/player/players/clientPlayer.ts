@@ -9,7 +9,7 @@ export class ClientPlayer implements Player {
   constructor(
     protected _info: PlayerInfo,
     protected _state: PlayerState,
-    protected _view: PlayerView
+    protected _view: PlayerView,
   ) {}
 
   updateInfo(newInfo: Partial<PlayerInfo>) {
@@ -19,6 +19,8 @@ export class ClientPlayer implements Player {
   updateState(newState: Partial<PlayerState>) {
     this._state = { ...this.state, ...newState };
   }
+
+
 
   destroy() {
     this._view.destroy();

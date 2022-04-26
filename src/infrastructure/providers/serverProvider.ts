@@ -3,6 +3,7 @@ import { EnvironmentObjectRepository } from "../../domain/environmentObjects/env
 import { Item } from "../../domain/items/item";
 import { PlayerInfo } from "../../domain/player/playerInfo";
 import { ServerPlayer } from "../../domain/player/players/serverPlayer";
+import { PlayerStats } from "../../domain/player/playerStats";
 import { AsyncRepository, SimpleRepository } from "../../domain/repository";
 import { RoomManager } from "../../domain/roomManager";
 import { DependencyManager } from "../dependencyManager";
@@ -24,6 +25,7 @@ class InGamePlayerRepository extends InMemoryRepository<ServerPlayer> {}
 class PlayerInfoRepository extends InMemoryAsyncRepository<PlayerInfo> {}
 class PlayerInventoryRepository extends InMemoryAsyncRepository<PlayerInventoryDto> {}
 class ItemRepository extends InMemoryAsyncRepository<Item> {}
+class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
 
 export class ServerProvider {
   public static get connectionsRepository(): SimpleRepository<ClientConnection> {
@@ -80,6 +82,12 @@ export class ServerProvider {
   public static get inGamePlayerRepository(): SimpleRepository<ServerPlayer> {
     return DependencyManager.GetOrInstantiate<SimpleRepository<ServerPlayer>>(
       () => new InGamePlayerRepository()
+    );
+  }
+
+  public static get playerStatsRepository(): AsyncRepository<PlayerStats> {
+    return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerStats>>(
+      () => new PlayerStatsRepository()
     );
   }
 }

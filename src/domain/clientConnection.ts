@@ -1,4 +1,5 @@
 import { Observable } from "rxjs";
+import { LocalPlayerInitialStateDto } from "../infrastructure/dtos/localPlayerInitialStateDto";
 import { PlayerInitialStateDto } from "../infrastructure/dtos/playerInitialStateDto";
 import { PlayerInventoryDto } from "../infrastructure/dtos/playerInventoryDto";
 import { EnvironmentObjectDetailsRequest, EnvironmentObjectDetailsResponse, ItemDetailRequest, ItemDetailResponse, PlayerInputEvent } from "../infrastructure/events/gameEvents";
@@ -10,6 +11,7 @@ export interface ClientConnection {
   playerId?: string
   onPlayerConnection(): Observable<{ playerId: string }>;
   sendInitialStateEvent(
+    localPlayer: LocalPlayerInitialStateDto,
     players: PlayerInitialStateDto[],
     currentMap: ProcessedMap | undefined,
     neighborMaps: ProcessedMap[] | undefined
