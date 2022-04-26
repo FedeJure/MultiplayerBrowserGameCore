@@ -10,7 +10,8 @@ export class MovementSystem {
     let newVelY = player.view.velocity.y;
     let velocity = 0.05;
     let maxRunVelocity =
-      DefaultConfiguration.runVelocity * (state.attacking ? 0.5 : 1);
+      DefaultConfiguration.runVelocity *
+      (state.attacking && state.grounded ? 0.5 : 1);
     let availableJumps = state.grounded
       ? DefaultConfiguration.initialJumps
       : state.jumpsAvailable;

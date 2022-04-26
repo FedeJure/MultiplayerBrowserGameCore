@@ -18,8 +18,7 @@ export class ClientPlayerView extends PhaserPlayerView {
     const spine = scene.add.spine(x, y, "hero", AnimationCode.IDLE, true);
     const currentSize: Vector = spine.getBounds().size;
     const factor = currentSize.y / height;
-
-    spine.setDisplaySize(currentSize.x / factor + 10, height + 10).refresh();
+    spine.setDisplaySize(currentSize.x / factor + 10, height + 10);
     spine.setSize(width, height);
     spine.setOffset(0, 10);
     const viewAsSprite = spine as unknown as Physics.Matter.Sprite;
@@ -31,7 +30,7 @@ export class ClientPlayerView extends PhaserPlayerView {
   }
 
   playAnimation(anim: string) {
-    this.spine.setAnimation(0, anim, true, true);
+    this.spine.setAnimation(0, anim, true, true)
   }
 
   setDisplayName(name: string): void {

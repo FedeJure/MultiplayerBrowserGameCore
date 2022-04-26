@@ -16,7 +16,6 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
         player.updateState({
           velocity: { x: 0, y: 0 },
         });
-        player.view.setVelocity(0, 0);
       }
 
       player.updateState({
