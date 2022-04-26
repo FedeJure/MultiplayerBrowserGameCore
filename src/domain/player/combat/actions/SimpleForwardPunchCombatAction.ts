@@ -19,12 +19,11 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
       }
 
       player.updateState({
-        anim: AnimationCode.BASIC_ATTACK,
         attacking: true,
       });
       setTimeout(() => {
         player.updateState({ attacking: false });
-      }, 200);
+      }, 450);
     }
   }
 }

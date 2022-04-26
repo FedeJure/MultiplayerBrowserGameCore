@@ -8,6 +8,10 @@ import {
 import { PlayerView } from "../../domain/playerView";
 import { CollisionDetector } from "./collisionDetector";
 import { ExistentDepths } from "../existentDepths";
+import {
+  AnimationCode,
+  AnimationLayer,
+} from "../../domain/animations/animations";
 
 export class PhaserPlayerView
   extends GameObjects.Container
@@ -50,6 +54,7 @@ export class PhaserPlayerView
 
     this.initCollisions();
   }
+  playAnimation(anim: AnimationCode, animLayer: AnimationLayer) {}
   setDisplayName(name: string) {}
 
   get positionVector(): MatterJS.Vector {
@@ -68,7 +73,6 @@ export class PhaserPlayerView
   startFollowWithCam(): void {
     this.scene.cameras.main.startFollow(this, false, 0.1, 0.1);
   }
-  playAnimation(anim: string): void {}
   get velocity(): MatterJS.Vector {
     return this.matterBody.velocity;
   }

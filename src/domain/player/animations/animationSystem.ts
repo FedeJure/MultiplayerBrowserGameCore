@@ -4,9 +4,8 @@ import { ServerPlayer } from "../players/serverPlayer";
 
 export class AnimationSystem {
   processAnimation(player: LocalClientPlayer | ServerPlayer) {
-    if (!player.state.attacking)
-      player.updateState({ anim: this.getMovementAnimation(player) });
-    else player.updateState({ anim: this.getAttackAnimation(player) });
+    player.updateState({ movementAnim: this.getMovementAnimation(player) });
+    player.updateState({ combatAnim: this.getAttackAnimation(player) });
   }
 
   private getMovementAnimation(player: LocalClientPlayer | ServerPlayer) {
@@ -29,6 +28,7 @@ export class AnimationSystem {
   }
 
   private getAttackAnimation(player: LocalClientPlayer | ServerPlayer) {
-    return AnimationCode.BASIC_ATTACK;
+    if (player.state.attacking) return AnimationCode.BASIC_ATTACK
+    return undefined
   }
 }

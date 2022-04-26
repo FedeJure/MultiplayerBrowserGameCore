@@ -3,6 +3,7 @@ import { PlayerInfo } from "../playerInfo";
 import { Player } from "./player";
 import { PlayerState } from "../playerState";
 import { Side } from "../../side";
+import { AnimationCode, AnimationLayer } from "../../animations/animations";
 
 export class ClientPlayer implements Player {
   constructor(
@@ -33,7 +34,12 @@ export class ClientPlayer implements Player {
   }
 
   update(time: number, delta: number) {
-    this.view.playAnimation(this.state.anim);
+    this.view.playAnimation(this.state.movementAnim, AnimationLayer.MOVEMENT);
+    this.view.playAnimation(
+      this.state.combatAnim ?? AnimationCode.EMPTY_ANIMATION,
+      AnimationLayer.COMBAT,
+      false
+    );
     this.view.setPosition(this.state.position.x, this.state.position.y);
     this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);
     this.view.lookToLeft(this.state.side === Side.LEFT);

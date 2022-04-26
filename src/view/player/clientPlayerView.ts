@@ -1,6 +1,9 @@
 import { Vector } from "matter";
 import { Physics, Scene } from "phaser";
-import { AnimationCode } from "../../domain/animations/animations";
+import {
+  AnimationCode,
+  AnimationLayer,
+} from "../../domain/animations/animations";
 import { PlayerIngameHud } from "./playerIngameHud";
 import { PhaserPlayerView } from "./phaserPlayerView";
 
@@ -29,11 +32,18 @@ export class ClientPlayerView extends PhaserPlayerView {
     this.spine = spine;
   }
 
-  playAnimation(anim: string) {
-    this.spine.setAnimation(0, anim, true, true)
+  playAnimation(
+    anim: AnimationCode,
+    layer: AnimationLayer,
+    loop: boolean = true
+  ) {
+    if (anim === AnimationCode.EMPTY_ANIMATION) {
+      this.spine.clearTrack(layer)
+    }
+    else this.spine.setAnimation(layer, anim, loop, true);
   }
 
   setDisplayName(name: string): void {
-    this.hud.setDisplayName(name)
+    this.hud.setDisplayName(name);
   }
 }

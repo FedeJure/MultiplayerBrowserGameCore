@@ -14,9 +14,10 @@ export const DefaultPlayerState: PlayerState = {
   grounded: false,
   side: Side.RIGHT,
   inputNumber: 1,
-  anim: AnimationCode.IDLE,
+  movementAnim: AnimationCode.IDLE,
   map: { mapId: DefaultGameConfiguration.initialMapId },
   currentRooms: [],
   jumping: false,
-  attacking: false
+  attacking: false,
+  combatAnim: undefined
 };

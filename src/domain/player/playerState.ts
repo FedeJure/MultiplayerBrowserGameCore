@@ -13,7 +13,8 @@ export interface PlayerState {
   readonly grounded: boolean;
   readonly side: Side;
   readonly inputNumber: number;
-  readonly anim: AnimationCode;
+  readonly movementAnim: AnimationCode;
+  readonly combatAnim?: AnimationCode;
   readonly map: currentMapState;
   readonly currentRooms: string[]
   readonly jumping: boolean
