@@ -118,20 +118,14 @@ export class ClientConnectionDelegator implements Delegator {
       type: AttackTargetType.PLAYER,
     });
     const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
-    const combatSystem = new CombatSystem([
-      new SimpleForwardPunchCombatAction(
-        this.inGamePlayersRepository,
-        this.attackTargetRepository
-      ),
-    ]);
 
     const movementSystem = new MovementSystem();
     const player = new LocalClientPlayer(
       info,
       state,
       view,
+      this.inGamePlayersRepository,
       stats ?? DefaultPlayerStats,
-      combatSystem,
       movementSystem,
       new AnimationSystem(),
       input

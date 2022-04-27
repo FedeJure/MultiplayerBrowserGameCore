@@ -2,8 +2,7 @@ import { Observable, Subject } from "rxjs";
 import { PlayerStateRepository } from "../../../infrastructure/repositories/playerStateRepository";
 import { ClientConnection } from "../../clientConnection";
 import { PlayerView } from "../../playerView";
-import { AsyncRepository } from "../../repository";
-import { CombatSystem } from "../combat/combatSystem";
+import { AsyncRepository, SimpleRepository } from "../../repository";
 import { LocalClientPlayer } from "./localClientPlayer";
 import { PlayerInfo } from "../playerInfo";
 import { PlayerState } from "../playerState";
@@ -11,6 +10,8 @@ import { PlayerInput } from "../playerInput";
 import { MovementSystem } from "../movement/movementSystem";
 import { AnimationSystem } from "../animations/animationSystem";
 import { PlayerStats } from "../playerStats";
+import { CombatResult } from "../combat/combatResult";
+import { Player } from "./player";
 
 export class ServerPlayer extends LocalClientPlayer {
   private _onStateChange: Subject<{
@@ -21,11 +22,11 @@ export class ServerPlayer extends LocalClientPlayer {
     info: PlayerInfo,
     state: PlayerState,
     view: PlayerView,
-    combatSystem: CombatSystem,
     movementSystem: MovementSystem,
     animationSystem: AnimationSystem,
     input: PlayerInput,
     stats: PlayerStats,
+    inGamePlayersRepository: SimpleRepository<Player>,
     private _connection: ClientConnection,
     private playerInfoRepository: AsyncRepository<PlayerInfo>,
     private playerStateRepository: PlayerStateRepository
@@ -34,8 +35,8 @@ export class ServerPlayer extends LocalClientPlayer {
       info,
       state,
       view,
+      inGamePlayersRepository,
       stats,
-      combatSystem,
       movementSystem,
       animationSystem,
       input
@@ -66,5 +67,9 @@ export class ServerPlayer extends LocalClientPlayer {
 
   get connection(): ClientConnection {
     return this._connection;
+  }
+
+  receiveAttack(attack: CombatResult) {
+      this._combatSystem.receiveAttack(attack)
   }
 }

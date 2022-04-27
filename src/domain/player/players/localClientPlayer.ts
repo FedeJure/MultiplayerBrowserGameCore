@@ -1,5 +1,8 @@
 import { PlayerView } from "../../playerView";
+import { SimpleRepository } from "../../repository";
 import { AnimationSystem } from "../animations/animationSystem";
+import { SimpleForwardPunchCombatAction } from "../combat/actions/SimpleForwardPunchCombatAction";
+import { CombatResult } from "../combat/combatResult";
 import { CombatSystem } from "../combat/combatSystem";
 import { MovementSystem } from "../movement/movementSystem";
 import { PlayerInfo } from "../playerInfo";
@@ -7,19 +10,24 @@ import { PlayerInput } from "../playerInput";
 import { PlayerState } from "../playerState";
 import { PlayerStats } from "../playerStats";
 import { ClientPlayer } from "./clientPlayer";
+import { Player } from "./player";
 
 export class LocalClientPlayer extends ClientPlayer {
+  protected _combatSystem: CombatSystem;
   constructor(
     _info: PlayerInfo,
     _state: PlayerState,
     _view: PlayerView,
-    private _stats: PlayerStats,
-    private _combatSystem: CombatSystem,
+    inGamePlayersRepository: SimpleRepository<Player>,
+    protected _stats: PlayerStats,
     private _movementSystem: MovementSystem,
     private _animationSystem: AnimationSystem,
     private _input: PlayerInput
   ) {
     super(_info, _state, _view);
+    this._combatSystem = new CombatSystem(this, [
+      new SimpleForwardPunchCombatAction(inGamePlayersRepository, this),
+    ]);
   }
 
   updateInfo(newInfo: Partial<PlayerInfo>) {
@@ -55,7 +63,7 @@ export class LocalClientPlayer extends ClientPlayer {
   }
 
   update(time: number, delta: number) {
-    this._combatSystem.processCombat(this, delta);
+    this._combatSystem.processCombat(delta);
     this._movementSystem.processMovement(this, delta);
     this._animationSystem.processAnimation(this);
     super.update(time, delta);

@@ -1,4 +1,5 @@
 import { PlayerView } from "../../playerView";
+import { CombatResult } from "../combat/combatResult";
 import { PlayerInfo } from "../playerInfo";
 import { PlayerState } from "../playerState";
 
@@ -10,4 +11,5 @@ export interface Player {
   updateInfo(newInfo: Partial<PlayerInfo>);
   updateState(newState: Partial<PlayerState>);
   destroy();
+  receiveAttack(attack: CombatResult);
 }

@@ -4,6 +4,7 @@ import { Player } from "./player";
 import { PlayerState } from "../playerState";
 import { Side } from "../../side";
 import { AnimationCode, AnimationLayer } from "../../animations/animations";
+import { CombatResult } from "../combat/combatResult";
 
 export class ClientPlayer implements Player {
   constructor(
@@ -11,6 +12,7 @@ export class ClientPlayer implements Player {
     protected _state: PlayerState,
     protected _view: PlayerView,
   ) {}
+  receiveAttack(attack: CombatResult) {}
 
   updateInfo(newInfo: Partial<PlayerInfo>) {
     this._info = { ...this.info, ...newInfo };
@@ -19,8 +21,6 @@ export class ClientPlayer implements Player {
   updateState(newState: Partial<PlayerState>) {
     this._state = { ...this.state, ...newState };
   }
-
-
 
   destroy() {
     this._view.destroy();

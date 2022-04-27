@@ -170,19 +170,14 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       playerInfo,
       playerState,
       view,
-      new CombatSystem([
-        new SimpleForwardPunchCombatAction(
-          this.inGamePlayersRepository,
-          this.attackTargetRepository
-        ),
-      ]),
       new MovementSystem(),
       new AnimationSystem(),
       input,
       stats ?? DefaultPlayerStats,
+      this.inGamePlayersRepository,
       connection,
       this.playerInfoRepository,
-      this.playerStateRepository
+      this.playerStateRepository,
     );
     connection.setPlayerId(player.info.id);
     this.presenterProvider.forPlayer(view, player);

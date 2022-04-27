@@ -33,7 +33,6 @@ export class PhaserPlayerView
     this.setName("Player View");
     this.setSize(width, height);
     this.scene.add.existing(this);
-
     this._view = view;
     this.scene.add.existing(this._view);
     this._view.scene.matter.add.gameObject(this);
@@ -48,9 +47,15 @@ export class PhaserPlayerView
       this.y + this.height / 2 + 1,
       this.width / 2,
       2
-    )
-    this.scene.matter.setCollisionCategory([colDetectorBody], CollisionCategory.Player);
-    this.scene.matter.setCollidesWith([colDetectorBody], CollisionCategory.StaticEnvironment);
+    );
+    this.scene.matter.setCollisionCategory(
+      [colDetectorBody],
+      CollisionCategory.Player
+    );
+    this.scene.matter.setCollidesWith(
+      [colDetectorBody],
+      CollisionCategory.StaticEnvironment
+    );
     this.groundCollisionDetector = new CollisionDetector(
       this.scene,
       this.scene.matter.bodies.rectangle(
@@ -58,7 +63,7 @@ export class PhaserPlayerView
         this.y + this.height / 2 + 1,
         this.width / 2,
         2
-      ),
+      )
     );
     this.setDepth(ExistentDepths.GROUND);
 
@@ -99,15 +104,25 @@ export class PhaserPlayerView
   }
   private initCollisions() {
     const body = this.scene.matter.body.create({
-      parts: [
-        this.matterBody,
-        this.groundCollisionDetector.body,
-      ],
+      parts: [this.matterBody, this.groundCollisionDetector.body],
     });
     this.selfAsPhysic.setExistingBody(body);
-    this.scene.matter.setCollisionGroup([this.matterBody],  -CollisionCategory.Player)
-    this.scene.matter.setCollisionCategory([this.matterBody], CollisionCategory.Player)
-    this.scene.matter.setCollidesWith([this.matterBody], [CollisionCategory.StaticEnvironment ,CollisionCategory.WorldBounds, CollisionCategory.DamageArea])
+    this.scene.matter.setCollisionGroup(
+      [this.matterBody],
+      -CollisionCategory.Player
+    );
+    this.scene.matter.setCollisionCategory(
+      [this.matterBody],
+      CollisionCategory.Player
+    );
+    this.scene.matter.setCollidesWith(
+      [this.matterBody],
+      [
+        CollisionCategory.StaticEnvironment,
+        CollisionCategory.WorldBounds,
+        CollisionCategory.DamageArea,
+      ]
+    );
   }
 
   public get view() {
