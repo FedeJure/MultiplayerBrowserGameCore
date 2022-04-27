@@ -1,9 +1,15 @@
-import { AnimationCode } from "../../../animations/animations";
 import { CombatAction } from "./combatAction";
 import { LocalClientPlayer } from "../../players/localClientPlayer";
 import { ServerPlayer } from "../../players/serverPlayer";
+import { Player } from "../../players/player";
+import { SimpleRepository } from "../../../repository";
+import { AttackTarget } from "../../../combat/attackTarget";
 
 export class SimpleForwardPunchCombatAction implements CombatAction {
+  constructor(
+    private inGamePlayersRepository: SimpleRepository<Player>,
+    private attackTargetRepository: SimpleRepository<AttackTarget>
+  ) {}
   execute(player: LocalClientPlayer | ServerPlayer) {
     const { input } = player;
     if (
@@ -21,9 +27,14 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
       player.updateState({
         attacking: true,
       });
-      setTimeout(() => {
+      player.view.scene.time.delayedCall(450, () => {
         player.updateState({ attacking: false });
-      }, 450);
+        player.view.combatCollisionResolver.disableMeleeCollision();
+      });
+      player.view.combatCollisionResolver.onMeleeTarget.subscribe((targets) => {
+        console.log(targets);
+      });
+      player.view.combatCollisionResolver.enableMeleeCollision();
     }
   }
 }

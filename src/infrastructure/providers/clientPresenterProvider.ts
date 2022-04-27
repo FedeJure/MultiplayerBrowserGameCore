@@ -91,6 +91,7 @@ export class ClientPresenterProvider {
         scene,
         ClientProvider.presenterProvider,
         ClientProvider.inGamePlayersRepository,
+        ClientProvider.attackTargetRepository
       ),
     ]);
   }

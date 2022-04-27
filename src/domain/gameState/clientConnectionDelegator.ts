@@ -9,7 +9,7 @@ import { DefaultConfiguration } from "../player/playerConfiguration";
 import { ServerConnection } from "../serverConnection";
 import { PlayerState } from "../player/playerState";
 import { PlayerInfo } from "../player/playerInfo";
-import { AsyncRepository, SimpleRepository } from "../repository";
+import { SimpleRepository } from "../repository";
 import { Scene } from "phaser";
 import { CombatSystem } from "../player/combat/combatSystem";
 import { SimpleForwardPunchCombatAction } from "../player/combat/actions/SimpleForwardPunchCombatAction";
@@ -18,6 +18,9 @@ import { Player } from "../player/players/player";
 import { MovementSystem } from "../player/movement/movementSystem";
 import { AnimationSystem } from "../player/animations/animationSystem";
 import { DefaultPlayerStats, PlayerStats } from "../player/playerStats";
+import { AttackTarget } from "../combat/attackTarget";
+import { AttackTargetType } from "../combat/attackTargetType";
+import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -25,7 +28,8 @@ export class ClientConnectionDelegator implements Delegator {
     private connection: ServerConnection,
     private scene: Scene,
     private presenterProvider: ClientPresenterProvider,
-    private inGamePlayersRepository: SimpleRepository<Player>
+    private inGamePlayersRepository: SimpleRepository<Player>,
+    private attackTargetRepository: SimpleRepository<AttackTarget>
   ) {}
   init(): void {
     this.connection.onInitialGameState.subscribe(async (data) => {
@@ -48,8 +52,13 @@ export class ClientConnectionDelegator implements Delegator {
 
       this.connection.onPlayerDisconnected.subscribe((data) => {
         const player = this.inGamePlayersRepository.get(data.playerId);
-        if (player) player.destroy();
-        this.inGamePlayersRepository.remove(data.playerId);
+        if (player) {
+          this.attackTargetRepository.remove(
+            player.view.matterBody.id.toString()
+          );
+          player.destroy();
+          this.inGamePlayersRepository.remove(data.playerId);
+        }
       });
     });
 
@@ -61,13 +70,24 @@ export class ClientConnectionDelegator implements Delegator {
   update(time: number, delta: number): void {}
 
   createClientPlayer(state: PlayerState, info: PlayerInfo) {
+    const collisionResolver = new PhaserCombatCollisionResolver(
+      state.position.x,
+      state.position.y,
+      this.scene,
+      this.attackTargetRepository
+    );
     const view = new ClientPlayerView(
       this.scene,
       state.position.x,
       state.position.y,
       DefaultConfiguration.height,
-      DefaultConfiguration.width
+      DefaultConfiguration.width,
+      collisionResolver
     );
+    this.attackTargetRepository.save(view.matterBody.id.toString(), {
+      id: info.id,
+      type: AttackTargetType.PLAYER,
+    });
     const player = new ClientPlayer(info, state, view);
     this.presenterProvider.forPlayer(player, view);
     this.inGamePlayersRepository.save(player.info.id, player);
@@ -78,17 +98,31 @@ export class ClientConnectionDelegator implements Delegator {
     info: PlayerInfo,
     stats: PlayerStats
   ) {
+    const collisionResolver = new PhaserCombatCollisionResolver(
+      state.position.x,
+      state.position.y,
+      this.scene,
+      this.attackTargetRepository
+    );
+
     const view = new ClientPlayerView(
       this.scene,
       state.position.x,
       state.position.y,
       DefaultConfiguration.height,
-      DefaultConfiguration.width
+      DefaultConfiguration.width,
+      collisionResolver
     );
+    this.attackTargetRepository.save(view.matterBody.id.toString(), {
+      id: info.id,
+      type: AttackTargetType.PLAYER,
+    });
     const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
     const combatSystem = new CombatSystem([
-      new SimpleForwardPunchCombatAction(),
-      new SimpleForwardPunchCombatAction(),
+      new SimpleForwardPunchCombatAction(
+        this.inGamePlayersRepository,
+        this.attackTargetRepository
+      ),
     ]);
 
     const movementSystem = new MovementSystem();

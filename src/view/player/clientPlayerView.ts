@@ -6,6 +6,7 @@ import {
 } from "../../domain/animations/animations";
 import { PlayerIngameHud } from "./playerIngameHud";
 import { PhaserPlayerView } from "./phaserPlayerView";
+import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
 
 export class ClientPlayerView extends PhaserPlayerView {
   private readonly spine: SpineGameObject;
@@ -16,7 +17,9 @@ export class ClientPlayerView extends PhaserPlayerView {
     x: number,
     y: number,
     height: number,
-    width: number
+    width: number,
+    combatCollisionResolver: PhaserCombatCollisionResolver
+
   ) {
     const spine = scene.add.spine(x, y, "hero", AnimationCode.IDLE, true);
     const currentSize: Vector = spine.getBounds().size;
@@ -25,7 +28,7 @@ export class ClientPlayerView extends PhaserPlayerView {
     spine.setSize(width, height);
     spine.setOffset(0, 10);
     const viewAsSprite = spine as unknown as Physics.Matter.Sprite;
-    super(viewAsSprite, x, y, height, width);
+    super(viewAsSprite, x, y, height, width, combatCollisionResolver);
 
     this.hud = new PlayerIngameHud(scene, height, width);
     this.add(this.hud);

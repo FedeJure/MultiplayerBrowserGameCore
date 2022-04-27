@@ -1,5 +1,6 @@
 import { PhaserPlayerView } from "./phaserPlayerView";
 import { Scene } from "phaser";
+import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
 
 export class ServerPlayerView extends PhaserPlayerView {
   private readonly spine: SpineGameObject;
@@ -8,10 +9,10 @@ export class ServerPlayerView extends PhaserPlayerView {
     x: number,
     y: number,
     height: number,
-    width: number
+    width: number,
+    combatCollisionResolver: PhaserCombatCollisionResolver
   ) {
-    
-    const sprite = scene.matter.add.sprite(x,y, "")
-    super(sprite, x, y, height, width);
+    const sprite = scene.matter.add.sprite(x, y, "");
+    super(sprite, x, y, height, width, combatCollisionResolver);
   }
 }

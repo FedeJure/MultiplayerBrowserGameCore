@@ -13,10 +13,12 @@ import { SimpleRepository } from "../../domain/repository";
 import { InMemoryRepository } from "../repositories/InMemoryRepository";
 import { Item } from "../../domain/items/item";
 import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
+import { AttackTarget } from "../../domain/combat/attackTarget";
 
 //This is necessary because the dependency manager not work with generics
 class InventoryRepository extends InMemoryRepository<PlayerInventoryDto> {}
 class ItemRepository extends InMemoryRepository<Item> {}
+class AttackTargetRepository extends InMemoryRepository<AttackTarget> {}
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
@@ -82,6 +84,12 @@ export class ClientProvider {
     return DependencyManager.GetOrInstantiate<SimpleRepository<LocalClientPlayer>>(
       () => new InMemoryRepository<LocalClientPlayer>()
     );
+  }
+
+  public static get attackTargetRepository(): SimpleRepository<AttackTarget> {
+    return DependencyManager.GetOrInstantiate<SimpleRepository<AttackTarget>>(
+      () => new AttackTargetRepository()
+    )
   }
 
   public static get originUrl(): string {

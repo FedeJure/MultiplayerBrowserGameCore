@@ -23,6 +23,9 @@ import { SimpleForwardPunchCombatAction } from "./combat/actions/SimpleForwardPu
 import { MovementSystem } from "./movement/movementSystem";
 import { AnimationSystem } from "./animations/animationSystem";
 import { DefaultPlayerStats, PlayerStats } from "./playerStats";
+import { AttackTarget } from "../combat/attackTarget";
+import { AttackTargetType } from "../combat/attackTargetType";
+import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -35,7 +38,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private inventoryRepository: AsyncRepository<PlayerInventoryDto>,
     private presenterProvider: ServerPresenterProvider,
     private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
-    private playerStatsRepository: AsyncRepository<PlayerStats>
+    private playerStatsRepository: AsyncRepository<PlayerStats>,
+    private attackTargetRepository: SimpleRepository<AttackTarget>
   ) {}
   init(): void {
     this.connectionsRepository.onSave.subscribe((connection) => {
@@ -103,6 +107,10 @@ export class ServerPlayerCreatorDelegator implements Delegator {
               GameEvents.PLAYER_DISCONNECTED.name,
               GameEvents.PLAYER_DISCONNECTED.getEvent(playerId)
             );
+          this.attackTargetRepository.remove(
+            player.view.matterBody.id.toString()
+          );
+
           player.destroy();
           this.inGamePlayersRepository.remove(playerId);
         }
@@ -134,14 +142,25 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     const stats = await this.playerStatsRepository.get(playerId);
     if (!stats)
       await this.playerStatsRepository.save(playerId, DefaultPlayerStats);
+    const collisionResolver = new PhaserCombatCollisionResolver(
+      playerState.position.x,
+      playerState.position.y,
+      scene,
+      this.attackTargetRepository
+    );
 
     const view = new ServerPlayerView(
       scene,
       playerState.position.x,
       playerState.position.y,
       DefaultConfiguration.height,
-      DefaultConfiguration.width
+      DefaultConfiguration.width,
+      collisionResolver
     );
+    this.attackTargetRepository.save(view.matterBody.id.toString(), {
+      id: playerId,
+      type: AttackTargetType.PLAYER,
+    });
     const input = new PlayerSocketInput(
       playerId,
       connection,
@@ -152,8 +171,10 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       playerState,
       view,
       new CombatSystem([
-        new SimpleForwardPunchCombatAction(),
-        new SimpleForwardPunchCombatAction(),
+        new SimpleForwardPunchCombatAction(
+          this.inGamePlayersRepository,
+          this.attackTargetRepository
+        ),
       ]),
       new MovementSystem(),
       new AnimationSystem(),

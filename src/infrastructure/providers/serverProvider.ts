@@ -1,4 +1,5 @@
 import { ClientConnection } from "../../domain/clientConnection";
+import { AttackTarget } from "../../domain/combat/attackTarget";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { Item } from "../../domain/items/item";
 import { PlayerInfo } from "../../domain/player/playerInfo";
@@ -26,6 +27,8 @@ class PlayerInfoRepository extends InMemoryAsyncRepository<PlayerInfo> {}
 class PlayerInventoryRepository extends InMemoryAsyncRepository<PlayerInventoryDto> {}
 class ItemRepository extends InMemoryAsyncRepository<Item> {}
 class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
+class AttackTargetRepository extends InMemoryRepository<AttackTarget> {}
+
 
 export class ServerProvider {
   public static get connectionsRepository(): SimpleRepository<ClientConnection> {
@@ -83,6 +86,12 @@ export class ServerProvider {
     return DependencyManager.GetOrInstantiate<SimpleRepository<ServerPlayer>>(
       () => new InGamePlayerRepository()
     );
+  }
+
+  public static get attackTargetRepository(): SimpleRepository<AttackTarget> {
+    return DependencyManager.GetOrInstantiate<SimpleRepository<AttackTarget>>(
+      () => new AttackTargetRepository()
+    )
   }
 
   public static get playerStatsRepository(): AsyncRepository<PlayerStats> {

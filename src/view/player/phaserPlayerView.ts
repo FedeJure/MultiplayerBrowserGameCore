@@ -1,6 +1,6 @@
 import { BodyType } from "matter";
 import { GameObjects, Physics } from "phaser";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import {
   CollisionCategory,
   CollisionGroups,
@@ -12,6 +12,7 @@ import {
   AnimationCode,
   AnimationLayer,
 } from "../../domain/animations/animations";
+import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
 
 export class PhaserPlayerView
   extends GameObjects.Container
@@ -25,7 +26,8 @@ export class PhaserPlayerView
     x: number,
     y: number,
     height: number,
-    width: number
+    width: number,
+    public readonly combatCollisionResolver: PhaserCombatCollisionResolver
   ) {
     super(view.scene, x, y, [view]);
     this.setName("Player View");
@@ -41,19 +43,28 @@ export class PhaserPlayerView
     this._view.displayOriginY = 0;
     this._view.setPosition(0, 0);
 
+    const colDetectorBody = this.scene.matter.bodies.rectangle(
+      this.x,
+      this.y + this.height / 2 + 1,
+      this.width / 2,
+      2
+    )
+    this.scene.matter.setCollisionCategory([colDetectorBody], CollisionCategory.Player);
+    this.scene.matter.setCollidesWith([colDetectorBody], CollisionCategory.StaticEnvironment);
     this.groundCollisionDetector = new CollisionDetector(
+      this.scene,
       this.scene.matter.bodies.rectangle(
         this.x,
         this.y + this.height / 2 + 1,
         this.width / 2,
         2
-      )
+      ),
     );
-
     this.setDepth(ExistentDepths.GROUND);
 
     this.initCollisions();
   }
+
   playAnimation(anim: AnimationCode, animLayer: AnimationLayer) {}
   setDisplayName(name: string) {}
 
@@ -88,14 +99,15 @@ export class PhaserPlayerView
   }
   private initCollisions() {
     const body = this.scene.matter.body.create({
-      parts: [this.matterBody, this.groundCollisionDetector.body],
+      parts: [
+        this.matterBody,
+        this.groundCollisionDetector.body,
+      ],
     });
     this.selfAsPhysic.setExistingBody(body);
-    this.matterBody.collisionFilter = body.collisionFilter = {
-      category: CollisionCategory.Player,
-      group: CollisionGroups.Player,
-      mask: CollisionCategory.StaticEnvironment | CollisionCategory.WorldBounds,
-    };
+    this.scene.matter.setCollisionGroup([this.matterBody],  -CollisionCategory.Player)
+    this.scene.matter.setCollisionCategory([this.matterBody], CollisionCategory.Player)
+    this.scene.matter.setCollidesWith([this.matterBody], [CollisionCategory.StaticEnvironment ,CollisionCategory.WorldBounds, CollisionCategory.DamageArea])
   }
 
   public get view() {

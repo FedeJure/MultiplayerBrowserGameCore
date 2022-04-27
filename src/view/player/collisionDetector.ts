@@ -1,26 +1,23 @@
 import { BodyType } from "matter";
+import { Scene } from "phaser";
 import { Observable, Subject } from "rxjs";
-import {
-  CollisionCategory,
-  CollisionGroups,
-} from "../../domain/collisions/collisionTypes";
 
 const LABEL = "CollisionDetector";
 
 export class CollisionDetector {
   private activeCollisions: { [key: number]: true } = {};
   private activeCollisionsCount: number = 0;
-  private readonly _onCollideChange: Subject<boolean> = new Subject<boolean>();
-  constructor(public readonly body: BodyType) {
+  private readonly _onCollideChange: Subject<boolean> = new Subject();
+  private readonly _onCollidesStart: Subject<BodyType> = new Subject();
+  private readonly _onCollidesEnd: Subject<BodyType> = new Subject();
+  constructor(
+    scene: Scene,
+    public readonly body: BodyType
+  ) {
     body.isSensor = true;
     body.label = LABEL;
     body.onCollideCallback = this.handleCollisionStart.bind(this);
     body.onCollideEndCallback = this.handleCollisionEnd.bind(this);
-    body.collisionFilter = {
-      category: CollisionCategory.Player,
-      group: CollisionGroups.Player,
-      mask: CollisionCategory.StaticEnvironment,
-    };
   }
 
   private handleCollisionStart(
@@ -28,6 +25,8 @@ export class CollisionDetector {
   ) {
     this.addColision(pair.bodyA.id);
     this.addColision(pair.bodyB.id);
+    const otherBody = pair.bodyA.id === this.body.id ? pair.bodyB : pair.bodyA;
+    this._onCollidesStart.next(otherBody);
   }
 
   private handleCollisionEnd(
@@ -35,6 +34,8 @@ export class CollisionDetector {
   ) {
     this.removeCollision(pair.bodyA.id);
     this.removeCollision(pair.bodyB.id);
+    const otherBody = pair.bodyA.id === this.body.id ? pair.bodyB : pair.bodyA;
+    this._onCollidesEnd.next(otherBody);
   }
 
   private addColision(id: number) {
@@ -53,7 +54,23 @@ export class CollisionDetector {
     }
   }
 
+  disable() {
+    // Sleeping.set(this.body, true)
+  }
+
+  enable() {
+    // Sleeping.set(this.body, false)
+  }
+
   public get onCollideChange(): Observable<boolean> {
     return this._onCollideChange;
+  }
+
+  public get onCollideStart(): Observable<BodyType> {
+    return this._onCollidesStart;
+  }
+
+  public get onCollideEnd(): Observable<BodyType> {
+    return this._onCollidesEnd;
   }
 }

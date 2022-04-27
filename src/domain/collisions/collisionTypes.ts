@@ -2,6 +2,8 @@ export enum CollisionCategory {
   Player = 2,
   StaticEnvironment = 4,
   WorldBounds = 6,
+  DamageArea = 8,
+  ReceiveDamageArea = 10
 }
 
 export enum CollisionType {

@@ -2,6 +2,7 @@ import { BodyType, Vector } from "matter";
 import { GameObjects, Scene } from "phaser";
 import { Observable } from "rxjs";
 import { AnimationCode, AnimationLayer } from "./animations/animations";
+import { CombatCollisionResolver } from "./player/combat/combatCollisionResolver";
 
 export interface PlayerView {
   body: {
@@ -26,4 +27,5 @@ export interface PlayerView {
   get x(): number;
   get y(): number;
   setDisplayName(name: string);
+  combatCollisionResolver: CombatCollisionResolver
 }
