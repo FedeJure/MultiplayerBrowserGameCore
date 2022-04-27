@@ -29,37 +29,40 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
         });
       }
 
-      const x =
-        this.player.state.side === Side.RIGHT
-          ? this.player.state.position.x
-          : this.player.state.position.x - this.range;
-      const y = this.player.state.position.y;
-
       this.player.updateState({
         attacking: true,
       });
       this.player.view.scene.time.delayedCall(this.duration, () => {
         this.player.updateState({ attacking: false });
       });
+
+      const x =
+        this.player.state.position.x -
+        this.player.view.width / 2 -
+        (this.player.state.side === Side.RIGHT ? 0 : this.range);
+      const y = this.player.state.position.y;
       const targets = this.player.view.combatCollisionResolver.getTargetsOnArea(
         x,
         y,
-        this.range + this.player.view.width,
+        this.player.view.width + this.range,
         this.player.view.height / 2
       );
       targets
-      .filter(t => t.type === AttackTargetType.PLAYER && t.id !== this.player.info.id)
-      .forEach(t => {
-        const player = this.inGamePlayersRepository.get(t.id)
-        if (!player) return
-        player.receiveAttack(this.getAttackResult())
-      })
+        .filter(
+          (t) =>
+            t.type === AttackTargetType.PLAYER && t.id !== this.player.info.id
+        )
+        .forEach((t) => {
+          const player = this.inGamePlayersRepository.get(t.id);
+          if (!player) return;
+          player.receiveAttack(this.getAttackResult());
+        });
     }
   }
 
   getAttackResult(): CombatResult {
     return {
-      damage: 1
-    }
+      damage: 10,
+    };
   }
 }

@@ -10,7 +10,7 @@ export class ClientPlayer implements Player {
   constructor(
     protected _info: PlayerInfo,
     protected _state: PlayerState,
-    protected _view: PlayerView
+    protected _view: PlayerView,
   ) {}
   receiveAttack(attack: CombatResult) {}
 
@@ -45,5 +45,6 @@ export class ClientPlayer implements Player {
     this.view.setPosition(this.state.position.x, this.state.position.y);
     this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);
     this.view.lookToLeft(this.state.side === Side.LEFT);
+    this.view.setLifePercent((this.state.life / 100) * 100);
   }
 }

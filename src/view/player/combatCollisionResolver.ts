@@ -19,10 +19,27 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
     height: number
   ): AttackTarget[] {
     const bodies = this.scene.matter.intersectRect(x, y, width, height);
+    // this.drawDebugRectangle(x, y, width, height);
     return bodies
       .map((body) =>
         this.attackTargetRepository.get((body as BodyType).id.toString())
       )
       .filter((target) => target !== undefined) as AttackTarget[];
+  }
+
+  private drawDebugRectangle(
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) {
+    const rect = this.scene.add.rectangle(
+      x + width / 2,
+      y,
+      width,
+      height,
+      0xff0000
+    );
+    this.scene.time.delayedCall(500, () => rect.destroy());
   }
 }

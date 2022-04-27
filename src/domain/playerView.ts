@@ -31,4 +31,5 @@ export interface PlayerView {
   get y(): number;
   setDisplayName(name: string);
   combatCollisionResolver: CombatCollisionResolver
+  setLifePercent(percent: number)
 }

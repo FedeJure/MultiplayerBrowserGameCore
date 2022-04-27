@@ -68,4 +68,8 @@ export class LocalClientPlayer extends ClientPlayer {
     this._animationSystem.processAnimation(this);
     super.update(time, delta);
   }
+
+  receiveAttack(attack: CombatResult) {
+    this._combatSystem.receiveAttack(attack);
+  }
 }

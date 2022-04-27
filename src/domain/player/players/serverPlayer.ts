@@ -68,8 +68,4 @@ export class ServerPlayer extends LocalClientPlayer {
   get connection(): ClientConnection {
     return this._connection;
   }
-
-  receiveAttack(attack: CombatResult) {
-      this._combatSystem.receiveAttack(attack)
-  }
 }

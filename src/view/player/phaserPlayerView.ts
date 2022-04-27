@@ -1,9 +1,8 @@
 import { BodyType } from "matter";
 import { GameObjects, Physics } from "phaser";
-import { Observable, Subject } from "rxjs";
+import { Observable } from "rxjs";
 import {
   CollisionCategory,
-  CollisionGroups,
 } from "../../domain/collisions/collisionTypes";
 import { PlayerView } from "../../domain/playerView";
 import { CollisionDetector } from "./collisionDetector";
@@ -32,6 +31,7 @@ export class PhaserPlayerView
     super(view.scene, x, y, [view]);
     this.setName("Player View");
     this.setSize(width, height);
+    this.setDisplaySize(width, height)
     this.scene.add.existing(this);
     this._view = view;
     this.scene.add.existing(this._view);
@@ -42,20 +42,6 @@ export class PhaserPlayerView
     this._view.displayOriginY = 0;
     this._view.setPosition(0, 0);
 
-    const colDetectorBody = this.scene.matter.bodies.rectangle(
-      this.x,
-      this.y + this.height / 2 + 1,
-      this.width / 2,
-      2
-    );
-    this.scene.matter.setCollisionCategory(
-      [colDetectorBody],
-      CollisionCategory.Player
-    );
-    this.scene.matter.setCollidesWith(
-      [colDetectorBody],
-      CollisionCategory.StaticEnvironment
-    );
     this.groundCollisionDetector = new CollisionDetector(
       this.scene,
       this.scene.matter.bodies.rectangle(
@@ -68,6 +54,8 @@ export class PhaserPlayerView
     this.setDepth(ExistentDepths.GROUND);
 
     this.initCollisions();
+  }
+  setLifePercent(percent: number) {
   }
 
   playAnimation(anim: AnimationCode, animLayer: AnimationLayer) {}

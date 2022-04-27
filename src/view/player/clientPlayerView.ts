@@ -49,4 +49,8 @@ export class ClientPlayerView extends PhaserPlayerView {
   setDisplayName(name: string): void {
     this.hud.setDisplayName(name);
   }
+
+  setLifePercent(percent: number): void {
+      this.hud.setLifePercent(percent)
+  }
 }

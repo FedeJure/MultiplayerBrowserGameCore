@@ -51,7 +51,11 @@ export class ClientPresenterProvider {
         player
       ),
       new PlayerAngleFixDelegator(player),
-      new PlayerStateUpdaterDelegator(player)
+      new PlayerStateUpdaterDelegator(player),
+      new PlayerRemoteMovementDelegator(
+        player,
+        ClientProvider.serverConnection
+      ),
     ]);
   }
   forPlayer(player: Player, view: GameObjects.GameObject): void {
