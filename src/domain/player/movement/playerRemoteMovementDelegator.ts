@@ -1,7 +1,6 @@
 import { Delegator } from "../../delegator";
 import { Disposer } from "../../disposer";
 import { ServerConnection } from "../../serverConnection";
-import { Side } from "../../side";
 import { Player } from "../players/player";
 
 export class PlayerRemoteMovementDelegator implements Delegator {
@@ -24,15 +23,5 @@ export class PlayerRemoteMovementDelegator implements Delegator {
   }
 
   update(time: number, delta: number): void {
-    const view = this.player.view;
-    view.lookToLeft(this.player.state.side === Side.LEFT);
-    view.setPosition(
-      this.player.state.position.x,
-      this.player.state.position.y
-    );
-    view.setVelocity(
-      this.player.state.velocity.x,
-      this.player.state.velocity.y
-    );
   }
 }

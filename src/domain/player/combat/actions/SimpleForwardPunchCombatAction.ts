@@ -9,6 +9,7 @@ import { CombatResult } from "../combatResult";
 
 export class SimpleForwardPunchCombatAction implements CombatAction {
   private readonly range = 20;
+  private readonly duration = 400;
   constructor(
     private inGamePlayersRepository: SimpleRepository<Player>,
     private player: LocalClientPlayer | ServerPlayer
@@ -37,7 +38,7 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
       this.player.updateState({
         attacking: true,
       });
-      this.player.view.scene.time.delayedCall(450, () => {
+      this.player.view.scene.time.delayedCall(this.duration, () => {
         this.player.updateState({ attacking: false });
       });
       const targets = this.player.view.combatCollisionResolver.getTargetsOnArea(

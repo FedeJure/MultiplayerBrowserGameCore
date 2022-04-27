@@ -19,5 +19,5 @@ export const DefaultPlayerState: PlayerState = {
   currentRooms: [],
   jumping: false,
   attacking: false,
-  combatAnim: undefined
+  combatAnim: AnimationCode.EMPTY_ANIMATION
 };

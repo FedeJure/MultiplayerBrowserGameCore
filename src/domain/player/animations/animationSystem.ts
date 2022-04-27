@@ -29,6 +29,6 @@ export class AnimationSystem {
 
   private getAttackAnimation(player: LocalClientPlayer | ServerPlayer) {
     if (player.state.attacking) return AnimationCode.BASIC_ATTACK
-    return undefined
+    return AnimationCode.EMPTY_ANIMATION
   }
 }

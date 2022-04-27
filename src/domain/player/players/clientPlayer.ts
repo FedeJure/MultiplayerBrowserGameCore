@@ -10,7 +10,7 @@ export class ClientPlayer implements Player {
   constructor(
     protected _info: PlayerInfo,
     protected _state: PlayerState,
-    protected _view: PlayerView,
+    protected _view: PlayerView
   ) {}
   receiveAttack(attack: CombatResult) {}
 
