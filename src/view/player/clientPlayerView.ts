@@ -25,7 +25,6 @@ export class ClientPlayerView extends PhaserPlayerView {
     const factor = currentSize.y / height;
     spine.setDisplaySize(currentSize.x / factor + 10, height + 10);
     spine.setSize(width, height);
-    spine.setOffset(0, 10);
     const viewAsSprite = spine as unknown as Physics.Matter.Sprite;
     super(viewAsSprite, x, y, height, width, combatCollisionResolver);
 
@@ -40,15 +39,19 @@ export class ClientPlayerView extends PhaserPlayerView {
     loop: boolean = true,
     duration?: number
   ) {
-    
     if (duration) {
       const animation = this.spine.findAnimation(anim);
-      if (animation) animation.duration = duration / 1000
+      if (animation) animation.duration = duration / 1000;
     }
+    const currentAnim = this.spine.getCurrentAnimation(layer)
+    if (anim === AnimationCode.EMPTY_ANIMATION && currentAnim && currentAnim.name !== anim)
+      this.spine.setToSetupPose();
 
     if (anim === AnimationCode.EMPTY_ANIMATION) {
       this.spine.clearTrack(layer);
-    } else this.spine.setAnimation(layer, anim, loop, true);
+    } else {
+      this.spine.setAnimation(layer, anim, loop, true);
+    }
   }
 
   setDisplayName(name: string): void {
