@@ -1,3 +1,4 @@
 export interface CombatResult {
-    damage: number
+    damage: number,
+    from?: {x: number, y: number}
 }

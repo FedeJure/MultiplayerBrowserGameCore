@@ -19,7 +19,6 @@ export class ClientPlayerView extends PhaserPlayerView {
     height: number,
     width: number,
     combatCollisionResolver: PhaserCombatCollisionResolver
-
   ) {
     const spine = scene.add.spine(x, y, "hero", AnimationCode.IDLE, true);
     const currentSize: Vector = spine.getBounds().size;
@@ -38,12 +37,18 @@ export class ClientPlayerView extends PhaserPlayerView {
   playAnimation(
     anim: AnimationCode,
     layer: AnimationLayer,
-    loop: boolean = true
+    loop: boolean = true,
+    duration?: number
   ) {
-    if (anim === AnimationCode.EMPTY_ANIMATION) {
-      this.spine.clearTrack(layer)
+    
+    if (duration) {
+      const animation = this.spine.findAnimation(anim);
+      if (animation) animation.duration = duration / 1000
     }
-    else this.spine.setAnimation(layer, anim, loop, true);
+
+    if (anim === AnimationCode.EMPTY_ANIMATION) {
+      this.spine.clearTrack(layer);
+    } else this.spine.setAnimation(layer, anim, loop, true);
   }
 
   setDisplayName(name: string): void {
@@ -51,6 +56,6 @@ export class ClientPlayerView extends PhaserPlayerView {
   }
 
   setLifePercent(percent: number): void {
-      this.hud.setLifePercent(percent)
+    this.hud.setLifePercent(percent);
   }
 }

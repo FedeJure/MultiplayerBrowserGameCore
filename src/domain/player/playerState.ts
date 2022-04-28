@@ -1,6 +1,7 @@
 import { AnimationCode } from "../animations/animations";
 import { currentMapState } from "../environment/currentMapState";
 import { Side } from "../side";
+import { AnimationDto } from "./animations/AnimationDto";
 
 export interface PlayerState {
   readonly life: number;
@@ -13,8 +14,8 @@ export interface PlayerState {
   readonly grounded: boolean;
   readonly side: Side;
   readonly inputNumber: number;
-  readonly movementAnim: AnimationCode;
-  readonly combatAnim: AnimationCode;
+  readonly movementAnim: AnimationDto;
+  readonly combatAnim: AnimationDto;
   readonly map: currentMapState;
   readonly currentRooms: string[]
   readonly jumping: boolean

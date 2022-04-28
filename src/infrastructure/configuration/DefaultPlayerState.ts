@@ -14,10 +14,10 @@ export const DefaultPlayerState: PlayerState = {
   grounded: false,
   side: Side.RIGHT,
   inputNumber: 1,
-  movementAnim: AnimationCode.IDLE,
+  movementAnim: { name: AnimationCode.IDLE },
   map: { mapId: DefaultGameConfiguration.initialMapId },
   currentRooms: [],
   jumping: false,
   attacking: false,
-  combatAnim: AnimationCode.EMPTY_ANIMATION
+  combatAnim: { name: AnimationCode.EMPTY_ANIMATION },
 };

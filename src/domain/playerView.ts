@@ -9,15 +9,20 @@ export interface PlayerView {
     position: { x: number; y: number };
     velocity: { x: number; y: number };
   };
-  height:number
-  width: number
-  getBounds(): { x: number, y:number, width: number, height: number}
+  height: number;
+  width: number;
+  getBounds(): { x: number; y: number; width: number; height: number };
   setVelocity(x: number, y: number): void;
   setPosition(x: number, y: number): void;
   setScale(x: number, y: number): void;
   setAngle(degreeAngle: number): void;
   lookToLeft(value: boolean): void;
-  playAnimation(anim: AnimationCode, layer?: AnimationLayer, loop?: boolean): void;
+  playAnimation(
+    anim: AnimationCode,
+    layer?: AnimationLayer,
+    loop?: boolean,
+    duration?: number
+  ): void;
   startFollowWithCam(): void;
   scene: Scene;
   destroy(): void;
@@ -30,6 +35,6 @@ export interface PlayerView {
   get x(): number;
   get y(): number;
   setDisplayName(name: string);
-  combatCollisionResolver: CombatCollisionResolver
-  setLifePercent(percent: number)
+  combatCollisionResolver: CombatCollisionResolver;
+  setLifePercent(percent: number);
 }

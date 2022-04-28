@@ -10,7 +10,7 @@ export class ClientPlayer implements Player {
   constructor(
     protected _info: PlayerInfo,
     protected _state: PlayerState,
-    protected _view: PlayerView,
+    protected _view: PlayerView
   ) {}
   receiveAttack(attack: CombatResult) {}
 
@@ -36,11 +36,17 @@ export class ClientPlayer implements Player {
   }
 
   update(time: number, delta: number) {
-    this.view.playAnimation(this.state.movementAnim, AnimationLayer.MOVEMENT);
     this.view.playAnimation(
-      this.state.combatAnim ?? AnimationCode.EMPTY_ANIMATION,
+      this.state.movementAnim.name,
+      AnimationLayer.MOVEMENT,
+      true,
+      this.state.movementAnim.duration
+    );
+    this.view.playAnimation(
+      this.state.combatAnim.name,
       AnimationLayer.COMBAT,
-      false
+      false,
+      this.state.combatAnim.duration
     );
     this.view.setPosition(this.state.position.x, this.state.position.y);
     this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);

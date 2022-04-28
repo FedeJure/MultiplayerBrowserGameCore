@@ -6,10 +6,10 @@ import { SimpleRepository } from "../../../repository";
 import { Side } from "../../../side";
 import { AttackTargetType } from "../../../combat/attackTargetType";
 import { CombatResult } from "../combatResult";
+import { AnimationCode } from "../../../animations/animations";
 
 export class SimpleForwardPunchCombatAction implements CombatAction {
   private readonly range = 20;
-  private readonly duration = 400;
   constructor(
     private inGamePlayersRepository: SimpleRepository<Player>,
     private player: LocalClientPlayer | ServerPlayer
@@ -28,12 +28,21 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
           velocity: { x: 0, y: 0 },
         });
       }
+      const attackDuration = 1000 / this.player.stats.basicAttackSpeed;
 
       this.player.updateState({
         attacking: true,
+        combatAnim: {
+          name: AnimationCode.BASIC_ATTACK,
+          duration: attackDuration,
+        },
       });
-      this.player.view.scene.time.delayedCall(this.duration, () => {
-        this.player.updateState({ attacking: false });
+
+      this.player.view.scene.time.delayedCall(attackDuration, () => {
+        this.player.updateState({
+          attacking: false,
+          combatAnim: { name: AnimationCode.EMPTY_ANIMATION },
+        });
       });
 
       const x =
@@ -62,7 +71,7 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
 
   getAttackResult(): CombatResult {
     return {
-      damage: 10,
+      damage: this.player.stats.meleeDamage,
     };
   }
 }
