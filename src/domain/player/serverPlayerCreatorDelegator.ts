@@ -171,7 +171,6 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       playerState,
       view,
       new MovementSystem(),
-      new AnimationSystem(),
       input,
       stats ?? DefaultPlayerStats,
       this.inGamePlayersRepository,

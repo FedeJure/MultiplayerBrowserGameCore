@@ -19,7 +19,7 @@ export interface PlayerView {
   lookToLeft(value: boolean): void;
   playAnimation(
     anim: AnimationCode,
-    layer?: AnimationLayer,
+    layer: AnimationLayer,
     loop?: boolean,
     duration?: number
   ): void;

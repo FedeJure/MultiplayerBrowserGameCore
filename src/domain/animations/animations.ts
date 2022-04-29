@@ -6,10 +6,16 @@ export enum AnimationCode {
   SECOND_JUMP = "jump",
   FALLING = "fall",
   BASIC_ATTACK = "attack",
-  EMPTY_ANIMATION = 'empty'
+  EMPTY_ANIMATION = 'empty',
+  TAKING_DAMAGE = 'takingDamage'
 }
 
 export enum AnimationLayer {
   MOVEMENT = 0,
   COMBAT = 1 
 }
+
+export const AnimationLayers = [
+  AnimationLayer.COMBAT,
+  AnimationLayer.MOVEMENT
+]

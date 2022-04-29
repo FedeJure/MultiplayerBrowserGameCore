@@ -1,6 +1,8 @@
-import { AnimationCode } from "../../animations/animations";
+import { AnimationCode, AnimationLayer } from "../../animations/animations";
 
 export interface AnimationDto {
     name: AnimationCode,
-    duration?: number
+    layer: AnimationLayer
+    duration?: number,
+    loop?: boolean
 }

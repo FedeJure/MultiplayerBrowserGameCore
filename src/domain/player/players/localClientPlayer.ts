@@ -14,6 +14,7 @@ import { Player } from "./player";
 
 export class LocalClientPlayer extends ClientPlayer {
   protected _combatSystem: CombatSystem;
+  protected _animationSystem: AnimationSystem
   constructor(
     _info: PlayerInfo,
     _state: PlayerState,
@@ -21,10 +22,10 @@ export class LocalClientPlayer extends ClientPlayer {
     inGamePlayersRepository: SimpleRepository<Player>,
     protected _stats: PlayerStats,
     private _movementSystem: MovementSystem,
-    private _animationSystem: AnimationSystem,
     private _input: PlayerInput
   ) {
     super(_info, _state, _view);
+    this._animationSystem = new AnimationSystem(this)
     this._combatSystem = new CombatSystem(this, [
       new SimpleForwardPunchCombatAction(inGamePlayersRepository, this),
     ]);
@@ -62,6 +63,10 @@ export class LocalClientPlayer extends ClientPlayer {
     return this._stats;
   }
 
+  get animSystem() {
+    return this._animationSystem
+  }
+
   update(time: number, delta: number) {
     this._combatSystem.processCombat(delta);
     this._movementSystem.processMovement(this, delta);
@@ -72,4 +77,5 @@ export class LocalClientPlayer extends ClientPlayer {
   receiveAttack(attack: CombatResult) {
     this._combatSystem.receiveAttack(attack);
   }
+
 }

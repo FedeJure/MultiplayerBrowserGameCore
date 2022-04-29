@@ -6,7 +6,7 @@ import { SimpleRepository } from "../../../repository";
 import { Side } from "../../../side";
 import { AttackTargetType } from "../../../combat/attackTargetType";
 import { CombatResult } from "../combatResult";
-import { AnimationCode } from "../../../animations/animations";
+import { AnimationCode, AnimationLayer } from "../../../animations/animations";
 
 export class SimpleForwardPunchCombatAction implements CombatAction {
   private readonly range = 20;
@@ -32,16 +32,17 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
 
       this.player.updateState({
         attacking: true,
-        combatAnim: {
-          name: AnimationCode.BASIC_ATTACK,
-          duration: attackDuration,
-        },
       });
+      this.player.animSystem.executeAnimation(
+        AnimationCode.BASIC_ATTACK,
+        AnimationLayer.COMBAT,
+        false,
+        attackDuration
+      );
 
       this.player.view.scene.time.delayedCall(attackDuration, () => {
         this.player.updateState({
           attacking: false,
-          combatAnim: { name: AnimationCode.EMPTY_ANIMATION },
         });
       });
 

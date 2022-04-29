@@ -8,9 +8,7 @@ import { PlayerInfo } from "../playerInfo";
 import { PlayerState } from "../playerState";
 import { PlayerInput } from "../playerInput";
 import { MovementSystem } from "../movement/movementSystem";
-import { AnimationSystem } from "../animations/animationSystem";
 import { PlayerStats } from "../playerStats";
-import { CombatResult } from "../combat/combatResult";
 import { Player } from "./player";
 
 export class ServerPlayer extends LocalClientPlayer {
@@ -23,7 +21,6 @@ export class ServerPlayer extends LocalClientPlayer {
     state: PlayerState,
     view: PlayerView,
     movementSystem: MovementSystem,
-    animationSystem: AnimationSystem,
     input: PlayerInput,
     stats: PlayerStats,
     inGamePlayersRepository: SimpleRepository<Player>,
@@ -38,7 +35,6 @@ export class ServerPlayer extends LocalClientPlayer {
       inGamePlayersRepository,
       stats,
       movementSystem,
-      animationSystem,
       input
     );
   }

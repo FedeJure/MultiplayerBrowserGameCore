@@ -127,7 +127,6 @@ export class ClientConnectionDelegator implements Delegator {
       this.inGamePlayersRepository,
       stats ?? DefaultPlayerStats,
       movementSystem,
-      new AnimationSystem(),
       input
     );
     const inventory = new ClientInventoryView(this.scene, input);

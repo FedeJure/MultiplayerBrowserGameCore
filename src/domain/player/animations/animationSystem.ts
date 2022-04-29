@@ -1,12 +1,29 @@
-import { AnimationCode } from "../../animations/animations";
+import { AnimationCode, AnimationLayer } from "../../animations/animations";
 import { LocalClientPlayer } from "../players/localClientPlayer";
 import { ServerPlayer } from "../players/serverPlayer";
+import { AnimationDto } from "./AnimationDto";
 
 export class AnimationSystem {
+  private currentAnimPerLayer: Map<
+    AnimationLayer,
+    { anim: AnimationDto; timeout: NodeJS.Timeout }
+  > = new Map();
+
+  constructor(private player: LocalClientPlayer) {}
   processAnimation(player: LocalClientPlayer | ServerPlayer) {
     player.updateState({
-      movementAnim: { name: this.getMovementAnimation(player) },
+      animations: [
+        ...player.state.animations.filter(this.filterCondition),
+        {
+          name: this.getMovementAnimation(player),
+          layer: AnimationLayer.MOVEMENT,
+        },
+      ],
     });
+  }
+
+  private filterCondition(anim: AnimationDto) {
+    return anim.layer !== AnimationLayer.MOVEMENT;
   }
 
   private getMovementAnimation(player: LocalClientPlayer | ServerPlayer) {
@@ -28,4 +45,42 @@ export class AnimationSystem {
     return AnimationCode.IDLE;
   }
 
+  executeAnimation(
+    anim: AnimationCode,
+    layer: AnimationLayer,
+    loop?: boolean,
+    duration?: number
+  ) {
+    const currentAnim = this.currentAnimPerLayer.get(layer);
+    if (currentAnim) {
+      clearTimeout(currentAnim.timeout);
+      this.currentAnimPerLayer.delete(layer);
+    }
+
+    const newAnim = {
+      name: anim,
+      layer,
+      loop,
+      duration,
+      executionTime: Date.now(),
+    };
+    this.currentAnimPerLayer.set(layer, {
+      anim: newAnim,
+      timeout: setTimeout(() => {
+        this.player.updateState({
+          animations: [
+            ...this.player.state.animations.filter((a) => a.layer !== layer),
+            { name: AnimationCode.EMPTY_ANIMATION, layer },
+          ],
+        });
+      }, duration),
+    });
+
+    this.player.updateState({
+      animations: [
+        ...this.player.state.animations.filter((a) => a.layer !== layer),
+        newAnim,
+      ],
+    });
+  }
 }
