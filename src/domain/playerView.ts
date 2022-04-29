@@ -1,13 +1,14 @@
-import { BodyType, Vector } from "matter";
+import { BodyType } from "matter";
 import { GameObjects, Scene } from "phaser";
 import { Observable } from "rxjs";
 import { AnimationCode, AnimationLayer } from "./animations/animations";
 import { CombatCollisionResolver } from "./player/combat/combatCollisionResolver";
+import { Vector } from "./vector";
 
 export interface PlayerView {
   body: {
-    position: { x: number; y: number };
-    velocity: { x: number; y: number };
+    position: Vector;
+    velocity: Vector;
   };
   height: number;
   width: number;

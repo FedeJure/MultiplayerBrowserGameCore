@@ -1,8 +1,9 @@
+import { Vector } from "../vector";
 import { EnvironmentObjectVariant } from "./environmentObjectVariant";
 
 export interface EnvironmentObject {
   id: number;
-  pivotOrigin: { x: number; y: number };
+  pivotOrigin: Vector;
   height: number;
   width: number;
   textureName: string;

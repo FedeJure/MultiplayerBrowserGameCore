@@ -1,5 +1,6 @@
 import { currentMapState } from "../environment/currentMapState";
 import { Side } from "../side";
+import { Vector } from "../vector";
 import { AnimationDto } from "./animations/AnimationDto";
 
 export interface PlayerState {
@@ -7,8 +8,8 @@ export interface PlayerState {
   readonly jumpsAvailable: number;
   readonly inInertia: boolean;
   readonly canMove: boolean;
-  readonly position: { x: number; y: number };
-  readonly velocity: { x: number; y: number };
+  readonly position: Vector;
+  readonly velocity: Vector;
   readonly canJump: boolean;
   readonly grounded: boolean;
   readonly side: Side;

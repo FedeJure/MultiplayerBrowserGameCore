@@ -1,7 +1,8 @@
+import { Vector } from "../vector"
 import { MapEnvironmentObject } from "./mapEnvironmentObject"
 
 export interface MapConfiguration {
-    singleMapSize: { x: number, y: number },
+    singleMapSize: Vector,
     patronSizeInPixels: number,
     mapLayers: MapLayer[],
     layerNames: {

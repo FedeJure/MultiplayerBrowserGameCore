@@ -2,12 +2,13 @@ import { PlayerInputRequestRepository } from "../../../infrastructure/repositori
 import { Delegator } from "../../delegator";
 import { Disposer } from "../../disposer";
 import { ServerConnection } from "../../serverConnection";
+import { Vector } from "../../vector";
 import { Player } from "../players/player";
 
 export class PlayerMovementValidationDelegator implements Delegator {
   private readonly disposer: Disposer = new Disposer();
   private lastInputValidated: number = 0;
-  private remotePosition: { x: number; y: number } = Phaser.Math.Vector2.ZERO;
+  private remotePosition: Vector = Phaser.Math.Vector2.ZERO;
 
   constructor(
     private readonly player: Player,
