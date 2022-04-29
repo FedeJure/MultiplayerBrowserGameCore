@@ -3,7 +3,6 @@ import { ServerPlayer } from "../players/serverPlayer";
 import { LocalClientPlayer } from "../players/localClientPlayer";
 import { CombatResult } from "./combatResult";
 import { AnimationCode, AnimationLayer } from "../../animations/animations";
-import { AnimationDto } from "../animations/AnimationDto";
 
 export class CombatSystem {
   constructor(

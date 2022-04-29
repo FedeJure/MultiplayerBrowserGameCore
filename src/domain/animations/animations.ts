@@ -14,8 +14,3 @@ export enum AnimationLayer {
   MOVEMENT = 0,
   COMBAT = 1 
 }
-
-export const AnimationLayers = [
-  AnimationLayer.COMBAT,
-  AnimationLayer.MOVEMENT
-]

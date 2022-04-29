@@ -3,7 +3,6 @@ import { PlayerInfo } from "../playerInfo";
 import { Player } from "./player";
 import { PlayerState } from "../playerState";
 import { Side } from "../../side";
-import { AnimationCode, AnimationLayer } from "../../animations/animations";
 import { CombatResult } from "../combat/combatResult";
 
 export class ClientPlayer implements Player {

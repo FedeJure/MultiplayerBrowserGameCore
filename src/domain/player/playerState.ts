@@ -1,4 +1,3 @@
-import { AnimationCode } from "../animations/animations";
 import { currentMapState } from "../environment/currentMapState";
 import { Side } from "../side";
 import { AnimationDto } from "./animations/AnimationDto";
