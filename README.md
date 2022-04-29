@@ -43,3 +43,10 @@ At the moment there are two kind of assets supported: `Spine` and `Atlas`.
 
 *   `Spine`: Will be loaded like a separated object and can have all the animations you want
 *   (WIP) `Atlas`: This is for object with no animations (mostly environment decorations) and will use the atlas system, which will load a single atlas (preferably one single atlas per map) and use the texture saved on the db object inside that atlas.
+
+# Character
+
+## Animations
+
+* All the character spine models must have all the animations existing on `AnimationCode` enum.
+* The `AnimationLayer` enum exists to perform multiple animations at the same time, thats why is prefferible to make animations that uses only the necessary bones
