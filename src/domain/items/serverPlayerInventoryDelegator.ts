@@ -29,8 +29,7 @@ export class ServerPlayerInventoryDelegator implements Delegator {
           ev.callback(GameEvents.ITEM_DETAILS_RESPONSE.getEvent(items));
         });
         const inventory = await this.inventoryRepository.get(player.info.id);
-
-        connection.sendInventoryEvent(inventory ?? DefaultPlayerInventoryDto);
+        connection.sendInventoryEvent(inventory || DefaultPlayerInventoryDto);
       } catch (error: any) {
         Log("ServerPlayerInventoryDelegator [Error]:  ", error);
       }

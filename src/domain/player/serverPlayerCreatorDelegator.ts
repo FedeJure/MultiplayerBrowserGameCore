@@ -65,6 +65,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
           foundedMap,
           neighborMaps
         );
+        this.inGamePlayersRepository.save(player.info.id, player);
 
         if (!foundedMap || !neighborMaps) return;
 
@@ -178,7 +179,6 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     connection.setPlayerId(player.info.id);
     this.presenterProvider.forPlayer(view, player);
 
-    this.inGamePlayersRepository.save(player.info.id, player);
     return player;
   }
 }

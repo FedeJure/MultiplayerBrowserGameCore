@@ -12,7 +12,7 @@ export const LoadServerRepositoriesWithMockData = async () => {
   }
 
   // Load existent items
-  await ServerProvider.itemsRepository.save("1",{
+  await ServerProvider.itemsRepository.save("1", {
     id: "1",
     types: [],
     icon: "ui/testItem.png",
@@ -20,7 +20,7 @@ export const LoadServerRepositoriesWithMockData = async () => {
     name: "Default Test Item",
     detail: "This is a Test item used only for testing purpose",
   });
-  await ServerProvider.itemsRepository.save("2",{
+  await ServerProvider.itemsRepository.save("2", {
     id: "2",
     types: [],
     icon: "ui/testItem.png",

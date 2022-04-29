@@ -52,7 +52,6 @@ function givenAState(): PlayerState {
 }
 
 function thenStateNotChange(state: PlayerState, finalState: PlayerState) {
-    console.log(state, finalState)
   expect(state.jumpsAvailable == finalState.jumpsAvailable).toBe(true);
   expect(state.position.x == finalState.position.x).toBe(true);
   expect(state.velocity.x == finalState.velocity.x).toBe(true);
