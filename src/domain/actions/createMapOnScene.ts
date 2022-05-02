@@ -4,7 +4,7 @@ import { ExistentDepths } from "../../view/existentDepths";
 import { CollisionCategory } from "../collisions/collisionTypes";
 
 import { ProcessedMap } from "../environment/processedMap";
-import { EnvironmentObjectFactory } from "../environmentObjects/environmentObjectFactory";
+import { EnvironmentObjectFactory } from "../environmentObjects/environmentobjectFactory";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
 
 export function createMapOnScene(
