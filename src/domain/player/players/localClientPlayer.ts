@@ -1,6 +1,8 @@
+import { AttackTargetType } from "../../combat/attackTargetType";
 import { PlayerView } from "../../playerView";
 import { SimpleRepository } from "../../repository";
 import { AnimationSystem } from "../animations/animationSystem";
+import { DefendCombatAction } from "../combat/actions/DefendCombatAction";
 import { SimpleForwardPunchCombatAction } from "../combat/actions/SimpleForwardPunchCombatAction";
 import { CombatResult } from "../combat/combatResult";
 import { CombatSystem } from "../combat/combatSystem";
@@ -14,20 +16,21 @@ import { Player } from "./player";
 
 export class LocalClientPlayer extends ClientPlayer {
   protected _combatSystem: CombatSystem;
-  protected _animationSystem: AnimationSystem
+  protected _animationSystem: AnimationSystem;
   constructor(
     _info: PlayerInfo,
     _state: PlayerState,
     _view: PlayerView,
-    inGamePlayersRepository: SimpleRepository<Player>,
+    private inGamePlayersRepository: SimpleRepository<Player>,
     protected _stats: PlayerStats,
     private _movementSystem: MovementSystem,
     private _input: PlayerInput
   ) {
     super(_info, _state, _view);
-    this._animationSystem = new AnimationSystem(this)
+    this._animationSystem = new AnimationSystem(this);
     this._combatSystem = new CombatSystem(this, [
-      new SimpleForwardPunchCombatAction(inGamePlayersRepository, this),
+      new SimpleForwardPunchCombatAction(this),
+      new DefendCombatAction(this)
     ]);
   }
 
@@ -64,7 +67,7 @@ export class LocalClientPlayer extends ClientPlayer {
   }
 
   get animSystem() {
-    return this._animationSystem
+    return this._animationSystem;
   }
 
   update(time: number, delta: number) {
@@ -78,4 +81,18 @@ export class LocalClientPlayer extends ClientPlayer {
     this._combatSystem.receiveAttack(attack);
   }
 
+  getPlayersOnArea(
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): Player[] {
+    return this.view.combatCollisionResolver
+      .getTargetsOnArea(x, y, width, height)
+      .filter(
+        (t) => t.type === AttackTargetType.PLAYER && t.id !== this.info.id
+      )
+      .map((t) => this.inGamePlayersRepository.get(t.id))
+      .filter((p) => p !== undefined) as Player[];
+  }
 }

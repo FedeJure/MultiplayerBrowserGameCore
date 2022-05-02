@@ -1,19 +1,12 @@
 import { CombatAction } from "./combatAction";
 import { LocalClientPlayer } from "../../players/localClientPlayer";
-import { ServerPlayer } from "../../players/serverPlayer";
-import { Player } from "../../players/player";
-import { SimpleRepository } from "../../../repository";
 import { Side } from "../../../side";
-import { AttackTargetType } from "../../../combat/attackTargetType";
 import { CombatResult } from "../combatResult";
 import { AnimationCode, AnimationLayer } from "../../../animations/animations";
 
 export class SimpleForwardPunchCombatAction implements CombatAction {
   private readonly range = 20;
-  constructor(
-    private inGamePlayersRepository: SimpleRepository<Player>,
-    private player: LocalClientPlayer | ServerPlayer
-  ) {}
+  constructor(private player: LocalClientPlayer) {}
 
   execute() {
     const { input } = this.player;
@@ -51,20 +44,14 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
         this.player.view.width / 2 -
         (this.player.state.side === Side.RIGHT ? 0 : this.range);
       const y = this.player.state.position.y;
-      const targets = this.player.view.combatCollisionResolver.getTargetsOnArea(
-        x,
-        y,
-        this.player.view.width + this.range,
-        this.player.view.height / 2
-      );
-      targets
-        .filter(
-          (t) =>
-            t.type === AttackTargetType.PLAYER && t.id !== this.player.info.id
+      this.player
+        .getPlayersOnArea(
+          x,
+          y,
+          this.player.view.width + this.range,
+          this.player.view.height / 2
         )
-        .forEach((t) => {
-          const player = this.inGamePlayersRepository.get(t.id);
-          if (!player) return;
+        .forEach((player) => {
           player.receiveAttack(this.getAttackResult());
         });
     }

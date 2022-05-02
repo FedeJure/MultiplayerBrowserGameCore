@@ -14,6 +14,10 @@ export class CombatSystem {
     this.actions.forEach((action) => action.execute());
   }
 
+  executeAttackAction(duration: number) {
+    
+  }
+
   receiveAttack(attack: CombatResult) {
     if (attack.damage > 0)
       this.player.animSystem.executeAnimation(

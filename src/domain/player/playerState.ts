@@ -2,6 +2,7 @@ import { currentMapState } from "../environment/currentMapState";
 import { Side } from "../side";
 import { Vector } from "../vector";
 import { AnimationDto } from "./animations/AnimationDto";
+import { CombatPlayerState } from "./playerCombatState";
 
 export interface PlayerState {
   readonly life: number;
@@ -19,4 +20,5 @@ export interface PlayerState {
   readonly currentRooms: string[]
   readonly jumping: boolean
   readonly attacking: boolean
+  readonly playerCombarState: CombatPlayerState
 }
