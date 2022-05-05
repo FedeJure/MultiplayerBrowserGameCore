@@ -13,5 +13,5 @@ export const DefaultPlayerStats: PlayerStats = {
     jumpPower: 0.4,
     maxJumps: 2,
     meleeDamage: 20,
-    basicAttackSpeed: 4,
+    basicAttackSpeed: 2.5
 }

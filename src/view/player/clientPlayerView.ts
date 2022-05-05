@@ -41,9 +41,10 @@ export class ClientPlayerView extends PhaserPlayerView {
   ) {
     if (duration) {
       const animation = this.spine.findAnimation(anim);
-      if (animation) animation.duration = duration / 1000;
+      if (animation) animation.duration = duration;
     }
     const currentAnim = this.spine.getCurrentAnimation(layer)
+    
     if (anim === AnimationCode.EMPTY_ANIMATION && currentAnim && currentAnim.name !== anim)
       this.spine.setToSetupPose();
 

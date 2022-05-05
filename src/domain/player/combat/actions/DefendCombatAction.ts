@@ -16,7 +16,8 @@ export class DefendCombatAction implements CombatAction {
       this.player.animSystem.executeAnimation(
         AnimationCode.DEFEND,
         AnimationLayer.COMBAT,
-        false
+        false,
+        attackDuration
       );
       this.player.updateState({ attacking: true });
       this.player.view.scene.time.delayedCall(attackDuration, () => {

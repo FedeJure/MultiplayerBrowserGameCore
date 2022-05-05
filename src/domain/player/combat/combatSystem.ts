@@ -5,20 +5,28 @@ import { CombatResult } from "./combatResult";
 import { AnimationCode, AnimationLayer } from "../../animations/animations";
 
 export class CombatSystem {
+  private attacking: boolean;
   constructor(
     private player: LocalClientPlayer | ServerPlayer,
     private actions: CombatAction[]
   ) {}
 
   processCombat(delta: number) {
-    for (const action of this.actions) {
-      if (action.execute()) return;
-    }
-    if (!this.player.state.attacking)
+    if (!this.attacking)
+      for (const action of this.actions) {
+        if (action.execute()) {
+          this.attacking = true;
+          return;
+        }
+      }
+    if (
+      !this.player.state.attacking) {
+      this.attacking = false;
       this.player.animSystem.executeAnimation(
         AnimationCode.EMPTY_ANIMATION,
         AnimationLayer.COMBAT
       );
+    }
   }
 
   executeAttackAction(duration: number) {}
@@ -28,11 +36,12 @@ export class CombatSystem {
       this.player.animSystem.executeAnimation(
         AnimationCode.TAKING_DAMAGE,
         AnimationLayer.COMBAT,
-        false
+        false,
+        200
       );
     this.player.view.scene.time.delayedCall(200, () => {
       this.player.animSystem.executeAnimation(
-        AnimationCode.TAKING_DAMAGE,
+        AnimationCode.EMPTY_ANIMATION,
         AnimationLayer.COMBAT,
         false
       );

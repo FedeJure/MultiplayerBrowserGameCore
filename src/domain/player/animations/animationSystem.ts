@@ -6,7 +6,7 @@ import { AnimationDto } from "./AnimationDto";
 export class AnimationSystem {
   private currentAnimPerLayer: Map<
     AnimationLayer,
-    { anim: AnimationDto; timeout?: NodeJS.Timeout }
+    { anim: AnimationDto }
   > = new Map();
 
   constructor(private player: LocalClientPlayer) {}
@@ -52,8 +52,7 @@ export class AnimationSystem {
     duration?: number
   ) {
     const currentAnim = this.currentAnimPerLayer.get(layer);
-    if (currentAnim && currentAnim.timeout) {
-      clearTimeout(currentAnim.timeout);
+    if (currentAnim) {
       this.currentAnimPerLayer.delete(layer);
     }
 

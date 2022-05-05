@@ -22,14 +22,14 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
         });
       }
       const attackDuration = 1000 / this.player.stats.basicAttackSpeed;
-
       this.player.updateState({
         attacking: true,
       });
       this.player.animSystem.executeAnimation(
         AnimationCode.BASIC_ATTACK,
         AnimationLayer.COMBAT,
-        false
+        false,
+        attackDuration
       );
 
       this.player.view.scene.time.delayedCall(attackDuration, () => {
