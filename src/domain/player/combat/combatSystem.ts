@@ -11,21 +11,32 @@ export class CombatSystem {
   ) {}
 
   processCombat(delta: number) {
-    this.actions.forEach((action) => action.execute());
+    for (const action of this.actions) {
+      if (action.execute()) return;
+    }
+    if (!this.player.state.attacking)
+      this.player.animSystem.executeAnimation(
+        AnimationCode.EMPTY_ANIMATION,
+        AnimationLayer.COMBAT
+      );
   }
 
-  executeAttackAction(duration: number) {
-    
-  }
+  executeAttackAction(duration: number) {}
 
   receiveAttack(attack: CombatResult) {
     if (attack.damage > 0)
       this.player.animSystem.executeAnimation(
         AnimationCode.TAKING_DAMAGE,
         AnimationLayer.COMBAT,
-        false,
-        200
+        false
       );
+    this.player.view.scene.time.delayedCall(200, () => {
+      this.player.animSystem.executeAnimation(
+        AnimationCode.TAKING_DAMAGE,
+        AnimationLayer.COMBAT,
+        false
+      );
+    });
     this.player.updateState({
       life: this.player.state.life - attack.damage,
     });

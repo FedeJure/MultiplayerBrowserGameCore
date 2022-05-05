@@ -29,8 +29,7 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
       this.player.animSystem.executeAnimation(
         AnimationCode.BASIC_ATTACK,
         AnimationLayer.COMBAT,
-        false,
-        attackDuration
+        false
       );
 
       this.player.view.scene.time.delayedCall(attackDuration, () => {
@@ -54,7 +53,9 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
         .forEach((player) => {
           player.receiveAttack(this.getAttackResult());
         });
+      return true;
     }
+    return false;
   }
 
   getAttackResult(): CombatResult {
