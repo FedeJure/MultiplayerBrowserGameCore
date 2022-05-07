@@ -4,7 +4,7 @@ import { ClientPresenterProvider } from "../../infrastructure/providers/clientPr
 import { ClientInventoryView } from "../../view/clientInventoryView";
 import { ClientPlayerView } from "../../view/player/clientPlayerView";
 import { Delegator } from "../delegator";
-import { LocalClientPlayer } from "../player/players/localClientPlayer";
+import { ControllablePlayer } from "../player/players/controllablePlayer";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { ServerConnection } from "../serverConnection";
 import { PlayerState } from "../player/playerState";
@@ -117,7 +117,7 @@ export class ClientConnectionDelegator implements Delegator {
     const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
 
     const movementSystem = new MovementSystem();
-    const player = new LocalClientPlayer(
+    const player = new ControllablePlayer(
       info,
       state,
       view,

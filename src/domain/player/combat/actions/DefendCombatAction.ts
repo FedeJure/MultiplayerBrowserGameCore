@@ -1,9 +1,9 @@
 import { AnimationCode, AnimationLayer } from "../../../animations/animations";
-import { LocalClientPlayer } from "../../players/localClientPlayer";
+import { ControllablePlayer } from "../../players/controllablePlayer";
 import { CombatAction } from "./combatAction";
 
 export class DefendCombatAction implements CombatAction {
-  constructor(private player: LocalClientPlayer) {}
+  constructor(private player: ControllablePlayer) {}
   execute() {
     const { input } = this.player;
     if (

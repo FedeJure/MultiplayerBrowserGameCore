@@ -1,13 +1,13 @@
 import { CombatAction } from "./actions/combatAction";
 import { ServerPlayer } from "../players/serverPlayer";
-import { LocalClientPlayer } from "../players/localClientPlayer";
+import { ControllablePlayer } from "../players/controllablePlayer";
 import { CombatResult } from "./combatResult";
 import { AnimationCode, AnimationLayer } from "../../animations/animations";
 
 export class CombatSystem {
   private attacking: boolean;
   constructor(
-    private player: LocalClientPlayer | ServerPlayer,
+    private player: ControllablePlayer | ServerPlayer,
     private actions: CombatAction[]
   ) {}
 

@@ -1,12 +1,12 @@
 import { CombatAction } from "./combatAction";
-import { LocalClientPlayer } from "../../players/localClientPlayer";
+import { ControllablePlayer } from "../../players/controllablePlayer";
 import { Side } from "../../../side";
 import { CombatResult } from "../combatResult";
 import { AnimationCode, AnimationLayer } from "../../../animations/animations";
 
 export class SimpleForwardPunchCombatAction implements CombatAction {
   private readonly range = 20;
-  constructor(private player: LocalClientPlayer) {}
+  constructor(private player: ControllablePlayer) {}
 
   execute() {
     const { input } = this.player;

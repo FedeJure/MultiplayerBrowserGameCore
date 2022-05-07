@@ -3,7 +3,7 @@ import { PlayerStateRepository } from "../../../infrastructure/repositories/play
 import { ClientConnection } from "../../clientConnection";
 import { PlayerView } from "../../playerView";
 import { AsyncRepository, SimpleRepository } from "../../repository";
-import { LocalClientPlayer } from "./localClientPlayer";
+import { ControllablePlayer } from "./controllablePlayer";
 import { PlayerInfo } from "../playerInfo";
 import { PlayerState } from "../playerState";
 import { PlayerInput } from "../playerInput";
@@ -11,7 +11,7 @@ import { MovementSystem } from "../movement/movementSystem";
 import { PlayerStats } from "../playerStats";
 import { Player } from "./player";
 
-export class ServerPlayer extends LocalClientPlayer {
+export class ServerPlayer extends ControllablePlayer {
   private _onStateChange: Subject<{
     state: PlayerState;
     change: Partial<PlayerState>;

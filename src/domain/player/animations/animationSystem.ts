@@ -1,5 +1,5 @@
 import { AnimationCode, AnimationLayer } from "../../animations/animations";
-import { LocalClientPlayer } from "../players/localClientPlayer";
+import { ControllablePlayer } from "../players/controllablePlayer";
 import { ServerPlayer } from "../players/serverPlayer";
 import { AnimationDto } from "./AnimationDto";
 
@@ -7,8 +7,8 @@ export class AnimationSystem {
   private currentAnimPerLayer: Map<AnimationLayer, { anim: AnimationDto }> =
     new Map();
 
-  constructor(private player: LocalClientPlayer) {}
-  processAnimation(player: LocalClientPlayer | ServerPlayer) {
+  constructor(private player: ControllablePlayer) {}
+  processAnimation(player: ControllablePlayer | ServerPlayer) {
     player.updateState({
       animations: [
         ...player.state.animations
@@ -34,7 +34,7 @@ export class AnimationSystem {
     );
   }
 
-  private getMovementAnimation(player: LocalClientPlayer | ServerPlayer) {
+  private getMovementAnimation(player: ControllablePlayer | ServerPlayer) {
     const { state } = player;
     const absVelx = Math.abs(state.velocity.x);
     const absVely = Math.abs(state.velocity.y);

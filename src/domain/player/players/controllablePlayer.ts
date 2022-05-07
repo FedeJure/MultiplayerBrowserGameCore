@@ -14,7 +14,7 @@ import { PlayerStats } from "../playerStats";
 import { ClientPlayer } from "./clientPlayer";
 import { Player } from "./player";
 
-export class LocalClientPlayer extends ClientPlayer {
+export class ControllablePlayer extends ClientPlayer {
   protected _combatSystem: CombatSystem;
   protected _animationSystem: AnimationSystem;
   constructor(

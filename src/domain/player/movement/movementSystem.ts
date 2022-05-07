@@ -1,9 +1,9 @@
 import { Side } from "../../side";
-import { LocalClientPlayer } from "../players/localClientPlayer";
+import { ControllablePlayer } from "../players/controllablePlayer";
 import { ServerPlayer } from "../players/serverPlayer";
 
 export class MovementSystem {
-  processMovement(player: LocalClientPlayer | ServerPlayer, deltaTime: number) {
+  processMovement(player: ControllablePlayer | ServerPlayer, deltaTime: number) {
     const { state, input } = player;
     let newVelX = player.view.velocity.x;
     let newVelY = player.view.velocity.y;
