@@ -2,6 +2,7 @@ import { BodyType } from "matter";
 import { GameObjects, Scene } from "phaser";
 import { Observable } from "rxjs";
 import { AnimationCode, AnimationLayer } from "./animations/animations";
+import { AnimationDto } from "./player/animations/AnimationDto";
 import { CombatCollisionResolver } from "./player/combat/combatCollisionResolver";
 import { Vector } from "./vector";
 
@@ -24,6 +25,7 @@ export interface PlayerView {
     loop?: boolean,
     duration?: number
   ): void;
+  playAnimations(anims: AnimationDto[])
   startFollowWithCam(): void;
   scene: Scene;
   destroy(): void;

@@ -7,7 +7,6 @@ export class DefendCombatAction implements CombatAction {
   execute() {
     const { input } = this.player;
     if (
-      !this.player.state.attacking &&
       input.defend &&
       !input.up &&
       !input.down
@@ -19,14 +18,7 @@ export class DefendCombatAction implements CombatAction {
         false,
         attackDuration
       );
-      this.player.updateState({ attacking: true });
-      this.player.view.scene.time.delayedCall(attackDuration, () => {
-        this.player.updateState({
-          attacking: false,
-        });
-      });
-      return true;
+      return { duration: attackDuration };
     }
-    return false;
   }
 }

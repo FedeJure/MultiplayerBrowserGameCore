@@ -1,8 +1,14 @@
 import { AnimationCode, AnimationLayer } from "../../animations/animations";
 
 export interface AnimationDto {
-    name: AnimationCode,
-    layer: AnimationLayer
-    duration?: number,
-    loop?: boolean
+  name: AnimationCode;
+  layer: AnimationLayer;
+  duration?: number;
+  loop?: boolean;
+  time?: number;
 }
+
+export const EmptyAnimations: AnimationDto[] = [
+  { name: AnimationCode.EMPTY_ANIMATION, layer: AnimationLayer.COMBAT },
+  { name: AnimationCode.EMPTY_ANIMATION, layer: AnimationLayer.MOVEMENT },
+];

@@ -3,10 +3,15 @@ import { Physics, Scene } from "phaser";
 import {
   AnimationCode,
   AnimationLayer,
+  AnimationLayers,
 } from "../../domain/animations/animations";
 import { PlayerIngameHud } from "./playerIngameHud";
 import { PhaserPlayerView } from "./phaserPlayerView";
 import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
+import {
+  AnimationDto,
+  EmptyAnimations,
+} from "../../domain/player/animations/AnimationDto";
 
 export class ClientPlayerView extends PhaserPlayerView {
   private readonly spine: SpineGameObject;
@@ -33,6 +38,14 @@ export class ClientPlayerView extends PhaserPlayerView {
     this.spine = spine;
   }
 
+  playAnimations(anims: AnimationDto[]): void {
+    EmptyAnimations.map(
+      (anim) => anims.find((a) => a.layer === anim.layer) ?? anim
+    ).forEach((anim) =>
+      this.playAnimation(anim.name, anim.layer, anim.loop, anim.duration)
+    );
+  }
+
   playAnimation(
     anim: AnimationCode,
     layer: AnimationLayer,
@@ -43,9 +56,13 @@ export class ClientPlayerView extends PhaserPlayerView {
       const animation = this.spine.findAnimation(anim);
       if (animation) animation.duration = duration;
     }
-    const currentAnim = this.spine.getCurrentAnimation(layer)
-    
-    if (anim === AnimationCode.EMPTY_ANIMATION && currentAnim && currentAnim.name !== anim)
+    const currentAnim = this.spine.getCurrentAnimation(layer);
+
+    if (
+      anim === AnimationCode.EMPTY_ANIMATION &&
+      currentAnim &&
+      currentAnim.name !== anim
+    )
       this.spine.setToSetupPose();
 
     if (anim === AnimationCode.EMPTY_ANIMATION) {
@@ -62,5 +79,4 @@ export class ClientPlayerView extends PhaserPlayerView {
   setLifePercent(percent: number): void {
     this.hud.setLifePercent(percent);
   }
-
 }

@@ -14,19 +14,17 @@ export class CombatSystem {
   processCombat(delta: number) {
     if (!this.attacking)
       for (const action of this.actions) {
-        if (action.execute()) {
+        const execution = action.execute();
+        if (execution) {
+          this.player.updateState({ attacking: true });
           this.attacking = true;
+          this.player.view.scene.time.delayedCall(execution.duration, () => {
+            this.attacking = false;
+          });
           return;
         }
       }
-    if (
-      !this.player.state.attacking) {
-      this.attacking = false;
-      this.player.animSystem.executeAnimation(
-        AnimationCode.EMPTY_ANIMATION,
-        AnimationLayer.COMBAT
-      );
-    }
+    this.player.updateState({ attacking: false });
   }
 
   executeAttackAction(duration: number) {}
@@ -39,13 +37,6 @@ export class CombatSystem {
         false,
         200
       );
-    this.player.view.scene.time.delayedCall(200, () => {
-      this.player.animSystem.executeAnimation(
-        AnimationCode.EMPTY_ANIMATION,
-        AnimationLayer.COMBAT,
-        false
-      );
-    });
     this.player.updateState({
       life: this.player.state.life - attack.damage,
     });

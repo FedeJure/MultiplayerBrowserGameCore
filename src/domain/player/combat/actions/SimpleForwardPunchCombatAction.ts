@@ -11,7 +11,6 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
   execute() {
     const { input } = this.player;
     if (
-      !this.player.state.attacking &&
       input.basicAttack &&
       !input.up &&
       !input.down
@@ -22,9 +21,9 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
         });
       }
       const attackDuration = 1000 / this.player.stats.basicAttackSpeed;
-      this.player.updateState({
-        attacking: true,
-      });
+      // this.player.updateState({
+      //   attacking: true,
+      // });
       this.player.animSystem.executeAnimation(
         AnimationCode.BASIC_ATTACK,
         AnimationLayer.COMBAT,
@@ -32,11 +31,11 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
         attackDuration
       );
 
-      this.player.view.scene.time.delayedCall(attackDuration, () => {
-        this.player.updateState({
-          attacking: false,
-        });
-      });
+      // this.player.view.scene.time.delayedCall(attackDuration, () => {
+      //   this.player.updateState({
+      //     attacking: false,
+      //   });
+      // });
 
       const x =
         this.player.state.position.x -
@@ -53,9 +52,8 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
         .forEach((player) => {
           player.receiveAttack(this.getAttackResult());
         });
-      return true;
+      return { duration: attackDuration };
     }
-    return false;
   }
 
   getAttackResult(): CombatResult {

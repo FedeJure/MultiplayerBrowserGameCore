@@ -1,9 +1,7 @@
 import { BodyType } from "matter";
 import { GameObjects, Physics } from "phaser";
 import { Observable } from "rxjs";
-import {
-  CollisionCategory,
-} from "../../domain/collisions/collisionTypes";
+import { CollisionCategory } from "../../domain/collisions/collisionTypes";
 import { PlayerView } from "../../domain/playerView";
 import { CollisionDetector } from "./collisionDetector";
 import { ExistentDepths } from "../existentDepths";
@@ -12,6 +10,7 @@ import {
   AnimationLayer,
 } from "../../domain/animations/animations";
 import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
+import { AnimationDto } from "../../domain/player/animations/AnimationDto";
 
 export class PhaserPlayerView
   extends GameObjects.Container
@@ -31,7 +30,7 @@ export class PhaserPlayerView
     super(view.scene, x, y, [view]);
     this.setName("Player View");
     this.setSize(width, height);
-    this.setDisplaySize(width, height)
+    this.setDisplaySize(width, height);
     this.scene.add.existing(this);
     this._view = view;
     this.scene.add.existing(this._view);
@@ -55,8 +54,8 @@ export class PhaserPlayerView
 
     this.initCollisions();
   }
-  setLifePercent(percent: number) {
-  }
+  playAnimations(anims: AnimationDto[]) {}
+  setLifePercent(percent: number) {}
 
   playAnimation(anim: AnimationCode, animLayer: AnimationLayer) {}
   setDisplayName(name: string) {}

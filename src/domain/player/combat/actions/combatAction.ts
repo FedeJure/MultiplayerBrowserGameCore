@@ -1,5 +1,8 @@
-import { CombatResult } from "../combatResult";
 
 export interface CombatAction {
-    execute(): boolean
+    execute(): undefined | CombatActionExecution
+}
+
+export interface CombatActionExecution {
+    duration: number
 }

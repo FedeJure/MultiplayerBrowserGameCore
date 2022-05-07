@@ -36,9 +36,7 @@ export class ClientPlayer implements Player {
   }
 
   update(time: number, delta: number) {
-    this.state.animations.forEach((anim) => {
-      this.view.playAnimation(anim.name, anim.layer, anim.loop, anim.duration);
-    });
+    this.view.playAnimations(this.state.animations)
     this.view.setPosition(this.state.position.x, this.state.position.y);
     this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);
     this.view.lookToLeft(this.state.side === Side.LEFT);

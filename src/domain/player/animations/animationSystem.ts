@@ -4,16 +4,16 @@ import { ServerPlayer } from "../players/serverPlayer";
 import { AnimationDto } from "./AnimationDto";
 
 export class AnimationSystem {
-  private currentAnimPerLayer: Map<
-    AnimationLayer,
-    { anim: AnimationDto }
-  > = new Map();
+  private currentAnimPerLayer: Map<AnimationLayer, { anim: AnimationDto }> =
+    new Map();
 
   constructor(private player: LocalClientPlayer) {}
   processAnimation(player: LocalClientPlayer | ServerPlayer) {
     player.updateState({
       animations: [
-        ...player.state.animations.filter(this.filterCondition),
+        ...player.state.animations
+          .filter(this.filterCondition)
+          .filter(this.filterFinishedAnimations),
         {
           name: this.getMovementAnimation(player),
           layer: AnimationLayer.MOVEMENT,
@@ -24,6 +24,20 @@ export class AnimationSystem {
 
   private filterCondition(anim: AnimationDto) {
     return anim.layer !== AnimationLayer.MOVEMENT;
+  }
+
+  // private mapFinishedAnimations(anim: AnimationDto): AnimationDto {
+  //   return anim.duration !== undefined &&
+  //     anim.time !== undefined &&
+  //     Date.now() > anim.duration + anim.time
+  //     ? { name: AnimationCode.EMPTY_ANIMATION, layer: anim.layer }
+  //     : anim;
+  // }
+
+  private filterFinishedAnimations(anim: AnimationDto): boolean {
+    return anim.duration === undefined ||
+      anim.time === undefined ||
+      Date.now() <= anim.duration + anim.time
   }
 
   private getMovementAnimation(player: LocalClientPlayer | ServerPlayer) {
@@ -61,17 +75,14 @@ export class AnimationSystem {
       layer,
       loop,
       duration,
-      executionTime: Date.now(),
+      time: Date.now(),
     };
     this.currentAnimPerLayer.set(layer, {
       anim: newAnim,
     });
 
     this.player.updateState({
-      animations: [
-        ...this.player.state.animations.filter((a) => a.layer !== layer),
-        newAnim,
-      ],
+      animations: [...this.player.state.animations, newAnim],
     });
   }
 }
