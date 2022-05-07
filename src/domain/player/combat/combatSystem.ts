@@ -28,8 +28,6 @@ export class CombatSystem {
     }
   }
 
-  executeAttackAction(duration: number) {}
-
   receiveAttack(attack: CombatResult) {
     if (attack.damage > 0)
       this.player.animSystem.executeAnimation(
