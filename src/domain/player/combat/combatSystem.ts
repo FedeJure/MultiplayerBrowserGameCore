@@ -12,7 +12,7 @@ export class CombatSystem {
   ) {}
 
   processCombat(delta: number) {
-    if (!this.attacking)
+    if (!this.attacking) {
       for (const action of this.actions) {
         const execution = action.execute();
         if (execution) {
@@ -24,7 +24,8 @@ export class CombatSystem {
           return;
         }
       }
-    this.player.updateState({ attacking: false });
+      this.player.updateState({ attacking: false });
+    }
   }
 
   executeAttackAction(duration: number) {}

@@ -10,32 +10,20 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
 
   execute() {
     const { input } = this.player;
-    if (
-      input.basicAttack &&
-      !input.up &&
-      !input.down
-    ) {
+    if (input.basicAttack && !input.up && !input.down) {
       if (this.player.state.grounded) {
         this.player.updateState({
           velocity: { x: 0, y: 0 },
         });
       }
       const attackDuration = 1000 / this.player.stats.basicAttackSpeed;
-      // this.player.updateState({
-      //   attacking: true,
-      // });
+
       this.player.animSystem.executeAnimation(
         AnimationCode.BASIC_ATTACK,
         AnimationLayer.COMBAT,
         false,
         attackDuration
       );
-
-      // this.player.view.scene.time.delayedCall(attackDuration, () => {
-      //   this.player.updateState({
-      //     attacking: false,
-      //   });
-      // });
 
       const x =
         this.player.state.position.x -

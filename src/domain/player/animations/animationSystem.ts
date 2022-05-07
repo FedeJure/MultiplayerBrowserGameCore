@@ -26,18 +26,12 @@ export class AnimationSystem {
     return anim.layer !== AnimationLayer.MOVEMENT;
   }
 
-  // private mapFinishedAnimations(anim: AnimationDto): AnimationDto {
-  //   return anim.duration !== undefined &&
-  //     anim.time !== undefined &&
-  //     Date.now() > anim.duration + anim.time
-  //     ? { name: AnimationCode.EMPTY_ANIMATION, layer: anim.layer }
-  //     : anim;
-  // }
-
   private filterFinishedAnimations(anim: AnimationDto): boolean {
-    return anim.duration === undefined ||
+    return (
+      anim.duration === undefined ||
       anim.time === undefined ||
       Date.now() <= anim.duration + anim.time
+    );
   }
 
   private getMovementAnimation(player: LocalClientPlayer | ServerPlayer) {
