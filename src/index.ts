@@ -32,6 +32,7 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
   socket: Socket,
   originUrl: string
 ) => {
+  ServerProvider.init(MapsConfiguration);
   const scene = new GameScene();
   const config = {
     ...PhaserServerConfig,
@@ -45,7 +46,7 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
     scene.events.addListener(Phaser.Scenes.Events.CREATE, () => {
       const __ = new ScenePresenter(scene, [
         new CompleteMapDelegator(
-          MapsConfiguration,
+          ServerProvider.mapMapanger,
           scene,
           ServerProvider.roomManager,
           socket,
@@ -69,7 +70,8 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
           ServerProvider.presenterProvider,
           ServerProvider.inGamePlayerRepository,
           ServerProvider.playerStatsRepository,
-          ServerProvider.attackTargetRepository
+          ServerProvider.attackTargetRepository,
+          ServerProvider.mapMapanger
         ),
         new ServerPlayerInventoryDelegator(
           ServerProvider.inventoryRepository,

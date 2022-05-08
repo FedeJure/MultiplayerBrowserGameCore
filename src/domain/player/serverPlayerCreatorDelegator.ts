@@ -23,6 +23,7 @@ import { DefaultPlayerStats, PlayerStats } from "./playerStats";
 import { AttackTarget } from "../combat/attackTarget";
 import { AttackTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
+import { MapManager } from "../environment/mapManager";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -36,7 +37,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private presenterProvider: ServerPresenterProvider,
     private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
     private playerStatsRepository: AsyncRepository<PlayerStats>,
-    private attackTargetRepository: SimpleRepository<AttackTarget>
+    private attackTargetRepository: SimpleRepository<AttackTarget>,
+    private mapManager: MapManager
   ) {}
   init(): void {
     this.connectionsRepository.onSave.subscribe((connection) => {
@@ -48,7 +50,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
         );
 
         const { foundedMap, neighborMaps } =
-          CompleteMapDelegator.getMapForPlayer(player.state);
+          this.mapManager.getMapForPlayer(player);
 
         connection.sendInitialStateEvent(
           {

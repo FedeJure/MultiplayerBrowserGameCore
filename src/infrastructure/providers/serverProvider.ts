@@ -1,5 +1,7 @@
 import { ClientConnection } from "../../domain/clientConnection";
 import { AttackTarget } from "../../domain/combat/attackTarget";
+import { MapConfiguration } from "../../domain/environment/mapConfiguration";
+import { MapManager } from "../../domain/environment/mapManager";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
 import { Item } from "../../domain/items/item";
 import { PlayerInfo } from "../../domain/player/playerInfo";
@@ -7,6 +9,7 @@ import { ServerPlayer } from "../../domain/player/players/serverPlayer";
 import { PlayerStats } from "../../domain/player/playerStats";
 import { AsyncRepository, SimpleRepository } from "../../domain/repository";
 import { RoomManager } from "../../domain/roomManager";
+import { MapsConfiguration } from "../configuration/MapsConfiguration";
 import { DependencyManager } from "../dependencyManager";
 import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
@@ -29,8 +32,11 @@ class ItemRepository extends InMemoryAsyncRepository<Item> {}
 class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
 class AttackTargetRepository extends InMemoryRepository<AttackTarget> {}
 
-
 export class ServerProvider {
+  private static mapConfig?: MapConfiguration;
+  public static init(mapConfig: MapConfiguration) {
+    ServerProvider.mapConfig = mapConfig;
+  }
   public static get connectionsRepository(): SimpleRepository<ClientConnection> {
     return DependencyManager.GetOrInstantiate<
       SimpleRepository<ClientConnection>
@@ -91,12 +97,18 @@ export class ServerProvider {
   public static get attackTargetRepository(): SimpleRepository<AttackTarget> {
     return DependencyManager.GetOrInstantiate<SimpleRepository<AttackTarget>>(
       () => new AttackTargetRepository()
-    )
+    );
   }
 
   public static get playerStatsRepository(): AsyncRepository<PlayerStats> {
     return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerStats>>(
       () => new PlayerStatsRepository()
     );
+  }
+
+  public static get mapMapanger(): MapManager {
+    return DependencyManager.GetOrInstantiate<MapManager>(
+      () => new MapManager(ServerProvider.mapConfig ?? MapsConfiguration)
+    )
   }
 }
