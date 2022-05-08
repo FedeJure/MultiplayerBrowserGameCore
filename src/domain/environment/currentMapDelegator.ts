@@ -8,6 +8,7 @@ import { loadMapAssets } from "../actions/loadMapAssets";
 import { Delegator } from "../delegator";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
 import { ServerConnection } from "../serverConnection";
+import { MapManager } from "./mapManager";
 import { ProcessedMap } from "./processedMap";
 
 interface LoadedMap {
@@ -22,11 +23,12 @@ export class CurrentMapDelegator implements Delegator {
   public constructor(
     private scene: ClientGameScene,
     private connection: ServerConnection,
-    private originUrl: string,
-    private envObjectsRepository: EnvironmentObjectRepository
+    private envObjectsRepository: EnvironmentObjectRepository,
+    private mapManager: MapManager
   ) {}
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {
+      this.mapManager.setMaps([ev.newMap, ...ev.neighborMaps])
       return new Promise(async () => {
         await this.loadAssets([ev.newMap]);
         await this.loadAssets(ev.neighborMaps);

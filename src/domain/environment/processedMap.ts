@@ -1,3 +1,4 @@
+import { Vector } from "../vector";
 import { Map } from "./mapConfiguration";
 
 export interface ProcessedMap {
@@ -16,4 +17,5 @@ export interface ProcessedMap {
   rightTopMapId: number | undefined;
   leftBottomMapId: number | undefined;
   rightBottomMapId: number | undefined;
+  spawnPositions: Vector[]
 }

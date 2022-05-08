@@ -10,7 +10,6 @@ import { PlayerStateRepository } from "../../infrastructure/repositories/playerS
 import { ServerPlayerView } from "../../view/player/serverPlayerView";
 import { ClientConnection } from "../clientConnection";
 import { Delegator } from "../delegator";
-import { CompleteMapDelegator } from "../environment/completeMapDelegator";
 import { RoomManager } from "../roomManager";
 import { DefaultConfiguration } from "./playerConfiguration";
 import { ServerPlayer } from "./players/serverPlayer";
@@ -174,6 +173,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       input,
       stats ?? DefaultPlayerStats,
       this.inGamePlayersRepository,
+      this.mapManager,
       connection,
       this.playerInfoRepository,
       this.playerStateRepository,

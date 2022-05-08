@@ -1,4 +1,5 @@
 import { AttackTargetType } from "../../combat/attackTargetType";
+import { MapManager } from "../../environment/mapManager";
 import { PlayerView } from "../../playerView";
 import { SimpleRepository } from "../../repository";
 import { AnimationSystem } from "../animations/animationSystem";
@@ -24,7 +25,8 @@ export class ControllablePlayer extends ClientPlayer {
     private inGamePlayersRepository: SimpleRepository<Player>,
     protected _stats: PlayerStats,
     private _movementSystem: MovementSystem,
-    private _input: PlayerInput
+    private _input: PlayerInput,
+    private mapManager: MapManager
   ) {
     super(_info, _state, _view);
     this._animationSystem = new AnimationSystem(this);

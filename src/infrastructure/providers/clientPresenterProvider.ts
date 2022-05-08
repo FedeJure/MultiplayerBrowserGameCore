@@ -80,8 +80,8 @@ export class ClientPresenterProvider {
       new CurrentMapDelegator(
         scene,
         ClientProvider.serverConnection,
-        ClientProvider.originUrl,
-        ClientProvider.environmentObjectRepository
+        ClientProvider.environmentObjectRepository,
+        ClientProvider.mapManager
       ),
       new BackgroundDelegator(
         scene,
@@ -95,7 +95,8 @@ export class ClientPresenterProvider {
         scene,
         ClientProvider.presenterProvider,
         ClientProvider.inGamePlayersRepository,
-        ClientProvider.attackTargetRepository
+        ClientProvider.attackTargetRepository,
+        ClientProvider.mapManager
       ),
     ]);
   }

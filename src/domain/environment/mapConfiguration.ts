@@ -23,6 +23,7 @@ export interface Map {
     jsonFile: {key: string, fileName: string}
     sourceFiles: {key: string, fileName: string}[]
     objects: MapEnvironmentObject[]
+    spawnPositions: Vector[]
   }
   
 

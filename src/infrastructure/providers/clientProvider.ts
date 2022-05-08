@@ -14,6 +14,7 @@ import { InMemoryRepository } from "../repositories/InMemoryRepository";
 import { Item } from "../../domain/items/item";
 import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
 import { AttackTarget } from "../../domain/combat/attackTarget";
+import { MapManager } from "../../domain/environment/mapManager";
 
 //This is necessary because the dependency manager not work with generics
 class InventoryRepository extends InMemoryRepository<PlayerInventoryDto> {}
@@ -94,5 +95,11 @@ export class ClientProvider {
 
   public static get originUrl(): string {
     return this._originUrl;
+  }
+
+  public static get mapManager(): MapManager {
+    return DependencyManager.GetOrInstantiate<MapManager>(
+      () => new MapManager()
+    )
   }
 }

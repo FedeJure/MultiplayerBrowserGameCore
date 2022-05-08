@@ -1,5 +1,6 @@
 import { ClientConnection } from "../../domain/clientConnection";
 import { AttackTarget } from "../../domain/combat/attackTarget";
+import { CompleteMapManager } from "../../domain/environment/completeMapManager";
 import { MapConfiguration } from "../../domain/environment/mapConfiguration";
 import { MapManager } from "../../domain/environment/mapManager";
 import { EnvironmentObjectRepository } from "../../domain/environmentObjects/environmentObjectRepository";
@@ -108,7 +109,7 @@ export class ServerProvider {
 
   public static get mapMapanger(): MapManager {
     return DependencyManager.GetOrInstantiate<MapManager>(
-      () => new MapManager(ServerProvider.mapConfig ?? MapsConfiguration)
+      () => new CompleteMapManager(ServerProvider.mapConfig ?? MapsConfiguration)
     )
   }
 }

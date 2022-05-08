@@ -18,6 +18,7 @@ import { DefaultPlayerStats, PlayerStats } from "../player/playerStats";
 import { AttackTarget } from "../combat/attackTarget";
 import { AttackTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
+import { MapManager } from "../environment/mapManager";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -26,7 +27,8 @@ export class ClientConnectionDelegator implements Delegator {
     private scene: Scene,
     private presenterProvider: ClientPresenterProvider,
     private inGamePlayersRepository: SimpleRepository<Player>,
-    private attackTargetRepository: SimpleRepository<AttackTarget>
+    private attackTargetRepository: SimpleRepository<AttackTarget>,
+    private mapManager: MapManager
   ) {}
   init(): void {
     this.connection.onInitialGameState.subscribe(async (data) => {
@@ -124,7 +126,8 @@ export class ClientConnectionDelegator implements Delegator {
       this.inGamePlayersRepository,
       stats ?? DefaultPlayerStats,
       movementSystem,
-      input
+      input,
+      this.mapManager
     );
     const inventory = new ClientInventoryView(this.scene, input);
     this.presenterProvider.forInventory(info.id, inventory);
