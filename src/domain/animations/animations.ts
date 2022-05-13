@@ -9,6 +9,7 @@ export enum AnimationCode {
   EMPTY_ANIMATION = "empty",
   TAKING_DAMAGE = "takingDamage",
   DEFEND = "defend",
+  DIE = 'takingDamage'
 }
 
 export enum AnimationLayer {

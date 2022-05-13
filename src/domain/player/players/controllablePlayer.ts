@@ -26,11 +26,11 @@ export class ControllablePlayer extends ClientPlayer {
     protected _stats: PlayerStats,
     private _movementSystem: MovementSystem,
     private _input: PlayerInput,
-    private mapManager: MapManager
+    mapManager: MapManager //usar esto para spawnear al jugador en un spot de spawn al morir.
   ) {
     super(_info, _state, _view);
     this._animationSystem = new AnimationSystem(this);
-    this._combatSystem = new CombatSystem(this, [
+    this._combatSystem = new CombatSystem(this, mapManager, [
       new SimpleForwardPunchCombatAction(this),
       new DefendCombatAction(this)
     ]);

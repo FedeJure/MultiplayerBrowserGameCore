@@ -1,13 +1,14 @@
 import { CombatAction } from "./actions/combatAction";
-import { ServerPlayer } from "../players/serverPlayer";
 import { ControllablePlayer } from "../players/controllablePlayer";
 import { CombatResult } from "./combatResult";
 import { AnimationCode, AnimationLayer } from "../../animations/animations";
+import { MapManager } from "../../environment/mapManager";
 
 export class CombatSystem {
   private attacking: boolean;
   constructor(
-    private player: ControllablePlayer | ServerPlayer,
+    private player: ControllablePlayer,
+    private mapMapanger: MapManager,
     private actions: CombatAction[]
   ) {}
 
@@ -38,6 +39,40 @@ export class CombatSystem {
       );
     this.player.updateState({
       life: this.player.state.life - attack.damage,
+    });
+    if (this.player.state.life <= 0) this.die();
+  }
+
+  private die() {
+    const dieDuration = 2000;
+    this.player.animSystem.executeAnimation(
+      AnimationCode.DIE,
+      AnimationLayer.COMBAT,
+      false,
+      dieDuration
+    );
+    const closestSpawnPosition = this.mapMapanger
+      .getMap(this.player.state.map.mapId)
+      .spawnPositions.sort((p1, p2) => {
+        return (
+          Math.sqrt(
+            Math.pow(p1.x - this.player.state.position.x, 2) +
+              Math.pow(p1.y - this.player.state.position.y, 2)
+          ) -
+          Math.sqrt(
+            Math.pow(p2.x - this.player.state.position.x, 2) +
+              Math.pow(p2.y - this.player.state.position.y, 2)
+          )
+        );
+      });
+    const newPosition = closestSpawnPosition[0] ?? { x: 100, y: 100 };
+    this.player.view.scene.time.delayedCall(dieDuration, () => {
+      this.player.view.setPosition(newPosition.x, newPosition.y);
+      this.player.updateState({
+        life: this.player.stats.maxLife,
+        animations: [],
+        position: newPosition,
+      });
     });
   }
 }
