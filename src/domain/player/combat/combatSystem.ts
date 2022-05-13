@@ -44,7 +44,7 @@ export class CombatSystem {
   }
 
   private die() {
-    const dieDuration = 2000;
+    const dieDuration = 1000;
     this.player.animSystem.executeAnimation(
       AnimationCode.DIE,
       AnimationLayer.COMBAT,
