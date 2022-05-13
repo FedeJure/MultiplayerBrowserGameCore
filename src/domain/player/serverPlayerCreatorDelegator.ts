@@ -77,6 +77,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
           connection,
           [foundedMap, ...neighborMaps]
         );
+        player.updateState({currentRooms: joinedRooms})
         connection.sendMapUpdateEvent(foundedMap, neighborMaps);
         this.socket.in(joinedRooms).emit(
           GameEvents.NEW_PLAYER_CONNECTED.name,

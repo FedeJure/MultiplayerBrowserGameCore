@@ -1,25 +1,18 @@
 import { ClientConnection } from "../domain/clientConnection";
 import { ProcessedMap } from "../domain/environment/processedMap";
-import { ServerPlayer } from "../domain/player/players/serverPlayer";
-import { SimpleRepository } from "../domain/repository";
-import { RoomManager, PlayerId, RoomId } from "../domain/roomManager";
+import { RoomManager, RoomId, GetRoomId } from "../domain/roomManager";
 
 export class SocketRoomManager implements RoomManager {
-  private playersByRoom: { [key: RoomId]: PlayerId[] | undefined } = {};
-  constructor(
-    private readonly inGamePlayersRepository: SimpleRepository<ServerPlayer>
-  ) {}
-
-  private getRoomId(map: ProcessedMap) {
-    return map.id.toString();
-  }
+  private playersByRoom: { [key: RoomId]: string[] | undefined } = {};
+  private enemiesByRoom: { [key: RoomId]: string[] | undefined } = {};
+  constructor() {}
 
   async joinToRoom(
     playerId: string,
     conn: ClientConnection,
     maps: ProcessedMap[]
   ) {
-    const roomIds = maps.map(this.getRoomId);
+    const roomIds = maps.map(GetRoomId);
     const { previousRooms } = await conn.join(roomIds);
     previousRooms.forEach((r) => {
       if (!this.playersByRoom[r]) return;
@@ -32,13 +25,31 @@ export class SocketRoomManager implements RoomManager {
       if (!this.playersByRoom[r]) this.playersByRoom[r] = [];
       this.playersByRoom[r]?.push(playerId);
     });
-    this.inGamePlayersRepository.get(playerId)?.updateState({
-      currentRooms: roomIds,
-    });
     return roomIds;
   }
 
   getPlayersByRoom() {
     return this.playersByRoom;
+  }
+
+  joinEnemyToRoom(enemyId: string, newRooms: RoomId[], prevRooms: RoomId[]) {
+    newRooms.forEach(this.initEnemyRoomIfNotExist.bind(this));
+    prevRooms.forEach(this.initEnemyRoomIfNotExist.bind(this));
+    prevRooms.forEach((room) => {
+      this.enemiesByRoom[room] = this.enemiesByRoom[room]!.filter(
+        (id) => id !== enemyId
+      );
+    });
+
+    newRooms.forEach((room) => {
+      this.enemiesByRoom[room]!.push(enemyId);
+    });
+  }
+
+  private initEnemyRoomIfNotExist(id: RoomId) {
+    if (!this.enemiesByRoom[id]) this.enemiesByRoom[id] = [];
+  }
+  getEnemiesByRoom(): { [key: RoomId]: string[] | undefined } {
+    return this.enemiesByRoom;
   }
 }

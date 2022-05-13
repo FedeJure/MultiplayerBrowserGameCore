@@ -29,13 +29,17 @@ export class CompleteMapDelegator implements Delegator {
       serverPlayer.onStateChange
         .pipe(filter(({ change }) => change.position !== undefined))
         .subscribe(({ state }) => {
-          this.updateMapAndSendEvents(serverPlayer, state)
+          this.updateMapAndSendEvents(serverPlayer, state);
         });
     });
   }
 
-  private async updateMapAndSendEvents(player: ServerPlayer, newState: PlayerState) {
+  private async updateMapAndSendEvents(
+    player: ServerPlayer,
+    newState: PlayerState
+  ) {
     this.updateMapForPlayer(player).then(async (joinedRooms) => {
+      player.updateState({ currentRooms: joinedRooms });
       const newRooms: string[] = difference(joinedRooms, newState.currentRooms);
       if (newRooms.length === 0) return;
 

@@ -9,10 +9,9 @@ export const SpiderEnemyModel: EnemyModel = {
     idleMovementSpeed: 5,
     combatingMovementSpeed: 2.5,
   },
-  info: {
-    id: "spider",
-    name: "Spider",
-  },
+
+  name: "Spider",
+
   width: 60,
   height: 60,
 };

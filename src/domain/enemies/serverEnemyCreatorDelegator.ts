@@ -1,4 +1,4 @@
-import { Scene } from "phaser";
+import Phaser, { Scene } from "phaser";
 import { PhaserEnemyView } from "../../view/enemy/phaserEnemyView";
 import { Delegator } from "../delegator";
 import { BaseEnemy } from "./BaseEnemy";
@@ -26,7 +26,10 @@ export class ServerEnemyCreatorDelegator implements Delegator {
       );
       return new BaseEnemy(
         state,
-        SpiderEnemyModel.info,
+        {
+          name: SpiderEnemyModel.name,
+          id: Phaser.Utils.String.UUID(),
+        },
         SpiderEnemyModel.stats,
         view
       );

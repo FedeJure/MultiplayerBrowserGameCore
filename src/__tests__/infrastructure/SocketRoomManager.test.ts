@@ -1,12 +1,9 @@
 import MockSocket from "socket.io-mock";
-import { InMemoryPlayerStateRepository } from "../../infrastructure/repositories/inMemoryPlayerStateRepository";
-import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { SocketRoomManager } from "../../infrastructure/SocketRoomManager";
 import { SocketClientConnection } from "../../infrastructure/socketClientConnection";
 import { ProcessedMap } from "../../domain/environment/processedMap";
 
-let playerStates: PlayerStateRepository = new InMemoryPlayerStateRepository();
-let roomManager: SocketRoomManager = new SocketRoomManager(playerStates);
+let roomManager: SocketRoomManager = new SocketRoomManager();
 let socket: MockSocket = new MockSocket();
 
 let defaultMap: ProcessedMap = {
@@ -14,8 +11,9 @@ let defaultMap: ProcessedMap = {
     id: 1,
     backgroundFile: [],
     jsonFile: { key: "string", fileName: "string" },
-    tilesSourceFiles: { key: "string", fileName: "string" },
-    objectsSourceFile: { key: "string", fileName: "string" },
+    sourceFiles: [{ key: "string", fileName: "string" }],
+    objects: [],
+    spawnPositions: []
   },
   layerId: 1,
   id: 1,
@@ -31,6 +29,7 @@ let defaultMap: ProcessedMap = {
   rightTopMapId: undefined,
   leftBottomMapId: undefined,
   rightBottomMapId: undefined,
+  spawnPositions: []
 };
 
 let maps: ProcessedMap[] = [
@@ -56,8 +55,7 @@ let maps1: ProcessedMap[] = [
 ];
 
 beforeEach(() => {
-  playerStates = new InMemoryPlayerStateRepository();
-  roomManager = new SocketRoomManager(playerStates);
+  roomManager = new SocketRoomManager();
 });
 
 test("Get players by room empty when no players added", () => {
