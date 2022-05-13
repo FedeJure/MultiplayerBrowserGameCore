@@ -5,4 +5,6 @@ export interface EnemyStats {
   attackSpeed: number;
   idleMovementSpeed: number;
   combatingMovementSpeed: number;
+  height: number;
+  width: number;
 }

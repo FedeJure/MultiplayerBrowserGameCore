@@ -6,17 +6,21 @@ import { EnemyStats } from "./EnemyStats";
 import { EnemyView } from "./EnemyView";
 
 export class BaseEnemy implements Enemy {
+  private _state: EnemyState;
   constructor(
-    readonly state: EnemyState,
+    state: EnemyState,
     readonly info: EnemyInfo,
     readonly stats: EnemyStats,
     readonly view: EnemyView
-  ) {}
-  receiveAttack(attack: CombatResult) {
+  ) {
+    this._state = state;
   }
-  update(time: number, delta: number) {
-      
+  get state() {
+    return this._state;
   }
-
-  
+  updateState(state: Partial<EnemyState>) {
+    this._state = { ...this._state, ...state };
+  }
+  receiveAttack(attack: CombatResult) {}
+  update(time: number, delta: number) {}
 }

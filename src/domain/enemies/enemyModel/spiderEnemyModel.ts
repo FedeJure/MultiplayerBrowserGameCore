@@ -8,10 +8,8 @@ export const SpiderEnemyModel: EnemyModel = {
     attackSpeed: 1,
     idleMovementSpeed: 5,
     combatingMovementSpeed: 2.5,
+    width: 60,
+    height: 60,
   },
-
   name: "Spider",
-
-  width: 60,
-  height: 60,
 };

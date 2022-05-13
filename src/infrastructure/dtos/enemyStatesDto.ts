@@ -1,6 +1,7 @@
 import { EnemyInfo } from "../../domain/enemies/EnemyInfo";
 import { EnemyState } from "../../domain/enemies/EnemyState";
+import { EnemyStats } from "../../domain/enemies/EnemyStats";
 
 export interface EnemyStatesDto {
-    states: {state: EnemyState, info: EnemyInfo}[]
+  enemies: { state: EnemyState; info: EnemyInfo; stats: EnemyStats }[];
 }

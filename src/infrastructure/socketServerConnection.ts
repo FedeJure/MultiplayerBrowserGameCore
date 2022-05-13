@@ -1,10 +1,10 @@
-import { Observable, Subject } from "rxjs";
+import { Subject } from "rxjs";
 import { Socket } from "socket.io-client";
-import { EnvironmentObjectRepository } from "../domain/environmentObjects/environmentObjectRepository";
 
 import { ServerConnection } from "../domain/serverConnection";
 import { PlayerInputDto } from "./dtos/playerInputDto";
 import {
+  EnemiesStatesEvent,
   EnvironmentObjectDetailsResponse,
   GameEvents,
   InitialGameStateEvent,
@@ -29,6 +29,7 @@ export class SocketServerConnection implements ServerConnection {
   private readonly _onPing = new Subject<number>();
   private readonly _onMapUpdated = new Subject<MapUpdateEvent>();
   private readonly _onInventoryUpdated = new Subject<InventoryUpdatedEvent>();
+  private readonly _onEnemyStates = new Subject<EnemiesStatesEvent>();
 
   constructor(socket: Socket) {
     this.socket = socket;
@@ -51,9 +52,10 @@ export class SocketServerConnection implements ServerConnection {
     socket.on(GameEvents.INVENTORY_UPDATED.name, (data) =>
       this._onInventoryUpdated.next(data)
     );
+    socket.on(GameEvents.ENEMIES_STATES.name, (data) => this._onEnemyStates.next(data))
 
     var startTime = Date.now();
-    socket.on(SocketIOEvents.PONG, (data) =>
+    socket.on(SocketIOEvents.PONG, () =>
       this._onPing.next(Date.now() - startTime)
     );
     setInterval(() => {
@@ -100,6 +102,10 @@ export class SocketServerConnection implements ServerConnection {
 
   get onPing() {
     return this._onPing;
+  }
+
+  get onEnemyState() {
+    return this._onEnemyStates
   }
 
   emitStartNewConnection(playerId: string): void {

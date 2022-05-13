@@ -4,6 +4,7 @@ import { Delegator } from "../delegator";
 import { SimpleRepository } from "../repository";
 import { RoomManager } from "../roomManager";
 import { BaseEnemy } from "./BaseEnemy";
+import { Enemy } from "./Enemy";
 import { EnemyAnimation } from "./EnemyAnimations";
 import { SpiderEnemyModel } from "./enemyModel/spiderEnemyModel";
 import { EnemySpawner } from "./EnemySpawner";
@@ -12,7 +13,7 @@ import { EnemyState } from "./EnemyState";
 export class ServerEnemyCreatorDelegator implements Delegator {
   constructor(
     private scene: Scene,
-    private enemiesRepository: SimpleRepository<BaseEnemy>,
+    private enemiesRepository: SimpleRepository<Enemy>,
     private roomManager: RoomManager
   ) {}
   init(): void {
@@ -28,8 +29,8 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         this.scene.matter.add.sprite(state.position.x, state.position.y, ""),
         state.position.x,
         state.position.y,
-        SpiderEnemyModel.height,
-        SpiderEnemyModel.width
+        SpiderEnemyModel.stats.height,
+        SpiderEnemyModel.stats.width
       );
       const enemy = new BaseEnemy(
         state,

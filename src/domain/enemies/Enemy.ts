@@ -11,4 +11,5 @@ export interface Enemy {
   readonly view: EnemyView
   receiveAttack(attack: CombatResult);
   update(time: number, delta: number);
+  updateState(state: Partial<EnemyState>)
 }

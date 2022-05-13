@@ -24,6 +24,7 @@ import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjec
 import { GameObjects } from "phaser";
 import { Player } from "../../domain/player/players/player";
 import { PlayerStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
+import { ClientEnemyCreatorDelegator } from "../../domain/enemies/clientEnemyCreatorDelegator";
 
 export class ClientPresenterProvider {
   forLocalPlayer(
@@ -70,8 +71,7 @@ export class ClientPresenterProvider {
         player
       ),
       new PlayerAngleFixDelegator(player),
-      new PlayerStateUpdaterDelegator(player)
-
+      new PlayerStateUpdaterDelegator(player),
     ]);
   }
 
@@ -97,6 +97,11 @@ export class ClientPresenterProvider {
         ClientProvider.inGamePlayersRepository,
         ClientProvider.attackTargetRepository,
         ClientProvider.mapManager
+      ),
+      new ClientEnemyCreatorDelegator(
+        scene,
+        ClientProvider.serverConnection,
+        ClientProvider.spawnedEnemies
       ),
     ]);
   }
