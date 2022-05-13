@@ -27,6 +27,7 @@ import { AssetLoader } from "./view/AssetLoader";
 import { AssetsConfiguration } from "./infrastructure/configuration/AssetsConfiguration";
 import { LoadServerRepositoriesWithMockData } from "./infrastructure/mockUtils";
 import { EnvironmentObjectDetailsDispatcherDelegator } from "./domain/environmentObjects/environmentObjectDetailsDispatcherDelegator";
+import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
 
 export const InitGame: (socket: Socket, originUrl: string) => void = (
   socket: Socket,
@@ -54,6 +55,7 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
           ServerProvider.presenterProvider,
           ServerProvider.inGamePlayerRepository
         ),
+        new ServerEnemyCreatorDelegator(scene),
         new PlayerStateDelegator(
           ServerProvider.roomManager,
           ServerProvider.inGamePlayerRepository,

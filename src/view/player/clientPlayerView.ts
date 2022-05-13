@@ -3,7 +3,6 @@ import { Physics, Scene } from "phaser";
 import {
   AnimationCode,
   AnimationLayer,
-  AnimationLayers,
 } from "../../domain/animations/animations";
 import { PlayerIngameHud } from "./playerIngameHud";
 import { PhaserPlayerView } from "./phaserPlayerView";

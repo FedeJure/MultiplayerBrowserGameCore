@@ -1,10 +1,8 @@
-import { GameObjects, Physics } from "phaser";
+import { Physics } from "phaser";
 import { EnemyView } from "../../domain/enemies/EnemyView";
+import { PhaserEntityView } from "../controllable/phaserEntityView";
 
-export class PhaserEnemyView
-  extends GameObjects.Container
-  implements EnemyView
-{
+export class PhaserEnemyView extends PhaserEntityView implements EnemyView {
   constructor(
     readonly view: Physics.Matter.Sprite,
     x: number,
@@ -12,7 +10,7 @@ export class PhaserEnemyView
     height: number,
     width: number
   ) {
-    super(view.scene, x, y, [view]);
+    super(view, x, y, height, width);
     this.setName("Enemy View");
   }
 }
