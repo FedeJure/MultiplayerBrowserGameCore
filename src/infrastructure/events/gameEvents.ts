@@ -2,6 +2,7 @@ import { ProcessedMap } from "../../domain/environment/processedMap";
 import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
 import { Item } from "../../domain/items/item";
 import { PlayerState } from "../../domain/player/playerState";
+import { EnemyStatesDto } from "../dtos/enemyStatesDto";
 import { LocalPlayerInitialStateDto } from "../dtos/localPlayerInitialStateDto";
 import { PlayerInitialStateDto } from "../dtos/playerInitialStateDto";
 import { PlayerInputDto } from "../dtos/playerInputDto";
@@ -71,6 +72,10 @@ export const GameEvents: {
     getEvent: (
       objects: EnvironmentObject[]
     ) => EnvironmentObjectDetailsResponse;
+  };
+  ENEMIES_STATES: {
+    name: string;
+    getEvent: (enemyStates: EnemyStatesDto) => EnemiesStatesEvent;
   };
 } = {
   PLAYER_CONNECTED: {
@@ -151,6 +156,13 @@ export const GameEvents: {
       time: new Date(),
     }),
   },
+  ENEMIES_STATES: {
+    name: "enemies_states_event",
+    getEvent: (enemyStates: EnemyStatesDto) => ({
+      enemyStates: enemyStates,
+      time: new Date(),
+    }),
+  },
 };
 
 interface BaseEvent {
@@ -209,4 +221,8 @@ export interface EnvironmentObjectDetailsResponse extends BaseEvent {
 
 export interface EnvironmentObjectDetailsRequest extends BaseEvent {
   objectIds: EnvironmentObject["id"][];
+}
+
+export interface EnemiesStatesEvent extends BaseEvent {
+  enemyStates: EnemyStatesDto;
 }

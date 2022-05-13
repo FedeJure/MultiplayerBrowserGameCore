@@ -1,5 +1,6 @@
 import { ClientConnection } from "../../domain/clientConnection";
 import { AttackTarget } from "../../domain/combat/attackTarget";
+import { BaseEnemy } from "../../domain/enemies/BaseEnemy";
 import { CompleteMapManager } from "../../domain/environment/completeMapManager";
 import { MapConfiguration } from "../../domain/environment/mapConfiguration";
 import { MapManager } from "../../domain/environment/mapManager";
@@ -32,6 +33,7 @@ class PlayerInventoryRepository extends InMemoryAsyncRepository<PlayerInventoryD
 class ItemRepository extends InMemoryAsyncRepository<Item> {}
 class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
 class AttackTargetRepository extends InMemoryRepository<AttackTarget> {}
+class SpawnedEnemiesRepository extends InMemoryRepository<BaseEnemy> {}
 
 export class ServerProvider {
   private static mapConfig?: MapConfiguration;
@@ -110,6 +112,12 @@ export class ServerProvider {
   public static get mapMapanger(): MapManager {
     return DependencyManager.GetOrInstantiate<MapManager>(
       () => new CompleteMapManager(ServerProvider.mapConfig ?? MapsConfiguration)
+    )
+  }
+
+  public static get enemiesRepository(): SimpleRepository<BaseEnemy> {
+    return DependencyManager.GetOrInstantiate<SpawnedEnemiesRepository>(
+      () => new SpawnedEnemiesRepository()
     )
   }
 }

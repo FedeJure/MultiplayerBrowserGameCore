@@ -1,4 +1,4 @@
-import { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 import * as Phaser from "phaser";
 
 import { SocketIOEvents } from "./infrastructure/events/socketIoEvents";
@@ -28,6 +28,7 @@ import { AssetsConfiguration } from "./infrastructure/configuration/AssetsConfig
 import { LoadServerRepositoriesWithMockData } from "./infrastructure/mockUtils";
 import { EnvironmentObjectDetailsDispatcherDelegator } from "./domain/environmentObjects/environmentObjectDetailsDispatcherDelegator";
 import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
+import { EnemiesStateSenderDelegator } from "./domain/gameState/enemiesStateSenderDelegator";
 
 export const InitGame: (socket: Socket, originUrl: string) => void = (
   socket: Socket,
@@ -55,11 +56,20 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
           ServerProvider.presenterProvider,
           ServerProvider.inGamePlayerRepository
         ),
-        new ServerEnemyCreatorDelegator(scene),
+        new ServerEnemyCreatorDelegator(
+          scene,
+          ServerProvider.enemiesRepository,
+          ServerProvider.roomManager
+        ),
         new PlayerStateDelegator(
           ServerProvider.roomManager,
           ServerProvider.inGamePlayerRepository,
           socket
+        ),
+        new EnemiesStateSenderDelegator(
+          ServerProvider.roomManager,
+          socket,
+          ServerProvider.enemiesRepository
         ),
         new ServerPlayerCreatorDelegator(
           ServerProvider.connectionsRepository,

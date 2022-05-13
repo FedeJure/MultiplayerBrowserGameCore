@@ -1,6 +1,8 @@
 import Phaser, { Scene } from "phaser";
 import { PhaserEnemyView } from "../../view/enemy/phaserEnemyView";
 import { Delegator } from "../delegator";
+import { SimpleRepository } from "../repository";
+import { RoomManager } from "../roomManager";
 import { BaseEnemy } from "./BaseEnemy";
 import { EnemyAnimation } from "./EnemyAnimations";
 import { SpiderEnemyModel } from "./enemyModel/spiderEnemyModel";
@@ -8,7 +10,11 @@ import { EnemySpawner } from "./EnemySpawner";
 import { EnemyState } from "./EnemyState";
 
 export class ServerEnemyCreatorDelegator implements Delegator {
-  constructor(private scene: Scene) {}
+  constructor(
+    private scene: Scene,
+    private enemiesRepository: SimpleRepository<BaseEnemy>,
+    private roomManager: RoomManager
+  ) {}
   init(): void {
     // here, create a EnemySpawner on each enemy spot (from map or random)
     new EnemySpawner(600, 600, 3, 3000, 10000, (x, y) => {
@@ -16,6 +22,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         life: SpiderEnemyModel.stats.maxLife,
         position: { x, y },
         anim: EnemyAnimation.IDLE,
+        map: 0,
       };
       const view = new PhaserEnemyView(
         this.scene.matter.add.sprite(state.position.x, state.position.y, ""),
@@ -24,7 +31,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         SpiderEnemyModel.height,
         SpiderEnemyModel.width
       );
-      return new BaseEnemy(
+      const enemy = new BaseEnemy(
         state,
         {
           name: SpiderEnemyModel.name,
@@ -33,6 +40,13 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         SpiderEnemyModel.stats,
         view
       );
+      this.roomManager.joinEnemyToRoom(
+        enemy.info.id,
+        [enemy.state.map.toString()],
+        []
+      );
+      this.enemiesRepository.save(enemy.info.id, enemy);
+      return enemy;
     });
   }
   stop(): void {}
