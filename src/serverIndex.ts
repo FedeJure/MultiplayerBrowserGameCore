@@ -3,20 +3,11 @@ import * as Phaser from "phaser";
 
 import { SocketIOEvents } from "./infrastructure/events/socketIoEvents";
 import { ServerProvider } from "./infrastructure/providers/serverProvider";
-import { ClientProvider } from "./infrastructure/providers/clientProvider";
 import { GameScene } from "./view/scenes/GameScene";
 import { SocketClientConnection } from "./infrastructure/socketClientConnection";
-import {
-  PhaserClientConfig,
-  PhaserServerConfig,
-} from "./infrastructure/configuration/PhaserGameConfigs";
+import { PhaserServerConfig } from "./infrastructure/configuration/PhaserGameConfigs";
 import { LoadScene } from "./view/scenes/LoadScene";
-import { SocketServerConnection } from "./infrastructure/socketServerConnection";
 import { Log } from "./infrastructure/Logger";
-import { GameplayHud } from "./view/scenes/GameplayHud";
-import { LocalPlayerRepository } from "./infrastructure/repositories/localPlayerRepository";
-import { ClientLoadScene } from "./view/scenes/ClientLoadScene";
-import { ClientGameScene } from "./view/scenes/ClientGameScene";
 import { CompleteMapDelegator } from "./domain/environment/completeMapDelegator";
 import { MapsConfiguration } from "./infrastructure/configuration/MapsConfiguration";
 import { PlayerStateDelegator } from "./domain/gameState/playerStateDelegator";
@@ -115,32 +106,5 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
         });
       });
     });
-  });
-};
-
-export const InitClientGame = (
-  socket: any,
-  localPlayerId: string,
-  originUrl: string
-) => {
-  const connectionWithServer = new SocketServerConnection(socket);
-  const hudScene = new GameplayHud(connectionWithServer);
-
-  ClientProvider.Init(
-    connectionWithServer,
-    new LocalPlayerRepository(localPlayerId),
-    originUrl,
-    hudScene
-  );
-  const scene = new ClientGameScene(hudScene);
-  const config = {
-    ...PhaserClientConfig,
-    scene: [new ClientLoadScene(), scene, hudScene],
-  };
-  const game = new Phaser.Game(config);
-  AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
-
-  game.events.addListener(Phaser.Core.Events.READY, () => {
-    ClientProvider.presenterProvider.forGameplay(scene);
   });
 };
