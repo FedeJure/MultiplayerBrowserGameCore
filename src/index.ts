@@ -59,7 +59,8 @@ export const InitGame: (socket: Socket, originUrl: string) => void = (
         new ServerEnemyCreatorDelegator(
           scene,
           ServerProvider.enemiesRepository,
-          ServerProvider.roomManager
+          ServerProvider.roomManager,
+          ServerProvider.presenterProvider
         ),
         new PlayerStateDelegator(
           ServerProvider.roomManager,

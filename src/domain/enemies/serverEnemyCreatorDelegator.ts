@@ -1,29 +1,34 @@
 import Phaser, { Scene } from "phaser";
+import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { PhaserEnemyView } from "../../view/enemy/phaserEnemyView";
 import { Delegator } from "../delegator";
 import { SimpleRepository } from "../repository";
 import { RoomManager } from "../roomManager";
-import { BaseEnemy } from "./BaseEnemy";
+import { Side } from "../side";
 import { Enemy } from "./Enemy";
 import { EnemyAnimation } from "./EnemyAnimations";
 import { SpiderEnemyModel } from "./enemyModel/spiderEnemyModel";
 import { EnemySpawner } from "./EnemySpawner";
 import { EnemyState } from "./EnemyState";
+import { ServerBaseEnemy } from "./ServerBaseEnemy";
 
 export class ServerEnemyCreatorDelegator implements Delegator {
   constructor(
     private scene: Scene,
     private enemiesRepository: SimpleRepository<Enemy>,
-    private roomManager: RoomManager
+    private roomManager: RoomManager,
+    private presenterProvider: ServerPresenterProvider
   ) {}
   init(): void {
     // here, create a EnemySpawner on each enemy spot (from map or random)
-    new EnemySpawner(600, 600, 3, 3000, 10000, (x, y) => {
+    new EnemySpawner(600, 1600, 3, 3000, 10000, (x, y) => {
       const state: EnemyState = {
         life: SpiderEnemyModel.stats.maxLife,
         position: { x, y },
         anim: EnemyAnimation.IDLE,
         map: 0,
+        velocity: { x: 0, y: 0 },
+        side: Side.RIGHT,
       };
       const view = new PhaserEnemyView(
         this.scene.matter.add.sprite(state.position.x, state.position.y, ""),
@@ -32,7 +37,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         SpiderEnemyModel.stats.height,
         SpiderEnemyModel.stats.width
       );
-      const enemy = new BaseEnemy(
+      const enemy = new ServerBaseEnemy(
         state,
         {
           name: SpiderEnemyModel.name,
@@ -47,6 +52,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         []
       );
       this.enemiesRepository.save(enemy.info.id, enemy);
+      this.presenterProvider.forEnemy(view, enemy);
       return enemy;
     });
   }

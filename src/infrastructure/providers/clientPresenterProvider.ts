@@ -25,6 +25,8 @@ import { GameObjects } from "phaser";
 import { Player } from "../../domain/player/players/player";
 import { PlayerStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
 import { ClientEnemyCreatorDelegator } from "../../domain/enemies/clientEnemyCreatorDelegator";
+import { Enemy } from "../../domain/enemies/Enemy";
+import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
 
 export class ClientPresenterProvider {
   forLocalPlayer(
@@ -101,7 +103,8 @@ export class ClientPresenterProvider {
       new ClientEnemyCreatorDelegator(
         scene,
         ClientProvider.serverConnection,
-        ClientProvider.spawnedEnemies
+        ClientProvider.spawnedEnemies,
+        ClientProvider.presenterProvider
       ),
     ]);
   }
@@ -127,5 +130,8 @@ export class ClientPresenterProvider {
         break;
     }
     new ViewPresenter(view, delegators);
+  }
+  forEnemy(view: GameObjects.GameObject, enemy: Enemy) {
+    new ViewPresenter(view, [new EnemyUpdateDelegator(enemy)]);
   }
 }

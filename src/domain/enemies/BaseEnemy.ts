@@ -1,4 +1,5 @@
 import { CombatResult } from "../player/combat/combatResult";
+import { Side } from "../side";
 import { Enemy } from "./Enemy";
 import { EnemyInfo } from "./EnemyInfo";
 import { EnemyState } from "./EnemyState";
@@ -22,8 +23,12 @@ export class BaseEnemy implements Enemy {
     this._state = { ...this._state, ...state };
   }
   receiveAttack(attack: CombatResult) {}
-  update(time: number, delta: number) {}
+  update(time: number, delta: number) {
+    this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);
+    this.view.setPosition(this.state.position.x, this.state.position.y)
+    this.view.lookToLeft(this.state.side === Side.LEFT);
+  }
   destroy() {
-      this.view.destroy()
+    this.view.destroy();
   }
 }

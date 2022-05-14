@@ -8,12 +8,11 @@ import { PlayerAngleFixDelegator } from "../../domain/player/movement/playerAngl
 import { PlayerStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
 import { ViewPresenter } from "../../presentation/viewPresenter";
 import { Player } from "../../domain/player/players/player";
+import { Enemy } from "../../domain/enemies/Enemy";
+import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
 
 export class ServerPresenterProvider {
-  forPlayer(
-    view: Phaser.GameObjects.GameObject,
-    player: Player,
-  ): void {
+  forPlayer(view: Phaser.GameObjects.GameObject, player: Player): void {
     new ViewPresenter(view, [
       new PlayerCollisionDelegator(player),
       new PlayerStateUpdaterDelegator(player),
@@ -31,5 +30,8 @@ export class ServerPresenterProvider {
         break;
     }
     new ViewPresenter(view, delegators);
+  }
+  forEnemy(view: GameObjects.GameObject, enemy: Enemy) {
+    new ViewPresenter(view, [new EnemyUpdateDelegator(enemy)]);
   }
 }

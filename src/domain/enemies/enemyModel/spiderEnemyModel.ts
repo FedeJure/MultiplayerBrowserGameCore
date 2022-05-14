@@ -6,7 +6,7 @@ export const SpiderEnemyModel: EnemyModel = {
     baseAttack: 1,
     baseDefense: 0,
     attackSpeed: 1,
-    idleMovementSpeed: 5,
+    idleMovementSpeed: 3,
     combatingMovementSpeed: 2.5,
     width: 60,
     height: 60,

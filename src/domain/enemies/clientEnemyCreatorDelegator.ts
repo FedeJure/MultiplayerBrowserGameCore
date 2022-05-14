@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
 import { EnemiesStatesEvent } from "../../infrastructure/events/gameEvents";
+import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
 import { ClientPhaserEnemyView } from "../../view/enemy/clientPhaserEnemyView";
 import { Delegator } from "../delegator";
 import { SimpleRepository } from "../repository";
@@ -16,7 +17,8 @@ export class ClientEnemyCreatorDelegator implements Delegator {
   constructor(
     private scene: Scene,
     private serverConnection: ServerConnection,
-    private spawnedEnemies: SimpleRepository<Enemy>
+    private spawnedEnemies: SimpleRepository<Enemy>,
+    private presenterProvider: ClientPresenterProvider
   ) {}
   init(): void {
     this.serverConnection.onEnemyState.subscribe((event) => {
@@ -42,6 +44,7 @@ export class ClientEnemyCreatorDelegator implements Delegator {
       state.anim
     );
     const enemy = new BaseEnemy(state, info, stats, view);
+    this.presenterProvider.forEnemy(view, enemy);
     this.spawnedEnemies.save(enemy.info.id, enemy);
   }
 
