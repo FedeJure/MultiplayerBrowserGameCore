@@ -1,4 +1,5 @@
 import { Scene } from "phaser";
+import { EnemiesStatesEvent } from "../../infrastructure/events/gameEvents";
 import { ClientPhaserEnemyView } from "../../view/enemy/clientPhaserEnemyView";
 import { Delegator } from "../delegator";
 import { SimpleRepository } from "../repository";
@@ -10,6 +11,8 @@ import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 
 export class ClientEnemyCreatorDelegator implements Delegator {
+  private lastTimeCleanup: number = 0;
+  private readonly cleanupTime = 3000;
   constructor(
     private scene: Scene,
     private serverConnection: ServerConnection,
@@ -22,6 +25,9 @@ export class ClientEnemyCreatorDelegator implements Delegator {
         if (!existentEnemy)
           this.createEnemy(enemy.state, enemy.info, enemy.stats);
         else existentEnemy.updateState(enemy.state);
+        if (this.lastTimeCleanup + this.cleanupTime < Date.now()) {
+          this.cleanUp(event);
+        }
       });
     });
   }
@@ -36,7 +42,17 @@ export class ClientEnemyCreatorDelegator implements Delegator {
       state.anim
     );
     const enemy = new BaseEnemy(state, info, stats, view);
-    this.spawnedEnemies.save(enemy.info.id, enemy)
+    this.spawnedEnemies.save(enemy.info.id, enemy);
+  }
+
+  private cleanUp(event: EnemiesStatesEvent) {
+    this.lastTimeCleanup = Date.now();
+    this.spawnedEnemies.getAll().forEach((enemy) => {
+      if (!event.enemyStates.enemies.find((e) => e.info.id === enemy.info.id)) {
+        this.spawnedEnemies.remove(enemy.info.id);
+        enemy.destroy();
+      }
+    });
   }
 
   stop(): void {}

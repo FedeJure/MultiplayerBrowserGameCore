@@ -23,4 +23,7 @@ export class BaseEnemy implements Enemy {
   }
   receiveAttack(attack: CombatResult) {}
   update(time: number, delta: number) {}
+  destroy() {
+      this.view.destroy()
+  }
 }

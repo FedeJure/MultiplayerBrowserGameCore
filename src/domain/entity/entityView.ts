@@ -16,4 +16,5 @@ export interface EntityView {
   setAngle(degreeAngle: number): void;
   lookToLeft(value: boolean): void;
   setVelocity(x: number, y: number): void;
+  destroy()
 }

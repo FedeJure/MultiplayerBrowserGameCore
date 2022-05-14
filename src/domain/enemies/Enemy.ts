@@ -12,4 +12,5 @@ export interface Enemy {
   receiveAttack(attack: CombatResult);
   update(time: number, delta: number);
   updateState(state: Partial<EnemyState>)
+  destroy();
 }
