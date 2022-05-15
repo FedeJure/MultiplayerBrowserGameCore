@@ -2,17 +2,17 @@ import { EnvironmentObjectAssetType } from "../domain/environmentObjects/environ
 import { EnvironmentObjectVariant } from "../domain/environmentObjects/environmentObjectVariant";
 import { ServerProvider } from "../infrastructure/providers/serverProvider";
 
-export const LoadServerRepositoriesWithMockData = async () => {
+export const LoadServerRepositoriesWithMockData = async (provider: ServerProvider) => {
   //Mock players
   for (let i = 1; i <= 200; i++) {
-    await ServerProvider.playerInfoRepository.save(i.toString(), {
+    await provider.playerInfoRepository.save(i.toString(), {
       id: i.toString(),
       name: "Test Player " + i,
     });
   }
 
   // Load existent items
-  await ServerProvider.itemsRepository.save("1", {
+  await provider.itemsRepository.save("1", {
     id: "1",
     types: [],
     icon: "ui/testItem.png",
@@ -20,7 +20,7 @@ export const LoadServerRepositoriesWithMockData = async () => {
     name: "Default Test Item",
     detail: "This is a Test item used only for testing purpose",
   });
-  await ServerProvider.itemsRepository.save("2", {
+  await provider.itemsRepository.save("2", {
     id: "2",
     types: [],
     icon: "ui/testItem.png",
@@ -29,7 +29,7 @@ export const LoadServerRepositoriesWithMockData = async () => {
     detail: "This is a Test item used only for testing purpose",
   });
 
-  ServerProvider.environmentObjectsRepository.save({
+  provider.environmentObjectsRepository.save({
     id: 1,
     pivotOrigin: { x: 0.5, y: 0 },
     height: 30,

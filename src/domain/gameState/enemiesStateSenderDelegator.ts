@@ -22,8 +22,13 @@ export class EnemiesStateSenderDelegator implements Delegator {
           enemies: (enemiesByRoom[room] ?? [])
             .map(this.enemiesRepository.get.bind(this.enemiesRepository))
             .filter((e) => e)
-            .map((enemy) => ({ state: enemy!.state, info: enemy!.info, stats: enemy!.stats })),
+            .map((enemy) => ({
+              state: enemy!.state,
+              info: enemy!.info,
+              stats: enemy!.stats,
+            })),
         };
+
         this.socket
           .in(room)
           .emit(

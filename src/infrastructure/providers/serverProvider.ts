@@ -37,86 +37,83 @@ class AttackTargetRepository extends InMemoryRepository<AttackTarget> {}
 class SpawnedEnemiesRepository extends InMemoryRepository<BaseEnemy> {}
 
 export class ServerProvider {
-  private static mapConfig?: MapConfiguration;
-  public static init(mapConfig: MapConfiguration) {
-    ServerProvider.mapConfig = mapConfig;
-  }
-  public static get connectionsRepository(): SimpleRepository<ClientConnection> {
+  constructor(private mapConfig: MapConfiguration) {}
+  public  get connectionsRepository(): SimpleRepository<ClientConnection> {
     return DependencyManager.GetOrInstantiate<
       SimpleRepository<ClientConnection>
     >(() => new ClientConnectionRepository());
   }
-  public static get playerInfoRepository(): AsyncRepository<PlayerInfo> {
+  public  get playerInfoRepository(): AsyncRepository<PlayerInfo> {
     return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerInfo>>(
       () => new PlayerInfoRepository()
     );
   }
-  public static get playerStateRepository(): PlayerStateRepository {
+  public  get playerStateRepository(): PlayerStateRepository {
     return DependencyManager.GetOrInstantiate<PlayerStateRepository>(
       () => new InMemoryPlayerStateRepository()
     );
   }
-  public static get presenterProvider(): ServerPresenterProvider {
+  public  get presenterProvider(): ServerPresenterProvider {
     return DependencyManager.GetOrInstantiate<ServerPresenterProvider>(
       () => new ServerPresenterProvider()
     );
   }
 
-  public static get playerInputRequestRepository(): PlayerInputRequestRepository {
+  public  get playerInputRequestRepository(): PlayerInputRequestRepository {
     return DependencyManager.GetOrInstantiate<PlayerInputRequestRepository>(
       () => new PlayerInputRequestRepository()
     );
   }
 
-  public static get roomManager(): RoomManager {
+  public  get roomManager(): RoomManager {
     return DependencyManager.GetOrInstantiate<RoomManager>(
       () => new SocketRoomManager()
     );
   }
 
-  public static get inventoryRepository(): AsyncRepository<PlayerInventoryDto> {
+  public  get inventoryRepository(): AsyncRepository<PlayerInventoryDto> {
     return DependencyManager.GetOrInstantiate<
       AsyncRepository<PlayerInventoryDto>
     >(() => new PlayerInventoryRepository());
   }
 
-  public static get itemsRepository(): AsyncRepository<Item> {
+  public  get itemsRepository(): AsyncRepository<Item> {
     return DependencyManager.GetOrInstantiate<AsyncRepository<Item>>(
       () => new ItemRepository()
     );
   }
 
-  public static get environmentObjectsRepository(): EnvironmentObjectRepository {
+  public  get environmentObjectsRepository(): EnvironmentObjectRepository {
     return DependencyManager.GetOrInstantiate<EnvironmentObjectRepository>(
       () => new InMemoryEnvironmentObjectRepository()
     );
   }
 
-  public static get inGamePlayerRepository(): SimpleRepository<ServerPlayer> {
+  public  get inGamePlayerRepository(): SimpleRepository<ServerPlayer> {
     return DependencyManager.GetOrInstantiate<SimpleRepository<ServerPlayer>>(
       () => new InGamePlayerRepository()
     );
   }
 
-  public static get attackTargetRepository(): SimpleRepository<AttackTarget> {
+  public  get attackTargetRepository(): SimpleRepository<AttackTarget> {
     return DependencyManager.GetOrInstantiate<SimpleRepository<AttackTarget>>(
       () => new AttackTargetRepository()
     );
   }
 
-  public static get playerStatsRepository(): AsyncRepository<PlayerStats> {
+  public  get playerStatsRepository(): AsyncRepository<PlayerStats> {
     return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerStats>>(
       () => new PlayerStatsRepository()
     );
   }
 
-  public static get mapMapanger(): MapManager {
+  public  get mapMapanger(): MapManager {
     return DependencyManager.GetOrInstantiate<MapManager>(
-      () => new CompleteMapManager(ServerProvider.mapConfig ?? MapsConfiguration)
+      () => new CompleteMapManager(this.mapConfig ?? MapsConfiguration)
     )
   }
 
-  public static get enemiesRepository(): SimpleRepository<Enemy> {
+  public  get enemiesRepository(): SimpleRepository<Enemy> {
     return DependencyManager.GetOrInstantiate<SpawnedEnemiesRepository>(
       () => new SpawnedEnemiesRepository()
     )

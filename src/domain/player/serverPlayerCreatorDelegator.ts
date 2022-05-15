@@ -5,7 +5,6 @@ import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { PlayerSocketInput } from "../../infrastructure/input/playerSocketInput";
 import { Log } from "../../infrastructure/Logger";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
-import { ServerProvider } from "../../infrastructure/providers/serverProvider";
 import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ServerPlayerView } from "../../view/player/serverPlayerView";
 import { ClientConnection } from "../clientConnection";
@@ -23,6 +22,7 @@ import { AttackTarget } from "../combat/attackTarget";
 import { AttackTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 import { MapManager } from "../environment/mapManager";
+import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -37,7 +37,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
     private playerStatsRepository: AsyncRepository<PlayerStats>,
     private attackTargetRepository: SimpleRepository<AttackTarget>,
-    private mapManager: MapManager
+    private mapManager: MapManager,
+    private playerInputRequestRepository: PlayerInputRequestRepository
   ) {}
   init(): void {
     this.connectionsRepository.onSave.subscribe((connection) => {
@@ -77,7 +78,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
           connection,
           [foundedMap, ...neighborMaps]
         );
-        player.updateState({currentRooms: joinedRooms})
+        player.updateState({ currentRooms: joinedRooms });
         connection.sendMapUpdateEvent(foundedMap, neighborMaps);
         this.socket.in(joinedRooms).emit(
           GameEvents.NEW_PLAYER_CONNECTED.name,
@@ -161,11 +162,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       id: playerId,
       type: AttackTargetType.PLAYER,
     });
-    const input = new PlayerSocketInput(
-      playerId,
-      connection,
-      ServerProvider.playerInputRequestRepository
-    );
+    const input = new PlayerSocketInput(playerId, connection, this.playerInputRequestRepository);
     const player = new ServerPlayer(
       playerInfo,
       playerState,
@@ -177,7 +174,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       this.mapManager,
       connection,
       this.playerInfoRepository,
-      this.playerStateRepository,
+      this.playerStateRepository
     );
     connection.setPlayerId(player.info.id);
     this.presenterProvider.forPlayer(view, player);

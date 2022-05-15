@@ -21,7 +21,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
   ) {}
   init(): void {
     // here, create a EnemySpawner on each enemy spot (from map or random)
-    new EnemySpawner(600, 1600, 3, 3000, 10000, (x, y) => {
+    new EnemySpawner(600, 1600, 10, 1000, 3000, (x, y) => {
       const state: EnemyState = {
         life: SpiderEnemyModel.stats.maxLife,
         position: { x, y },
