@@ -85,10 +85,6 @@ export class ClientConnectionDelegator implements Delegator {
     );
 
     const player = new Player(info, state, view);
-    this.attackTargetRepository.save(view.matterBody.id.toString(), {
-      target: player,
-      type: AttackTargetType.PLAYER,
-    });
     this.presenterProvider.forPlayer(player, view);
     this.inGamePlayersRepository.save(player.info.id, player);
   }
