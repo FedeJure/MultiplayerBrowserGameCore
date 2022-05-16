@@ -8,7 +8,7 @@ import { Delegator } from "../delegator";
 import { SimpleRepository } from "../repository";
 import { RoomManager } from "../roomManager";
 import { Side } from "../side";
-import { Enemy } from "./Enemy";
+import { BaseEnemy } from "./BaseEnemy";
 import { EnemyAnimation } from "./EnemyAnimations";
 import { SpiderEnemyModel } from "./enemyModel/spiderEnemyModel";
 import { EnemySpawner } from "./EnemySpawner";
@@ -18,7 +18,7 @@ import { ServerBaseEnemy } from "./ServerBaseEnemy";
 export class ServerEnemyCreatorDelegator implements Delegator {
   constructor(
     private scene: Scene,
-    private enemiesRepository: SimpleRepository<Enemy>,
+    private enemiesRepository: SimpleRepository<BaseEnemy>,
     private roomManager: RoomManager,
     private presenterProvider: ServerPresenterProvider,
     private attackTargetRepository: SimpleRepository<AttackTarget>

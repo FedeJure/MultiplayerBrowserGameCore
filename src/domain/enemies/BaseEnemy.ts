@@ -1,11 +1,10 @@
 import { Side } from "../side";
-import { Enemy } from "./Enemy";
 import { EnemyInfo } from "./EnemyInfo";
 import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 import { EnemyView } from "./EnemyView";
 
-export class BaseEnemy implements Enemy {
+export class BaseEnemy {
   private _state: EnemyState;
   constructor(
     state: EnemyState,

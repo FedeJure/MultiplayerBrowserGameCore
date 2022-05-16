@@ -1,8 +1,8 @@
 import { Delegator } from "../delegator";
-import { Enemy } from "./Enemy";
+import { BaseEnemy } from "./BaseEnemy";
 
 export class EnemyDelegator implements Delegator {
-  constructor(private enemy: Enemy) {}
+  constructor(private enemy: BaseEnemy) {}
   init(): void {}
   stop(): void {}
   update(time: number, delta: number): void {

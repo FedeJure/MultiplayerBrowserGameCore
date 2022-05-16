@@ -2,7 +2,7 @@ import { Socket } from "socket.io";
 import { EnemyStatesDto } from "../../infrastructure/dtos/enemyStatesDto";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { Delegator } from "../delegator";
-import { Enemy } from "../enemies/Enemy";
+import { BaseEnemy } from "../enemies/BaseEnemy";
 import { SimpleRepository } from "../repository";
 import { RoomManager } from "../roomManager";
 
@@ -10,7 +10,7 @@ export class EnemiesStateSenderDelegator implements Delegator {
   constructor(
     private roomManager: RoomManager,
     private socket: Socket,
-    private enemiesRepository: SimpleRepository<Enemy>
+    private enemiesRepository: SimpleRepository<BaseEnemy>
   ) {}
   init(): void {}
   stop(): void {}

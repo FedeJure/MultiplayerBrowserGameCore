@@ -23,10 +23,10 @@ import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjec
 import { GameObjects } from "phaser";
 import { PlayerStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
 import { ClientEnemyCreatorDelegator } from "../../domain/enemies/clientEnemyCreatorDelegator";
-import { Enemy } from "../../domain/enemies/Enemy";
 import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
 import { ControllablePlayer } from "../../domain/player/players/controllablePlayer";
 import { Player } from "../../domain/player/players/player";
+import { BaseEnemy } from "../../domain/enemies/BaseEnemy";
 
 export class ClientPresenterProvider {
   forLocalPlayer(
@@ -129,7 +129,7 @@ export class ClientPresenterProvider {
     }
     new ViewPresenter(view, delegators);
   }
-  forEnemy(view: GameObjects.GameObject, enemy: Enemy) {
+  forEnemy(view: GameObjects.GameObject, enemy: BaseEnemy) {
     new ViewPresenter(view, [new EnemyUpdateDelegator(enemy)]);
   }
 }

@@ -1,7 +1,6 @@
 import { ClientConnection } from "../../domain/clientConnection";
 import { AttackTarget } from "../../domain/combat/attackTarget";
 import { BaseEnemy } from "../../domain/enemies/BaseEnemy";
-import { Enemy } from "../../domain/enemies/Enemy";
 import { CompleteMapManager } from "../../domain/environment/completeMapManager";
 import { MapConfiguration } from "../../domain/environment/mapConfiguration";
 import { MapManager } from "../../domain/environment/mapManager";
@@ -113,7 +112,7 @@ export class ServerProvider {
     )
   }
 
-  public  get enemiesRepository(): SimpleRepository<Enemy> {
+  public  get enemiesRepository(): SimpleRepository<BaseEnemy> {
     return DependencyManager.GetOrInstantiate<SpawnedEnemiesRepository>(
       () => new SpawnedEnemiesRepository()
     )

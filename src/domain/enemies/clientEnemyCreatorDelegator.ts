@@ -6,7 +6,6 @@ import { Delegator } from "../delegator";
 import { SimpleRepository } from "../repository";
 import { ServerConnection } from "../serverConnection";
 import { BaseEnemy } from "./BaseEnemy";
-import { Enemy } from "./Enemy";
 import { EnemyInfo } from "./EnemyInfo";
 import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
@@ -17,7 +16,7 @@ export class ClientEnemyCreatorDelegator implements Delegator {
   constructor(
     private scene: Scene,
     private serverConnection: ServerConnection,
-    private spawnedEnemies: SimpleRepository<Enemy>,
+    private spawnedEnemies: SimpleRepository<BaseEnemy>,
     private presenterProvider: ClientPresenterProvider,
   ) {}
   init(): void {

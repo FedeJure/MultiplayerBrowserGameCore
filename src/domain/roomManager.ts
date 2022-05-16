@@ -1,5 +1,4 @@
 import { ClientConnection } from "./clientConnection";
-import { Enemy } from "./enemies/Enemy";
 import { EnemyInfo } from "./enemies/EnemyInfo";
 import { ProcessedMap } from "./environment/processedMap";
 import {  PlayerInfo } from "./player/playerInfo";
@@ -17,11 +16,11 @@ export interface RoomManager {
     maps: ProcessedMap[]
   ): Promise<string[]>;
   joinEnemyToRoom(
-    enemyId: Enemy["info"]["id"],
+    enemyId: EnemyInfo["id"],
     newRooms: RoomId[],
     prevRoom: RoomId[]
   );
-  removeEnemyFromRoom(enemyId: Enemy["info"]["id"], rooms: RoomId[]);
+  removeEnemyFromRoom(enemyId: EnemyInfo["id"], rooms: RoomId[]);
   getPlayersByRoom(): { [key: RoomId]: PlayerInfo["id"][] | undefined };
   getEnemiesByRoom(): { [key: RoomId]: EnemyInfo["id"][] | undefined };
 }
