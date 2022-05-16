@@ -3,10 +3,13 @@ import { AnimationLayer, AnimationCode } from "../../domain/animations/animation
 import { EnemyAnimation } from "../../domain/enemies/EnemyAnimations";
 import { AnimationDto, EmptyAnimations } from "../../domain/player/animations/AnimationDto";
 import { Vector } from "../../domain/vector";
+import { EntityIngameHud } from "../controllable/entityIngameHud";
 import { PhaserEnemyView } from "./phaserEnemyView";
 
 export class ClientPhaserEnemyView extends PhaserEnemyView {
   private spine: SpineGameObject;
+  private readonly hud: EntityIngameHud;
+
   constructor(
     scene: Scene,
     x: number,
@@ -24,6 +27,9 @@ export class ClientPhaserEnemyView extends PhaserEnemyView {
     const viewAsSprite = spine as unknown as Physics.Matter.Sprite;
 
     super(viewAsSprite, x, y, height, width);
+    this.hud = new EntityIngameHud(scene, height, width);
+    this.hud.setDisplayName(name)
+    this.add(this.hud)
     this.spine = spine;
   }
 

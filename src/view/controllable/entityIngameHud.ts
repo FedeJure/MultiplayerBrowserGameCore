@@ -1,8 +1,8 @@
 import { BodyType } from "matter";
 import { GameObjects, Scene } from "phaser";
 import { FontSize, FONT_RESOLUTION } from "../Fonts";
-import { LifeBar } from "./lifeBar";
-export class PlayerIngameHud extends GameObjects.Container {
+import { LifeBar } from "../player/lifeBar";
+export class EntityIngameHud extends GameObjects.Container {
   private nameText: GameObjects.Text;
   private lifeBar: LifeBar;
   public readonly matterBody: BodyType;

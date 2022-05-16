@@ -4,7 +4,7 @@ import {
   AnimationCode,
   AnimationLayer,
 } from "../../domain/animations/animations";
-import { PlayerIngameHud } from "./playerIngameHud";
+import { EntityIngameHud } from "../controllable/entityIngameHud";
 import { PhaserPlayerView } from "./phaserPlayerView";
 import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
 import {
@@ -14,7 +14,7 @@ import {
 
 export class ClientPlayerView extends PhaserPlayerView {
   private readonly spine: SpineGameObject;
-  private readonly hud: PlayerIngameHud;
+  private readonly hud: EntityIngameHud;
 
   constructor(
     scene: Scene,
@@ -32,7 +32,7 @@ export class ClientPlayerView extends PhaserPlayerView {
     const viewAsSprite = spine as unknown as Physics.Matter.Sprite;
     super(viewAsSprite, x, y, height, width, combatCollisionResolver);
 
-    this.hud = new PlayerIngameHud(scene, height, width);
+    this.hud = new EntityIngameHud(scene, height, width);
     this.add(this.hud);
     this.spine = spine;
   }
