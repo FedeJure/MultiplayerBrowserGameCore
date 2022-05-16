@@ -4,7 +4,7 @@ import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 import { EnemyView } from "./EnemyView";
 
-export class BaseEnemy {
+export class Enemy {
   private _state: EnemyState;
   constructor(
     state: EnemyState,

@@ -26,7 +26,7 @@ import { ClientEnemyCreatorDelegator } from "../../domain/enemies/clientEnemyCre
 import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
 import { ControllablePlayer } from "../../domain/player/players/controllablePlayer";
 import { Player } from "../../domain/player/players/player";
-import { BaseEnemy } from "../../domain/enemies/BaseEnemy";
+import { Enemy } from "../../domain/enemies/enemy";
 
 export class ClientPresenterProvider {
   forLocalPlayer(
@@ -129,7 +129,7 @@ export class ClientPresenterProvider {
     }
     new ViewPresenter(view, delegators);
   }
-  forEnemy(view: GameObjects.GameObject, enemy: BaseEnemy) {
+  forEnemy(view: GameObjects.GameObject, enemy: Enemy) {
     new ViewPresenter(view, [new EnemyUpdateDelegator(enemy)]);
   }
 }

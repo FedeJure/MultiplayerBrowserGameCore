@@ -1,7 +1,7 @@
 import { AnimationLayer } from "../animations/animations";
 import { Side } from "../side";
 import { EnemyAnimation } from "./EnemyAnimations";
-import { ServerBaseEnemy } from "./ServerBaseEnemy";
+import { ServerEnemy } from "./serverEnemy";
 
 enum Actions {
   IDLE = "idle",
@@ -16,7 +16,7 @@ export class BaseEnemyMovement {
   private currentAction: Actions = Actions.IDLE;
   private nextTimeDecide: number = 0;
 
-  constructor(private enemy: ServerBaseEnemy) {}
+  constructor(private enemy: ServerEnemy) {}
 
   decideNonCombatMove() {
     this.currentAction =

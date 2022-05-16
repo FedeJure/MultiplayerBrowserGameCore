@@ -8,17 +8,17 @@ import { Delegator } from "../delegator";
 import { SimpleRepository } from "../repository";
 import { RoomManager } from "../roomManager";
 import { Side } from "../side";
-import { BaseEnemy } from "./BaseEnemy";
+import { Enemy } from "./enemy";
 import { EnemyAnimation } from "./EnemyAnimations";
 import { SpiderEnemyModel } from "./enemyModel/spiderEnemyModel";
 import { EnemySpawner } from "./EnemySpawner";
 import { EnemyState } from "./EnemyState";
-import { ServerBaseEnemy } from "./ServerBaseEnemy";
+import { ServerEnemy } from "./serverEnemy";
 
 export class ServerEnemyCreatorDelegator implements Delegator {
   constructor(
     private scene: Scene,
-    private enemiesRepository: SimpleRepository<BaseEnemy>,
+    private enemiesRepository: SimpleRepository<Enemy>,
     private roomManager: RoomManager,
     private presenterProvider: ServerPresenterProvider,
     private attackTargetRepository: SimpleRepository<AttackTarget>
@@ -42,7 +42,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         SpiderEnemyModel.stats.height,
         SpiderEnemyModel.stats.width
       );
-      const enemy = new ServerBaseEnemy(
+      const enemy = new ServerEnemy(
         state,
         {
           name: SpiderEnemyModel.name,

@@ -15,13 +15,13 @@ import { Item } from "../../domain/items/item";
 import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
 import { AttackTarget } from "../../domain/combat/attackTarget";
 import { MapManager } from "../../domain/environment/mapManager";
-import { BaseEnemy } from "../../domain/enemies/BaseEnemy";
+import { Enemy } from "../../domain/enemies/enemy";
 
 //This is necessary because the dependency manager not work with generics
 class InventoryRepository extends InMemoryRepository<PlayerInventoryDto> {}
 class ItemRepository extends InMemoryRepository<Item> {}
 class AttackTargetRepository extends InMemoryRepository<AttackTarget> {}
-class SpawnedEnemiesRepository extends InMemoryRepository<BaseEnemy>{}
+class SpawnedEnemiesRepository extends InMemoryRepository<Enemy>{}
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
@@ -105,8 +105,8 @@ export class ClientProvider {
     )
   }
 
-  public static get spawnedEnemies(): SimpleRepository<BaseEnemy> {
-    return DependencyManager.GetOrInstantiate<SimpleRepository<BaseEnemy>>(
+  public static get spawnedEnemies(): SimpleRepository<Enemy> {
+    return DependencyManager.GetOrInstantiate<SimpleRepository<Enemy>>(
       () => new SpawnedEnemiesRepository()
     )
   }

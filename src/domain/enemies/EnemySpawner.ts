@@ -1,4 +1,4 @@
-import { ServerBaseEnemy } from "./ServerBaseEnemy";
+import { ServerEnemy } from "./serverEnemy";
 
 export class EnemySpawner {
   private enemies: number = 0;
@@ -9,7 +9,7 @@ export class EnemySpawner {
     private maxEnemies: number,
     private minInterval: number,
     private maxInterval: number,
-    private spawner: (x: number, y: number) => ServerBaseEnemy
+    private spawner: (x: number, y: number) => ServerEnemy
   ) {
     this.spawnEnemy();
     this.scheduleNewSpawn();

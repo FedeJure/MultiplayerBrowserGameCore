@@ -1,11 +1,11 @@
 import { CombatResult } from "../player/combat/combatResult";
 import { ControllablePlayer } from "../player/players/controllablePlayer";
-import { BaseEnemy } from "./BaseEnemy";
+import { Enemy } from "./enemy";
 
 export class BaseEnemyCombat {
   private _target: ControllablePlayer | null = null;
 
-  constructor(private enemy: BaseEnemy) {}
+  constructor(private enemy: Enemy) {}
   public get target() {
     return this._target;
   }

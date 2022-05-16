@@ -1,7 +1,7 @@
 import { Observable, Subject } from "rxjs";
 import { Attackable } from "../combat/attackTarget";
 import { CombatResult } from "../player/combat/combatResult";
-import { BaseEnemy } from "./BaseEnemy";
+import { Enemy } from "./enemy";
 import { BaseEnemyCombat } from "./BaseEnemyCombat";
 import { BaseEnemyMovement } from "./BaseEnemyMovement";
 import { EnemyInfo } from "./EnemyInfo";
@@ -9,7 +9,7 @@ import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 import { EnemyView } from "./EnemyView";
 
-export class ServerBaseEnemy extends BaseEnemy implements Attackable {
+export class ServerEnemy extends Enemy implements Attackable {
   private movement: BaseEnemyMovement;
   public readonly combat: BaseEnemyCombat;
   private _onDestroy = new Subject<void>();

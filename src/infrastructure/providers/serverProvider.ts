@@ -1,6 +1,6 @@
 import { ClientConnection } from "../../domain/clientConnection";
 import { AttackTarget } from "../../domain/combat/attackTarget";
-import { BaseEnemy } from "../../domain/enemies/BaseEnemy";
+import { Enemy } from "../../domain/enemies/enemy";
 import { CompleteMapManager } from "../../domain/environment/completeMapManager";
 import { MapConfiguration } from "../../domain/environment/mapConfiguration";
 import { MapManager } from "../../domain/environment/mapManager";
@@ -33,7 +33,7 @@ class PlayerInventoryRepository extends InMemoryAsyncRepository<PlayerInventoryD
 class ItemRepository extends InMemoryAsyncRepository<Item> {}
 class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
 class AttackTargetRepository extends InMemoryRepository<AttackTarget> {}
-class SpawnedEnemiesRepository extends InMemoryRepository<BaseEnemy> {}
+class SpawnedEnemiesRepository extends InMemoryRepository<Enemy> {}
 
 export class ServerProvider {
   constructor(private mapConfig: MapConfiguration) {}
@@ -112,7 +112,7 @@ export class ServerProvider {
     )
   }
 
-  public  get enemiesRepository(): SimpleRepository<BaseEnemy> {
+  public  get enemiesRepository(): SimpleRepository<Enemy> {
     return DependencyManager.GetOrInstantiate<SpawnedEnemiesRepository>(
       () => new SpawnedEnemiesRepository()
     )

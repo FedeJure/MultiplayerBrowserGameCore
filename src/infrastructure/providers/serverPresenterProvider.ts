@@ -9,7 +9,7 @@ import { PlayerStateUpdaterDelegator } from "../../domain/player/playerStateUpda
 import { ViewPresenter } from "../../presentation/viewPresenter";
 import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
 import { ControllablePlayer } from "../../domain/player/players/controllablePlayer";
-import { BaseEnemy } from "../../domain/enemies/BaseEnemy";
+import { Enemy } from "../../domain/enemies/enemy";
 
 export class ServerPresenterProvider {
   forPlayer(view: Phaser.GameObjects.GameObject, player: ControllablePlayer): void {
@@ -31,7 +31,7 @@ export class ServerPresenterProvider {
     }
     new ViewPresenter(view, delegators);
   }
-  forEnemy(view: GameObjects.GameObject, enemy: BaseEnemy) {
+  forEnemy(view: GameObjects.GameObject, enemy: Enemy) {
     new ViewPresenter(view, [new EnemyUpdateDelegator(enemy)]);
   }
 }

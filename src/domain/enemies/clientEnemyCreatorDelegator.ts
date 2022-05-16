@@ -5,7 +5,7 @@ import { SpinePhaserEntityView } from "../../view/entity/spinePhaserEntityView";
 import { Delegator } from "../delegator";
 import { SimpleRepository } from "../repository";
 import { ServerConnection } from "../serverConnection";
-import { BaseEnemy } from "./BaseEnemy";
+import { Enemy } from "./enemy";
 import { EnemyInfo } from "./EnemyInfo";
 import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
@@ -16,7 +16,7 @@ export class ClientEnemyCreatorDelegator implements Delegator {
   constructor(
     private scene: Scene,
     private serverConnection: ServerConnection,
-    private spawnedEnemies: SimpleRepository<BaseEnemy>,
+    private spawnedEnemies: SimpleRepository<Enemy>,
     private presenterProvider: ClientPresenterProvider,
   ) {}
   init(): void {
@@ -41,7 +41,7 @@ export class ClientEnemyCreatorDelegator implements Delegator {
       stats.width,
       info.name
     );
-    const enemy = new BaseEnemy(state, info, stats, view);
+    const enemy = new Enemy(state, info, stats, view);
     this.presenterProvider.forEnemy(view, enemy);
     this.spawnedEnemies.save(enemy.info.id, enemy);
   }
