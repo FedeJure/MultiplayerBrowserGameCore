@@ -1,6 +1,5 @@
 import { Physics, Scene } from "phaser";
 import { AnimationLayer, AnimationCode } from "../../domain/animations/animations";
-import { EnemyAnimation } from "../../domain/enemies/EnemyAnimations";
 import { AnimationDto, EmptyAnimations } from "../../domain/player/animations/AnimationDto";
 import { Vector } from "../../domain/vector";
 import { EntityIngameHud } from "../controllable/entityIngameHud";
@@ -17,9 +16,9 @@ export class ClientPhaserEnemyView extends PhaserEnemyView {
     height: number,
     width: number,
     name: string,
-    initialAnimation: EnemyAnimation
+    initialAnimation: AnimationDto
   ) {
-    const spine = scene.add.spine(x, y, "hero", initialAnimation, true);
+    const spine = scene.add.spine(x, y, "hero", undefined, true);
     const currentSize: Vector = spine.getBounds().size;
     const factor = currentSize.y / height;
     spine.setDisplaySize(currentSize.x / factor + 10, height + 10);
