@@ -2,7 +2,6 @@ import { Attackable } from "../../combat/attackTarget";
 import { AttackTargetType } from "../../combat/attackTargetType";
 import { MapManager } from "../../environment/mapManager";
 import { PlayerView } from "../../playerView";
-import { SimpleRepository } from "../../repository";
 import { AnimationSystem } from "../animations/animationSystem";
 import { DefendCombatAction } from "../combat/actions/DefendCombatAction";
 import { SimpleForwardPunchCombatAction } from "../combat/actions/SimpleForwardPunchCombatAction";

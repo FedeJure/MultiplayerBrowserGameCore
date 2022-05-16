@@ -11,8 +11,6 @@ export class Player {
     protected _view: PlayerView
   ) {}
 
-  receiveAttack(attack: CombatResult) {}
-
   updateInfo(newInfo: Partial<PlayerInfo>) {
     this._info = { ...this.info, ...newInfo };
   }
