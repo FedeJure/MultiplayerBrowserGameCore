@@ -18,6 +18,8 @@ export class BaseEnemyCombat {
   }
 
   die() {
-    this.enemy.destroy()
+    setTimeout(() => {
+      this.enemy.destroy();
+    }, 50);
   }
 }
