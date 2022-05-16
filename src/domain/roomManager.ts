@@ -1,7 +1,8 @@
 import { ClientConnection } from "./clientConnection";
 import { Enemy } from "./enemies/Enemy";
+import { EnemyInfo } from "./enemies/EnemyInfo";
 import { ProcessedMap } from "./environment/processedMap";
-import { Player } from "./player/players/player";
+import {  PlayerInfo } from "./player/playerInfo";
 
 export type RoomId = string;
 
@@ -21,6 +22,6 @@ export interface RoomManager {
     prevRoom: RoomId[]
   );
   removeEnemyFromRoom(enemyId: Enemy["info"]["id"], rooms: RoomId[]);
-  getPlayersByRoom(): { [key: RoomId]: Player["info"]["id"][] | undefined };
-  getEnemiesByRoom(): { [key: RoomId]: Enemy["info"]["id"][] | undefined };
+  getPlayersByRoom(): { [key: RoomId]: PlayerInfo["id"][] | undefined };
+  getEnemiesByRoom(): { [key: RoomId]: EnemyInfo["id"][] | undefined };
 }

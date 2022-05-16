@@ -3,7 +3,7 @@ import { Delegator } from "../../delegator";
 import { Disposer } from "../../disposer";
 import { ServerConnection } from "../../serverConnection";
 import { Vector } from "../../vector";
-import { Player } from "../players/player";
+import { ControllablePlayer } from "../players/controllablePlayer";
 
 export class PlayerMovementValidationDelegator implements Delegator {
   private readonly disposer: Disposer = new Disposer();
@@ -11,7 +11,7 @@ export class PlayerMovementValidationDelegator implements Delegator {
   private remotePosition: Vector = Phaser.Math.Vector2.ZERO;
 
   constructor(
-    private readonly player: Player,
+    private readonly player: ControllablePlayer,
     private readonly connection: ServerConnection,
     private readonly inputRepository: PlayerInputRequestRepository
   ) {

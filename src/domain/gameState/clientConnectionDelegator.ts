@@ -11,7 +11,6 @@ import { PlayerState } from "../player/playerState";
 import { PlayerInfo } from "../player/playerInfo";
 import { SimpleRepository } from "../repository";
 import { Scene } from "phaser";
-import { ClientPlayer } from "../player/players/clientPlayer";
 import { Player } from "../player/players/player";
 import { MovementSystem } from "../player/movement/movementSystem";
 import { DefaultPlayerStats, PlayerStats } from "../player/playerStats";
@@ -85,7 +84,7 @@ export class ClientConnectionDelegator implements Delegator {
       collisionResolver
     );
 
-    const player = new ClientPlayer(info, state, view);
+    const player = new Player(info, state, view);
     this.attackTargetRepository.save(view.matterBody.id.toString(), {
       target: player,
       type: AttackTargetType.PLAYER,
@@ -123,7 +122,6 @@ export class ClientConnectionDelegator implements Delegator {
       info,
       state,
       view,
-      this.inGamePlayersRepository,
       stats ?? DefaultPlayerStats,
       movementSystem,
       input,

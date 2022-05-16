@@ -4,7 +4,7 @@ import { PlayerInput } from "../player/playerInput";
 import { PlayerInputDto } from "../../infrastructure/dtos/playerInputDto";
 import { PlayerState } from "../player/playerState";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
-import { Player } from "../player/players/player";
+import { ControllablePlayer } from "../player/players/controllablePlayer";
 
 export class PlayerInputDelegator implements Delegator {
   private currentInput: PlayerInputDto | undefined;
@@ -12,7 +12,7 @@ export class PlayerInputDelegator implements Delegator {
   private savedState: PlayerState | undefined;
 
   constructor(
-    private player: Player,
+    private player: ControllablePlayer,
     private input: PlayerInput,
     private connection: ServerConnection,
     private inputRequestRepository: PlayerInputRequestRepository

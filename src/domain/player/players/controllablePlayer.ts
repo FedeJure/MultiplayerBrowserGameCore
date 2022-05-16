@@ -13,17 +13,15 @@ import { PlayerInfo } from "../playerInfo";
 import { PlayerInput } from "../playerInput";
 import { PlayerState } from "../playerState";
 import { PlayerStats } from "../playerStats";
-import { ClientPlayer } from "./clientPlayer";
 import { Player } from "./player";
 
-export class ControllablePlayer extends ClientPlayer implements Attackable {
+export class ControllablePlayer extends Player implements Attackable {
   protected _combatSystem: CombatSystem;
   protected _animationSystem: AnimationSystem;
   constructor(
     _info: PlayerInfo,
     _state: PlayerState,
     _view: PlayerView,
-    private inGamePlayersRepository: SimpleRepository<Player>,
     protected _stats: PlayerStats,
     private _movementSystem: MovementSystem,
     private _input: PlayerInput,

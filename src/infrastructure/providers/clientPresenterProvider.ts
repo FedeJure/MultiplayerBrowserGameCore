@@ -21,16 +21,17 @@ import { EnvironmentObjectVariant } from "../../domain/environmentObjects/enviro
 import { Delegator } from "../../domain/delegator";
 import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
 import { GameObjects } from "phaser";
-import { Player } from "../../domain/player/players/player";
 import { PlayerStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
 import { ClientEnemyCreatorDelegator } from "../../domain/enemies/clientEnemyCreatorDelegator";
 import { Enemy } from "../../domain/enemies/Enemy";
 import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
+import { ControllablePlayer } from "../../domain/player/players/controllablePlayer";
+import { Player } from "../../domain/player/players/player";
 
 export class ClientPresenterProvider {
   forLocalPlayer(
     input: PlayerInput,
-    player: Player,
+    player: ControllablePlayer,
     view: GameObjects.GameObject
   ): void {
     new ViewPresenter(view, [

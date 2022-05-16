@@ -9,8 +9,8 @@ import { PlayerState } from "../playerState";
 import { PlayerInput } from "../playerInput";
 import { MovementSystem } from "../movement/movementSystem";
 import { PlayerStats } from "../playerStats";
-import { Player } from "./player";
 import { MapManager } from "../../environment/mapManager";
+import { Player } from "./player";
 
 export class ServerPlayer extends ControllablePlayer {
   private _onStateChange: Subject<{
@@ -24,7 +24,6 @@ export class ServerPlayer extends ControllablePlayer {
     movementSystem: MovementSystem,
     input: PlayerInput,
     stats: PlayerStats,
-    inGamePlayersRepository: SimpleRepository<Player>,
     mapManager: MapManager,
     private _connection: ClientConnection,
     private playerInfoRepository: AsyncRepository<PlayerInfo>,
@@ -34,7 +33,6 @@ export class ServerPlayer extends ControllablePlayer {
       info,
       state,
       view,
-      inGamePlayersRepository,
       stats,
       movementSystem,
       input,

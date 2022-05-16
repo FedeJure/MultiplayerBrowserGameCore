@@ -7,12 +7,12 @@ import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjec
 import { PlayerAngleFixDelegator } from "../../domain/player/movement/playerAngleFixDelegator";
 import { PlayerStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
 import { ViewPresenter } from "../../presentation/viewPresenter";
-import { Player } from "../../domain/player/players/player";
 import { Enemy } from "../../domain/enemies/Enemy";
 import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
+import { ControllablePlayer } from "../../domain/player/players/controllablePlayer";
 
 export class ServerPresenterProvider {
-  forPlayer(view: Phaser.GameObjects.GameObject, player: Player): void {
+  forPlayer(view: Phaser.GameObjects.GameObject, player: ControllablePlayer): void {
     new ViewPresenter(view, [
       new PlayerCollisionDelegator(player),
       new PlayerStateUpdaterDelegator(player),
