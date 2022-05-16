@@ -1,3 +1,4 @@
+import { groupBy } from "rxjs";
 import { Side } from "../../side";
 import { ControllablePlayer } from "../players/controllablePlayer";
 import { ServerPlayer } from "../players/serverPlayer";
@@ -26,7 +27,7 @@ export class MovementSystem {
     if (!canJump && availableJumps > 0 && !input.jump) canJump = true;
 
     if (input.left || input.right || jumping) {
-      const inAirFactor = jumping ? 0.3 : 1;
+      const inAirFactor = !state.grounded ? 0.3 : 1;
       newVelX += +input.right * velocity * deltaTime * inAirFactor;
       newVelX -= +input.left * velocity * deltaTime * inAirFactor;
 
