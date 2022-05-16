@@ -30,6 +30,7 @@ export class CombatSystem {
   }
 
   receiveAttack(attack: CombatResult) {
+    console.log(attack)
     if (attack.damage > 0)
       this.player.animSystem.executeAnimation(
         AnimationCode.TAKING_DAMAGE,

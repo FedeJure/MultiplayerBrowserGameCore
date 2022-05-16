@@ -1,6 +1,4 @@
-import { AttackTarget } from "../../combat/attackTarget";
 import { PlayerView } from "../../playerView";
-import { CombatResult } from "../combat/combatResult";
 import { PlayerInfo } from "../playerInfo";
 import { PlayerState } from "../playerState";
 

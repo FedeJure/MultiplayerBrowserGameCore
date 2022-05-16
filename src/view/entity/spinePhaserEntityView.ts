@@ -1,7 +1,13 @@
 import { Vector } from "matter";
 import { Scene, Physics } from "phaser";
-import { AnimationLayer, AnimationCode } from "../../domain/animations/animations";
-import { AnimationDto, EmptyAnimations } from "../../domain/player/animations/AnimationDto";
+import {
+  AnimationLayer,
+  AnimationCode,
+} from "../../domain/animations/animations";
+import {
+  AnimationDto,
+  EmptyAnimations,
+} from "../../domain/player/animations/AnimationDto";
 import { EntityIngameHud } from "./entityIngameHud";
 import { PhaserEntityView } from "./phaserEntityView";
 
@@ -37,6 +43,10 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     ).forEach((anim) =>
       this.playAnimation(anim.name, anim.layer, anim.loop, anim.duration)
     );
+  }
+
+  override setLifePercent(percent: number): void {
+    this.hud.setLifePercent(percent);
   }
 
   playAnimation(

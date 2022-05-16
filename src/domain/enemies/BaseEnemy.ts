@@ -1,3 +1,4 @@
+import { Attackable } from "../combat/attackTarget";
 import { CombatResult } from "../player/combat/combatResult";
 import { Side } from "../side";
 import { Enemy } from "./Enemy";
@@ -6,7 +7,7 @@ import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 import { EnemyView } from "./EnemyView";
 
-export class BaseEnemy implements Enemy {
+export class BaseEnemy implements Enemy, Attackable {
   private _state: EnemyState;
   constructor(
     state: EnemyState,
@@ -22,7 +23,8 @@ export class BaseEnemy implements Enemy {
   updateState(state: Partial<EnemyState>) {
     this._state = { ...this._state, ...state };
   }
-  receiveAttack(attack: CombatResult) {}
+  receiveAttack(attack: CombatResult) {
+  }
   update(time: number, delta: number) {
     this.view.playAnimations([this.state.anim])
     this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);

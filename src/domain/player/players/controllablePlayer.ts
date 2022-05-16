@@ -1,4 +1,4 @@
-import { Attackable, AttackTarget } from "../../combat/attackTarget";
+import { Attackable } from "../../combat/attackTarget";
 import { AttackTargetType } from "../../combat/attackTargetType";
 import { MapManager } from "../../environment/mapManager";
 import { PlayerView } from "../../playerView";
@@ -33,7 +33,7 @@ export class ControllablePlayer extends ClientPlayer implements Attackable {
     this._animationSystem = new AnimationSystem(this);
     this._combatSystem = new CombatSystem(this, mapManager, [
       new SimpleForwardPunchCombatAction(this),
-      new DefendCombatAction(this)
+      new DefendCombatAction(this),
     ]);
   }
 
@@ -93,7 +93,11 @@ export class ControllablePlayer extends ClientPlayer implements Attackable {
     return this.view.combatCollisionResolver
       .getTargetsOnArea(x, y, width, height)
       .filter(
-        (t) => t.type === AttackTargetType.PLAYER && t.target !== this
-      ).map(t => t.target)
+        (t) =>
+          t.target !== this &&
+          (t.type === AttackTargetType.PLAYER ||
+            t.type === AttackTargetType.MOB)
+      )
+      .map((t) => t.target);
   }
 }
