@@ -6,6 +6,13 @@ export class SocketRoomManager implements RoomManager {
   private playersByRoom: { [key: RoomId]: string[] | undefined } = {};
   private enemiesByRoom: { [key: RoomId]: string[] | undefined } = {};
   constructor() {}
+  removeEnemyFromRoom(enemyId: string, rooms: string[]) {
+    rooms.forEach((room) => {
+      this.enemiesByRoom[room] = this.enemiesByRoom[room]?.filter(
+        (e) => e !== enemyId
+      );
+    });
+  }
 
   async joinToRoom(
     playerId: string,

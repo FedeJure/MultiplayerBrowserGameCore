@@ -56,6 +56,13 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         [enemy.state.map.toString()],
         []
       );
+      enemy.onDestroy.subscribe(() => {
+        this.enemiesRepository.remove(enemy.info.id);
+        this.attackTargetRepository.remove(view.matterBody.id.toString());
+        this.roomManager.removeEnemyFromRoom(enemy.info.id, [
+          enemy.state.map.toString(),
+        ]);
+      });
       this.enemiesRepository.save(enemy.info.id, enemy);
       this.presenterProvider.forEnemy(view, enemy);
       this.attackTargetRepository.save(view.matterBody.id.toString(), {

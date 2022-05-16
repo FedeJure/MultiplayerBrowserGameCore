@@ -20,6 +20,7 @@ export interface RoomManager {
     newRooms: RoomId[],
     prevRoom: RoomId[]
   );
+  removeEnemyFromRoom(enemyId: Enemy["info"]["id"], rooms: RoomId[]);
   getPlayersByRoom(): { [key: RoomId]: Player["info"]["id"][] | undefined };
   getEnemiesByRoom(): { [key: RoomId]: Enemy["info"]["id"][] | undefined };
 }

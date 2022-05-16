@@ -14,7 +14,6 @@ export class BaseEnemyCombat {
     this.enemy.updateState({
       life: this.enemy.state.life - attack.damage,
     });
-    console.log(this.enemy.state.life)
     if (this.enemy.state.life <= 0) this.die();
   }
 

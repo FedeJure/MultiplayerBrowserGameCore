@@ -1,5 +1,3 @@
-import { Attackable } from "../combat/attackTarget";
-import { CombatResult } from "../player/combat/combatResult";
 import { Side } from "../side";
 import { Enemy } from "./Enemy";
 import { EnemyInfo } from "./EnemyInfo";
