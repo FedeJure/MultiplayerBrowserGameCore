@@ -1,8 +1,9 @@
+import { AnimationCode, AnimationLayer } from "../animations/animations";
 import { CombatResult } from "../player/combat/combatResult";
 import { ControllablePlayer } from "../player/players/controllablePlayer";
 import { Enemy } from "./enemy";
 
-export class BaseEnemyCombat {
+export class EnemyCombat {
   private _target: ControllablePlayer | null = null;
 
   constructor(private enemy: Enemy) {}
@@ -13,6 +14,10 @@ export class BaseEnemyCombat {
   receiveAttack(attack: CombatResult) {
     this.enemy.updateState({
       life: this.enemy.state.life - attack.damage,
+      anim: {
+        name: AnimationCode.TAKING_DAMAGE,
+        layer: AnimationLayer.MOVEMENT,
+      },
     });
     if (this.enemy.state.life <= 0) this.die();
   }
