@@ -1,5 +1,7 @@
 import { Physics, Scene } from "phaser";
+import { AnimationLayer, AnimationCode } from "../../domain/animations/animations";
 import { EnemyAnimation } from "../../domain/enemies/EnemyAnimations";
+import { AnimationDto, EmptyAnimations } from "../../domain/player/animations/AnimationDto";
 import { Vector } from "../../domain/vector";
 import { PhaserEnemyView } from "./phaserEnemyView";
 
@@ -23,5 +25,39 @@ export class ClientPhaserEnemyView extends PhaserEnemyView {
 
     super(viewAsSprite, x, y, height, width);
     this.spine = spine;
+  }
+
+  playAnimations(anims: AnimationDto[]): void {
+    EmptyAnimations.map(
+      (anim) => anims.find((a) => a.layer === anim.layer) ?? anim
+    ).forEach((anim) =>
+      this.playAnimation(anim.name, anim.layer, anim.loop, anim.duration)
+    );
+  }
+
+  playAnimation(
+    anim: string,
+    layer: AnimationLayer,
+    loop: boolean = true,
+    duration?: number
+  ) {
+    if (duration) {
+      const animation = this.spine.findAnimation(anim);
+      if (animation) animation.duration = duration;
+    }
+    const currentAnim = this.spine.getCurrentAnimation(layer);
+
+    if (
+      anim === AnimationCode.EMPTY_ANIMATION &&
+      currentAnim &&
+      currentAnim.name !== anim
+    )
+      this.spine.setToSetupPose();
+
+    if (anim === AnimationCode.EMPTY_ANIMATION) {
+      this.spine.clearTrack(layer);
+    } else {
+      this.spine.setAnimation(layer, anim, loop, true);
+    }
   }
 }

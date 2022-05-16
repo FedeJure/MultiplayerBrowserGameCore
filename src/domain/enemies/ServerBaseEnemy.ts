@@ -1,4 +1,5 @@
 import { BaseEnemy } from "./BaseEnemy";
+import { BaseEnemyCombat } from "./BaseEnemyCombat";
 import { BaseEnemyMovement } from "./BaseEnemyMovement";
 import { EnemyInfo } from "./EnemyInfo";
 import { EnemyState } from "./EnemyState";
@@ -7,6 +8,7 @@ import { EnemyView } from "./EnemyView";
 
 export class ServerBaseEnemy extends BaseEnemy {
   private movement: BaseEnemyMovement;
+  public readonly combat: BaseEnemyCombat;
 
   constructor(
     state: EnemyState,
@@ -16,6 +18,7 @@ export class ServerBaseEnemy extends BaseEnemy {
   ) {
     super(state, info, stats, view);
     this.movement = new BaseEnemyMovement(this);
+    this.combat = new BaseEnemyCombat()
   }
 
   update(time: number, delta: number): void {

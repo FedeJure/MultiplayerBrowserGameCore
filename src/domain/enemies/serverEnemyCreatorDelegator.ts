@@ -1,6 +1,7 @@
 import Phaser, { Scene } from "phaser";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { PhaserEnemyView } from "../../view/enemy/phaserEnemyView";
+import { AnimationLayer } from "../animations/animations";
 import { Delegator } from "../delegator";
 import { SimpleRepository } from "../repository";
 import { RoomManager } from "../roomManager";
@@ -21,14 +22,15 @@ export class ServerEnemyCreatorDelegator implements Delegator {
   ) {}
   init(): void {
     // here, create a EnemySpawner on each enemy spot (from map or random)
-    new EnemySpawner(600, 1600, 10, 1000, 3000, (x, y) => {
+    new EnemySpawner(600, 1600, 5, 1000, 3300, (x, y) => {
       const state: EnemyState = {
         life: SpiderEnemyModel.stats.maxLife,
         position: { x, y },
-        anim: EnemyAnimation.IDLE,
+        anim: {name: EnemyAnimation.IDLE, layer: AnimationLayer.MOVEMENT},
         map: 0,
         velocity: { x: 0, y: 0 },
         side: Side.RIGHT,
+        inCombat: false
       };
       const view = new PhaserEnemyView(
         this.scene.matter.add.sprite(state.position.x, state.position.y, ""),

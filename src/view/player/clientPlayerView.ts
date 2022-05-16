@@ -46,7 +46,7 @@ export class ClientPlayerView extends PhaserPlayerView {
   }
 
   playAnimation(
-    anim: AnimationCode,
+    anim: string,
     layer: AnimationLayer,
     loop: boolean = true,
     duration?: number
