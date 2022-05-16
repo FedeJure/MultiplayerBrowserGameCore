@@ -31,7 +31,7 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
         (this.player.state.side === Side.RIGHT ? 0 : this.range);
       const y = this.player.state.position.y;
       this.player
-        .getPlayersOnArea(
+        .getAttackablesOnArea(
           x,
           y,
           this.player.view.width + this.range,

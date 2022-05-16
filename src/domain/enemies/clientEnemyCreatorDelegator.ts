@@ -2,6 +2,8 @@ import { Scene } from "phaser";
 import { EnemiesStatesEvent } from "../../infrastructure/events/gameEvents";
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
 import { SpinePhaserEntityView } from "../../view/entity/spinePhaserEntityView";
+import { AttackTarget } from "../combat/attackTarget";
+import { AttackTargetType } from "../combat/attackTargetType";
 import { Delegator } from "../delegator";
 import { SimpleRepository } from "../repository";
 import { ServerConnection } from "../serverConnection";
@@ -18,7 +20,7 @@ export class ClientEnemyCreatorDelegator implements Delegator {
     private scene: Scene,
     private serverConnection: ServerConnection,
     private spawnedEnemies: SimpleRepository<Enemy>,
-    private presenterProvider: ClientPresenterProvider
+    private presenterProvider: ClientPresenterProvider,
   ) {}
   init(): void {
     this.serverConnection.onEnemyState.subscribe((event) => {

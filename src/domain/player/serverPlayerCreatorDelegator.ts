@@ -158,11 +158,12 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       DefaultConfiguration.width,
       collisionResolver
     );
-    this.attackTargetRepository.save(view.matterBody.id.toString(), {
-      id: playerId,
-      type: AttackTargetType.PLAYER,
-    });
-    const input = new PlayerSocketInput(playerId, connection, this.playerInputRequestRepository);
+
+    const input = new PlayerSocketInput(
+      playerId,
+      connection,
+      this.playerInputRequestRepository
+    );
     const player = new ServerPlayer(
       playerInfo,
       playerState,
@@ -176,6 +177,11 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       this.playerInfoRepository,
       this.playerStateRepository
     );
+
+    this.attackTargetRepository.save(view.matterBody.id.toString(), {
+      target: player,
+      type: AttackTargetType.PLAYER,
+    });
     connection.setPlayerId(player.info.id);
     this.presenterProvider.forPlayer(view, player);
 

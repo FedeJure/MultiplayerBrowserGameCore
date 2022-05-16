@@ -52,7 +52,8 @@ export const InitGame: (socket: Socket, originUrl: string, provider: ServerProvi
           scene,
           provider.enemiesRepository,
           provider.roomManager,
-          provider.presenterProvider
+          provider.presenterProvider,
+          provider.attackTargetRepository
         ),
         new PlayerStateDelegator(
           provider.roomManager,

@@ -1,3 +1,4 @@
 export enum AttackTargetType {
-    PLAYER = 'player'
+  PLAYER = "player",
+  MOB = "mob",
 }

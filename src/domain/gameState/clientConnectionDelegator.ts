@@ -84,11 +84,12 @@ export class ClientConnectionDelegator implements Delegator {
       info.name,
       collisionResolver
     );
+
+    const player = new ClientPlayer(info, state, view);
     this.attackTargetRepository.save(view.matterBody.id.toString(), {
-      id: info.id,
+      target: player,
       type: AttackTargetType.PLAYER,
     });
-    const player = new ClientPlayer(info, state, view);
     this.presenterProvider.forPlayer(player, view);
     this.inGamePlayersRepository.save(player.info.id, player);
   }
@@ -114,10 +115,7 @@ export class ClientConnectionDelegator implements Delegator {
       info.name,
       collisionResolver
     );
-    this.attackTargetRepository.save(view.matterBody.id.toString(), {
-      id: info.id,
-      type: AttackTargetType.PLAYER,
-    });
+
     const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
 
     const movementSystem = new MovementSystem();
@@ -131,6 +129,10 @@ export class ClientConnectionDelegator implements Delegator {
       input,
       this.mapManager
     );
+    this.attackTargetRepository.save(view.matterBody.id.toString(), {
+      target: player,
+      type: AttackTargetType.PLAYER,
+    });
     const inventory = new ClientInventoryView(this.scene, input);
     this.presenterProvider.forInventory(info.id, inventory);
     this.presenterProvider.forLocalPlayer(input, player, view);

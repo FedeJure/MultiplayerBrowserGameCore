@@ -1,3 +1,4 @@
+import { Attackable, AttackTarget } from "../../combat/attackTarget";
 import { AttackTargetType } from "../../combat/attackTargetType";
 import { MapManager } from "../../environment/mapManager";
 import { PlayerView } from "../../playerView";
@@ -15,7 +16,7 @@ import { PlayerStats } from "../playerStats";
 import { ClientPlayer } from "./clientPlayer";
 import { Player } from "./player";
 
-export class ControllablePlayer extends ClientPlayer {
+export class ControllablePlayer extends ClientPlayer implements Attackable {
   protected _combatSystem: CombatSystem;
   protected _animationSystem: AnimationSystem;
   constructor(
@@ -83,18 +84,16 @@ export class ControllablePlayer extends ClientPlayer {
     this._combatSystem.receiveAttack(attack);
   }
 
-  getPlayersOnArea(
+  getAttackablesOnArea(
     x: number,
     y: number,
     width: number,
     height: number
-  ): Player[] {
+  ): Attackable[] {
     return this.view.combatCollisionResolver
       .getTargetsOnArea(x, y, width, height)
       .filter(
-        (t) => t.type === AttackTargetType.PLAYER && t.id !== this.info.id
-      )
-      .map((t) => this.inGamePlayersRepository.get(t.id))
-      .filter((p) => p !== undefined) as Player[];
+        (t) => t.type === AttackTargetType.PLAYER && t.target !== this
+      ).map(t => t.target)
   }
 }
