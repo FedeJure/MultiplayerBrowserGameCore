@@ -7,7 +7,6 @@ import { LocalPlayerRenderDelegator } from "../../domain/player/localPlayerRende
 import { PlayerRemoteMovementDelegator } from "../../domain/player/movement/playerRemoteMovementDelegator";
 import { CurrentMapDelegator } from "../../domain/environment/currentMapDelegator";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
-import { PlayerInfoDelegator } from "../../domain/player/playerInfoDelegator";
 import { BackgroundDelegator } from "../../domain/environment/backgroundDelegator";
 import { ClientPlayerInventoryDelegator } from "../../domain/items/clientPlayerInventoryDelegator";
 import { ViewPresenter } from "../../presentation/viewPresenter";
@@ -48,7 +47,6 @@ export class ClientPresenterProvider {
         ClientProvider.playerInputRequestRepository
       ),
       new LocalPlayerRenderDelegator(player),
-      new PlayerInfoDelegator(player),
       new ClientPlayerConnectionDelegator(
         ClientProvider.serverConnection,
         player
@@ -67,7 +65,6 @@ export class ClientPresenterProvider {
         player,
         ClientProvider.serverConnection
       ),
-      new PlayerInfoDelegator(player),
       new ClientPlayerConnectionDelegator(
         ClientProvider.serverConnection,
         player

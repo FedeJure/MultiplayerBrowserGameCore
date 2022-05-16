@@ -81,6 +81,7 @@ export class ClientConnectionDelegator implements Delegator {
       state.position.y,
       DefaultConfiguration.height,
       DefaultConfiguration.width,
+      info.name,
       collisionResolver
     );
     this.attackTargetRepository.save(view.matterBody.id.toString(), {
@@ -110,6 +111,7 @@ export class ClientConnectionDelegator implements Delegator {
       state.position.y,
       DefaultConfiguration.height,
       DefaultConfiguration.width,
+      info.name,
       collisionResolver
     );
     this.attackTargetRepository.save(view.matterBody.id.toString(), {
