@@ -1,13 +1,13 @@
-import { Physics, Scene } from "phaser";
+import { Vector } from "matter";
+import { Scene, Physics } from "phaser";
 import { AnimationLayer, AnimationCode } from "../../domain/animations/animations";
 import { AnimationDto, EmptyAnimations } from "../../domain/player/animations/AnimationDto";
-import { Vector } from "../../domain/vector";
-import { EntityIngameHud } from "../controllable/entityIngameHud";
-import { PhaserEnemyView } from "./phaserEnemyView";
+import { EntityIngameHud } from "./entityIngameHud";
+import { PhaserEntityView } from "./phaserEntityView";
 
-export class ClientPhaserEnemyView extends PhaserEnemyView {
-  private spine: SpineGameObject;
-  private readonly hud: EntityIngameHud;
+export class SpinePhaserEntityView extends PhaserEntityView {
+  protected spine: SpineGameObject;
+  protected readonly hud: EntityIngameHud;
 
   constructor(
     scene: Scene,
@@ -15,8 +15,7 @@ export class ClientPhaserEnemyView extends PhaserEnemyView {
     y: number,
     height: number,
     width: number,
-    name: string,
-    initialAnimation: AnimationDto
+    name: string
   ) {
     const spine = scene.add.spine(x, y, "hero", undefined, true);
     const currentSize: Vector = spine.getBounds().size;
@@ -27,12 +26,12 @@ export class ClientPhaserEnemyView extends PhaserEnemyView {
 
     super(viewAsSprite, x, y, height, width);
     this.hud = new EntityIngameHud(scene, height, width);
-    this.hud.setDisplayName(name)
-    this.add(this.hud)
+    this.hud.setDisplayName(name);
+    this.add(this.hud);
     this.spine = spine;
   }
 
-  playAnimations(anims: AnimationDto[]): void {
+  override playAnimations(anims: AnimationDto[]): void {
     EmptyAnimations.map(
       (anim) => anims.find((a) => a.layer === anim.layer) ?? anim
     ).forEach((anim) =>

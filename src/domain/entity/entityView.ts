@@ -1,4 +1,5 @@
 import { BodyType } from "matter";
+import { AnimationDto } from "../player/animations/AnimationDto";
 import { Vector } from "../vector";
 
 export interface EntityView {
@@ -17,4 +18,7 @@ export interface EntityView {
   lookToLeft(value: boolean): void;
   setVelocity(x: number, y: number): void;
   destroy()
+  playAnimations(anims: AnimationDto[]): void
+  setLifePercent(percent: number): void
+  setDisplayName(name: string) : void
 }

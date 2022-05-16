@@ -3,6 +3,7 @@ import { GameObjects, Physics } from "phaser";
 import { Observable } from "rxjs";
 import { CollisionCategory } from "../../domain/collisions/collisionTypes";
 import { EntityView } from "../../domain/entity/entityView";
+import { AnimationDto } from "../../domain/player/animations/AnimationDto";
 import { Vector } from "../../domain/vector";
 import { ExistentDepths } from "../existentDepths";
 import { CollisionDetector } from "../player/collisionDetector";
@@ -41,6 +42,9 @@ export class PhaserEntityView extends GameObjects.Container implements EntityVie
 
     this.initCollisions();
   }
+  playAnimations(anims: AnimationDto[]): void {}
+  setLifePercent(percent: number): void {}
+  setDisplayName(name: string): void {}
   get velocity() {
     return this.matterBody.velocity;
   }
@@ -92,5 +96,8 @@ export class PhaserEntityView extends GameObjects.Container implements EntityVie
 
   public get onGroundCollideChange(): Observable<boolean> {
     return this.groundCollisionDetector.onCollideChange;
+  }
+  startFollowWithCam(): void {
+    this.scene.cameras.main.startFollow(this, false, 0.1, 0.1);
   }
 }

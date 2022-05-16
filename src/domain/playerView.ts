@@ -12,19 +12,10 @@ export interface PlayerView extends EntityView {
     position: Vector;
     velocity: Vector;
   };
-  playAnimation(
-    anim: AnimationCode,
-    layer: AnimationLayer,
-    loop?: boolean,
-    duration?: number
-  ): void;
-  playAnimations(anims: AnimationDto[])
   startFollowWithCam(): void;
   scene: Scene;
   destroy(): void;
   add(children: GameObjects.GameObject): this;
   get onGroundCollideChange(): Observable<boolean>;
-  setDisplayName(name: string);
   combatCollisionResolver: CombatCollisionResolver;
-  setLifePercent(percent: number);
 }
