@@ -7,7 +7,7 @@ import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 import { EnemyView } from "./EnemyView";
 
-export class BaseEnemy implements Enemy, Attackable {
+export class BaseEnemy implements Enemy {
   private _state: EnemyState;
   constructor(
     state: EnemyState,
@@ -17,19 +17,19 @@ export class BaseEnemy implements Enemy, Attackable {
   ) {
     this._state = state;
   }
+
   get state() {
     return this._state;
   }
   updateState(state: Partial<EnemyState>) {
     this._state = { ...this._state, ...state };
   }
-  receiveAttack(attack: CombatResult) {
-  }
   update(time: number, delta: number) {
     this.view.playAnimations([this.state.anim])
     this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);
     this.view.setPosition(this.state.position.x, this.state.position.y)
     this.view.lookToLeft(this.state.side === Side.LEFT);
+    this.view.setLifePercent((this.state.life / this.stats.maxLife) * 100);
   }
   destroy() {
     this.view.destroy();

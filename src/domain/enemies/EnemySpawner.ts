@@ -1,7 +1,7 @@
-import { Enemy } from "./Enemy";
+import { ServerBaseEnemy } from "./ServerBaseEnemy";
 
 export class EnemySpawner {
-  private enemies: Enemy[] = [];
+  private enemies: number = 0;
   private timeout: NodeJS.Timeout | null = null;
   constructor(
     private x: number,
@@ -9,7 +9,7 @@ export class EnemySpawner {
     private maxEnemies: number,
     private minInterval: number,
     private maxInterval: number,
-    private spawner: (x: number, y: number) => Enemy
+    private spawner: (x: number, y: number) => ServerBaseEnemy
   ) {
     this.spawnEnemy();
     this.scheduleNewSpawn();
@@ -24,8 +24,11 @@ export class EnemySpawner {
   }
 
   private spawnEnemy() {
-    if (this.enemies.length >= this.maxEnemies) return;
+    if (this.enemies >= this.maxEnemies) return;
     const newEnemy = this.spawner(this.x, this.y);
-    this.enemies.push(newEnemy);
+    newEnemy.onDestroy.subscribe(() => {
+      this.enemies--;
+    });
+    this.enemies++;
   }
 }
