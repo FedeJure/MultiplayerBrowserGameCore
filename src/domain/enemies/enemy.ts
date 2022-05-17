@@ -1,34 +1,28 @@
-import { Side } from "../side";
+import { Entity } from "../entity/entity";
 import { EnemyInfo } from "./EnemyInfo";
 import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 import { EnemyView } from "./EnemyView";
 
-export class Enemy {
-  private _state: EnemyState;
+export class Enemy extends Entity {
   constructor(
     state: EnemyState,
-    readonly info: EnemyInfo,
-    readonly stats: EnemyStats,
-    readonly view: EnemyView
+    info: EnemyInfo,
+    view: EnemyView,
+    stats: EnemyStats
   ) {
-    this._state = state;
+    super(info, state, view, stats);
+  }
+
+  update(time: number, delta: number): void {
+    super.update(time, delta);
   }
 
   get state() {
-    return this._state;
+    return this._state as EnemyState;
   }
-  updateState(state: Partial<EnemyState>) {
-    this._state = { ...this._state, ...state };
-  }
-  update(time: number, delta: number) {
-    this.view.playAnimations(this.state.anim)
-    this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);
-    this.view.setPosition(this.state.position.x, this.state.position.y)
-    this.view.lookToLeft(this.state.side === Side.LEFT);
-    this.view.setLifePercent((this.state.life / this.stats.maxLife) * 100);
-  }
-  destroy() {
-    this.view.destroy();
+
+  get stats() {
+    return this._stats as EnemyStats;
   }
 }

@@ -41,7 +41,7 @@ export class ClientEnemyCreatorDelegator implements Delegator {
       stats.width,
       info.name
     );
-    const enemy = new Enemy(state, info, stats, view);
+    const enemy = new Enemy(state, info, view, stats);
     this.presenterProvider.forEnemy(view, enemy);
     this.spawnedEnemies.save(enemy.info.id, enemy);
   }

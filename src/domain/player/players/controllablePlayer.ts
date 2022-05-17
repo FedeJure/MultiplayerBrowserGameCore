@@ -17,18 +17,16 @@ import { PlayerStats } from "../playerStats";
 export class ControllablePlayer extends Entity implements Attackable {
   protected _combatSystem: CombatSystem;
   protected _animationSystem: AnimationSystem;
-  protected _view: PlayerView
-  protected _state: PlayerState
   constructor(
     _info: PlayerInfo,
     _state: PlayerState,
     _view: PlayerView,
-    protected _stats: PlayerStats,
+    _stats: PlayerStats,
     private _movementSystem: MovementSystem,
     private _input: PlayerInput,
     mapManager: MapManager //usar esto para spawnear al jugador en un spot de spawn al morir.
   ) {
-    super(_info, _state, _view);
+    super(_info, _state, _view, _stats);
     this._animationSystem = new AnimationSystem(this);
     this._combatSystem = new CombatSystem(this, mapManager, [
       new SimpleForwardPunchCombatAction(this),
@@ -53,16 +51,16 @@ export class ControllablePlayer extends Entity implements Attackable {
   }
 
   get state() {
-    return this._state
+    return this._state as PlayerState;
   }
   get view() {
-    return this._view;
+    return this._view as PlayerView;
   }
   get input() {
     return this._input;
   }
   get stats() {
-    return this._stats;
+    return this._stats as PlayerStats;
   }
 
   get animSystem() {

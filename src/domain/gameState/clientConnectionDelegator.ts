@@ -84,7 +84,7 @@ export class ClientConnectionDelegator implements Delegator {
       collisionResolver
     );
 
-    const player = new Player(info, state, view);
+    const player = new Player(info, state, view, DefaultPlayerStats);
     this.presenterProvider.forPlayer(player, view);
     this.inGamePlayersRepository.save(player.info.id, player);
   }

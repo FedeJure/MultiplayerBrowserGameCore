@@ -20,7 +20,7 @@ export class ServerEnemy extends Enemy implements Attackable {
     stats: EnemyStats,
     view: EnemyView
   ) {
-    super(state, info, stats, view);
+    super(state, info, view, stats);
     this.movement = new BaseEnemyMovement(this);
     this.combat = new EnemyCombat(this);
   }
