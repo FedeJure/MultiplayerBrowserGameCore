@@ -2,7 +2,6 @@ import { PlayerView } from "../../playerView";
 import { PlayerInfo } from "../playerInfo";
 import { PlayerState } from "../playerState";
 import { Side } from "../../side";
-import { CombatResult } from "../combat/combatResult";
 
 export class Player {
   constructor(
@@ -33,7 +32,7 @@ export class Player {
   }
 
   update(time: number, delta: number) {
-    this.view.playAnimations(this.state.animations)
+    this.view.playAnimations(this.state.anim)
     this.view.setPosition(this.state.position.x, this.state.position.y);
     this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);
     this.view.lookToLeft(this.state.side === Side.LEFT);

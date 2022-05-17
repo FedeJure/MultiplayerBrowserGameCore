@@ -1,4 +1,3 @@
-import { AnimationCode } from "../animations/animations";
 import { CombatResult } from "../player/combat/combatResult";
 import { ControllablePlayer } from "../player/players/controllablePlayer";
 import { Enemy } from "./enemy";

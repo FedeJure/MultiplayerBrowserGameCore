@@ -93,10 +93,10 @@ export class CompleteMapDelegator implements Delegator {
     if (
       foundedMap &&
       neighborMaps &&
-      foundedMap.id !== player.state.map.mapId
+      foundedMap.id !== player.state.mapId
     ) {
       player.updateState({
-        map: { mapId: foundedMap.id },
+        mapId: foundedMap.id,
       });
       const connection = player.connection;
       if (connection) {

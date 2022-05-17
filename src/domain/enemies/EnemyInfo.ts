@@ -1,4 +1,3 @@
-export interface EnemyInfo {
-    id: string
-    name: string
-}
+import { EntityInfo } from "../entity/entityInfo";
+
+export interface EnemyInfo extends EntityInfo {}

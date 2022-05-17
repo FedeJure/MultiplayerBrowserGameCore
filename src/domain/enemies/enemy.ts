@@ -22,7 +22,7 @@ export class Enemy {
     this._state = { ...this._state, ...state };
   }
   update(time: number, delta: number) {
-    this.view.playAnimations([this.state.anim])
+    this.view.playAnimations(this.state.anim)
     this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);
     this.view.setPosition(this.state.position.x, this.state.position.y)
     this.view.lookToLeft(this.state.side === Side.LEFT);

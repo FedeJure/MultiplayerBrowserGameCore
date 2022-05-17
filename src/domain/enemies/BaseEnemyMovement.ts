@@ -27,11 +27,11 @@ export class BaseEnemyMovement {
     const vel = this.enemy.state.velocity;
     if (Math.abs(vel.x) < 0.1) {
       this.enemy.updateState({
-        anim: { name: EnemyAnimation.IDLE, layer: AnimationLayer.MOVEMENT },
+        anim: [{ name: EnemyAnimation.IDLE, layer: AnimationLayer.MOVEMENT }],
       });
     } else {
       this.enemy.updateState({
-        anim: { name: EnemyAnimation.WALK, layer: AnimationLayer.MOVEMENT },
+        anim: [{ name: EnemyAnimation.WALK, layer: AnimationLayer.MOVEMENT }],
       });
     }
   }
@@ -54,7 +54,7 @@ export class BaseEnemyMovement {
           side: Side.LEFT,
         });
         this.enemy.view.setVelocity(
-          -this.enemy.stats.idleMovementSpeed,
+          -this.enemy.stats.walkSpeed,
           this.enemy.view.velocity.y
         );
       }
@@ -63,7 +63,7 @@ export class BaseEnemyMovement {
           side: Side.RIGHT,
         });
         this.enemy.view.setVelocity(
-          this.enemy.stats.idleMovementSpeed,
+          this.enemy.stats.walkSpeed,
           this.enemy.view.velocity.y
         );
       }

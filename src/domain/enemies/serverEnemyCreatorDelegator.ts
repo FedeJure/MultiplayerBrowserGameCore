@@ -29,11 +29,12 @@ export class ServerEnemyCreatorDelegator implements Delegator {
       const state: EnemyState = {
         life: SpiderEnemyModel.stats.maxLife,
         position: { x, y },
-        anim: { name: EnemyAnimation.IDLE, layer: AnimationLayer.MOVEMENT },
-        map: 0,
+        anim: [{ name: EnemyAnimation.IDLE, layer: AnimationLayer.MOVEMENT }],
+        mapId: 0,
         velocity: { x: 0, y: 0 },
         side: Side.RIGHT,
         inCombat: false,
+        grounded: true
       };
       const view = new PhaserEnemyView(
         this.scene.matter.add.sprite(state.position.x, state.position.y, ""),
@@ -53,14 +54,14 @@ export class ServerEnemyCreatorDelegator implements Delegator {
       );
       this.roomManager.joinEnemyToRoom(
         enemy.info.id,
-        [enemy.state.map.toString()],
+        [enemy.state.mapId.toString()],
         []
       );
       enemy.onDestroy.subscribe(() => {
         this.enemiesRepository.remove(enemy.info.id);
         this.attackTargetRepository.remove(view.matterBody.id.toString());
         this.roomManager.removeEnemyFromRoom(enemy.info.id, [
-          enemy.state.map.toString(),
+          enemy.state.mapId.toString(),
         ]);
       });
       this.enemiesRepository.save(enemy.info.id, enemy);

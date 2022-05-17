@@ -2,14 +2,14 @@ import { EnemyModel } from "./enemyModel";
 
 export const SpiderEnemyModel: EnemyModel = {
   stats: {
+    meleeDamage: 1,
+    basicAttackSpeed: 1,
     maxLife: 200,
-    baseAttack: 1,
-    baseDefense: 0,
-    attackSpeed: 1,
-    idleMovementSpeed: 1,
-    combatingMovementSpeed: 2.5,
+    walkSpeed: 1,
+    runSpeed: 2.5,
     width: 25,
     height: 37,
+    jumpPower: 1
   },
   name: "Spider",
 };

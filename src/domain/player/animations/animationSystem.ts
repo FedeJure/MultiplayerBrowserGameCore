@@ -10,8 +10,8 @@ export class AnimationSystem {
   constructor(private player: ControllablePlayer) {}
   processAnimation(player: ControllablePlayer | ServerPlayer) {
     player.updateState({
-      animations: [
-        ...player.state.animations
+      anim: [
+        ...player.state.anim
           .filter(this.filterCondition)
           .filter(this.filterFinishedAnimations),
         {
@@ -76,7 +76,7 @@ export class AnimationSystem {
     });
 
     this.player.updateState({
-      animations: [...this.player.state.animations, newAnim],
+      anim: [...this.player.state.anim, newAnim],
     });
   }
 }

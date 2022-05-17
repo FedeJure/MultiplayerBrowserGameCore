@@ -1,10 +1,6 @@
-export interface EnemyStats {
-  maxLife: number;
-  baseAttack: number;
-  baseDefense: number;
-  attackSpeed: number;
-  idleMovementSpeed: number;
-  combatingMovementSpeed: number;
+import { EntityStats } from "../entity/entityStats";
+
+export interface EnemyStats extends EntityStats {
   height: number;
   width: number;
 }

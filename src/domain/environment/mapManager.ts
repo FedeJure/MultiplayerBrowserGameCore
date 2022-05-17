@@ -33,7 +33,7 @@ export class MapManager {
 
   getMapForPlayer(player: ControllablePlayer) {
     const { state } = player;
-    const currentMap = this.processedMaps[state.map.mapId];
+    const currentMap = this.processedMaps[state.mapId];
     if (!this.isInside(state.position.x, state.position.y, currentMap)) {
       const foundedMap = this.processedMapsAsList.find((map) =>
         this.isInside(state.position.x, state.position.y, map)

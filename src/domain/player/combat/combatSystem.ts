@@ -52,7 +52,7 @@ export class CombatSystem {
       dieDuration
     );
     const closestSpawnPosition = this.mapMapanger
-      .getMap(this.player.state.map.mapId)
+      .getMap(this.player.state.mapId)
       .spawnPositions.sort((p1, p2) => {
         return (
           Math.sqrt(
@@ -70,7 +70,7 @@ export class CombatSystem {
       this.player.view.setPosition(newPosition.x, newPosition.y);
       this.player.updateState({
         life: this.player.stats.maxLife,
-        animations: [],
+        anim: [],
         position: newPosition,
       });
     });

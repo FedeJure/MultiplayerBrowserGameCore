@@ -1,4 +1,3 @@
-export interface PlayerInfo {
-  name: string;
-  id: string;
-}
+import { EntityInfo } from "../entity/entityInfo";
+
+export interface PlayerInfo extends EntityInfo {}
