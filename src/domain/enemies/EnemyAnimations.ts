@@ -1,4 +1,5 @@
 export enum EnemyAnimation {
   IDLE = "idle",
-  WALK = 'walk'
+  WALK = 'walk',
+  RUN = 'run'
 }

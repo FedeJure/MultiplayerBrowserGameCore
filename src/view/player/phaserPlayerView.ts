@@ -12,7 +12,7 @@ export class PhaserPlayerView extends PhaserEntityView implements PlayerView {
     width: number,
     public readonly combatCollisionResolver: PhaserCombatCollisionResolver
   ) {
-    super(view, x, y, height, width);
+    super(view, x, y, height, width, combatCollisionResolver);
     this.setName("Player View");
   }
 

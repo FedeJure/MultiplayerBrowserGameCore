@@ -1,3 +1,5 @@
+import { Attackable } from "../combat/attackTarget";
+import { CombatResult } from "../player/combat/combatResult";
 import { PlayerInfo } from "../player/playerInfo";
 import { PlayerState } from "../player/playerState";
 import { Side } from "../side";
@@ -6,13 +8,14 @@ import { EntityState } from "./entityState";
 import { EntityStats } from "./entityStats";
 import { EntityView } from "./entityView";
 
-export class Entity {
+export class Entity implements Attackable {
   constructor(
     protected _info: EntityInfo,
     protected _state: EntityState,
     protected _view: EntityView,
     protected _stats: EntityStats
   ) {}
+  receiveAttack(attack: CombatResult) {}
 
   updateInfo(newInfo: Partial<PlayerInfo>) {
     this._info = { ...this.info, ...newInfo };

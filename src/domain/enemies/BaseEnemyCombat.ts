@@ -1,11 +1,17 @@
+import { AttackTarget } from "../combat/attackTarget";
+import { AttackTargetType } from "../combat/attackTargetType";
+import { Entity } from "../entity/entity";
 import { CombatResult } from "../player/combat/combatResult";
-import { ControllablePlayer } from "../player/players/controllablePlayer";
 import { Enemy } from "./enemy";
 
 export class EnemyCombat {
-  private _target: ControllablePlayer | null = null;
+  private _target: Entity | null = null;
 
-  constructor(private enemy: Enemy) {}
+  constructor(private enemy: Enemy) {
+    setInterval(() => {
+      this.processCloseTargets(this.enemy.view.getEntitiesClose(300));
+    }, 500);
+  }
   public get target() {
     return this._target;
   }
@@ -17,9 +23,19 @@ export class EnemyCombat {
     if (this.enemy.state.life <= 0) this.die();
   }
 
-  die() {
+  private die() {
     setTimeout(() => {
       this.enemy.destroy();
     }, 50);
+  }
+
+  private processCloseTargets(targets: AttackTarget[]) {
+    const filterTargets = targets.filter(t => t.type === AttackTargetType.PLAYER)
+    if (this._target && filterTargets.length === 0) {
+      this._target = null
+    }
+    filterTargets.map(({target, type}) => {
+        this._target = target
+    })
   }
 }

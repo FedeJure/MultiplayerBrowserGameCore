@@ -8,7 +8,7 @@ export class PhaserEnemyView extends PhaserEntityView implements EnemyView {
     x: number,
     y: number,
     height: number,
-    width: number
+    width: number,
   ) {
     super(view, x, y, height, width);
     this.setName("Enemy View");

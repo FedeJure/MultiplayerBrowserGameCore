@@ -14,7 +14,7 @@ import { PlayerInput } from "../playerInput";
 import { PlayerState } from "../playerState";
 import { PlayerStats } from "../playerStats";
 
-export class ControllablePlayer extends Entity implements Attackable {
+export class ControllablePlayer extends Entity {
   protected _combatSystem: CombatSystem;
   protected _animationSystem: AnimationSystem;
   constructor(

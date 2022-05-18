@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 import { EnemiesStatesEvent } from "../../infrastructure/events/gameEvents";
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
-import { SpinePhaserEntityView } from "../../view/entity/spinePhaserEntityView";
+import { SpinePhaserEnemyView } from "../../view/enemy/spinePhaserEnemyView";
 import { Delegator } from "../delegator";
 import { SimpleRepository } from "../repository";
 import { ServerConnection } from "../serverConnection";
@@ -33,7 +33,7 @@ export class ClientEnemyCreatorDelegator implements Delegator {
     });
   }
   private createEnemy(state: EnemyState, info: EnemyInfo, stats: EnemyStats) {
-    const view = new SpinePhaserEntityView(
+    const view = new SpinePhaserEnemyView(
       this.scene,
       state.position.x,
       state.position.y,

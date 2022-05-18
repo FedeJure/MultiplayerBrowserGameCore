@@ -12,6 +12,20 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
     private attackTargetRepository: SimpleRepository<AttackTarget>
   ) {}
 
+  getTargetsAround(x: number, y: number, distance: number) {
+    const bodies = this.scene.matter.intersectRect(
+      x - (distance / 2),
+      y - (distance / 2),
+      distance,
+      distance
+    );
+    return bodies
+      .map((body) =>
+        this.attackTargetRepository.get((body as BodyType).id.toString())
+      )
+      .filter((target) => target !== undefined) as AttackTarget[];
+  }
+
   getTargetsOnArea(
     x: number,
     y: number,

@@ -1,6 +1,7 @@
 import { BodyType } from "matter";
 import { AnimationDto } from "./AnimationDto";
 import { Vector } from "../vector";
+import { AttackTarget } from "../combat/attackTarget";
 
 export interface EntityView {
   velocity: Vector;
@@ -21,4 +22,5 @@ export interface EntityView {
   playAnimations(anims: AnimationDto[]): void
   setLifePercent(percent: number): void
   setDisplayName(name: string) : void
+  getEntitiesClose(distance: number): AttackTarget[]
 }

@@ -7,6 +7,8 @@ import { AnimationDto } from "../../domain/entity/AnimationDto";
 import { Vector } from "../../domain/vector";
 import { ExistentDepths } from "../existentDepths";
 import { CollisionDetector } from "../player/collisionDetector";
+import { PhaserCombatCollisionResolver } from "../player/combatCollisionResolver";
+import { AttackTargetType } from "../../domain/combat/attackTargetType";
 
 export class PhaserEntityView extends GameObjects.Container implements EntityView {
   private readonly groundCollisionDetector: CollisionDetector;
@@ -16,7 +18,8 @@ export class PhaserEntityView extends GameObjects.Container implements EntityVie
     x: number,
     y: number,
     height: number,
-    width: number
+    width: number,
+    protected collisionResolver?: PhaserCombatCollisionResolver
   ) {
     super(view.scene, x, y, [view]);
     this.setSize(width, height);
@@ -41,6 +44,13 @@ export class PhaserEntityView extends GameObjects.Container implements EntityVie
     this.setDepth(ExistentDepths.GROUND);
 
     this.initCollisions();
+  }
+  getEntitiesClose(distance: number) {
+    return this.collisionResolver?.getTargetsAround(
+      this.x,
+      this.y,
+      distance,
+    ) ?? [];
   }
   playAnimations(anims: AnimationDto[]): void {}
   setLifePercent(percent: number): void {}
@@ -96,5 +106,10 @@ export class PhaserEntityView extends GameObjects.Container implements EntityVie
 
   public get onGroundCollideChange(): Observable<boolean> {
     return this.groundCollisionDetector.onCollideChange;
+  }
+
+  setCollisionResolver(collisionResolver: PhaserCombatCollisionResolver) {
+    this.collisionResolver = collisionResolver
+    return this
   }
 }

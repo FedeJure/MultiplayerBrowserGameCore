@@ -14,6 +14,7 @@ import { SpiderEnemyModel } from "./enemyModel/spiderEnemyModel";
 import { EnemySpawner } from "./EnemySpawner";
 import { EnemyState } from "./EnemyState";
 import { ServerEnemy } from "./serverEnemy";
+import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 
 export class ServerEnemyCreatorDelegator implements Delegator {
   constructor(
@@ -25,7 +26,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
   ) {}
   init(): void {
     // here, create a EnemySpawner on each enemy spot (from map or random)
-    new EnemySpawner(600, 1600, 5, 1000, 3300, (x, y) => {
+    new EnemySpawner(600, 1600, 1, 1000, 3300, (x, y) => {
       const state: EnemyState = {
         life: SpiderEnemyModel.stats.maxLife,
         position: { x, y },
@@ -34,14 +35,22 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         velocity: { x: 0, y: 0 },
         side: Side.RIGHT,
         inCombat: false,
-        grounded: true
+        grounded: true,
       };
+
       const view = new PhaserEnemyView(
         this.scene.matter.add.sprite(state.position.x, state.position.y, ""),
         state.position.x,
         state.position.y,
         SpiderEnemyModel.stats.height,
         SpiderEnemyModel.stats.width
+      ).setCollisionResolver(
+        new PhaserCombatCollisionResolver(
+          state.position.x,
+          state.position.y,
+          this.scene,
+          this.attackTargetRepository
+        )
       );
       const enemy = new ServerEnemy(
         state,
