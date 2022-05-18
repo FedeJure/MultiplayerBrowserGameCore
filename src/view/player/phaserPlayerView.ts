@@ -15,7 +15,6 @@ export class PhaserPlayerView extends PhaserEntityView implements PlayerView {
     super(view, x, y, height, width);
     this.setName("Player View");
   }
-  startFollowWithCam(): void {
-    this.scene.cameras.main.startFollow(this, false, 0.1, 0.1);
-  }
+
+  startFollowWithCam(): void {}
 }

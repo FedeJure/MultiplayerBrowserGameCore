@@ -74,4 +74,8 @@ export class SpinePhaserEntityView extends PhaserEntityView {
       this.spine.setAnimation(layer, anim, loop, true);
     }
   }
+
+  startFollowWithCam(): void {
+    this.scene.cameras.main.startFollow(this, false, 0.1, 0.1);
+  }
 }

@@ -97,7 +97,4 @@ export class PhaserEntityView extends GameObjects.Container implements EntityVie
   public get onGroundCollideChange(): Observable<boolean> {
     return this.groundCollisionDetector.onCollideChange;
   }
-  startFollowWithCam(): void {
-    this.scene.cameras.main.startFollow(this, false, 0.1, 0.1);
-  }
 }
