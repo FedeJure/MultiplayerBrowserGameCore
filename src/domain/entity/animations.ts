@@ -1,4 +1,4 @@
-export enum AnimationCode {
+export enum EntityAnimationCode {
   IDLE = "idle",
   RUNNING = "run",
   IDLE_JUMP = "jump",

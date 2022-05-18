@@ -2,7 +2,7 @@ import { CombatAction } from "./combatAction";
 import { ControllablePlayer } from "../../players/controllablePlayer";
 import { Side } from "../../../side";
 import { CombatResult } from "../combatResult";
-import { AnimationCode, AnimationLayer } from "../../../animations/animations";
+import { EntityAnimationCode, AnimationLayer } from "../../../entity/animations";
 
 export class SimpleForwardPunchCombatAction implements CombatAction {
   private readonly range = 20;
@@ -19,7 +19,7 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
       const attackDuration = 1000 / this.player.stats.basicAttackSpeed;
 
       this.player.animSystem.executeAnimation(
-        AnimationCode.BASIC_ATTACK,
+        EntityAnimationCode.BASIC_ATTACK,
         AnimationLayer.COMBAT,
         false,
         attackDuration

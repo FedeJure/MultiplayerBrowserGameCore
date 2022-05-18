@@ -3,7 +3,7 @@ import { GameObjects, Physics } from "phaser";
 import { Observable } from "rxjs";
 import { CollisionCategory } from "../../domain/collisions/collisionTypes";
 import { EntityView } from "../../domain/entity/entityView";
-import { AnimationDto } from "../../domain/player/animations/AnimationDto";
+import { AnimationDto } from "../../domain/entity/AnimationDto";
 import { Vector } from "../../domain/vector";
 import { ExistentDepths } from "../existentDepths";
 import { CollisionDetector } from "../player/collisionDetector";

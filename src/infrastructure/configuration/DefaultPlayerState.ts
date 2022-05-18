@@ -1,4 +1,4 @@
-import { AnimationCode, AnimationLayer } from "../../domain/animations/animations";
+import { EntityAnimationCode, AnimationLayer } from "../../domain/entity/animations";
 import { PlayerState } from "../../domain/player/playerState";
 import { Side } from "../../domain/side";
 import { DefaultGameConfiguration } from "./GameConfigurations";
@@ -14,7 +14,7 @@ export const DefaultPlayerState: PlayerState = {
   grounded: false,
   side: Side.RIGHT,
   inputNumber: 1,
-  anim: [{ name: AnimationCode.IDLE, layer: AnimationLayer.MOVEMENT }],
+  anim: [{ name: EntityAnimationCode.IDLE, layer: AnimationLayer.MOVEMENT }],
   mapId: DefaultGameConfiguration.initialMapId,
   currentRooms: [],
   jumping: false,

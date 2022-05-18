@@ -1,6 +1,6 @@
 import { Vector } from "matter";
 import { Map } from "../environment/mapConfiguration";
-import { AnimationDto } from "../player/animations/AnimationDto";
+import { AnimationDto } from "./AnimationDto";
 import { Side } from "../side";
 
 export interface EntityState {

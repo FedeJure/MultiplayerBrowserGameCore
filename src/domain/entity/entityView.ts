@@ -1,5 +1,5 @@
 import { BodyType } from "matter";
-import { AnimationDto } from "../player/animations/AnimationDto";
+import { AnimationDto } from "./AnimationDto";
 import { Vector } from "../vector";
 
 export interface EntityView {

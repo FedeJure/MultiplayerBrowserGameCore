@@ -2,12 +2,12 @@ import { Vector } from "matter";
 import { Scene, Physics } from "phaser";
 import {
   AnimationLayer,
-  AnimationCode,
-} from "../../domain/animations/animations";
+  EntityAnimationCode,
+} from "../../domain/entity/animations";
 import {
   AnimationDto,
   EmptyAnimations,
-} from "../../domain/player/animations/AnimationDto";
+} from "../../domain/entity/AnimationDto";
 import { EntityIngameHud } from "./entityIngameHud";
 import { PhaserEntityView } from "./phaserEntityView";
 
@@ -62,13 +62,13 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     const currentAnim = this.spine.getCurrentAnimation(layer);
 
     if (
-      anim === AnimationCode.EMPTY_ANIMATION &&
+      anim === EntityAnimationCode.EMPTY_ANIMATION &&
       currentAnim &&
       currentAnim.name !== anim
     )
       this.spine.setToSetupPose();
 
-    if (anim === AnimationCode.EMPTY_ANIMATION) {
+    if (anim === EntityAnimationCode.EMPTY_ANIMATION) {
       this.spine.clearTrack(layer);
     } else {
       this.spine.setAnimation(layer, anim, loop, true);

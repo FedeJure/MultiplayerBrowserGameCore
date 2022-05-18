@@ -1,7 +1,7 @@
 import { CombatAction } from "./actions/combatAction";
 import { ControllablePlayer } from "../players/controllablePlayer";
 import { CombatResult } from "./combatResult";
-import { AnimationCode, AnimationLayer } from "../../animations/animations";
+import { EntityAnimationCode, AnimationLayer } from "../../entity/animations";
 import { MapManager } from "../../environment/mapManager";
 
 export class CombatSystem {
@@ -32,7 +32,7 @@ export class CombatSystem {
   receiveAttack(attack: CombatResult) {
     if (attack.damage > 0)
       this.player.animSystem.executeAnimation(
-        AnimationCode.TAKING_DAMAGE,
+        EntityAnimationCode.TAKING_DAMAGE,
         AnimationLayer.COMBAT,
         false,
         200
@@ -46,7 +46,7 @@ export class CombatSystem {
   private die() {
     const dieDuration = 1000;
     this.player.animSystem.executeAnimation(
-      AnimationCode.DIE,
+      EntityAnimationCode.DIE,
       AnimationLayer.COMBAT,
       false,
       dieDuration

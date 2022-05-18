@@ -1,7 +1,7 @@
 import Phaser, { Scene } from "phaser";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { PhaserEnemyView } from "../../view/enemy/phaserEnemyView";
-import { AnimationLayer } from "../animations/animations";
+import { AnimationLayer } from "../entity/animations";
 import { AttackTarget } from "../combat/attackTarget";
 import { AttackTargetType } from "../combat/attackTargetType";
 import { Delegator } from "../delegator";

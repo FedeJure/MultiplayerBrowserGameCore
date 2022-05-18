@@ -1,4 +1,4 @@
-import { AnimationCode, AnimationLayer } from "../../../animations/animations";
+import { EntityAnimationCode, AnimationLayer } from "../../../entity/animations";
 import { ControllablePlayer } from "../../players/controllablePlayer";
 import { CombatAction } from "./combatAction";
 
@@ -13,7 +13,7 @@ export class DefendCombatAction implements CombatAction {
     ) {
       const attackDuration = 1000 / this.player.stats.basicAttackSpeed;
       this.player.animSystem.executeAnimation(
-        AnimationCode.DEFEND,
+        EntityAnimationCode.DEFEND,
         AnimationLayer.COMBAT,
         false,
         attackDuration

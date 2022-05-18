@@ -1,4 +1,4 @@
-import { AnimationLayer } from "../animations/animations";
+import { AnimationLayer } from "../entity/animations";
 import { Side } from "../side";
 import { EnemyAnimation } from "./EnemyAnimations";
 import { ServerEnemy } from "./serverEnemy";
@@ -67,6 +67,7 @@ export class BaseEnemyMovement {
           this.enemy.view.velocity.y
         );
       }
+      
     }
   }
 }

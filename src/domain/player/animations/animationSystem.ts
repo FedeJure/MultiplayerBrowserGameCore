@@ -1,7 +1,7 @@
-import { AnimationCode, AnimationLayer } from "../../animations/animations";
+import { EntityAnimationCode, AnimationLayer } from "../../entity/animations";
 import { ControllablePlayer } from "../players/controllablePlayer";
 import { ServerPlayer } from "../players/serverPlayer";
-import { AnimationDto } from "./AnimationDto";
+import { AnimationDto } from "../../entity/AnimationDto";
 
 export class AnimationSystem {
   private currentAnimPerLayer: Map<AnimationLayer, { anim: AnimationDto }> =
@@ -39,22 +39,22 @@ export class AnimationSystem {
     const absVelx = Math.abs(state.velocity.x);
     const absVely = Math.abs(state.velocity.y);
     const velY = state.velocity.y;
-    if (!state.grounded && velY > 2) return AnimationCode.FALLING;
+    if (!state.grounded && velY > 2) return EntityAnimationCode.FALLING;
 
     if (state.grounded && absVelx > 1 && absVely < 2)
-      return AnimationCode.RUNNING;
+      return EntityAnimationCode.RUNNING;
 
     if (!state.grounded && absVelx < 1 && velY < 2)
-      return AnimationCode.IDLE_JUMP;
+      return EntityAnimationCode.IDLE_JUMP;
 
     if (!state.grounded && absVelx >= 1 && velY < 2)
-      return AnimationCode.RUNNING_JUMP;
+      return EntityAnimationCode.RUNNING_JUMP;
 
-    return AnimationCode.IDLE;
+    return EntityAnimationCode.IDLE;
   }
 
   executeAnimation(
-    anim: AnimationCode,
+    anim: EntityAnimationCode,
     layer: AnimationLayer,
     loop?: boolean,
     duration?: number

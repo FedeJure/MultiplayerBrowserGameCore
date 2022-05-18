@@ -12,7 +12,7 @@ import { EnemyStats } from "./EnemyStats";
 
 export class ClientEnemyCreatorDelegator implements Delegator {
   private lastTimeCleanup: number = 0;
-  private readonly cleanupTime = 3000;
+  private readonly cleanupTime = 100;
   constructor(
     private scene: Scene,
     private serverConnection: ServerConnection,
