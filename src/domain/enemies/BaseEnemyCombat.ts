@@ -1,6 +1,5 @@
 import { AttackTarget } from "../combat/attackTarget";
 import { AttackTargetType } from "../combat/attackTargetType";
-import { EntityAnimationCode, AnimationLayer } from "../entity/animations";
 import { Entity } from "../entity/entity";
 import { CombatResult } from "../player/combat/combatResult";
 import { Enemy } from "./enemy";
@@ -30,7 +29,8 @@ export class EnemyCombat {
     if (this._target && filterTargets.length === 0) {
       this._target = null;
     }
-    filterTargets.map(({ target, type }) => {
+    if (filterTargets.find(t => t.target === this.target)) return
+    filterTargets.map(({ target }) => {
       this._target = target;
     });
   }
