@@ -4,7 +4,7 @@ export const SpiderEnemyModel: EnemyModel = {
   stats: {
     meleeDamage: 1,
     basicAttackSpeed: 1,
-    maxLife: 200,
+    maxLife: 45,
     walkSpeed: 1,
     runSpeed: 2.5,
     width: 25,

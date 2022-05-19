@@ -19,24 +19,9 @@ export class EnemyCombat {
     this.enemy.updateState({
       life: this.enemy.state.life - attack.damage,
     });
-    if (this.enemy.state.life <= 0) this.die();
+    if (this.enemy.state.life <= 0) this.enemy.die();
   }
 
-  private die() {
-    this.enemy.updateState({
-      isAlive: false,
-      anim: [
-        {
-          name: EntityAnimationCode.DIE,
-          layer: AnimationLayer.MOVEMENT,
-          duration: 1000,
-        },
-      ],
-    });
-    setTimeout(() => {
-      this.enemy.destroy();
-    }, 50);
-  }
 
   private processCloseTargets(targets: AttackTarget[]) {
     const filterTargets = targets.filter(
@@ -51,8 +36,6 @@ export class EnemyCombat {
   }
 
   update(time: number, delta: number) {
-    if (!this.enemy.state.isAlive) return;
-
     if (this.lastTimeCheck + this.intervalTimeCheck < time) {
       this.lastTimeCheck = time;
       this.processCloseTargets(

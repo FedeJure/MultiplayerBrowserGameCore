@@ -3,6 +3,7 @@ import { CombatResult } from "../player/combat/combatResult";
 import { PlayerInfo } from "../player/playerInfo";
 import { PlayerState } from "../player/playerState";
 import { Side } from "../side";
+import { EntityAnimationCode, AnimationLayer } from "./animations";
 import { EntityInfo } from "./entityInfo";
 import { EntityState } from "./entityState";
 import { EntityStats } from "./entityStats";
@@ -29,11 +30,27 @@ export class Entity implements Attackable {
     this._view.destroy();
   }
 
+  die() {
+    this.updateState({
+      isAlive: false,
+      anim: [
+        {
+          name: EntityAnimationCode.DIE,
+          layer: AnimationLayer.MOVEMENT,
+          duration: 1000,
+        },
+      ],
+    });
+    this.view.setVelocity(0, this.state.velocity.y)
+    setTimeout(() => {
+      this.destroy();
+    }, 50);
+  }
+
   update(time: number, delta: number) {
-    if (!this.state.isAlive) console.log(this.state.anim)
     this.view.playAnimations(this.state.anim);
     this.view.setLifePercent((this.state.life / this.stats.maxLife) * 100);
-    if (!this.state.isAlive) return
+    if (!this.state.isAlive) return;
     this.view.setPosition(this.state.position.x, this.state.position.y);
     this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);
     this.view.lookToLeft(this.state.side === Side.LEFT);
