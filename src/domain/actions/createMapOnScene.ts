@@ -30,7 +30,9 @@ export function createMapOnScene(
       });
       const tilesets = map.config.sourceFiles.map((s) => s.key);
       tilemap.layers.forEach((l) => {
-        tilemap.createLayer(l.name, tilesets, map.originX, map.originY).setDepth(ExistentDepths.GROUND_BACKGROUND);
+        tilemap
+          .createLayer(l.name, tilesets, map.originX, map.originY)
+          .setDepth(ExistentDepths.GROUND_BACKGROUND);
       });
 
       createBounds(map, scene);
