@@ -11,4 +11,5 @@ export interface EntityState {
     readonly mapId: Map['id'];
     readonly side: Side;
     readonly grounded: boolean;
+    readonly isAlive: boolean
 }

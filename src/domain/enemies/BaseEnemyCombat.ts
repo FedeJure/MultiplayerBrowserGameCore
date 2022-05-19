@@ -1,17 +1,16 @@
 import { AttackTarget } from "../combat/attackTarget";
 import { AttackTargetType } from "../combat/attackTargetType";
+import { EntityAnimationCode, AnimationLayer } from "../entity/animations";
 import { Entity } from "../entity/entity";
 import { CombatResult } from "../player/combat/combatResult";
 import { Enemy } from "./enemy";
 
 export class EnemyCombat {
   private _target: Entity | null = null;
+  private readonly intervalTimeCheck = 500;
+  private lastTimeCheck = 0;
 
-  constructor(private enemy: Enemy) {
-    setInterval(() => {
-      this.processCloseTargets(this.enemy.view.getEntitiesClose(300));
-    }, 500);
-  }
+  constructor(private enemy: Enemy) {}
   public get target() {
     return this._target;
   }
@@ -24,18 +23,41 @@ export class EnemyCombat {
   }
 
   private die() {
+    this.enemy.updateState({
+      isAlive: false,
+      anim: [
+        {
+          name: EntityAnimationCode.DIE,
+          layer: AnimationLayer.MOVEMENT,
+          duration: 1000,
+        },
+      ],
+    });
     setTimeout(() => {
       this.enemy.destroy();
     }, 50);
   }
 
   private processCloseTargets(targets: AttackTarget[]) {
-    const filterTargets = targets.filter(t => t.type === AttackTargetType.PLAYER)
+    const filterTargets = targets.filter(
+      (t) => t.type === AttackTargetType.PLAYER
+    );
     if (this._target && filterTargets.length === 0) {
-      this._target = null
+      this._target = null;
     }
-    filterTargets.map(({target, type}) => {
-        this._target = target
-    })
+    filterTargets.map(({ target, type }) => {
+      this._target = target;
+    });
+  }
+
+  update(time: number, delta: number) {
+    if (!this.enemy.state.isAlive) return;
+
+    if (this.lastTimeCheck + this.intervalTimeCheck < time) {
+      this.lastTimeCheck = time;
+      this.processCloseTargets(
+        this.enemy.view.getEntitiesClose(this.enemy.stats.detectionRange)
+      );
+    }
   }
 }

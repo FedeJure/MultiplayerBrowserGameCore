@@ -36,6 +36,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         side: Side.RIGHT,
         inCombat: false,
         grounded: true,
+        isAlive: true
       };
 
       const view = new PhaserEnemyView(

@@ -30,11 +30,13 @@ export class Entity implements Attackable {
   }
 
   update(time: number, delta: number) {
+    if (!this.state.isAlive) console.log(this.state.anim)
     this.view.playAnimations(this.state.anim);
+    this.view.setLifePercent((this.state.life / this.stats.maxLife) * 100);
+    if (!this.state.isAlive) return
     this.view.setPosition(this.state.position.x, this.state.position.y);
     this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);
     this.view.lookToLeft(this.state.side === Side.LEFT);
-    this.view.setLifePercent((this.state.life / this.stats.maxLife) * 100);
   }
 
   get info() {

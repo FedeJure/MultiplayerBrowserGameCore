@@ -24,10 +24,11 @@ export class ServerEnemy extends Enemy implements Attackable {
     this.movement = new BaseEnemyMovement(this);
     this.combat = new EnemyCombat(this);
   }
-  
+
   update(time: number, delta: number): void {
     try {
       this.movement.update(time, delta);
+      this.combat.update(time, delta);
       this.updateState({
         position: this.view.positionVector,
         velocity: this.view.velocity,

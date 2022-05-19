@@ -5,4 +5,6 @@ export interface EntityStats {
   readonly jumpPower: number;
   readonly meleeDamage: number;
   readonly basicAttackSpeed: number; // attacks per second
+  readonly meleeDistance: number;
+  readonly rangedDistance: number
 }

@@ -42,50 +42,52 @@ export class BaseEnemyMovement {
   }
 
   update(time: number, delta: number) {
+    if (!this.enemy.state.isAlive) return
     if (time > this.nextTimeDecide) {
       this.decideNonCombatMove();
       this.nextTimeDecide = time + Math.random() * 5000 + 1500;
     }
     this.updateAnimation();
-        if (this.enemy.combat.target !== null) {
-          const xDirection =
-            this.enemy.combat.target.state.position.x -
-            this.enemy.state.position.x;
-          const sideMultiplier = xDirection / Math.abs(xDirection);
-          const yDirection =
-            this.enemy.combat.target.state.position.y -
-            this.enemy.state.position.y;
-          this.enemy.view.setVelocity(
-            this.enemy.stats.runSpeed * sideMultiplier,
-            this.enemy.state.velocity.y
-          );
 
-          this.enemy.updateState({
-            side: sideMultiplier > 0 ? Side.RIGHT : Side.LEFT,
-          });
+    if (this.enemy.combat.target !== null) {
+      const xDirection =
+        this.enemy.combat.target.state.position.x - this.enemy.state.position.x;
+      const distance = Math.abs(xDirection);
 
-        } else {
-          if (this.currentAction === Actions.IDLE) {
-            this.enemy.view.setVelocity(0, this.enemy.view.velocity.y);
-          }
-          if (this.currentAction === Actions.WALK_LEFT) {
-            this.enemy.updateState({
-              side: Side.LEFT,
-            });
-            this.enemy.view.setVelocity(
-              -this.enemy.stats.walkSpeed,
-              this.enemy.view.velocity.y
-            );
-          }
-          if (this.currentAction === Actions.WALK_RIGHT) {
-            this.enemy.updateState({
-              side: Side.RIGHT,
-            });
-            this.enemy.view.setVelocity(
-              this.enemy.stats.walkSpeed,
-              this.enemy.view.velocity.y
-            );
-          }
-        }
+      const sideMultiplier = xDirection / distance;
+      this.enemy.updateState({
+        side: sideMultiplier > 0 ? Side.RIGHT : Side.LEFT,
+      });
+      if (distance <= this.enemy.stats.meleeDistance) {
+        this.enemy.view.setVelocity(0, this.enemy.state.velocity.y);
+        return;
+      }
+      this.enemy.view.setVelocity(
+        this.enemy.stats.runSpeed * sideMultiplier,
+        this.enemy.state.velocity.y
+      );
+    } else {
+      if (this.currentAction === Actions.IDLE) {
+        this.enemy.view.setVelocity(0, this.enemy.view.velocity.y);
+      }
+      if (this.currentAction === Actions.WALK_LEFT) {
+        this.enemy.updateState({
+          side: Side.LEFT,
+        });
+        this.enemy.view.setVelocity(
+          -this.enemy.stats.walkSpeed,
+          this.enemy.view.velocity.y
+        );
+      }
+      if (this.currentAction === Actions.WALK_RIGHT) {
+        this.enemy.updateState({
+          side: Side.RIGHT,
+        });
+        this.enemy.view.setVelocity(
+          this.enemy.stats.walkSpeed,
+          this.enemy.view.velocity.y
+        );
+      }
+    }
   }
 }

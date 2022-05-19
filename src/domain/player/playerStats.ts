@@ -17,4 +17,6 @@ export const DefaultPlayerStats: PlayerStats = {
   meleeDamage: 20,
   basicAttackSpeed: 2.5,
   walkSpeed: 2.5,
+  meleeDistance: 20,
+  rangedDistance: 200
 };

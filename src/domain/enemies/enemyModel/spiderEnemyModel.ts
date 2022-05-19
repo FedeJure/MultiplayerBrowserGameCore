@@ -9,7 +9,10 @@ export const SpiderEnemyModel: EnemyModel = {
     runSpeed: 2.5,
     width: 25,
     height: 37,
-    jumpPower: 1
+    jumpPower: 1,
+    rangedDistance: 200,
+    meleeDistance: 20,
+    detectionRange: 500
   },
   name: "Spider",
 };
