@@ -2,6 +2,8 @@ import { GameObjects, Scene } from "phaser";
 import { MapsConfiguration } from "../../infrastructure/configuration/MapsConfiguration";
 import { ExistentDepths } from "../../view/existentDepths";
 import { CollisionCategory } from "../collisions/collisionTypes";
+import { MapNode } from "../environment/mapNode";
+import { MapNodesManager } from "../environment/mapNodesManager";
 
 import { ProcessedMap } from "../environment/processedMap";
 import { EnvironmentObjectFactory } from "../environmentObjects/environmentobjectFactory";
@@ -11,7 +13,8 @@ export function createMapOnScene(
   map: ProcessedMap,
   scene: Scene,
   envObjectsRepository: EnvironmentObjectRepository,
-  objectsFactory: EnvironmentObjectFactory
+  objectsFactory: EnvironmentObjectFactory,
+  mapNodesManager: MapNodesManager
 ) {
   return new Promise<(GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[]>(
     async (res, _) => {
@@ -60,7 +63,7 @@ export function createMapOnScene(
         });
       }
       await Promise.all([
-        createColliders(colLayer, map, scene, createdObjects),
+        createColliders(colLayer, map, scene, createdObjects, mapNodesManager),
       ]);
 
       res(createdObjects);
@@ -72,7 +75,8 @@ async function createColliders(
   colLayer: Phaser.Tilemaps.ObjectLayer,
   map: ProcessedMap,
   scene: Scene,
-  createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[]
+  createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[],
+  mapNodesManager: MapNodesManager
 ) {
   return new Promise((res) => {
     colLayer.objects.forEach((obj) => {
@@ -89,6 +93,14 @@ async function createColliders(
           obj.width,
           obj.height
         );
+
+        const leftNode: MapNode = { x: pos.x + 10, y: pos.y };
+        const rightNode: MapNode = {
+          x: pos.x + (obj.width ?? 0) - 10,
+          y: pos.y - 10,
+        };
+        mapNodesManager.addNode(map.id, leftNode);
+        mapNodesManager.addNode(map.id, rightNode);
 
         sp = scene.matter.add.gameObject(rec, {
           isStatic: true,

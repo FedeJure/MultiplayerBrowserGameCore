@@ -23,7 +23,7 @@ export class CompleteMapDelegator implements Delegator {
     private socket: Socket,
     private envObjectsRepository: EnvironmentObjectRepository,
     private presenterProvider: ServerPresenterProvider,
-    private inGamePlayersRepository: SimpleRepository<ServerPlayer>
+    private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
   ) {
     this.inGamePlayersRepository.onSave.subscribe((serverPlayer) => {
       serverPlayer.onStateChange
@@ -119,7 +119,8 @@ export class CompleteMapDelegator implements Delegator {
           m,
           this.scene,
           this.envObjectsRepository,
-          new ServerEnvironmentObjectFactory(this.scene, this.presenterProvider)
+          new ServerEnvironmentObjectFactory(this.scene, this.presenterProvider),
+          this.mapManager.mapNodesManager
         )
       )
     );

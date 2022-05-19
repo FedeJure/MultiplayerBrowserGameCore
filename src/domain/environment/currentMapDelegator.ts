@@ -28,7 +28,7 @@ export class CurrentMapDelegator implements Delegator {
   ) {}
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {
-      this.mapManager.setMaps([ev.newMap, ...ev.neighborMaps])
+      this.mapManager.setMaps([ev.newMap, ...ev.neighborMaps]);
       return new Promise(async () => {
         await this.loadAssets([ev.newMap]);
         await this.loadAssets(ev.neighborMaps);
@@ -106,7 +106,16 @@ export class CurrentMapDelegator implements Delegator {
         maps
           .filter((m) => !loadedKeys.includes(m.id.toString()))
           .map((m) => {
-            return createMapOnScene(m, this.scene, this.envObjectsRepository, new ClientEnvironmentObjectFactory(this.scene, ClientProvider.presenterProvider)).then((createdObjects) => {
+            return createMapOnScene(
+              m,
+              this.scene,
+              this.envObjectsRepository,
+              new ClientEnvironmentObjectFactory(
+                this.scene,
+                ClientProvider.presenterProvider
+              ),
+              this.mapManager.mapNodesManager
+            ).then((createdObjects) => {
               this.loadedMaps[m.id] = { map: m, createdObjects };
               return createdObjects;
             });
