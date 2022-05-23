@@ -8,13 +8,14 @@ import { Vector } from "../../domain/vector";
 import { ExistentDepths } from "../existentDepths";
 import { CollisionDetector } from "../player/collisionDetector";
 import { PhaserCombatCollisionResolver } from "../player/combatCollisionResolver";
+import { ShapeCollisioner } from "./shapeCollisioner";
 
 export class PhaserEntityView
   extends GameObjects.Container
   implements EntityView
 {
   private readonly groundCollisionDetector: CollisionDetector;
-  protected readonly mainBody: BodyType
+  protected readonly mainBody: BodyType;
 
   constructor(
     readonly view: Physics.Matter.Sprite,
@@ -47,10 +48,11 @@ export class PhaserEntityView
     this.setDepth(ExistentDepths.GROUND);
     this.mainBody = this.body as BodyType;
 
-
     this.initCollisions();
   }
-  public get matterBody() {return this.body as BodyType};
+  public get matterBody() {
+    return this.body as BodyType;
+  }
 
   setPositionInTime(x: number, y: number, time: number) {
     this.scene.tweens.add({
@@ -91,8 +93,19 @@ export class PhaserEntityView
   }
 
   private initCollisions() {
+    // const collisionator = new ShapeCollisioner(
+    //   this.scene,
+    //   this.x,
+    //   this.y,
+    //   this.width,
+    //   this.height
+    // );
+      
     const body = this.scene.matter.body.create({
-      parts: [this.matterBody, this.groundCollisionDetector.body],
+      parts: [
+        this.matterBody,
+        this.groundCollisionDetector.body,
+      ],
     });
 
     body.id = this.matterBody.id;

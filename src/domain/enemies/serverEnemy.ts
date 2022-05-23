@@ -7,7 +7,7 @@ import { BaseEnemyMovement } from "./BaseEnemyMovement";
 import { EnemyInfo } from "./EnemyInfo";
 import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
-import { EnemyView } from "./EnemyView";
+import { ServerEnemyView } from "./ServerEnemyView";
 
 export class ServerEnemy extends Enemy implements Attackable {
   private movement: BaseEnemyMovement;
@@ -18,11 +18,15 @@ export class ServerEnemy extends Enemy implements Attackable {
     state: EnemyState,
     info: EnemyInfo,
     stats: EnemyStats,
-    view: EnemyView
+    view: ServerEnemyView
   ) {
     super(state, info, view, stats);
     this.movement = new BaseEnemyMovement(this);
     this.combat = new EnemyCombat(this);
+  }
+
+  get view() {
+      return this._view as ServerEnemyView
   }
 
   update(time: number, delta: number): void {

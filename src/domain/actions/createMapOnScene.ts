@@ -91,7 +91,7 @@ async function createColliders(
           obj.height
         );
 
-        new PlatformDetector(scene, pos.x + 10, pos.y);
+        new PlatformDetector(scene, pos.x + 10, pos.y - 10);
         new PlatformDetector(scene, pos.x + (obj.width ?? 0) - 10, pos.y - 10);
 
         sp = scene.matter.add.gameObject(rec, {

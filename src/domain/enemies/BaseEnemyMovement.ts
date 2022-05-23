@@ -16,7 +16,11 @@ export class BaseEnemyMovement {
   private currentAction: Actions = Actions.IDLE;
   private nextTimeDecide: number = 0;
 
-  constructor(private enemy: ServerEnemy) {}
+  constructor(private enemy: ServerEnemy) {
+    enemy.view.onPlatformDetectorEnter.subscribe(position => {
+      console.log(position)
+    })
+  }
 
   decideNonCombatMove() {
     this.currentAction =
