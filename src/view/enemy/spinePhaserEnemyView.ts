@@ -1,10 +1,11 @@
-import { BodyType } from "matter";
-import { GameObjects, Scene } from "phaser";
-import { CollisionCategory } from "../../domain/collisions/collisionTypes";
-import { ClientProvider } from "../../infrastructure/providers/clientProvider";
+import { Scene } from "phaser";
+import { EnemyView } from "../../domain/enemies/EnemyView";
 import { SpinePhaserEntityView } from "../entity/spinePhaserEntityView";
 
-export class SpinePhaserEnemyView extends SpinePhaserEntityView {
+export class SpinePhaserEnemyView
+  extends SpinePhaserEntityView
+  implements EnemyView
+{
   constructor(
     scene: Scene,
     x: number,
