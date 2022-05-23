@@ -113,8 +113,7 @@ export class CurrentMapDelegator implements Delegator {
               new ClientEnvironmentObjectFactory(
                 this.scene,
                 ClientProvider.presenterProvider
-              ),
-              this.mapManager.mapNodesManager
+              )
             ).then((createdObjects) => {
               this.loadedMaps[m.id] = { map: m, createdObjects };
               return createdObjects;

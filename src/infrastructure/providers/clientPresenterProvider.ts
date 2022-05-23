@@ -81,7 +81,7 @@ export class ClientPresenterProvider {
         scene,
         ClientProvider.serverConnection,
         ClientProvider.environmentObjectRepository,
-        ClientProvider.mapManager
+        ClientProvider.mapManager,
       ),
       new BackgroundDelegator(
         scene,
@@ -95,7 +95,7 @@ export class ClientPresenterProvider {
         scene,
         ClientProvider.presenterProvider,
         ClientProvider.inGamePlayersRepository,
-        ClientProvider.attackTargetRepository,
+        ClientProvider.collisionableTargetRepository,
         ClientProvider.mapManager
       ),
       new ClientEnemyCreatorDelegator(

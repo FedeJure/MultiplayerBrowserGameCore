@@ -42,7 +42,8 @@ export class BaseEnemyMovement {
   }
 
   update(time: number, delta: number) {
-    if (!this.enemy.state.isAlive) return
+    if (!this.enemy.state.isAlive) return;
+    this.enemy.view.setAngle(0);
     if (time > this.nextTimeDecide) {
       this.decideNonCombatMove();
       this.nextTimeDecide = time + Math.random() * 5000 + 1500;
@@ -53,7 +54,6 @@ export class BaseEnemyMovement {
       const xDirection =
         this.enemy.combat.target.state.position.x - this.enemy.state.position.x;
       const distance = Math.abs(xDirection);
-
       const sideMultiplier = xDirection / distance;
       this.enemy.updateState({
         side: sideMultiplier > 0 ? Side.RIGHT : Side.LEFT,

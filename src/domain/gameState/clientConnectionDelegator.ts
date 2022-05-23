@@ -14,7 +14,7 @@ import { Scene } from "phaser";
 import { Player } from "../player/players/player";
 import { MovementSystem } from "../player/movement/movementSystem";
 import { DefaultPlayerStats, PlayerStats } from "../player/playerStats";
-import { AttackTarget } from "../combat/attackTarget";
+import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { AttackTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 import { MapManager } from "../environment/mapManager";
@@ -26,7 +26,7 @@ export class ClientConnectionDelegator implements Delegator {
     private scene: Scene,
     private presenterProvider: ClientPresenterProvider,
     private inGamePlayersRepository: SimpleRepository<Player>,
-    private attackTargetRepository: SimpleRepository<AttackTarget>,
+    private collisionableTargetRepository: SimpleRepository<CollisionableEntity>,
     private mapManager: MapManager
   ) {}
   init(): void {
@@ -51,7 +51,7 @@ export class ClientConnectionDelegator implements Delegator {
       this.connection.onPlayerDisconnected.subscribe((data) => {
         const player = this.inGamePlayersRepository.get(data.playerId);
         if (player) {
-          this.attackTargetRepository.remove(
+          this.collisionableTargetRepository.remove(
             player.view.matterBody.id.toString()
           );
           player.destroy();
@@ -72,7 +72,7 @@ export class ClientConnectionDelegator implements Delegator {
       state.position.x,
       state.position.y,
       this.scene,
-      this.attackTargetRepository
+      this.collisionableTargetRepository
     );
     const view = new ClientPlayerView(
       this.scene,
@@ -98,7 +98,7 @@ export class ClientConnectionDelegator implements Delegator {
       state.position.x,
       state.position.y,
       this.scene,
-      this.attackTargetRepository
+      this.collisionableTargetRepository
     );
 
     const view = new ClientPlayerView(
@@ -123,7 +123,7 @@ export class ClientConnectionDelegator implements Delegator {
       input,
       this.mapManager
     );
-    this.attackTargetRepository.save(view.matterBody.id.toString(), {
+    this.collisionableTargetRepository.save(view.matterBody.id.toString(), {
       target: player,
       type: AttackTargetType.PLAYER,
     });

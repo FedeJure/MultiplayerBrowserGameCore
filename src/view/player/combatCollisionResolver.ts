@@ -1,6 +1,6 @@
 import { BodyType } from "matter";
 import { Scene } from "phaser";
-import { AttackTarget } from "../../domain/combat/attackTarget";
+import { CollisionableEntity } from "../../domain/entity/CollisionableEntity";
 import { CombatCollisionResolver } from "../../domain/player/combat/combatCollisionResolver";
 import { SimpleRepository } from "../../domain/repository";
 
@@ -9,7 +9,7 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
     x: number,
     y: number,
     private scene: Scene,
-    private attackTargetRepository: SimpleRepository<AttackTarget>
+    private collisionableTargetRepository: SimpleRepository<CollisionableEntity>
   ) {}
 
   getTargetsAround(x: number, y: number, distance: number) {
@@ -21,9 +21,9 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
     );
     return bodies
       .map((body) =>
-        this.attackTargetRepository.get((body as BodyType).id.toString())
+        this.collisionableTargetRepository.get((body as BodyType).id.toString())
       )
-      .filter((target) => target !== undefined) as AttackTarget[];
+      .filter((target) => target !== undefined) as CollisionableEntity[];
   }
 
   getTargetsOnArea(
@@ -31,14 +31,14 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
     y: number,
     width: number,
     height: number
-  ): AttackTarget[] {
+  ): CollisionableEntity[] {
     const bodies = this.scene.matter.intersectRect(x, y, width, height);
     // this.drawDebugRectangle(x, y, width, height);
     return bodies
       .map((body) =>
-        this.attackTargetRepository.get((body as BodyType).id.toString())
+        this.collisionableTargetRepository.get((body as BodyType).id.toString())
       )
-      .filter((target) => target !== undefined) as AttackTarget[];
+      .filter((target) => target !== undefined) as CollisionableEntity[];
   }
 
   private drawDebugRectangle(

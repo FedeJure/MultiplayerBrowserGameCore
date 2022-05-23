@@ -18,7 +18,7 @@ import { PlayerInventoryDto } from "../../infrastructure/dtos/playerInventoryDto
 import { Scene } from "phaser";
 import { MovementSystem } from "./movement/movementSystem";
 import { DefaultPlayerStats, PlayerStats } from "./playerStats";
-import { AttackTarget } from "../combat/attackTarget";
+import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { AttackTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 import { MapManager } from "../environment/mapManager";
@@ -36,7 +36,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private presenterProvider: ServerPresenterProvider,
     private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
     private playerStatsRepository: AsyncRepository<PlayerStats>,
-    private attackTargetRepository: SimpleRepository<AttackTarget>,
+    private collisionableTargetRepository: SimpleRepository<CollisionableEntity>,
     private mapManager: MapManager,
     private playerInputRequestRepository: PlayerInputRequestRepository
   ) {}
@@ -108,7 +108,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
               GameEvents.PLAYER_DISCONNECTED.name,
               GameEvents.PLAYER_DISCONNECTED.getEvent(playerId)
             );
-          this.attackTargetRepository.remove(
+          this.collisionableTargetRepository.remove(
             player.view.matterBody.id.toString()
           );
 
@@ -147,7 +147,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       playerState.position.x,
       playerState.position.y,
       scene,
-      this.attackTargetRepository
+      this.collisionableTargetRepository
     );
 
     const view = new ServerPlayerView(
@@ -177,7 +177,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       this.playerStateRepository
     );
 
-    this.attackTargetRepository.save(view.matterBody.id.toString(), {
+    this.collisionableTargetRepository.save(view.matterBody.id.toString(), {
       target: player,
       type: AttackTargetType.PLAYER,
     });

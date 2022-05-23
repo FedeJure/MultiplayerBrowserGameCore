@@ -1,9 +1,8 @@
 import { GameObjects, Scene } from "phaser";
 import { MapsConfiguration } from "../../infrastructure/configuration/MapsConfiguration";
+import { PlatformDetector } from "../../view/environment/platformDetector";
 import { ExistentDepths } from "../../view/existentDepths";
 import { CollisionCategory } from "../collisions/collisionTypes";
-import { MapNode } from "../environment/mapNode";
-import { MapNodesManager } from "../environment/mapNodesManager";
 
 import { ProcessedMap } from "../environment/processedMap";
 import { EnvironmentObjectFactory } from "../environmentObjects/environmentobjectFactory";
@@ -13,8 +12,7 @@ export function createMapOnScene(
   map: ProcessedMap,
   scene: Scene,
   envObjectsRepository: EnvironmentObjectRepository,
-  objectsFactory: EnvironmentObjectFactory,
-  mapNodesManager: MapNodesManager
+  objectsFactory: EnvironmentObjectFactory
 ) {
   return new Promise<(GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[]>(
     async (res, _) => {
@@ -63,7 +61,7 @@ export function createMapOnScene(
         });
       }
       await Promise.all([
-        createColliders(colLayer, map, scene, createdObjects, mapNodesManager),
+        createColliders(colLayer, map, scene, createdObjects),
       ]);
 
       res(createdObjects);
@@ -75,8 +73,7 @@ async function createColliders(
   colLayer: Phaser.Tilemaps.ObjectLayer,
   map: ProcessedMap,
   scene: Scene,
-  createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[],
-  mapNodesManager: MapNodesManager
+  createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[]
 ) {
   return new Promise((res) => {
     colLayer.objects.forEach((obj) => {
@@ -94,13 +91,8 @@ async function createColliders(
           obj.height
         );
 
-        const leftNode: MapNode = { x: pos.x + 10, y: pos.y };
-        const rightNode: MapNode = {
-          x: pos.x + (obj.width ?? 0) - 10,
-          y: pos.y - 10,
-        };
-        mapNodesManager.addNode(map.id, leftNode);
-        mapNodesManager.addNode(map.id, rightNode);
+        new PlatformDetector(scene, pos.x + 10, pos.y);
+        new PlatformDetector(scene, pos.x + (obj.width ?? 0) - 10, pos.y - 10);
 
         sp = scene.matter.add.gameObject(rec, {
           isStatic: true,
@@ -140,7 +132,7 @@ async function createColliders(
         sp.setFriction(0);
         sp.setCollisionCategory(CollisionCategory.StaticEnvironment);
         sp.setCollidesWith([
-          CollisionCategory.Player,
+          CollisionCategory.Entity,
           CollisionCategory.StaticEnvironment,
         ]);
       }
@@ -195,7 +187,7 @@ function addBound(
     label: "Bound Wall",
   }).collisionFilter = {
     group: 0,
-    mask: CollisionCategory.Player,
+    mask: CollisionCategory.Entity,
     category: CollisionCategory.WorldBounds,
   };
 }

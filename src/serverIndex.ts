@@ -21,11 +21,11 @@ import { EnvironmentObjectDetailsDispatcherDelegator } from "./domain/environmen
 import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
 import { EnemiesStateSenderDelegator } from "./domain/gameState/enemiesStateSenderDelegator";
 
-export const InitGame: (socket: Socket, originUrl: string, provider: ServerProvider) => void = (
+export const InitGame: (
   socket: Socket,
   originUrl: string,
-  provider
-) => {
+  provider: ServerProvider
+) => void = (socket: Socket, originUrl: string, provider) => {
   const scene = new GameScene();
   const config = {
     ...PhaserServerConfig,
@@ -53,7 +53,7 @@ export const InitGame: (socket: Socket, originUrl: string, provider: ServerProvi
           provider.enemiesRepository,
           provider.roomManager,
           provider.presenterProvider,
-          provider.attackTargetRepository
+          provider.collisionableTargetRepository
         ),
         new PlayerStateDelegator(
           provider.roomManager,
@@ -76,7 +76,7 @@ export const InitGame: (socket: Socket, originUrl: string, provider: ServerProvi
           provider.presenterProvider,
           provider.inGamePlayerRepository,
           provider.playerStatsRepository,
-          provider.attackTargetRepository,
+          provider.collisionableTargetRepository,
           provider.mapMapanger,
           provider.playerInputRequestRepository
         ),
@@ -114,17 +114,19 @@ export const InitGame: (socket: Socket, originUrl: string, provider: ServerProvi
 
 export const InitServerDependencies = () => {
   return new ServerProvider(MapsConfiguration);
-  
-}
+};
 
-export const InitGameStateSender = (socket: Socket, dependencyProvider: ServerProvider) => {
+export const InitGameStateSender = (
+  socket: Socket,
+  dependencyProvider: ServerProvider
+) => {
   const del = new EnemiesStateSenderDelegator(
     dependencyProvider.roomManager,
     socket,
     dependencyProvider.enemiesRepository
   );
-  del.init()
+  del.init();
   setInterval(() => {
-    del.update(1,1)
+    del.update(1, 1);
   }, 16);
 };

@@ -8,10 +8,13 @@ import { Vector } from "../../domain/vector";
 import { ExistentDepths } from "../existentDepths";
 import { CollisionDetector } from "../player/collisionDetector";
 import { PhaserCombatCollisionResolver } from "../player/combatCollisionResolver";
-import { AttackTargetType } from "../../domain/combat/attackTargetType";
 
-export class PhaserEntityView extends GameObjects.Container implements EntityView {
+export class PhaserEntityView
+  extends GameObjects.Container
+  implements EntityView
+{
   private readonly groundCollisionDetector: CollisionDetector;
+  protected readonly mainBody: BodyType
 
   constructor(
     readonly view: Physics.Matter.Sprite,
@@ -42,15 +45,24 @@ export class PhaserEntityView extends GameObjects.Container implements EntityVie
       )
     );
     this.setDepth(ExistentDepths.GROUND);
+    this.mainBody = this.body as BodyType;
+
 
     this.initCollisions();
   }
+  public get matterBody() {return this.body as BodyType};
+
+  setPositionInTime(x: number, y: number, time: number) {
+    this.scene.tweens.add({
+      targets: this.matterBody,
+      duration: time,
+      props: { x: { value: x }, y: { value: y } },
+    });
+  }
   getEntitiesClose(distance: number) {
-    return this.collisionResolver?.getTargetsAround(
-      this.x,
-      this.y,
-      distance,
-    ) ?? [];
+    return (
+      this.collisionResolver?.getTargetsAround(this.x, this.y, distance) ?? []
+    );
   }
   playAnimations(anims: AnimationDto[]): void {}
   setLifePercent(percent: number): void {}
@@ -64,9 +76,6 @@ export class PhaserEntityView extends GameObjects.Container implements EntityVie
       GameObjects.Container;
   }
 
-  get matterBody() {
-    return this.body as BodyType;
-  }
   lookToLeft(value: boolean): void {
     this.view.setScale(
       (value ? -1 : 1) * Math.abs(this.view.scaleX),
@@ -85,17 +94,14 @@ export class PhaserEntityView extends GameObjects.Container implements EntityVie
     const body = this.scene.matter.body.create({
       parts: [this.matterBody, this.groundCollisionDetector.body],
     });
+
+    body.id = this.matterBody.id;
     this.selfAsPhysic.setExistingBody(body);
-    this.scene.matter.setCollisionGroup(
-      [this.matterBody],
-      -CollisionCategory.Player
-    );
-    this.scene.matter.setCollisionCategory(
-      [this.matterBody],
-      CollisionCategory.Player
-    );
+
+    this.scene.matter.setCollisionGroup([body], -CollisionCategory.Entity);
+    this.scene.matter.setCollisionCategory([body], CollisionCategory.Entity);
     this.scene.matter.setCollidesWith(
-      [this.matterBody],
+      [body],
       [
         CollisionCategory.StaticEnvironment,
         CollisionCategory.WorldBounds,
@@ -109,7 +115,7 @@ export class PhaserEntityView extends GameObjects.Container implements EntityVie
   }
 
   setCollisionResolver(collisionResolver: PhaserCombatCollisionResolver) {
-    this.collisionResolver = collisionResolver
-    return this
+    this.collisionResolver = collisionResolver;
+    return this;
   }
 }

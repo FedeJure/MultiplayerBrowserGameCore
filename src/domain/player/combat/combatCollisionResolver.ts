@@ -1,4 +1,4 @@
-import { AttackTarget } from "../../combat/attackTarget";
+import { CollisionableEntity } from "../../entity/CollisionableEntity";
 
 export interface CombatCollisionResolver {
   getTargetsOnArea(
@@ -6,5 +6,5 @@ export interface CombatCollisionResolver {
     y: number,
     width: number,
     height: number
-  ): AttackTarget[];
+  ): CollisionableEntity[];
 }

@@ -1,4 +1,4 @@
-import { AttackTarget } from "../combat/attackTarget";
+import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { AttackTargetType } from "../combat/attackTargetType";
 import { Entity } from "../entity/entity";
 import { CombatResult } from "../player/combat/combatResult";
@@ -21,21 +21,21 @@ export class EnemyCombat {
     if (this.enemy.state.life <= 0) this.enemy.die();
   }
 
-
-  private processCloseTargets(targets: AttackTarget[]) {
+  private processCloseTargets(targets: CollisionableEntity[]) {
     const filterTargets = targets.filter(
       (t) => t.type === AttackTargetType.PLAYER
     );
     if (this._target && filterTargets.length === 0) {
       this._target = null;
     }
-    if (filterTargets.find(t => t.target === this.target)) return
+    if (filterTargets.find((t) => t.target === this.target)) return;
     filterTargets.map(({ target }) => {
       this._target = target;
     });
   }
 
   update(time: number, delta: number) {
+
     if (this.lastTimeCheck + this.intervalTimeCheck < time) {
       this.lastTimeCheck = time;
       this.processCloseTargets(

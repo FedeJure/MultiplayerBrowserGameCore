@@ -1,5 +1,5 @@
 import { ClientConnection } from "../../domain/clientConnection";
-import { AttackTarget } from "../../domain/combat/attackTarget";
+import { CollisionableEntity } from "../../domain/entity/CollisionableEntity";
 import { Enemy } from "../../domain/enemies/enemy";
 import { CompleteMapManager } from "../../domain/environment/completeMapManager";
 import { MapConfiguration } from "../../domain/environment/mapConfiguration";
@@ -32,7 +32,7 @@ class PlayerInfoRepository extends InMemoryAsyncRepository<PlayerInfo> {}
 class PlayerInventoryRepository extends InMemoryAsyncRepository<PlayerInventoryDto> {}
 class ItemRepository extends InMemoryAsyncRepository<Item> {}
 class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
-class AttackTargetRepository extends InMemoryRepository<AttackTarget> {}
+class AttackTargetRepository extends InMemoryRepository<CollisionableEntity> {}
 class SpawnedEnemiesRepository extends InMemoryRepository<Enemy> {}
 
 export class ServerProvider {
@@ -94,8 +94,8 @@ export class ServerProvider {
     );
   }
 
-  public  get attackTargetRepository(): SimpleRepository<AttackTarget> {
-    return DependencyManager.GetOrInstantiate<SimpleRepository<AttackTarget>>(
+  public  get collisionableTargetRepository(): SimpleRepository<CollisionableEntity> {
+    return DependencyManager.GetOrInstantiate<SimpleRepository<CollisionableEntity>>(
       () => new AttackTargetRepository()
     );
   }

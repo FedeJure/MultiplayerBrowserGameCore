@@ -23,7 +23,7 @@ export class CompleteMapDelegator implements Delegator {
     private socket: Socket,
     private envObjectsRepository: EnvironmentObjectRepository,
     private presenterProvider: ServerPresenterProvider,
-    private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
+    private inGamePlayersRepository: SimpleRepository<ServerPlayer>
   ) {
     this.inGamePlayersRepository.onSave.subscribe((serverPlayer) => {
       serverPlayer.onStateChange
@@ -90,11 +90,7 @@ export class CompleteMapDelegator implements Delegator {
   private updateMapForPlayer(player: ServerPlayer) {
     const { foundedMap, neighborMaps } =
       this.mapManager.getMapForPlayer(player);
-    if (
-      foundedMap &&
-      neighborMaps &&
-      foundedMap.id !== player.state.mapId
-    ) {
+    if (foundedMap && neighborMaps && foundedMap.id !== player.state.mapId) {
       player.updateState({
         mapId: foundedMap.id,
       });
@@ -119,8 +115,7 @@ export class CompleteMapDelegator implements Delegator {
           m,
           this.scene,
           this.envObjectsRepository,
-          new ServerEnvironmentObjectFactory(this.scene, this.presenterProvider),
-          this.mapManager.mapNodesManager
+          new ServerEnvironmentObjectFactory(this.scene, this.presenterProvider)
         )
       )
     );

@@ -1,5 +1,5 @@
 export enum CollisionCategory {
-  Player = 2,
+  Entity = 2,
   StaticEnvironment = 4,
   WorldBounds = 6,
   DamageArea = 8,
@@ -13,5 +13,5 @@ export enum CollisionType {
 }
 
 export enum CollisionGroups {
-  Player = -1, //Due Phaser rules, if two gameobjects have the same POSITIVE group they collide and if have the same NEGATIVE group they never collide
+  Entity = -1, //Due Phaser rules, if two gameobjects have the same POSITIVE group they collide and if have the same NEGATIVE group they never collide
 }

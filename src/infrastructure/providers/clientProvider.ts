@@ -13,14 +13,14 @@ import { SimpleRepository } from "../../domain/repository";
 import { InMemoryRepository } from "../repositories/InMemoryRepository";
 import { Item } from "../../domain/items/item";
 import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
-import { AttackTarget } from "../../domain/combat/attackTarget";
+import { CollisionableEntity } from "../../domain/entity/CollisionableEntity";
 import { MapManager } from "../../domain/environment/mapManager";
 import { Enemy } from "../../domain/enemies/enemy";
 
 //This is necessary because the dependency manager not work with generics
 class InventoryRepository extends InMemoryRepository<PlayerInventoryDto> {}
 class ItemRepository extends InMemoryRepository<Item> {}
-class AttackTargetRepository extends InMemoryRepository<AttackTarget> {}
+class AttackTargetRepository extends InMemoryRepository<CollisionableEntity> {}
 class SpawnedEnemiesRepository extends InMemoryRepository<Enemy>{}
 
 export class ClientProvider {
@@ -89,8 +89,8 @@ export class ClientProvider {
     );
   }
 
-  public static get attackTargetRepository(): SimpleRepository<AttackTarget> {
-    return DependencyManager.GetOrInstantiate<SimpleRepository<AttackTarget>>(
+  public static get collisionableTargetRepository(): SimpleRepository<CollisionableEntity> {
+    return DependencyManager.GetOrInstantiate<SimpleRepository<CollisionableEntity>>(
       () => new AttackTargetRepository()
     )
   }

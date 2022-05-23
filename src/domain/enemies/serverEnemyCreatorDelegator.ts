@@ -2,7 +2,7 @@ import Phaser, { Scene } from "phaser";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { PhaserEnemyView } from "../../view/enemy/phaserEnemyView";
 import { AnimationLayer } from "../entity/animations";
-import { AttackTarget } from "../combat/attackTarget";
+import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { AttackTargetType } from "../combat/attackTargetType";
 import { Delegator } from "../delegator";
 import { SimpleRepository } from "../repository";
@@ -22,7 +22,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
     private enemiesRepository: SimpleRepository<Enemy>,
     private roomManager: RoomManager,
     private presenterProvider: ServerPresenterProvider,
-    private attackTargetRepository: SimpleRepository<AttackTarget>
+    private collisionableTargetRepository: SimpleRepository<CollisionableEntity>
   ) {}
   init(): void {
     // here, create a EnemySpawner on each enemy spot (from map or random)
@@ -44,13 +44,13 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         state.position.x,
         state.position.y,
         SpiderEnemyModel.stats.height,
-        SpiderEnemyModel.stats.width
+        SpiderEnemyModel.stats.width,
       ).setCollisionResolver(
         new PhaserCombatCollisionResolver(
           state.position.x,
           state.position.y,
           this.scene,
-          this.attackTargetRepository
+          this.collisionableTargetRepository
         )
       );
       const enemy = new ServerEnemy(
@@ -69,14 +69,14 @@ export class ServerEnemyCreatorDelegator implements Delegator {
       );
       enemy.onDestroy.subscribe(() => {
         this.enemiesRepository.remove(enemy.info.id);
-        this.attackTargetRepository.remove(view.matterBody.id.toString());
+        this.collisionableTargetRepository.remove(view.matterBody.id.toString());
         this.roomManager.removeEnemyFromRoom(enemy.info.id, [
           enemy.state.mapId.toString(),
         ]);
       });
       this.enemiesRepository.save(enemy.info.id, enemy);
       this.presenterProvider.forEnemy(view, enemy);
-      this.attackTargetRepository.save(view.matterBody.id.toString(), {
+      this.collisionableTargetRepository.save(view.matterBody.id.toString(), {
         target: enemy,
         type: AttackTargetType.MOB,
       });
