@@ -1,12 +1,10 @@
 import { ControllablePlayer } from "../player/players/controllablePlayer";
 import { Map } from "./mapConfiguration";
-import { MapNodesManager } from "./mapNodesManager";
 import { ProcessedMap } from "./processedMap";
 
 export class MapManager {
   protected processedMaps: { [key: Map["id"]]: ProcessedMap } = {};
   protected processedMapsAsList: ProcessedMap[] = [];
-  public readonly mapNodesManager: MapNodesManager = new MapNodesManager()
 
   setMaps(maps: ProcessedMap[]) {
     this.processedMapsAsList = [...maps]
