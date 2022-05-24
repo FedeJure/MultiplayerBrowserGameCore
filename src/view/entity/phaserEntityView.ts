@@ -82,6 +82,11 @@ export class PhaserEntityView
 
   private initCollisions() {
     this.arcadeBody.onCollide = true;
+    this.arcadeBody.setAllowRotation(false);
+  }
+
+  get blocked(): boolean {
+    return this.arcadeBody.blocked.left || this.arcadeBody.blocked.right;
   }
 
   public get onGroundCollideChange(): Observable<boolean> {

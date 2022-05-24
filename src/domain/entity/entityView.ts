@@ -24,4 +24,5 @@ export interface EntityView {
   setPositionInTime(x:number, y:number, time:number)
   grounded: boolean
   id: string
+  blocked: boolean
 }

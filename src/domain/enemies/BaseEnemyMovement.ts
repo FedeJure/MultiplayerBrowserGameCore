@@ -30,7 +30,7 @@ export class BaseEnemyMovement {
   updateAnimation() {
     const vel = this.enemy.state.velocity;
     const xVel = Math.abs(vel.x);
-    if (xVel < 0.1) {
+    if (xVel < 0.1 || this.enemy.view.blocked) {
       this.enemy.updateState({
         anim: [{ name: EnemyAnimation.IDLE, layer: AnimationLayer.MOVEMENT }],
       });
@@ -47,7 +47,6 @@ export class BaseEnemyMovement {
 
   update(time: number, delta: number) {
     if (!this.enemy.state.isAlive) return;
-    this.enemy.view.setAngle(0);
     if (time > this.nextTimeDecide) {
       this.decideNonCombatMove();
       this.nextTimeDecide = time + Math.random() * 5000 + 1500;
@@ -71,8 +70,9 @@ export class BaseEnemyMovement {
         this.enemy.state.velocity.y
       );
     } else {
-      if (this.currentAction === Actions.IDLE) {
+      if (this.currentAction === Actions.IDLE || this.enemy.view.blocked) {
         this.enemy.view.setVelocity(0, this.enemy.view.velocity.y);
+        return
       }
       if (this.currentAction === Actions.WALK_LEFT) {
         this.enemy.updateState({
