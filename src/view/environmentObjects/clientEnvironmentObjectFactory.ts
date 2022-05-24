@@ -34,12 +34,9 @@ export class ClientEnvironmentObjectFactory
               ob.object.textureName
             ) as unknown as Phaser.GameObjects.Sprite;
 
-            this.scene.matter.add.gameObject(
+            this.scene.physics.add.existing(
               view as Phaser.GameObjects.GameObject,
-              {
-                ignoreGravity: true,
-                isStatic: true,
-              }
+              true
             );
 
             view.setDisplaySize(ob.object.width, ob.object.height);
@@ -54,12 +51,10 @@ export class ClientEnvironmentObjectFactory
             ob.object.objectVariant !== EnvironmentObjectVariant.decorative &&
             ob.object.assetType === EnvironmentObjectAssetType.tiledTile
           ) {
-            let view = this.scene.matter.add.sprite(
+            let view = this.scene.physics.add.image(
               ob.position.x,
               ob.position.y,
-              "",
-              undefined,
-              { ignoreGravity: true, isStatic: true }
+              ""
             );
 
             view.setDisplaySize(ob.object.width, ob.object.height);

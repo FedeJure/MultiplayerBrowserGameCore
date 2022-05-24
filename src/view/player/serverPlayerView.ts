@@ -12,7 +12,7 @@ export class ServerPlayerView extends PhaserPlayerView {
     width: number,
     combatCollisionResolver: PhaserCombatCollisionResolver
   ) {
-    const sprite = scene.matter.add.sprite(x, y, "");
+    const sprite = scene.physics.add.sprite(x, y, "");
     super(sprite, x, y, height, width, combatCollisionResolver);
   }
 }

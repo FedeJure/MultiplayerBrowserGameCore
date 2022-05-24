@@ -25,13 +25,12 @@ export const PhaserClientConfig: GameConfig = {
     target: 60,
   },
   physics: {
-    default: "matter",
-    matter: {
-      enableSleeping: false,
+    default: 'arcade',
+    arcade: {
       gravity: {
-        y: 1,
+        y: 900
       },
-      // debug: true
+      debug: true
     },
   },
   plugins: {
@@ -56,11 +55,10 @@ export const PhaserServerConfig: GameConfig = {
     target: 60,
   },
   physics: {
-    default: "matter",
-    matter: {
-      enableSleeping: false,
+    default: "arcade",
+    arcade: {
       gravity: {
-        y: 1,
+        y: 900
       },
     },
   },

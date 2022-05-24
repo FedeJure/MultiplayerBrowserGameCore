@@ -1,12 +1,9 @@
-import { BodyType } from "matter";
 import { GameObjects, Scene } from "phaser";
 import { FontSize, FONT_RESOLUTION } from "../Fonts";
 import { LifeBar } from "../player/lifeBar";
 export class EntityIngameHud extends GameObjects.Container {
   private nameText: GameObjects.Text;
   private lifeBar: LifeBar;
-  public readonly matterBody: BodyType;
-  p = 100;
   constructor(scene: Scene, height: number, width: number) {
     super(scene, 0, 0);
     this.setSize(width, height);

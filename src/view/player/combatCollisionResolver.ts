@@ -1,4 +1,3 @@
-import { BodyType } from "matter";
 import { Scene } from "phaser";
 import { CollisionableEntity } from "../../domain/entity/CollisionableEntity";
 import { CombatCollisionResolver } from "../../domain/player/combat/combatCollisionResolver";
@@ -13,17 +12,18 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
   ) {}
 
   getTargetsAround(x: number, y: number, distance: number) {
-    const bodies = this.scene.matter.intersectRect(
+    const bodies = this.scene.physics.overlapRect(
       x - (distance / 2),
       y - (distance / 2),
       distance,
       distance
     );
-    return bodies
-      .map((body) =>
-        this.collisionableTargetRepository.get((body as BodyType).id.toString())
-      )
-      .filter((target) => target !== undefined) as CollisionableEntity[];
+    return []
+    // return bodies
+    //   .map((body) =>
+    //     this.collisionableTargetRepository.get((body as BodyType).id.toString())
+    //   )
+    //   .filter((target) => target !== undefined) as CollisionableEntity[];
   }
 
   getTargetsOnArea(
@@ -32,13 +32,15 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
     width: number,
     height: number
   ): CollisionableEntity[] {
-    const bodies = this.scene.matter.intersectRect(x, y, width, height);
+    const bodies = this.scene.physics.overlapRect(x, y, width, height);
+    return []
+    
     // this.drawDebugRectangle(x, y, width, height);
-    return bodies
-      .map((body) =>
-        this.collisionableTargetRepository.get((body as BodyType).id.toString())
-      )
-      .filter((target) => target !== undefined) as CollisionableEntity[];
+    // return bodies
+    //   .map((body) =>
+    //     this.collisionableTargetRepository.get((body as BodyType).id.toString())
+    //   )
+    //   .filter((target) => target !== undefined) as CollisionableEntity[];
   }
 
   private drawDebugRectangle(

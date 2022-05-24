@@ -39,7 +39,6 @@ export class MovementSystem {
 
     const side =
       newVelX === 0 ? state.side : newVelX > 0 ? Side.RIGHT : Side.LEFT;
-
     player.updateState({
       velocity: {
         x: Number(newVelX.toPrecision(2)),

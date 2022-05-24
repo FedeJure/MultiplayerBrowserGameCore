@@ -77,7 +77,7 @@ async function createColliders(
 ) {
   return new Promise((res) => {
     colLayer.objects.forEach((obj) => {
-      var sp: Phaser.Physics.Matter.Sprite | undefined;
+      var sp: Phaser.GameObjects.Rectangle | undefined;
       const pos = {
         x: (obj.x || 0) + map.originX,
         y: (obj.y || 0) + map.originY,
@@ -90,51 +90,19 @@ async function createColliders(
           obj.width,
           obj.height
         );
+        rec.setOrigin(0,0)
 
         new PlatformDetector(scene, pos.x + 10, pos.y - 10);
         new PlatformDetector(scene, pos.x + (obj.width ?? 0) - 10, pos.y - 10);
-
-        sp = scene.matter.add.gameObject(rec, {
-          isStatic: true,
-          label: "Static Environment",
-        }) as Phaser.Physics.Matter.Sprite;
+        sp = scene.physics.add.existing(rec, true);
         sp.setPosition(sp.x + sp.width / 2, sp.y + sp.height / 2);
         sp.angle += obj.rotation || 0;
         sp.setOrigin(0, 0);
         createdObjects.push(rec);
       }
 
-      if (obj.polygon) {
-        const pol = new Phaser.GameObjects.Polygon(
-          scene,
-          pos.x,
-          pos.y,
-          obj.polygon
-        );
-        pol.setPosition(pol.x + pol.displayOriginX, pol.y - pol.displayOriginY);
-        sp = scene.matter.add.gameObject(pol, {
-          vertices: obj.polygon,
-          isStatic: true,
-          friction: 0,
-          angle: pol.rotation,
-          restitution: 0,
-          frictionAir: 0,
-          ignoreGravity: true,
-          label: "Static Environment",
-        }) as Phaser.Physics.Matter.Sprite;
-        sp.setDisplayOrigin(0);
-        createdObjects.push(pol);
-      }
-
       if (sp !== undefined) {
         createdObjects.push(sp);
-        sp.setBounce(0);
-        sp.setFriction(0);
-        sp.setCollisionCategory(CollisionCategory.StaticEnvironment);
-        sp.setCollidesWith([
-          CollisionCategory.Entity,
-          CollisionCategory.StaticEnvironment,
-        ]);
       }
       res(createdObjects);
     });
@@ -182,12 +150,8 @@ function addBound(
   height: number,
   scene: Scene
 ) {
-  scene.matter.add.rectangle(x, y, width, height, {
-    isStatic: true,
-    label: "Bound Wall",
-  }).collisionFilter = {
-    group: 0,
-    mask: CollisionCategory.Entity,
-    category: CollisionCategory.WorldBounds,
-  };
+  scene.physics.add.existing(
+    scene.add.rectangle(x, y, width, height),
+    true
+  )
 }

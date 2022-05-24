@@ -19,15 +19,10 @@ export class ServerEnvironmentObjectFactory
     objs.forEach((ob) => {
       if (ob.object.objectVariant === EnvironmentObjectVariant.decorative)
         return;
-      const view = this.scene.matter.add.sprite(
+      const view = this.scene.physics.add.sprite(
         ob.position.x,
         ob.position.y,
-        "",
-        undefined,
-        {
-          ignoreGravity: true,
-          isStatic: true,
-        }
+        ""
       );
 
       view.setDisplaySize(ob.object.width, ob.object.height);

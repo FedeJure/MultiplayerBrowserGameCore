@@ -1,4 +1,3 @@
-import { Vector } from "matter";
 import { Scene, Physics } from "phaser";
 import {
   AnimationLayer,
@@ -10,6 +9,7 @@ import {
 } from "../../domain/entity/AnimationDto";
 import { EntityIngameHud } from "./entityIngameHud";
 import { PhaserEntityView } from "./phaserEntityView";
+import { Vector } from "../../domain/vector";
 
 export class SpinePhaserEntityView extends PhaserEntityView {
   protected spine: SpineGameObject;
@@ -28,9 +28,9 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     const factor = currentSize.y / height;
     spine.setDisplaySize(currentSize.x / factor + 10, height + 10);
     spine.setSize(width, height);
-    const viewAsSprite = spine as unknown as Physics.Matter.Sprite;
 
-    super(viewAsSprite, x, y, height, width);
+
+    super(spine, x, y, height, width);
     this.hud = new EntityIngameHud(scene, height, width);
     this.hud.setDisplayName(name);
     this.add(this.hud);
@@ -75,7 +75,5 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     }
   }
 
-  startFollowWithCam(): void {
-    this.scene.cameras.main.startFollow(this, false, 0.1, 0.1);
-  }
+
 }

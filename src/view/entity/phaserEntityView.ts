@@ -1,62 +1,46 @@
-import { BodyType } from "matter";
 import { GameObjects, Physics } from "phaser";
-import { Observable } from "rxjs";
-import { CollisionCategory } from "../../domain/collisions/collisionTypes";
+import { Observable, Subject } from "rxjs";
 import { EntityView } from "../../domain/entity/entityView";
 import { AnimationDto } from "../../domain/entity/AnimationDto";
 import { Vector } from "../../domain/vector";
 import { ExistentDepths } from "../existentDepths";
 import { CollisionDetector } from "../player/collisionDetector";
 import { PhaserCombatCollisionResolver } from "../player/combatCollisionResolver";
-import { ShapeCollisioner } from "./shapeCollisioner";
 
 export class PhaserEntityView
-  extends GameObjects.Container
+  extends Phaser.GameObjects.Container
   implements EntityView
 {
   private readonly groundCollisionDetector: CollisionDetector;
-  protected readonly mainBody: BodyType;
-
+  private readonly group: Phaser.Physics.Arcade.Group;
   constructor(
-    readonly view: Physics.Matter.Sprite,
+    readonly view: Physics.Arcade.Sprite | SpineGameObject,
     x: number,
     y: number,
     height: number,
     width: number,
     protected collisionResolver?: PhaserCombatCollisionResolver
   ) {
-    super(view.scene, x, y, [view]);
-    this.setSize(width, height);
-    this.setDisplaySize(width, height);
-    this.scene.add.existing(this);
-    view.displayOriginX = 0;
-    view.displayOriginY = 0;
-    view.setPosition(0, 0);
-
-    view.scene.matter.add.gameObject(this);
-    this.selfAsPhysic.setBounce(0);
-
-    this.groundCollisionDetector = new CollisionDetector(
-      this.scene,
-      this.scene.matter.bodies.rectangle(
-        this.x,
-        this.y + this.height / 2 + 1,
-        this.width / 2,
-        2
-      )
-    );
+    super(view.scene, x, y, [view as GameObjects.GameObject]);
+    view.setPosition(0,0)
+    this.setSize(width, height)
+    this.scene.physics.add.existing(this)
+    this.scene.add.existing(this)
     this.setDepth(ExistentDepths.GROUND);
-    this.mainBody = this.body as BodyType;
-
     this.initCollisions();
   }
-  public get matterBody() {
-    return this.body as BodyType;
+
+  setVelocity(x: number, y: number): void {
+    this.arcadeBody.setVelocity(x, y);
+  }
+
+  get arcadeBody() {
+    return this.body as Phaser.Physics.Arcade.Body;
   }
 
   setPositionInTime(x: number, y: number, time: number) {
     this.scene.tweens.add({
-      targets: this.matterBody,
+      targets: this,
       duration: time,
       props: { x: { value: x }, y: { value: y } },
     });
@@ -70,12 +54,7 @@ export class PhaserEntityView
   setLifePercent(percent: number): void {}
   setDisplayName(name: string): void {}
   get velocity() {
-    return this.matterBody.velocity;
-  }
-
-  protected get selfAsPhysic() {
-    return this as unknown as Phaser.Physics.Matter.Sprite &
-      GameObjects.Container;
+    return this.arcadeBody.velocity;
   }
 
   lookToLeft(value: boolean): void {
@@ -84,51 +63,24 @@ export class PhaserEntityView
       this.view.scaleY
     );
   }
-  setVelocity(x: number, y: number): void {
-    this.selfAsPhysic.setVelocity(x, y);
-  }
 
   get positionVector(): Vector {
     return { x: this.x, y: this.y };
   }
 
-  private initCollisions() {
-    // const collisionator = new ShapeCollisioner(
-    //   this.scene,
-    //   this.x,
-    //   this.y,
-    //   this.width,
-    //   this.height
-    // );
-      
-    const body = this.scene.matter.body.create({
-      parts: [
-        this.matterBody,
-        this.groundCollisionDetector.body,
-      ],
-    });
-
-    body.id = this.matterBody.id;
-    this.selfAsPhysic.setExistingBody(body);
-
-    this.scene.matter.setCollisionGroup([body], -CollisionCategory.Entity);
-    this.scene.matter.setCollisionCategory([body], CollisionCategory.Entity);
-    this.scene.matter.setCollidesWith(
-      [body],
-      [
-        CollisionCategory.StaticEnvironment,
-        CollisionCategory.WorldBounds,
-        CollisionCategory.DamageArea,
-      ]
-    );
-  }
+  private initCollisions() {}
 
   public get onGroundCollideChange(): Observable<boolean> {
-    return this.groundCollisionDetector.onCollideChange;
+    // return this.groundCollisionDetector.onCollideChange;
+    return new Subject();
   }
 
   setCollisionResolver(collisionResolver: PhaserCombatCollisionResolver) {
     this.collisionResolver = collisionResolver;
     return this;
+  }
+
+  startFollowWithCam(): void {
+    this.scene.cameras.main.startFollow(this, false, 0.1, 0.1);
   }
 }

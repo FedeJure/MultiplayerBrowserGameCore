@@ -108,9 +108,9 @@ export class ServerPlayerCreatorDelegator implements Delegator {
               GameEvents.PLAYER_DISCONNECTED.name,
               GameEvents.PLAYER_DISCONNECTED.getEvent(playerId)
             );
-          this.collisionableTargetRepository.remove(
-            player.view.matterBody.id.toString()
-          );
+          // this.collisionableTargetRepository.remove(
+          //   player.view.arcadeBody.gameObject.name
+          // );
 
           player.destroy();
           this.inGamePlayersRepository.remove(playerId);
@@ -177,10 +177,10 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       this.playerStateRepository
     );
 
-    this.collisionableTargetRepository.save(view.matterBody.id.toString(), {
-      target: player,
-      type: AttackTargetType.PLAYER,
-    });
+    // this.collisionableTargetRepository.save(view.arcadeBody.gameObject.name, {
+    //   target: player,
+    //   type: AttackTargetType.PLAYER,
+    // });
     connection.setPlayerId(player.info.id);
     this.presenterProvider.forPlayer(view, player);
 

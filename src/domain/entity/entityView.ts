@@ -1,4 +1,3 @@
-import { BodyType } from "matter";
 import { AnimationDto } from "./AnimationDto";
 import { Vector } from "../vector";
 import { CollisionableEntity } from "./CollisionableEntity";
@@ -11,7 +10,6 @@ export interface EntityView {
   active: boolean;
   height: number;
   width: number;
-  matterBody: BodyType
   getBounds(): { x: number; y: number; width: number; height: number };
   setPosition(x: number, y: number): void;
   setScale(x: number, y: number): void;

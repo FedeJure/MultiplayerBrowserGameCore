@@ -38,13 +38,12 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         grounded: true,
         isAlive: true
       };
-
       const view = new PhaserEnemyView(
-        this.scene.matter.add.sprite(state.position.x, state.position.y, ""),
+        this.scene.physics.add.sprite(state.position.x, state.position.y, ""),
         state.position.x,
         state.position.y,
         SpiderEnemyModel.stats.height,
-        SpiderEnemyModel.stats.width,
+        SpiderEnemyModel.stats.width
       ).setCollisionResolver(
         new PhaserCombatCollisionResolver(
           state.position.x,
@@ -69,14 +68,14 @@ export class ServerEnemyCreatorDelegator implements Delegator {
       );
       enemy.onDestroy.subscribe(() => {
         this.enemiesRepository.remove(enemy.info.id);
-        this.collisionableTargetRepository.remove(view.matterBody.id.toString());
+        this.collisionableTargetRepository.remove(view.name);
         this.roomManager.removeEnemyFromRoom(enemy.info.id, [
           enemy.state.mapId.toString(),
         ]);
       });
       this.enemiesRepository.save(enemy.info.id, enemy);
       this.presenterProvider.forEnemy(view, enemy);
-      this.collisionableTargetRepository.save(view.matterBody.id.toString(), {
+      this.collisionableTargetRepository.save(view.name, {
         target: enemy,
         type: AttackTargetType.MOB,
       });

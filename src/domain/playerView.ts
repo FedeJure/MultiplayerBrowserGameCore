@@ -1,9 +1,6 @@
-import { BodyType } from "matter";
 import { GameObjects, Scene } from "phaser";
 import { Observable } from "rxjs";
-import { EntityAnimationCode, AnimationLayer } from "./entity/animations";
 import { EntityView } from "./entity/entityView";
-import { AnimationDto } from "./entity/AnimationDto";
 import { CombatCollisionResolver } from "./player/combat/combatCollisionResolver";
 import { Vector } from "./vector";
 

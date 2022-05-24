@@ -1,7 +1,7 @@
-import { Vector } from "matter";
 import { Map } from "../environment/mapConfiguration";
 import { AnimationDto } from "./AnimationDto";
 import { Side } from "../side";
+import { Vector } from "../vector";
 
 export interface EntityState {
     readonly life: number;

@@ -10,9 +10,10 @@ import { ViewPresenter } from "../../presentation/viewPresenter";
 import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
 import { ControllablePlayer } from "../../domain/player/players/controllablePlayer";
 import { Enemy } from "../../domain/enemies/enemy";
+import { PhaserEntityView } from "../../view/entity/phaserEntityView";
 
 export class ServerPresenterProvider {
-  forPlayer(view: Phaser.GameObjects.GameObject, player: ControllablePlayer): void {
+  forPlayer(view: PhaserEntityView, player: ControllablePlayer): void {
     new ViewPresenter(view, [
       new PlayerCollisionDelegator(player),
       new PlayerStateUpdaterDelegator(player),

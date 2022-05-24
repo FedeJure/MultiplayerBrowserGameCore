@@ -51,9 +51,9 @@ export class ClientConnectionDelegator implements Delegator {
       this.connection.onPlayerDisconnected.subscribe((data) => {
         const player = this.inGamePlayersRepository.get(data.playerId);
         if (player) {
-          this.collisionableTargetRepository.remove(
-            player.view.matterBody.id.toString()
-          );
+          // this.collisionableTargetRepository.remove(
+          //   player.view.arcadeBody.gameObject.name
+          // );
           player.destroy();
           this.inGamePlayersRepository.remove(data.playerId);
         }
@@ -123,7 +123,7 @@ export class ClientConnectionDelegator implements Delegator {
       input,
       this.mapManager
     );
-    this.collisionableTargetRepository.save(view.matterBody.id.toString(), {
+    this.collisionableTargetRepository.save(view.name, {
       target: player,
       type: AttackTargetType.PLAYER,
     });

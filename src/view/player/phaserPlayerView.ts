@@ -5,7 +5,7 @@ import { PhaserEntityView } from "../entity/phaserEntityView";
 
 export class PhaserPlayerView extends PhaserEntityView implements PlayerView {
   constructor(
-    readonly view: Physics.Matter.Sprite,
+    readonly view: Physics.Arcade.Sprite,
     x: number,
     y: number,
     height: number,
