@@ -13,17 +13,18 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
 
   getTargetsAround(x: number, y: number, distance: number) {
     const bodies = this.scene.physics.overlapRect(
-      x - (distance / 2),
-      y - (distance / 2),
+      x - distance / 2,
+      y - distance / 2,
       distance,
       distance
     );
-    return []
-    // return bodies
-    //   .map((body) =>
-    //     this.collisionableTargetRepository.get((body as BodyType).id.toString())
-    //   )
-    //   .filter((target) => target !== undefined) as CollisionableEntity[];
+    return bodies
+      .map((body) =>
+        this.collisionableTargetRepository.get(
+          (body as Phaser.Physics.Arcade.Body).gameObject.data.get("id")
+        )
+      )
+      .filter((target) => target !== undefined) as CollisionableEntity[];
   }
 
   getTargetsOnArea(
@@ -33,14 +34,14 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
     height: number
   ): CollisionableEntity[] {
     const bodies = this.scene.physics.overlapRect(x, y, width, height);
-    return []
-    
     // this.drawDebugRectangle(x, y, width, height);
-    // return bodies
-    //   .map((body) =>
-    //     this.collisionableTargetRepository.get((body as BodyType).id.toString())
-    //   )
-    //   .filter((target) => target !== undefined) as CollisionableEntity[];
+    return bodies
+      .map((body) =>
+        this.collisionableTargetRepository.get(
+          (body as Phaser.Physics.Arcade.Body).gameObject.data.get("id")
+        )
+      )
+      .filter((target) => target !== undefined) as CollisionableEntity[];
   }
 
   private drawDebugRectangle(

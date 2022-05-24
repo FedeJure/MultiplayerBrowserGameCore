@@ -1,5 +1,6 @@
 import { GameObjects, Physics } from "phaser";
 import { Observable, Subject } from "rxjs";
+import { v4 as uuidv4 } from "uuid";
 import { EntityView } from "../../domain/entity/entityView";
 import { AnimationDto } from "../../domain/entity/AnimationDto";
 import { Vector } from "../../domain/vector";
@@ -22,18 +23,23 @@ export class PhaserEntityView
     protected collisionResolver?: PhaserCombatCollisionResolver
   ) {
     super(view.scene, x, y, [view as GameObjects.GameObject]);
-    view.setPosition(0,0)
-    this.setSize(width, height)
-    this.scene.physics.add.existing(this)
-    this.scene.add.existing(this)
+    view.setPosition(0, 0);
+    this.setSize(width, height);
+    this.scene.physics.add.existing(this);
+    this.scene.add.existing(this);
     this.setDepth(ExistentDepths.GROUND);
-    this.arcadeBody.setFriction(100,100)
-    this.arcadeBody.setBounce(0,0)
+    this.arcadeBody.setFriction(100, 100);
+    this.arcadeBody.setBounce(0, 0);
     this.initCollisions();
+    this.setData("id", uuidv4());
+  }
+
+  get id() {
+    return this.getData("id");
   }
 
   get grounded() {
-    return this.arcadeBody.touching.down
+    return this.arcadeBody.touching.down;
   }
 
   setVelocity(x: number, y: number): void {
@@ -75,7 +81,7 @@ export class PhaserEntityView
   }
 
   private initCollisions() {
-    this.arcadeBody.onCollide = true
+    this.arcadeBody.onCollide = true;
   }
 
   public get onGroundCollideChange(): Observable<boolean> {

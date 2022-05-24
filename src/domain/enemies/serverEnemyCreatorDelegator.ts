@@ -71,14 +71,14 @@ export class ServerEnemyCreatorDelegator implements Delegator {
       );
       enemy.onDestroy.subscribe(() => {
         this.enemiesRepository.remove(enemy.info.id);
-        this.collisionableTargetRepository.remove(view.name);
+        this.collisionableTargetRepository.remove(view.id);
         this.roomManager.removeEnemyFromRoom(enemy.info.id, [
           enemy.state.mapId.toString(),
         ]);
       });
       this.enemiesRepository.save(enemy.info.id, enemy);
       this.presenterProvider.forEnemy(view, enemy);
-      this.collisionableTargetRepository.save(view.name, {
+      this.collisionableTargetRepository.save(view.id, {
         target: enemy,
         type: AttackTargetType.MOB,
       });
