@@ -22,4 +22,5 @@ export interface EntityView {
   setDisplayName(name: string) : void
   getEntitiesClose(distance: number): CollisionableEntity[]
   setPositionInTime(x:number, y:number, time:number)
+  grounded: boolean
 }

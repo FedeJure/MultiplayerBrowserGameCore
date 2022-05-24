@@ -69,7 +69,7 @@ export class ControllablePlayer extends Entity {
 
   update(time: number, delta: number) {
     this._combatSystem.processCombat(delta);
-    this._movementSystem.processMovement(this, delta);
+    this._movementSystem.processMovement(this, time,delta);
     this._animationSystem.processAnimation(this);
     super.update(time, delta);
   }

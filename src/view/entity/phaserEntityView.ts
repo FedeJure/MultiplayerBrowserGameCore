@@ -32,6 +32,10 @@ export class PhaserEntityView
     this.initCollisions();
   }
 
+  get grounded() {
+    return this.arcadeBody.touching.down
+  }
+
   setVelocity(x: number, y: number): void {
     this.arcadeBody.setVelocity(x, y);
   }
@@ -70,7 +74,9 @@ export class PhaserEntityView
     return { x: this.x, y: this.y };
   }
 
-  private initCollisions() {}
+  private initCollisions() {
+    this.arcadeBody.onCollide = true
+  }
 
   public get onGroundCollideChange(): Observable<boolean> {
     // return this.groundCollisionDetector.onCollideChange;
