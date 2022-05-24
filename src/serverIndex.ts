@@ -20,6 +20,7 @@ import { LoadServerRepositoriesWithMockData } from "./infrastructure/mockUtils";
 import { EnvironmentObjectDetailsDispatcherDelegator } from "./domain/environmentObjects/environmentObjectDetailsDispatcherDelegator";
 import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
 import { EnemiesStateSenderDelegator } from "./domain/gameState/enemiesStateSenderDelegator";
+import { PhaserCollisionManager } from "./view/collisions/phaserCollisionManager";
 
 export const InitGame: (
   socket: Socket,
@@ -35,6 +36,7 @@ export const InitGame: (
   const game = new Phaser.Game(config);
   AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
   game.events.addListener(Phaser.Core.Events.READY, async () => {
+    provider.setCollisionManager(new PhaserCollisionManager(scene));
     await LoadServerRepositoriesWithMockData(provider);
 
     scene.events.addListener(Phaser.Scenes.Events.CREATE, () => {
@@ -46,14 +48,16 @@ export const InitGame: (
           socket,
           provider.environmentObjectsRepository,
           provider.presenterProvider,
-          provider.inGamePlayerRepository
+          provider.inGamePlayerRepository,
+          provider.collisionManager
         ),
         new ServerEnemyCreatorDelegator(
           scene,
           provider.enemiesRepository,
           provider.roomManager,
           provider.presenterProvider,
-          provider.collisionableTargetRepository
+          provider.collisionableTargetRepository,
+          provider.collisionManager
         ),
         new PlayerStateDelegator(
           provider.roomManager,
@@ -78,7 +82,8 @@ export const InitGame: (
           provider.playerStatsRepository,
           provider.collisionableTargetRepository,
           provider.mapMapanger,
-          provider.playerInputRequestRepository
+          provider.playerInputRequestRepository,
+          provider.collisionManager
         ),
         new ServerPlayerInventoryDelegator(
           provider.inventoryRepository,

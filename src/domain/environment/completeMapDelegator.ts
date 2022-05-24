@@ -14,6 +14,7 @@ import { SimpleRepository } from "../repository";
 import { filter } from "rxjs";
 import { MapManager } from "./mapManager";
 import { PlayerState } from "../player/playerState";
+import { CollisionManager } from "../collisions/collisionManager";
 
 export class CompleteMapDelegator implements Delegator {
   public constructor(
@@ -23,7 +24,8 @@ export class CompleteMapDelegator implements Delegator {
     private socket: Socket,
     private envObjectsRepository: EnvironmentObjectRepository,
     private presenterProvider: ServerPresenterProvider,
-    private inGamePlayersRepository: SimpleRepository<ServerPlayer>
+    private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
+    private collisionManager: CollisionManager
   ) {
     this.inGamePlayersRepository.onSave.subscribe((serverPlayer) => {
       serverPlayer.onStateChange
@@ -115,7 +117,8 @@ export class CompleteMapDelegator implements Delegator {
           m,
           this.scene,
           this.envObjectsRepository,
-          new ServerEnvironmentObjectFactory(this.scene, this.presenterProvider)
+          new ServerEnvironmentObjectFactory(this.scene, this.presenterProvider),
+          this.collisionManager
         )
       )
     );

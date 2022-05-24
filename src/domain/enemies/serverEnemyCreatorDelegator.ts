@@ -15,6 +15,7 @@ import { EnemySpawner } from "./EnemySpawner";
 import { EnemyState } from "./EnemyState";
 import { ServerEnemy } from "./serverEnemy";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
+import { CollisionManager } from "../collisions/collisionManager";
 
 export class ServerEnemyCreatorDelegator implements Delegator {
   constructor(
@@ -22,7 +23,8 @@ export class ServerEnemyCreatorDelegator implements Delegator {
     private enemiesRepository: SimpleRepository<Enemy>,
     private roomManager: RoomManager,
     private presenterProvider: ServerPresenterProvider,
-    private collisionableTargetRepository: SimpleRepository<CollisionableEntity>
+    private collisionableTargetRepository: SimpleRepository<CollisionableEntity>,
+    private collisionManager: CollisionManager
   ) {}
   init(): void {
     // here, create a EnemySpawner on each enemy spot (from map or random)
@@ -52,6 +54,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
           this.collisionableTargetRepository
         )
       );
+      this.collisionManager.addEnemy(view)
       const enemy = new ServerEnemy(
         state,
         {

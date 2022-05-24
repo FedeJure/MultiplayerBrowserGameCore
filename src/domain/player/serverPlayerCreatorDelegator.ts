@@ -23,6 +23,7 @@ import { AttackTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 import { MapManager } from "../environment/mapManager";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
+import { CollisionManager } from "../collisions/collisionManager";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -38,7 +39,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private playerStatsRepository: AsyncRepository<PlayerStats>,
     private collisionableTargetRepository: SimpleRepository<CollisionableEntity>,
     private mapManager: MapManager,
-    private playerInputRequestRepository: PlayerInputRequestRepository
+    private playerInputRequestRepository: PlayerInputRequestRepository,
+    private collisionManager: CollisionManager
   ) {}
   init(): void {
     this.connectionsRepository.onSave.subscribe((connection) => {
@@ -158,6 +160,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       DefaultConfiguration.width,
       collisionResolver
     );
+    this.collisionManager.addPlayer(view)
 
     const input = new PlayerSocketInput(
       playerId,

@@ -2,6 +2,7 @@ import { GameObjects, Scene } from "phaser";
 import { MapsConfiguration } from "../../infrastructure/configuration/MapsConfiguration";
 import { PlatformDetector } from "../../view/environment/platformDetector";
 import { ExistentDepths } from "../../view/existentDepths";
+import { CollisionManager } from "../collisions/collisionManager";
 import { CollisionCategory } from "../collisions/collisionTypes";
 
 import { ProcessedMap } from "../environment/processedMap";
@@ -12,7 +13,8 @@ export function createMapOnScene(
   map: ProcessedMap,
   scene: Scene,
   envObjectsRepository: EnvironmentObjectRepository,
-  objectsFactory: EnvironmentObjectFactory
+  objectsFactory: EnvironmentObjectFactory,
+  collisionManager: CollisionManager
 ) {
   return new Promise<(GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[]>(
     async (res, _) => {
@@ -61,7 +63,7 @@ export function createMapOnScene(
         });
       }
       await Promise.all([
-        createColliders(colLayer, map, scene, createdObjects),
+        createColliders(colLayer, map, scene, createdObjects, collisionManager),
       ]);
 
       res(createdObjects);
@@ -73,7 +75,8 @@ async function createColliders(
   colLayer: Phaser.Tilemaps.ObjectLayer,
   map: ProcessedMap,
   scene: Scene,
-  createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[]
+  createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[],
+  collisionManager: CollisionManager
 ) {
   return new Promise((res) => {
     colLayer.objects.forEach((obj) => {
@@ -98,6 +101,7 @@ async function createColliders(
         sp.setPosition(sp.x + sp.width / 2, sp.y + sp.height / 2);
         sp.angle += obj.rotation || 0;
         sp.setOrigin(0, 0);
+        collisionManager.addStaticGround(rec)
         createdObjects.push(rec);
       }
 

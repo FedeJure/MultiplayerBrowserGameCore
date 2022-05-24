@@ -24,6 +24,8 @@ import { PlayerInputRequestRepository } from "../repositories/playerInputRequest
 import { PlayerStateRepository } from "../repositories/playerStateRepository";
 import { SocketRoomManager } from "../SocketRoomManager";
 import { ServerPresenterProvider } from "./serverPresenterProvider";
+import { CollisionManager } from "../../domain/collisions/collisionManager";
+import { PhaserCollisionManager } from "../../view/collisions/phaserCollisionManager";
 
 //This is necessary because the dependency manager not work with generics
 class ClientConnectionRepository extends InMemoryRepository<ClientConnection> {}
@@ -116,5 +118,15 @@ export class ServerProvider {
     return DependencyManager.GetOrInstantiate<SpawnedEnemiesRepository>(
       () => new SpawnedEnemiesRepository()
     )
+  }
+
+  private _collisionManager: CollisionManager;
+
+  public setCollisionManager(collisionManager: CollisionManager) {
+    this._collisionManager = collisionManager
+  }
+
+  public get collisionManager(): CollisionManager {
+    return this._collisionManager
   }
 }

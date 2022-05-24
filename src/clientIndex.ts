@@ -9,6 +9,7 @@ import { ClientLoadScene } from "./view/scenes/ClientLoadScene";
 import { ClientGameScene } from "./view/scenes/ClientGameScene";
 import { AssetsConfiguration } from "./infrastructure/configuration/AssetsConfiguration";
 import { AssetLoader } from "./view/AssetLoader";
+import { PhaserCollisionManager } from "./view/collisions/phaserCollisionManager";
 export const InitClientGame = (
   socket: any,
   localPlayerId: string,
@@ -17,13 +18,13 @@ export const InitClientGame = (
   const connectionWithServer = new SocketServerConnection(socket);
   const hudScene = new GameplayHud(connectionWithServer);
 
+  const scene = new ClientGameScene(hudScene);
   ClientProvider.Init(
     connectionWithServer,
     new LocalPlayerRepository(localPlayerId),
     originUrl,
     hudScene
   );
-  const scene = new ClientGameScene(hudScene);
   const config = {
     ...PhaserClientConfig,
     scene: [new ClientLoadScene(), scene, hudScene],
@@ -32,6 +33,7 @@ export const InitClientGame = (
   AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
 
   game.events.addListener(Phaser.Core.Events.READY, () => {
+    ClientProvider.setCollisionManager(new PhaserCollisionManager(scene));
     ClientProvider.presenterProvider.forGameplay(scene);
   });
 };

@@ -7,7 +7,7 @@ export class MovementSystem {
     const { state, input } = player;
     let newVelX = player.view.velocity.x;
     let newVelY = player.view.velocity.y;
-    let velocity = 0.05;
+    let velocity = 20;
     let maxRunVelocity =
       player.stats.runSpeed * (state.attacking && state.grounded ? 0.5 : 1);
     let availableJumps = state.grounded

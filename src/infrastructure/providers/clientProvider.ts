@@ -16,18 +16,20 @@ import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
 import { CollisionableEntity } from "../../domain/entity/CollisionableEntity";
 import { MapManager } from "../../domain/environment/mapManager";
 import { Enemy } from "../../domain/enemies/enemy";
+import { CollisionManager } from "../../domain/collisions/collisionManager";
 
 //This is necessary because the dependency manager not work with generics
 class InventoryRepository extends InMemoryRepository<PlayerInventoryDto> {}
 class ItemRepository extends InMemoryRepository<Item> {}
 class AttackTargetRepository extends InMemoryRepository<CollisionableEntity> {}
-class SpawnedEnemiesRepository extends InMemoryRepository<Enemy>{}
+class SpawnedEnemiesRepository extends InMemoryRepository<Enemy> {}
 
 export class ClientProvider {
   private static _serverConnection: SocketServerConnection;
   private static _localPlayerRepository: LocalPlayerRepository;
   private static _originUrl: string;
   private static _hudScene: Scene;
+  private static _collisionManager: CollisionManager;
 
   public static Init(
     serverConnection: SocketServerConnection,
@@ -39,6 +41,10 @@ export class ClientProvider {
     ClientProvider._localPlayerRepository = localPlayerRepository;
     ClientProvider._originUrl = originUrl;
     ClientProvider._hudScene = hudScene;
+  }
+
+  public static setCollisionManager(collisionManager: CollisionManager) {
+    ClientProvider._collisionManager = collisionManager;
   }
 
   public static get playerStateRepository(): PlayerStateRepository {
@@ -84,15 +90,15 @@ export class ClientProvider {
   }
 
   public static get inGamePlayersRepository(): SimpleRepository<ControllablePlayer> {
-    return DependencyManager.GetOrInstantiate<SimpleRepository<ControllablePlayer>>(
-      () => new InMemoryRepository<ControllablePlayer>()
-    );
+    return DependencyManager.GetOrInstantiate<
+      SimpleRepository<ControllablePlayer>
+    >(() => new InMemoryRepository<ControllablePlayer>());
   }
 
   public static get collisionableTargetRepository(): SimpleRepository<CollisionableEntity> {
-    return DependencyManager.GetOrInstantiate<SimpleRepository<CollisionableEntity>>(
-      () => new AttackTargetRepository()
-    )
+    return DependencyManager.GetOrInstantiate<
+      SimpleRepository<CollisionableEntity>
+    >(() => new AttackTargetRepository());
   }
 
   public static get originUrl(): string {
@@ -102,12 +108,16 @@ export class ClientProvider {
   public static get mapManager(): MapManager {
     return DependencyManager.GetOrInstantiate<MapManager>(
       () => new MapManager()
-    )
+    );
   }
 
   public static get spawnedEnemies(): SimpleRepository<Enemy> {
     return DependencyManager.GetOrInstantiate<SimpleRepository<Enemy>>(
       () => new SpawnedEnemiesRepository()
-    )
+    );
+  }
+
+  public static get collisionManager(): CollisionManager {
+    return this._collisionManager;
   }
 }

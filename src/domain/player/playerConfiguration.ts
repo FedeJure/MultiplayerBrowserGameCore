@@ -6,12 +6,9 @@ export interface PlayerConfiguration {
   initialJumps: number;
   height: number;
   width: number;
-  jumpVelocity: number;
-  runVelocity: number;
   initialSide: Side;
   initialX: number;
   initialY: number;
-  jumps: number;
 }
 
 export const DefaultConfiguration: PlayerConfiguration = {
@@ -19,10 +16,7 @@ export const DefaultConfiguration: PlayerConfiguration = {
   initialJumps: 2,
   height: 37,
   width: 25,
-  jumpVelocity: 0.4,
-  runVelocity: 5,
   initialSide: RIGHT,
   initialX: 0,
   initialY: 100,
-  jumps: 2,
 };

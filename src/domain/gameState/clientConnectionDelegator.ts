@@ -18,6 +18,7 @@ import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { AttackTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 import { MapManager } from "../environment/mapManager";
+import { CollisionManager } from "../collisions/collisionManager";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -27,7 +28,8 @@ export class ClientConnectionDelegator implements Delegator {
     private presenterProvider: ClientPresenterProvider,
     private inGamePlayersRepository: SimpleRepository<Player>,
     private collisionableTargetRepository: SimpleRepository<CollisionableEntity>,
-    private mapManager: MapManager
+    private mapManager: MapManager,
+    private collisionManager: CollisionManager
   ) {}
   init(): void {
     this.connection.onInitialGameState.subscribe(async (data) => {
@@ -83,6 +85,7 @@ export class ClientConnectionDelegator implements Delegator {
       info.name,
       collisionResolver
     );
+    this.collisionManager.addPlayer(view);
 
     const player = new Player(info, state, view, DefaultPlayerStats);
     this.presenterProvider.forPlayer(player, view);
@@ -110,6 +113,8 @@ export class ClientConnectionDelegator implements Delegator {
       info.name,
       collisionResolver
     );
+
+    this.collisionManager.addPlayer(view);
 
     const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
 

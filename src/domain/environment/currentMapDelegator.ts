@@ -5,6 +5,7 @@ import { ClientEnvironmentObjectFactory } from "../../view/environmentObjects/cl
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { createMapOnScene } from "../actions/createMapOnScene";
 import { loadMapAssets } from "../actions/loadMapAssets";
+import { CollisionManager } from "../collisions/collisionManager";
 import { Delegator } from "../delegator";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
 import { ServerConnection } from "../serverConnection";
@@ -24,7 +25,8 @@ export class CurrentMapDelegator implements Delegator {
     private scene: ClientGameScene,
     private connection: ServerConnection,
     private envObjectsRepository: EnvironmentObjectRepository,
-    private mapManager: MapManager
+    private mapManager: MapManager,
+    private collisionManager: CollisionManager
   ) {}
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {
@@ -113,7 +115,8 @@ export class CurrentMapDelegator implements Delegator {
               new ClientEnvironmentObjectFactory(
                 this.scene,
                 ClientProvider.presenterProvider
-              )
+              ),
+              this.collisionManager
             ).then((createdObjects) => {
               this.loadedMaps[m.id] = { map: m, createdObjects };
               return createdObjects;
