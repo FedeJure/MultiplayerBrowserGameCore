@@ -11,12 +11,12 @@ export interface PlayerStats extends EntityStats {
 
 export const DefaultPlayerStats: PlayerStats = {
   maxLife: 100,
-  runSpeed: 150,
-  jumpPower: 18,
+  runSpeed: 200,
+  jumpPower: 20,
   maxJumps: 2,
   meleeDamage: 20,
   basicAttackSpeed: 2.5,
-  walkSpeed: 50,
+  walkSpeed: 100,
   meleeDistance: 20,
   rangedDistance: 200
 };

@@ -1,4 +1,3 @@
-import { Observable } from "rxjs";
 import { EnemyView } from "../enemies/EnemyView";
 import { PlayerView } from "../playerView";
 

@@ -7,7 +7,6 @@ export class MovementSystem {
     const { state, input } = player;
     let newVelX = player.view.velocity.x;
     let newVelY = player.view.velocity.y;
-    let velocity = 20;
     let maxRunVelocity =
       player.stats.runSpeed * (state.attacking && state.grounded ? 0.5 : 1);
 
@@ -31,8 +30,8 @@ export class MovementSystem {
 
     if (input.left || input.right || jumping) {
       const inAirFactor = !state.grounded ? 0.3 : 1;
-      newVelX += +input.right * velocity * deltaTime * inAirFactor;
-      newVelX -= +input.left * velocity * deltaTime * inAirFactor;
+      newVelX += +input.right * maxRunVelocity * deltaTime * inAirFactor;
+      newVelX -= +input.left * maxRunVelocity * deltaTime * inAirFactor;
 
       newVelX =
         Math.sign(newVelX) * Math.min(maxRunVelocity, Math.abs(newVelX));

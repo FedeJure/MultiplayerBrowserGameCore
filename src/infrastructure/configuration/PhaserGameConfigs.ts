@@ -28,7 +28,7 @@ export const PhaserClientConfig: GameConfig = {
     default: 'arcade',
     arcade: {
       gravity: {
-        y: 900
+        y: 1300
       },
     },
   },
@@ -57,7 +57,7 @@ export const PhaserServerConfig: GameConfig = {
     default: "arcade",
     arcade: {
       gravity: {
-        y: 900
+        y: 1300
       },
     },
   },

@@ -1,5 +1,4 @@
 import { GameObjects, Scene } from "phaser";
-import { Observable, Subject } from "rxjs";
 import { CollisionManager } from "../../domain/collisions/collisionManager";
 import { PhaserEnemyView } from "../enemy/phaserEnemyView";
 import { PhaserPlayerView } from "../player/phaserPlayerView";
@@ -16,7 +15,6 @@ export class PhaserCollisionManager implements CollisionManager {
 
     scene.physics.add.collider(this.playerGroup, this.groundGroup);
 
-    scene.physics.add.collider(this.playerGroup, this.enemyGroup);
     scene.physics.add.collider(this.enemyGroup, this.groundGroup);
   }
 
