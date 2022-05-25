@@ -4,7 +4,6 @@ import { Delegator } from "../../domain/delegator";
 import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
 import { EnvironmentObjectVariant } from "../../domain/environmentObjects/environmentObjectVariant";
 import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
-import { PlayerAngleFixDelegator } from "../../domain/player/movement/playerAngleFixDelegator";
 import { PlayerStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
 import { ViewPresenter } from "../../presentation/viewPresenter";
 import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
@@ -16,8 +15,7 @@ export class ServerPresenterProvider {
   forPlayer(view: PhaserEntityView, player: ControllablePlayer): void {
     new ViewPresenter(view, [
       new PlayerCollisionDelegator(player),
-      new PlayerStateUpdaterDelegator(player),
-      new PlayerAngleFixDelegator(player),
+      new PlayerStateUpdaterDelegator(player)
     ]);
   }
   forEnvironmentObject(

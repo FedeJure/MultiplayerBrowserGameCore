@@ -13,7 +13,6 @@ import { ViewPresenter } from "../../presentation/viewPresenter";
 import { ClientConnectionDelegator } from "../../domain/gameState/clientConnectionDelegator";
 import { ScenePresenter } from "../../presentation/scenePresenter";
 import { ClientPlayerConnectionDelegator } from "../../domain/player/clientPlayerConnectionDelegator";
-import { PlayerAngleFixDelegator } from "../../domain/player/movement/playerAngleFixDelegator";
 import { ClientInventoryView } from "../../view/clientInventoryView";
 import { PlayerInfo } from "../../domain/player/playerInfo";
 import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
@@ -52,7 +51,6 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         player
       ),
-      new PlayerAngleFixDelegator(player),
       new PlayerStateUpdaterDelegator(player),
       new PlayerRemoteMovementDelegator(
         player,
@@ -70,7 +68,6 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         player
       ),
-      new PlayerAngleFixDelegator(player),
       new PlayerStateUpdaterDelegator(player),
     ]);
   }
