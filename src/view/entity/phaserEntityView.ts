@@ -29,7 +29,7 @@ export class PhaserEntityView
     this.arcadeBody.setBounce(0, 0);
     this.initCollisions();
     this.setData("id", uuidv4());
-    this.setData('type', ViewObjectType.Entity)
+    this.setData("type", ViewObjectType.Entity);
   }
 
   get id() {
@@ -37,7 +37,7 @@ export class PhaserEntityView
   }
 
   get viewType() {
-    return this.getData("type")
+    return this.getData("type");
   }
 
   get grounded() {
@@ -56,7 +56,8 @@ export class PhaserEntityView
     this.scene.tweens.add({
       targets: this,
       duration: time,
-      props: { x: { value: x }, y: { value: y } },
+      x,
+      y,
     });
   }
   getEntitiesClose(distance: number) {

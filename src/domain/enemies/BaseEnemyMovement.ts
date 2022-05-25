@@ -93,7 +93,13 @@ export class BaseEnemyMovement {
             closePoint = p;
           }
         });
-        this.enemy.view.setPosition(closePoint.x, closePoint.y);
+        const distanceToPoint = Phaser.Math.Distance.BetweenPoints(this.enemy.state.position, closePoint)
+        this.enemy.view.setPositionInTime(
+          closePoint.x,
+          closePoint.y,
+          distanceToPoint * 3
+        );
+        
         return;
       }
     }
