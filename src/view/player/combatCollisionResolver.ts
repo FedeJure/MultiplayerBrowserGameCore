@@ -2,6 +2,8 @@ import { Scene } from "phaser";
 import { CollisionableEntity } from "../../domain/entity/CollisionableEntity";
 import { CombatCollisionResolver } from "../../domain/player/combat/combatCollisionResolver";
 import { SimpleRepository } from "../../domain/repository";
+import { Vector } from "../../domain/vector";
+import { ViewObjectType } from "../../domain/viewObject";
 
 export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
   constructor(
@@ -12,10 +14,9 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
   ) {}
 
   getTargetsAround(x: number, y: number, distance: number) {
-    const bodies = this.scene.physics.overlapRect(
+    const bodies = this.scene.physics.overlapCirc(
       x - distance / 2,
       y - distance / 2,
-      distance,
       distance
     );
     return bodies
@@ -25,6 +26,23 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
         )
       )
       .filter((target) => target !== undefined) as CollisionableEntity[];
+  }
+
+  getPlatformDetectorsAround(x: number, y: number, distance: number): Vector[] {
+    const bodies = this.scene.physics.overlapCirc(
+      x - distance / 2,
+      y - distance / 2,
+      distance,
+      false,
+      true
+    ) as Phaser.Physics.Arcade.StaticBody[];
+    return bodies
+      .filter((body) => {
+        return (
+          body.gameObject.getData("type") === ViewObjectType.PlatformDetector
+        );
+      })
+      .map((body) => body.position);
   }
 
   getTargetsOnArea(

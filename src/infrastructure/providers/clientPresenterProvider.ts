@@ -1,6 +1,5 @@
 import { ClientProvider } from "./clientProvider";
 import { PlayerInput } from "../../domain/player/playerInput";
-import { PlayerCollisionDelegator } from "../../domain/collisions/playerCollisionDelegator";
 import { PlayerMovementValidationDelegator } from "../../domain/player/movement/playerMovementValidationDelegator";
 import { PlayerInputDelegator } from "../../domain/input/playerInputDelegator";
 import { LocalPlayerRenderDelegator } from "../../domain/player/localPlayerRenderDelegator";
@@ -34,7 +33,6 @@ export class ClientPresenterProvider {
     view: GameObjects.GameObject
   ): void {
     new ViewPresenter(view, [
-      new PlayerCollisionDelegator(player),
       new PlayerMovementValidationDelegator(
         player,
         ClientProvider.serverConnection,

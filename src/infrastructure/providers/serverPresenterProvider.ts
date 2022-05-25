@@ -1,5 +1,4 @@
 import { GameObjects } from "phaser";
-import { PlayerCollisionDelegator } from "../../domain/collisions/playerCollisionDelegator";
 import { Delegator } from "../../domain/delegator";
 import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
 import { EnvironmentObjectVariant } from "../../domain/environmentObjects/environmentObjectVariant";
@@ -14,7 +13,6 @@ import { PhaserEntityView } from "../../view/entity/phaserEntityView";
 export class ServerPresenterProvider {
   forPlayer(view: PhaserEntityView, player: ControllablePlayer): void {
     new ViewPresenter(view, [
-      new PlayerCollisionDelegator(player),
       new PlayerStateUpdaterDelegator(player)
     ]);
   }

@@ -13,6 +13,5 @@ export interface PlayerView extends EntityView {
   scene: Scene;
   destroy(): void;
   add(children: GameObjects.GameObject): this;
-  get onGroundCollideChange(): Observable<boolean>;
   combatCollisionResolver: CombatCollisionResolver;
 }

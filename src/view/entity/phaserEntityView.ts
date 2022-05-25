@@ -1,5 +1,4 @@
 import { GameObjects, Physics } from "phaser";
-import { Observable, Subject } from "rxjs";
 import { v4 as uuidv4 } from "uuid";
 import { EntityView } from "../../domain/entity/entityView";
 import { AnimationDto } from "../../domain/entity/AnimationDto";
@@ -84,17 +83,11 @@ export class PhaserEntityView
   }
 
   private initCollisions() {
-    this.arcadeBody.onCollide = true;
     this.arcadeBody.setAllowRotation(false);
   }
 
   get blocked(): boolean {
     return this.arcadeBody.blocked.left || this.arcadeBody.blocked.right;
-  }
-
-  public get onGroundCollideChange(): Observable<boolean> {
-    // return this.groundCollisionDetector.onCollideChange;
-    return new Subject();
   }
 
   setCollisionResolver(collisionResolver: PhaserCombatCollisionResolver) {

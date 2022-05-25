@@ -1,5 +1,7 @@
+import { update } from "lodash";
 import { AnimationLayer } from "../entity/animations";
 import { Side } from "../side";
+import { Vector } from "../vector";
 import { EnemyAnimation } from "./EnemyAnimations";
 import { ServerEnemy } from "./serverEnemy";
 
@@ -15,12 +17,11 @@ const NonCombatAction = [Actions.IDLE, Actions.WALK_LEFT, Actions.WALK_RIGHT];
 export class BaseEnemyMovement {
   private currentAction: Actions = Actions.IDLE;
   private nextTimeDecide: number = 0;
+  private readonly intervalTimeCheck = 500;
+  private lastTimeCheck = 0;
+  private platformDetectors: Vector[] = [];
 
-  constructor(private enemy: ServerEnemy) {
-    enemy.view.onPlatformDetectorEnter.subscribe(position => {
-      console.log(position)
-    })
-  }
+  constructor(private enemy: ServerEnemy) {}
 
   decideNonCombatMove() {
     this.currentAction =
@@ -45,53 +46,85 @@ export class BaseEnemyMovement {
     }
   }
 
+  resolveNotCombatMovements() {
+    if (this.currentAction === Actions.IDLE || this.enemy.view.blocked) {
+      this.enemy.view.setVelocity(0, this.enemy.view.velocity.y);
+      return;
+    }
+    if (this.currentAction === Actions.WALK_LEFT) {
+      this.enemy.updateState({
+        side: Side.LEFT,
+      });
+      this.enemy.view.setVelocity(
+        -this.enemy.stats.walkSpeed,
+        this.enemy.view.velocity.y
+      );
+    }
+    if (this.currentAction === Actions.WALK_RIGHT) {
+      this.enemy.updateState({
+        side: Side.RIGHT,
+      });
+      this.enemy.view.setVelocity(
+        this.enemy.stats.walkSpeed,
+        this.enemy.view.velocity.y
+      );
+    }
+  }
+
+  resolveCombatMovement(time: number) {
+    const xDirection =
+      this.enemy.combat.target!.state.position.x - this.enemy.state.position.x;
+
+    if (this.lastTimeCheck + this.intervalTimeCheck < time) {
+      this.lastTimeCheck = time;
+      this.platformDetectors = this.enemy.view.getPlatformDetectorClose();
+      if (this.platformDetectors.length > 0 && this.enemy.view.blocked) {
+        let closePoint = this.platformDetectors[0];
+        let minDistance = Infinity;
+        this.platformDetectors.forEach((p) => {
+          const distance = Phaser.Math.Distance.BetweenPoints(
+            this.enemy.combat.target!.state.position,
+            p
+          );
+          if (
+            distance < minDistance
+          ) {
+            minDistance = distance;
+            closePoint = p;
+          }
+        });
+        this.enemy.view.setPosition(closePoint.x, closePoint.y);
+        return;
+      }
+    }
+
+    const distance = Math.abs(xDirection);
+    const sideMultiplier = xDirection / distance;
+    this.enemy.updateState({
+      side: sideMultiplier > 0 ? Side.RIGHT : Side.LEFT,
+    });
+
+    if (distance <= this.enemy.stats.meleeDistance) {
+      this.enemy.view.setVelocity(0, this.enemy.state.velocity.y);
+      return;
+    }
+
+    this.enemy.view.setVelocity(
+      this.enemy.stats.runSpeed * sideMultiplier,
+      this.enemy.state.velocity.y
+    );
+  }
+
   update(time: number, delta: number) {
     if (!this.enemy.state.isAlive) return;
+
     if (time > this.nextTimeDecide) {
       this.decideNonCombatMove();
       this.nextTimeDecide = time + Math.random() * 5000 + 1500;
     }
     this.updateAnimation();
 
-    if (this.enemy.combat.target !== null) {
-      const xDirection =
-        this.enemy.combat.target.state.position.x - this.enemy.state.position.x;
-      const distance = Math.abs(xDirection);
-      const sideMultiplier = xDirection / distance;
-      this.enemy.updateState({
-        side: sideMultiplier > 0 ? Side.RIGHT : Side.LEFT,
-      });
-      if (distance <= this.enemy.stats.meleeDistance) {
-        this.enemy.view.setVelocity(0, this.enemy.state.velocity.y);
-        return;
-      }
-      this.enemy.view.setVelocity(
-        this.enemy.stats.runSpeed * sideMultiplier,
-        this.enemy.state.velocity.y
-      );
-    } else {
-      if (this.currentAction === Actions.IDLE || this.enemy.view.blocked) {
-        this.enemy.view.setVelocity(0, this.enemy.view.velocity.y);
-        return
-      }
-      if (this.currentAction === Actions.WALK_LEFT) {
-        this.enemy.updateState({
-          side: Side.LEFT,
-        });
-        this.enemy.view.setVelocity(
-          -this.enemy.stats.walkSpeed,
-          this.enemy.view.velocity.y
-        );
-      }
-      if (this.currentAction === Actions.WALK_RIGHT) {
-        this.enemy.updateState({
-          side: Side.RIGHT,
-        });
-        this.enemy.view.setVelocity(
-          this.enemy.stats.walkSpeed,
-          this.enemy.view.velocity.y
-        );
-      }
-    }
+    if (this.enemy.combat.target !== null) this.resolveCombatMovement(time);
+    else this.resolveNotCombatMovements();
   }
 }
