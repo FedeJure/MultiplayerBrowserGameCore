@@ -95,8 +95,8 @@ async function createColliders(
         );
         rec.setOrigin(0, 0);
 
-        new PlatformDetector(scene, pos.x + 10, pos.y - 10);
-        new PlatformDetector(scene, pos.x + (obj.width ?? 0) - 10, pos.y - 10);
+        new PlatformDetector(scene, pos.x + 20, pos.y);
+        new PlatformDetector(scene, pos.x + (obj.width ?? 0) - 20, pos.y);
         sp = scene.physics.add.existing(rec, true);
         sp.setPosition(sp.x + sp.width / 2, sp.y + sp.height / 2);
         sp.angle += obj.rotation || 0;

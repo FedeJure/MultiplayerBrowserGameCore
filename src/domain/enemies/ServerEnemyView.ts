@@ -1,4 +1,3 @@
-import { Observable } from "rxjs";
 import { Vector } from "../vector";
 import { EnemyView } from "./EnemyView";
 

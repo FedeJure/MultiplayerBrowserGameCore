@@ -53,12 +53,13 @@ export class PhaserEntityView
   }
 
   setPositionInTime(x: number, y: number, time: number) {
-    this.scene.tweens.add({
-      targets: this,
-      duration: time,
-      x,
-      y,
-    });
+    this.scene.physics.moveTo(this, x,y,undefined, time)
+    // this.scene.tweens.add({
+    //   targets: this,
+    //   duration: time,
+    //   x,
+    //   y,
+    // });
   }
   getEntitiesClose(distance: number) {
     return (

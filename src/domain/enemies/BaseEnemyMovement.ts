@@ -1,4 +1,3 @@
-import { update } from "lodash";
 import { AnimationLayer } from "../entity/animations";
 import { Side } from "../side";
 import { Vector } from "../vector";
@@ -17,7 +16,7 @@ const NonCombatAction = [Actions.IDLE, Actions.WALK_LEFT, Actions.WALK_RIGHT];
 export class BaseEnemyMovement {
   private currentAction: Actions = Actions.IDLE;
   private nextTimeDecide: number = 0;
-  private readonly intervalTimeCheck = 500;
+  private readonly intervalTimeCheck = 300;
   private lastTimeCheck = 0;
   private platformDetectors: Vector[] = [];
 
@@ -81,29 +80,31 @@ export class BaseEnemyMovement {
       if (this.platformDetectors.length > 0 && this.enemy.view.blocked) {
         let closePoint = this.platformDetectors[0];
         let minDistance = Infinity;
-        this.platformDetectors.forEach((p) => {
+        const targetPos = this.enemy.combat.target!.state.position;
+        this.platformDetectors.forEach((point) => {
           const distance = Phaser.Math.Distance.BetweenPoints(
-            this.enemy.combat.target!.state.position,
-            p
+            targetPos,
+            point
           );
-          if (
-            distance < minDistance
-          ) {
+          if (distance < minDistance) {
             minDistance = distance;
-            closePoint = p;
+            closePoint = point;
           }
         });
-        const distanceToPoint = Phaser.Math.Distance.BetweenPoints(this.enemy.state.position, closePoint)
+        const distanceToPoint = Phaser.Math.Distance.BetweenPoints(
+          this.enemy.state.position,
+          closePoint
+        );
+        const aux = distanceToPoint > this.enemy.view.height * 2 ? 0.7 : 0.4;
         this.enemy.view.setPositionInTime(
           closePoint.x,
           closePoint.y,
-          distanceToPoint * 3
+          (distanceToPoint / aux)
         );
-        
+
         return;
       }
     }
-
     const distance = Math.abs(xDirection);
     const sideMultiplier = xDirection / distance;
     this.enemy.updateState({

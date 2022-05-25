@@ -35,10 +35,6 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     this.hud.setDisplayName(name);
     this.add(this.hud);
     this.spine = spine;
-    setTimeout(() => {
-      console.log(this.scene.children.getAll());
-
-    },5000)
   }
 
   override playAnimations(anims: AnimationDto[]): void {
