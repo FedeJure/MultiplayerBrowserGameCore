@@ -5,15 +5,13 @@ import { EntityView } from "../../domain/entity/entityView";
 import { AnimationDto } from "../../domain/entity/AnimationDto";
 import { Vector } from "../../domain/vector";
 import { ExistentDepths } from "../existentDepths";
-import { CollisionDetector } from "../player/collisionDetector";
 import { PhaserCombatCollisionResolver } from "../player/combatCollisionResolver";
+import { ViewObject, ViewObjectType } from "../../domain/viewObject";
 
 export class PhaserEntityView
   extends Phaser.GameObjects.Container
-  implements EntityView
+  implements EntityView, ViewObject
 {
-  private readonly groundCollisionDetector: CollisionDetector;
-  private readonly group: Phaser.Physics.Arcade.Group;
   constructor(
     readonly view: Physics.Arcade.Sprite | SpineGameObject,
     x: number,
@@ -32,10 +30,15 @@ export class PhaserEntityView
     this.arcadeBody.setBounce(0, 0);
     this.initCollisions();
     this.setData("id", uuidv4());
+    this.setData('type', ViewObjectType.Entity)
   }
 
   get id() {
     return this.getData("id");
+  }
+
+  get viewType() {
+    return this.getData("type")
   }
 
   get grounded() {

@@ -38,7 +38,7 @@ export function createMapOnScene(
           .setDepth(ExistentDepths.GROUND_BACKGROUND);
       });
 
-      createBounds(map, scene);
+      createBounds(map, scene, collisionManager);
 
       const colLayer = tilemap.getObjectLayer(
         MapsConfiguration.layerNames.colliders
@@ -93,7 +93,7 @@ async function createColliders(
           obj.width,
           obj.height
         );
-        rec.setOrigin(0,0)
+        rec.setOrigin(0, 0);
 
         new PlatformDetector(scene, pos.x + 10, pos.y - 10);
         new PlatformDetector(scene, pos.x + (obj.width ?? 0) - 10, pos.y - 10);
@@ -101,7 +101,7 @@ async function createColliders(
         sp.setPosition(sp.x + sp.width / 2, sp.y + sp.height / 2);
         sp.angle += obj.rotation || 0;
         sp.setOrigin(0, 0);
-        collisionManager.addStaticGround(rec)
+        collisionManager.addStaticGround(rec);
         createdObjects.push(rec);
       }
 
@@ -113,7 +113,11 @@ async function createColliders(
   });
 }
 
-function createBounds(map: ProcessedMap, scene: Scene) {
+function createBounds(
+  map: ProcessedMap,
+  scene: Scene,
+  collisionManager: CollisionManager
+) {
   const boundSize = 32;
   if (map.leftMapId === undefined) {
     addBound(
@@ -121,7 +125,8 @@ function createBounds(map: ProcessedMap, scene: Scene) {
       map.originY + map.height / 2,
       boundSize,
       map.height + boundSize,
-      scene
+      scene,
+      collisionManager
     );
   }
   if (map.rightMapId === undefined) {
@@ -130,11 +135,19 @@ function createBounds(map: ProcessedMap, scene: Scene) {
       map.originY + map.height / 2,
       boundSize,
       map.height + boundSize,
-      scene
+      scene,
+      collisionManager
     );
   }
   if (map.topMapId === undefined) {
-    addBound(map.originX, map.originY, map.width + boundSize, boundSize, scene);
+    addBound(
+      map.originX,
+      map.originY,
+      map.width + boundSize,
+      boundSize,
+      scene,
+      collisionManager
+    );
   }
   if (map.bottomMapId === undefined) {
     addBound(
@@ -142,7 +155,8 @@ function createBounds(map: ProcessedMap, scene: Scene) {
       map.originY + map.height,
       map.width + boundSize,
       boundSize,
-      scene
+      scene,
+      collisionManager
     );
   }
 }
@@ -152,10 +166,10 @@ function addBound(
   y: number,
   width: number,
   height: number,
-  scene: Scene
+  scene: Scene,
+  collisionManager: CollisionManager
 ) {
-  scene.physics.add.existing(
-    scene.add.rectangle(x, y, width, height),
-    true
-  )
+  collisionManager.addStaticGround(
+    scene.physics.add.existing(scene.add.rectangle(x, y, width, height), true)
+  );
 }
