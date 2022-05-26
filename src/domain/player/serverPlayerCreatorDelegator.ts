@@ -16,7 +16,7 @@ import { AsyncRepository, SimpleRepository } from "../repository";
 import { PlayerInfo } from "./playerInfo";
 import { PlayerInventoryDto } from "../../infrastructure/dtos/playerInventoryDto";
 import { Scene } from "phaser";
-import { MovementSystem } from "./movement/movementSystem";
+import { PlayerMovement } from "./movement/playerMovement";
 import { DefaultPlayerStats, PlayerStats } from "./playerStats";
 import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { AttackTargetType } from "../combat/attackTargetType";
@@ -169,7 +169,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       playerInfo,
       playerState,
       view,
-      new MovementSystem(),
+      new PlayerMovement(),
       input,
       stats ?? DefaultPlayerStats,
       this.mapManager,

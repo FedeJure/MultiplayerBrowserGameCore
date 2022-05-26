@@ -7,10 +7,9 @@ import { ControllablePlayer } from "./controllablePlayer";
 import { PlayerInfo } from "../playerInfo";
 import { PlayerState } from "../playerState";
 import { PlayerInput } from "../playerInput";
-import { MovementSystem } from "../movement/movementSystem";
+import { PlayerMovement } from "../movement/playerMovement";
 import { PlayerStats } from "../playerStats";
 import { MapManager } from "../../environment/mapManager";
-import { Player } from "./player";
 
 export class ServerPlayer extends ControllablePlayer {
   private _onStateChange: Subject<{
@@ -21,7 +20,7 @@ export class ServerPlayer extends ControllablePlayer {
     info: PlayerInfo,
     state: PlayerState,
     view: PlayerView,
-    movementSystem: MovementSystem,
+    movementSystem: PlayerMovement,
     input: PlayerInput,
     stats: PlayerStats,
     mapManager: MapManager,

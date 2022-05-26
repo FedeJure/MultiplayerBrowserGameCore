@@ -1,4 +1,5 @@
 import { AnimationLayer } from "../entity/animations";
+import { DefaultEntityMovement } from "../entity/DefaultMovement";
 import { Side } from "../side";
 import { Vector } from "../vector";
 import { EnemyAnimation } from "./EnemyAnimations";
@@ -13,7 +14,7 @@ enum Actions {
 
 const NonCombatAction = [Actions.IDLE, Actions.WALK_LEFT, Actions.WALK_RIGHT];
 
-export class BaseEnemyMovement {
+export class EnemyMovement extends DefaultEntityMovement {
   private currentAction: Actions = Actions.IDLE;
   private nextTimeDecide: number = 0;
   private readonly intervalTimeCheck = 100;
@@ -21,14 +22,21 @@ export class BaseEnemyMovement {
   private platformDetectors: Vector[] = [];
   private initialPosition: Vector;
   private maxDistance: number = 200;
-
-  constructor(private enemy: ServerEnemy) {
+  private enemy: ServerEnemy;
+  init(enemy: ServerEnemy) {
+    this.enemy = enemy;
     this.initialPosition = enemy.state.position;
+    super.init(enemy);
   }
 
   update(time: number, delta: number) {
     if (!this.enemy.state.isAlive) return;
-    if (Phaser.Math.Distance.BetweenPoints(this.enemy.state.position, this.initialPosition) > this.maxDistance) {
+    if (
+      Phaser.Math.Distance.BetweenPoints(
+        this.enemy.state.position,
+        this.initialPosition
+      ) > this.maxDistance
+    ) {
       //reset position
     }
 
@@ -40,6 +48,12 @@ export class BaseEnemyMovement {
 
     if (this.enemy.combat.target !== null) this.resolveCombatMovement(time);
     else this.resolveNotCombatMovements();
+
+    this.enemy.updateState({
+      position: this.enemy.view.positionVector,
+      velocity: this.enemy.view.velocity,
+    });
+    super.update(time, delta);
   }
 
   decideNonCombatMove() {

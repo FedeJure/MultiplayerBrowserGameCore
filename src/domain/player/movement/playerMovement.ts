@@ -1,25 +1,32 @@
+import { DefaultEntityMovement } from "../../entity/DefaultMovement";
 import { Side } from "../../side";
 import { ControllablePlayer } from "../players/controllablePlayer";
 
-export class MovementSystem {
+export class PlayerMovement extends DefaultEntityMovement {
+  private player: ControllablePlayer;
+  init(player: ControllablePlayer) {
+    this.player = player;
+    super.init(player)
+  }
   private lastTimeJump: number | null = null;
-  processMovement(player: ControllablePlayer, time: number, deltaTime: number) {
-    const { state, input } = player;
-    let newVelX = player.view.velocity.x;
-    let newVelY = player.view.velocity.y;
+  update(time: number, delta: number) {
+    const { state, input } = this.player;
+    let newVelX = this.player.view.velocity.x;
+    let newVelY = this.player.view.velocity.y;
     let maxRunVelocity =
-      player.stats.runSpeed * (state.attacking && state.grounded ? 0.5 : 1);
+      this.player.stats.runSpeed *
+      (state.attacking && state.grounded ? 0.5 : 1);
 
     let canJump = state.canJump;
     let passLastTimeJump =
       this.lastTimeJump === null || this.lastTimeJump + 200 < time;
     let availableJumps =
       passLastTimeJump && state.grounded
-        ? player.stats.maxJumps
+        ? this.player.stats.maxJumps
         : state.jumpsAvailable;
     let jumping = state.jumping;
     if (canJump && availableJumps > 0 && input.jump && passLastTimeJump) {
-      newVelY = -player.stats.jumpPower * deltaTime;
+      newVelY = -this.player.stats.jumpPower * delta;
       availableJumps--;
       canJump = false;
       jumping = true;
@@ -30,8 +37,8 @@ export class MovementSystem {
 
     if (input.left || input.right || jumping) {
       const inAirFactor = !state.grounded ? 0.3 : 1;
-      newVelX += +input.right * maxRunVelocity * deltaTime * inAirFactor;
-      newVelX -= +input.left * maxRunVelocity * deltaTime * inAirFactor;
+      newVelX += +input.right * maxRunVelocity * delta * inAirFactor;
+      newVelX -= +input.left * maxRunVelocity * delta * inAirFactor;
 
       newVelX =
         Math.sign(newVelX) * Math.min(maxRunVelocity, Math.abs(newVelX));
@@ -42,17 +49,18 @@ export class MovementSystem {
 
     const side =
       newVelX === 0 ? state.side : newVelX > 0 ? Side.RIGHT : Side.LEFT;
-    player.updateState({
+    this.player.updateState({
       velocity: {
         x: Number(newVelX.toPrecision(2)),
         y: Number(newVelY.toPrecision(2)),
       },
       jumpsAvailable: availableJumps,
-      position: player.view.positionVector,
+      position: this.player.view.positionVector,
       canJump,
       side,
       jumping,
-      grounded: player.view.grounded,
+      grounded: this.player.view.grounded,
     });
+    super.update(time, delta);
   }
 }

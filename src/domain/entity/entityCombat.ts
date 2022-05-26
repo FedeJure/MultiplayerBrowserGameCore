@@ -6,9 +6,3 @@ export interface EntityCombat {
   update(time: number, delta: number);
   receiveAttack(attack: CombatResult);
 }
-
-export class EmptyCombat implements EntityCombat {
-  init(entity: Entity) {}
-  update(time: number, delta: number) {}
-  receiveAttack(attack: CombatResult) {}
-}

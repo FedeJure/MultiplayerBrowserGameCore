@@ -1,7 +1,7 @@
 import { Observable, Subject } from "rxjs";
 import { Attackable } from "../combat/attackTarget";
 import { EnemyCombat } from "./BaseEnemyCombat";
-import { BaseEnemyMovement } from "./BaseEnemyMovement";
+import { EnemyMovement } from "./enemyMovement";
 import { EnemyInfo } from "./EnemyInfo";
 import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
@@ -13,7 +13,6 @@ export class ServerEnemy
   extends Entity<EnemyInfo, EnemyState, EnemyView, EnemyStats, EnemyCombat>
   implements Attackable
 {
-  private movement: BaseEnemyMovement;
   private _onDestroy = new Subject<void>();
 
   constructor(
@@ -22,23 +21,11 @@ export class ServerEnemy
     stats: EnemyStats,
     view: ServerEnemyView
   ) {
-    super(info, state, view, stats, new EnemyCombat());
-    this.movement = new BaseEnemyMovement(this);
+    super(info, state, view, stats, new EnemyMovement(), new EnemyCombat());
   }
 
   get view() {
     return this._view as ServerEnemyView;
-  }
-
-  update(time: number, delta: number): void {
-    try {
-      this.combat.update(time,delta)
-      this.movement.update(time, delta);
-      this.updateState({
-        position: this.view.positionVector,
-        velocity: this.view.velocity,
-      });
-    } catch (error) {}
   }
 
   destroy(): void {

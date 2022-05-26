@@ -2,8 +2,11 @@ import { Attackable } from "../combat/attackTarget";
 import { CombatResult } from "../player/combat/combatResult";
 import { Side } from "../side";
 import { EntityAnimationCode, AnimationLayer } from "./animations";
-import { EmptyCombat, EntityCombat } from "./entityCombat";
+import { DefaultEntityCombat } from "./DefaultEntityCombat";
+import { DefaultEntityMovement } from "./DefaultMovement";
+import { EntityCombat } from "./entityCombat";
 import { EntityInfo } from "./entityInfo";
+import { EntityMovement } from "./entityMovement";
 import { EntityState } from "./entityState";
 import { EntityStats } from "./entityStats";
 import { EntityView } from "./entityView";
@@ -13,7 +16,8 @@ export class Entity<
   State extends EntityState = EntityState,
   View extends EntityView = EntityView,
   Stats extends EntityStats = EntityStats,
-  Combat extends EntityCombat = EntityCombat
+  Combat extends EntityCombat = EntityCombat,
+  Movement extends EntityMovement = EntityMovement
 > implements Attackable
 {
   constructor(
@@ -21,9 +25,11 @@ export class Entity<
     protected _state: State,
     protected _view: View,
     protected _stats: Stats,
-    protected _combat: Combat = new EmptyCombat() as Combat
+    protected _movement: Movement = new DefaultEntityMovement() as any as Movement,
+    protected _combat: Combat = new DefaultEntityCombat() as any as Combat
   ) {
     this._combat.init(this);
+    this._movement.init(this);
   }
 
   updateInfo(newInfo: Partial<Info>) {
@@ -56,12 +62,8 @@ export class Entity<
   }
 
   update(time: number, delta: number) {
-    this.view.playAnimations(this.state.anim);
-    this.view.setLifePercent((this.state.life / this.stats.maxLife) * 100);
-    if (!this.state.isAlive) return;
-    this.view.setPosition(this.state.position.x, this.state.position.y);
-    this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);
-    this.view.lookToLeft(this.state.side === Side.LEFT);
+    this.combat.update(time, delta);
+    this.movement.update(time, delta);
   }
 
   receiveAttack(attack: CombatResult) {
@@ -86,5 +88,9 @@ export class Entity<
 
   get combat() {
     return this._combat;
+  }
+
+  get movement() {
+    return this._movement;
   }
 }

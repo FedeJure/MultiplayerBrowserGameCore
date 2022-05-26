@@ -12,7 +12,7 @@ import { PlayerInfo } from "../player/playerInfo";
 import { SimpleRepository } from "../repository";
 import { Scene } from "phaser";
 import { Player } from "../player/players/player";
-import { MovementSystem } from "../player/movement/movementSystem";
+import { PlayerMovement } from "../player/movement/playerMovement";
 import { DefaultPlayerStats, PlayerStats } from "../player/playerStats";
 import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { AttackTargetType } from "../combat/attackTargetType";
@@ -116,7 +116,7 @@ export class ClientConnectionDelegator implements Delegator {
 
     const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
 
-    const movementSystem = new MovementSystem();
+    const movementSystem = new PlayerMovement();
     const player = new ControllablePlayer(
       info,
       state,

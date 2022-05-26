@@ -22,7 +22,7 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
     return bodies
       .map((body) =>
         this.collisionableTargetRepository.get(
-          (body as Phaser.Physics.Arcade.Body).gameObject.data.get("id")
+          (body as Phaser.Physics.Arcade.Body).gameObject.getData("id")
         )
       )
       .filter((target) => target !== undefined) as CollisionableEntity[];
@@ -56,7 +56,7 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
     return bodies
       .map((body) =>
         this.collisionableTargetRepository.get(
-          (body as Phaser.Physics.Arcade.Body).gameObject.data.get("id")
+          (body as Phaser.Physics.Arcade.Body).gameObject.getData("id")
         )
       )
       .filter((target) => target !== undefined) as CollisionableEntity[];

@@ -13,8 +13,8 @@ export class CombatSystem implements EntityCombat {
     private actions: CombatAction[]
   ) {}
   init(player: ControllablePlayer) {
-    this.player = player
-    this.actions.forEach(a => a.init(player))
+    this.player = player;
+    this.actions.forEach((a) => a.init(player));
   }
 
   update(time: number, delta: number) {
