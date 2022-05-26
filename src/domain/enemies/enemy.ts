@@ -4,7 +4,12 @@ import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 import { EnemyView } from "./EnemyView";
 
-export class Enemy extends Entity {
+export class Enemy extends Entity<
+  EnemyInfo,
+  EnemyState,
+  EnemyView,
+  EnemyStats
+> {
   constructor(
     state: EnemyState,
     info: EnemyInfo,
@@ -21,13 +26,5 @@ export class Enemy extends Entity {
 
   update(time: number, delta: number): void {
     super.update(time, delta);
-  }
-
-  get state() {
-    return this._state as EnemyState;
-  }
-
-  get stats() {
-    return this._stats as EnemyStats;
   }
 }

@@ -7,20 +7,26 @@ import { EntityState } from "./entityState";
 import { EntityStats } from "./entityStats";
 import { EntityView } from "./entityView";
 
-export class Entity implements Attackable {
+export class Entity<
+  Info extends EntityInfo = EntityInfo,
+  State extends EntityState = EntityState,
+  View extends EntityView = EntityView,
+  Stats extends EntityStats = EntityStats
+> implements Attackable
+{
   constructor(
-    protected _info: EntityInfo,
-    protected _state: EntityState,
-    protected _view: EntityView,
-    protected _stats: EntityStats
+    protected _info: Info,
+    protected _state: State,
+    protected _view: View,
+    protected _stats: Stats
   ) {}
   receiveAttack(attack: CombatResult) {}
 
-  updateInfo(newInfo: Partial<EntityInfo>) {
+  updateInfo(newInfo: Partial<Info>) {
     this._info = { ...this.info, ...newInfo };
   }
 
-  updateState(newState: Partial<EntityState>) {
+  updateState(newState: Partial<State>) {
     this._state = { ...this.state, ...newState };
   }
 
@@ -38,8 +44,8 @@ export class Entity implements Attackable {
           duration: 1000,
         },
       ],
-    });
-    this.view.setVelocity(0, this.state.velocity.y)
+    } as Partial<State>);
+    this.view.setVelocity(0, this.state.velocity.y);
     setTimeout(() => {
       this.destroy();
     }, 50);

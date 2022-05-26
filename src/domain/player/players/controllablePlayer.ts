@@ -14,7 +14,12 @@ import { PlayerInput } from "../playerInput";
 import { PlayerState } from "../playerState";
 import { PlayerStats } from "../playerStats";
 
-export class ControllablePlayer extends Entity {
+export class ControllablePlayer extends Entity<
+  PlayerInfo,
+  PlayerState,
+  PlayerView,
+  PlayerStats
+> {
   protected _combatSystem: CombatSystem;
   protected _animationSystem: AnimationSystem;
   constructor(
@@ -33,15 +38,6 @@ export class ControllablePlayer extends Entity {
       new DefendCombatAction(this),
     ]);
   }
-
-  updateInfo(newInfo: Partial<PlayerInfo>) {
-    this._info = { ...this.info, ...newInfo };
-  }
-
-  updateState(newState: Partial<PlayerState>) {
-    this._state = { ...this.state, ...newState };
-  }
-
   updateStats(newStats: Partial<PlayerStats>) {
     this._stats = { ...this.stats, ...newStats };
   }
@@ -50,26 +46,16 @@ export class ControllablePlayer extends Entity {
     this._view.destroy();
   }
 
-  get state() {
-    return this._state as PlayerState;
-  }
-  get view() {
-    return this._view as PlayerView;
-  }
   get input() {
     return this._input;
   }
-  get stats() {
-    return this._stats as PlayerStats;
-  }
-
   get animSystem() {
     return this._animationSystem;
   }
 
   update(time: number, delta: number) {
     this._combatSystem.processCombat(delta);
-    this._movementSystem.processMovement(this, time,delta);
+    this._movementSystem.processMovement(this, time, delta);
     this._animationSystem.processAnimation(this);
     super.update(time, delta);
   }

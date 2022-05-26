@@ -1,8 +1,8 @@
 import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { AttackTargetType } from "../combat/attackTargetType";
-import { Entity } from "../entity/entity";
 import { CombatResult } from "../player/combat/combatResult";
 import { Enemy } from "./enemy";
+import { Entity } from "../entity/entity";
 
 export class EnemyCombat {
   private _target: Entity | null = null;
