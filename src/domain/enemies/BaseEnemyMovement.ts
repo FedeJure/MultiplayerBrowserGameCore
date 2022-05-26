@@ -16,7 +16,7 @@ const NonCombatAction = [Actions.IDLE, Actions.WALK_LEFT, Actions.WALK_RIGHT];
 export class BaseEnemyMovement {
   private currentAction: Actions = Actions.IDLE;
   private nextTimeDecide: number = 0;
-  private readonly intervalTimeCheck = 300;
+  private readonly intervalTimeCheck = 100;
   private lastTimeCheck = 0;
   private platformDetectors: Vector[] = [];
 
@@ -77,6 +77,7 @@ export class BaseEnemyMovement {
     if (this.lastTimeCheck + this.intervalTimeCheck < time) {
       this.lastTimeCheck = time;
       this.platformDetectors = this.enemy.view.getPlatformDetectorClose();
+
       if (this.platformDetectors.length > 0 && this.enemy.view.blocked) {
         let closePoint = this.platformDetectors[0];
         let minDistance = Infinity;
@@ -101,7 +102,6 @@ export class BaseEnemyMovement {
           closePoint.y,
           (distanceToPoint / aux)
         );
-
         return;
       }
     }

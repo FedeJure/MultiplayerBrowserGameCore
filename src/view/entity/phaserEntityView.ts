@@ -27,6 +27,7 @@ export class PhaserEntityView
     this.setDepth(ExistentDepths.GROUND);
     this.arcadeBody.setFriction(100, 100);
     this.arcadeBody.setBounce(0, 0);
+    this.arcadeBody.setDrag(0,0)
     this.initCollisions();
     this.setData("id", uuidv4());
     this.setData("type", ViewObjectType.Entity);
