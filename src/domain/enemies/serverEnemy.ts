@@ -7,10 +7,9 @@ import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 import { ServerEnemyView } from "./ServerEnemyView";
 import { Entity } from "../entity/entity";
-import { EnemyView } from "./EnemyView";
 
 export class ServerEnemy
-  extends Entity<EnemyInfo, EnemyState, EnemyView, EnemyStats, EnemyCombat>
+  extends Entity<EnemyInfo, EnemyState, ServerEnemyView, EnemyStats, EnemyCombat>
   implements Attackable
 {
   private _onDestroy = new Subject<void>();
@@ -22,10 +21,6 @@ export class ServerEnemy
     view: ServerEnemyView
   ) {
     super(info, state, view, stats, new EnemyMovement(), new EnemyCombat());
-  }
-
-  get view() {
-    return this._view as ServerEnemyView;
   }
 
   destroy(): void {

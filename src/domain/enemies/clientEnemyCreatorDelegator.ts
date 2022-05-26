@@ -17,7 +17,7 @@ export class ClientEnemyCreatorDelegator implements Delegator {
     private scene: Scene,
     private serverConnection: ServerConnection,
     private spawnedEnemies: SimpleRepository<Enemy>,
-    private presenterProvider: ClientPresenterProvider,
+    private presenterProvider: ClientPresenterProvider
   ) {}
   init(): void {
     this.serverConnection.onEnemyState.subscribe((event) => {
@@ -41,7 +41,7 @@ export class ClientEnemyCreatorDelegator implements Delegator {
       stats.width,
       info.name
     );
-    const enemy = new Enemy(state, info, view, stats);
+    const enemy = new Enemy(info, state, view, stats);
     this.presenterProvider.forEnemy(view, enemy);
     this.spawnedEnemies.save(enemy.info.id, enemy);
   }

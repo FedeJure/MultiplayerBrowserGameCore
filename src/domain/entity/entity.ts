@@ -1,6 +1,5 @@
 import { Attackable } from "../combat/attackTarget";
 import { CombatResult } from "../player/combat/combatResult";
-import { Side } from "../side";
 import { EntityAnimationCode, AnimationLayer } from "./animations";
 import { DefaultEntityCombat } from "./DefaultEntityCombat";
 import { DefaultEntityMovement } from "./DefaultMovement";
@@ -41,6 +40,7 @@ export class Entity<
   }
 
   destroy() {
+    this.view.setVelocity(0, 0);
     this._view.destroy();
   }
 
