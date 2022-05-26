@@ -1,7 +1,5 @@
 import { Attackable } from "../combat/attackTarget";
 import { CombatResult } from "../player/combat/combatResult";
-import { PlayerInfo } from "../player/playerInfo";
-import { PlayerState } from "../player/playerState";
 import { Side } from "../side";
 import { EntityAnimationCode, AnimationLayer } from "./animations";
 import { EntityInfo } from "./entityInfo";
@@ -18,11 +16,11 @@ export class Entity implements Attackable {
   ) {}
   receiveAttack(attack: CombatResult) {}
 
-  updateInfo(newInfo: Partial<PlayerInfo>) {
+  updateInfo(newInfo: Partial<EntityInfo>) {
     this._info = { ...this.info, ...newInfo };
   }
 
-  updateState(newState: Partial<PlayerState>) {
+  updateState(newState: Partial<EntityState>) {
     this._state = { ...this.state, ...newState };
   }
 

@@ -38,7 +38,8 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         side: Side.RIGHT,
         inCombat: false,
         grounded: true,
-        isAlive: true
+        isAlive: true,
+        reseting: false
       };
       const view = new PhaserEnemyView(
         this.scene.physics.add.sprite(state.position.x, state.position.y, ""),

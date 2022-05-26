@@ -19,8 +19,28 @@ export class BaseEnemyMovement {
   private readonly intervalTimeCheck = 100;
   private lastTimeCheck = 0;
   private platformDetectors: Vector[] = [];
+  private initialPosition: Vector;
+  private maxDistance: number = 200;
 
-  constructor(private enemy: ServerEnemy) {}
+  constructor(private enemy: ServerEnemy) {
+    this.initialPosition = enemy.state.position;
+  }
+
+  update(time: number, delta: number) {
+    if (!this.enemy.state.isAlive) return;
+    if (Phaser.Math.Distance.BetweenPoints(this.enemy.state.position, this.initialPosition) > this.maxDistance) {
+      //reset position
+    }
+
+    if (time > this.nextTimeDecide) {
+      this.decideNonCombatMove();
+      this.nextTimeDecide = time + Math.random() * 5000 + 1500;
+    }
+    this.updateAnimation();
+
+    if (this.enemy.combat.target !== null) this.resolveCombatMovement(time);
+    else this.resolveNotCombatMovements();
+  }
 
   decideNonCombatMove() {
     this.currentAction =
@@ -83,10 +103,7 @@ export class BaseEnemyMovement {
         let minDistance = Infinity;
         const targetPos = this.enemy.combat.target!.state.position;
         this.platformDetectors.forEach((point) => {
-          const distance = Phaser.Math.Distance.BetweenPoints(
-            targetPos,
-            point
-          );
+          const distance = Phaser.Math.Distance.BetweenPoints(targetPos, point);
           if (distance < minDistance) {
             minDistance = distance;
             closePoint = point;
@@ -100,7 +117,7 @@ export class BaseEnemyMovement {
         this.enemy.view.setPositionInTime(
           closePoint.x,
           closePoint.y,
-          (distanceToPoint / aux)
+          distanceToPoint / aux
         );
         return;
       }
@@ -120,18 +137,5 @@ export class BaseEnemyMovement {
       this.enemy.stats.runSpeed * sideMultiplier,
       this.enemy.state.velocity.y
     );
-  }
-
-  update(time: number, delta: number) {
-    if (!this.enemy.state.isAlive) return;
-
-    if (time > this.nextTimeDecide) {
-      this.decideNonCombatMove();
-      this.nextTimeDecide = time + Math.random() * 5000 + 1500;
-    }
-    this.updateAnimation();
-
-    if (this.enemy.combat.target !== null) this.resolveCombatMovement(time);
-    else this.resolveNotCombatMovements();
   }
 }
