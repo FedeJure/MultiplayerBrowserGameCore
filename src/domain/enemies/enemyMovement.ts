@@ -21,12 +21,17 @@ export class EnemyMovement extends DefaultEntityMovement {
   private lastTimeCheck = 0;
   private platformDetectors: Vector[] = [];
   private initialPosition: Vector;
-  private maxDistance: number = 200;
+  private maxDistance: number = 1000;
   private enemy: ServerEnemy;
+
   init(enemy: ServerEnemy) {
     this.enemy = enemy;
     this.initialPosition = enemy.state.position;
     super.init(enemy);
+  }
+
+  resetingMovement(time: number) {
+    this.moveToPosition(time, this.initialPosition);
   }
 
   update(time: number, delta: number) {
@@ -37,22 +42,20 @@ export class EnemyMovement extends DefaultEntityMovement {
         this.initialPosition
       ) > this.maxDistance
     ) {
-      //reset position
+      this.enemy.updateState({ reseting: true });
     }
 
-    if (time > this.nextTimeDecide) {
-      this.decideNonCombatMove();
-      this.nextTimeDecide = time + Math.random() * 5000 + 1500;
-    }
     this.updateAnimation();
-
-    if (this.enemy.combat.target !== null) this.resolveCombatMovement(time);
-    else this.resolveNotCombatMovements();
+    if (this.enemy.state.reseting) this.resetingMovement(time);
+    else if (this.enemy.combat.target !== null)
+      this.resolveCombatMovement(time);
+    else this.resolveNotCombatMovements(time);
 
     this.enemy.updateState({
       position: this.enemy.view.positionVector,
       velocity: this.enemy.view.velocity,
     });
+
     super.update(time, delta);
   }
 
@@ -79,7 +82,11 @@ export class EnemyMovement extends DefaultEntityMovement {
     }
   }
 
-  resolveNotCombatMovements() {
+  resolveNotCombatMovements(time: number) {
+    if (time > this.nextTimeDecide) {
+      this.decideNonCombatMove();
+      this.nextTimeDecide = time + Math.random() * 5000 + 1500;
+    }
     if (this.currentAction === Actions.IDLE || this.enemy.view.blocked) {
       this.enemy.view.setVelocity(0, this.enemy.view.velocity.y);
       return;
@@ -104,9 +111,8 @@ export class EnemyMovement extends DefaultEntityMovement {
     }
   }
 
-  resolveCombatMovement(time: number) {
-    const xDirection =
-      this.enemy.combat.target!.state.position.x - this.enemy.state.position.x;
+  moveToPosition(time: number, position: Vector) {
+    const xDirection = position.x - this.enemy.state.position.x;
 
     if (this.lastTimeCheck + this.intervalTimeCheck < time) {
       this.lastTimeCheck = time;
@@ -115,9 +121,11 @@ export class EnemyMovement extends DefaultEntityMovement {
       if (this.platformDetectors.length > 0 && this.enemy.view.blocked) {
         let closePoint = this.platformDetectors[0];
         let minDistance = Infinity;
-        const targetPos = this.enemy.combat.target!.state.position;
         this.platformDetectors.forEach((point) => {
-          const distance = Phaser.Math.Distance.BetweenPoints(targetPos, point);
+          const distance = Phaser.Math.Distance.BetweenPoints(
+            position,
+            point
+          );
           if (distance < minDistance) {
             minDistance = distance;
             closePoint = point;
@@ -151,5 +159,9 @@ export class EnemyMovement extends DefaultEntityMovement {
       this.enemy.stats.runSpeed * sideMultiplier,
       this.enemy.state.velocity.y
     );
+  }
+
+  resolveCombatMovement(time: number) {
+    this.moveToPosition(time, this.enemy.combat.target!.state.position);
   }
 }

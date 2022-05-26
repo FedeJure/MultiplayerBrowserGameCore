@@ -1,4 +1,4 @@
-import { GameObjects, Physics } from "phaser";
+import Phaser, { GameObjects, Physics } from "phaser";
 import { v4 as uuidv4 } from "uuid";
 import { EntityView } from "../../domain/entity/entityView";
 import { AnimationDto } from "../../domain/entity/AnimationDto";
@@ -27,7 +27,7 @@ export class PhaserEntityView
     this.setDepth(ExistentDepths.GROUND);
     this.arcadeBody.setFriction(100, 100);
     this.arcadeBody.setBounce(0, 0);
-    this.arcadeBody.setDrag(0,0)
+    this.arcadeBody.setDrag(0, 0);
     this.initCollisions();
     this.setData("id", uuidv4());
     this.setData("type", ViewObjectType.Entity);
@@ -54,13 +54,22 @@ export class PhaserEntityView
   }
 
   setPositionInTime(x: number, y: number, time: number) {
-    this.scene.physics.moveTo(this, x,y,undefined, time)
+    // this.scene.physics.moveTo(this, x,y,undefined, time)
     // this.scene.tweens.add({
     //   targets: this,
     //   duration: time,
     //   x,
     //   y,
     // });
+
+    this.scene.tweens.add({
+      targets: this,
+      duration: time,
+      props: {
+        x: { value: x, duration: time },
+        y: { value: y, duration: time, ease: "Power2" },
+      },
+    });
   }
   getEntitiesClose(distance: number) {
     return (
