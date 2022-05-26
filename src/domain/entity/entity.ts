@@ -56,7 +56,6 @@ export class Entity<
   }
 
   update(time: number, delta: number) {
-    this._combat?.update(time, delta);
     this.view.playAnimations(this.state.anim);
     this.view.setLifePercent((this.state.life / this.stats.maxLife) * 100);
     if (!this.state.isAlive) return;
@@ -66,7 +65,7 @@ export class Entity<
   }
 
   receiveAttack(attack: CombatResult) {
-    this._combat?.receiveAttack(attack);
+    this._combat.receiveAttack(attack);
   }
 
   get info() {

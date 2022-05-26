@@ -31,10 +31,16 @@ export class ControllablePlayer extends Entity<
     private _input: PlayerInput,
     mapManager: MapManager //usar esto para spawnear al jugador en un spot de spawn al morir.
   ) {
-    super(_info, _state, _view, _stats, new CombatSystem(mapManager, [
-      new SimpleForwardPunchCombatAction(),
-      new DefendCombatAction(),
-    ]));
+    super(
+      _info,
+      _state,
+      _view,
+      _stats,
+      new CombatSystem(mapManager, [
+        new SimpleForwardPunchCombatAction(),
+        new DefendCombatAction(),
+      ])
+    );
     this._animationSystem = new AnimationSystem(this);
   }
   updateStats(newStats: Partial<PlayerStats>) {
@@ -53,6 +59,7 @@ export class ControllablePlayer extends Entity<
   }
 
   update(time: number, delta: number) {
+    this.combat.update(time, delta);
     this._movementSystem.processMovement(this, time, delta);
     this._animationSystem.processAnimation(this);
     super.update(time, delta);

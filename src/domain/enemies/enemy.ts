@@ -1,5 +1,4 @@
 import { Entity } from "../entity/entity";
-import { EnemyCombat } from "./BaseEnemyCombat";
 import { EnemyInfo } from "./EnemyInfo";
 import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
@@ -23,9 +22,5 @@ export class Enemy extends Entity<
   destroy(): void {
     this.view.setVelocity(0, 0);
     super.destroy();
-  }
-
-  update(time: number, delta: number): void {
-    super.update(time, delta);
   }
 }
