@@ -3,13 +3,17 @@ import { AttackTargetType } from "../combat/attackTargetType";
 import { CombatResult } from "../player/combat/combatResult";
 import { Enemy } from "./enemy";
 import { Entity } from "../entity/entity";
+import { EntityCombat } from "../entity/entityCombat";
 
-export class EnemyCombat {
+export class EnemyCombat implements EntityCombat {
   private _target: Entity | null = null;
   private readonly intervalTimeCheck = 500;
   private lastTimeCheck = 0;
+  private enemy: Enemy
 
-  constructor(private enemy: Enemy) {}
+  init(enemy: Enemy) {
+    this.enemy = enemy
+  }
   public get target() {
     return this._target;
   }

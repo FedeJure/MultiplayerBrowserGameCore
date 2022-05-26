@@ -1,4 +1,5 @@
 import { Entity } from "../entity/entity";
+import { EnemyCombat } from "./BaseEnemyCombat";
 import { EnemyInfo } from "./EnemyInfo";
 import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
@@ -14,7 +15,7 @@ export class Enemy extends Entity<
     state: EnemyState,
     info: EnemyInfo,
     view: EnemyView,
-    stats: EnemyStats
+    stats: EnemyStats,
   ) {
     super(info, state, view, stats);
   }

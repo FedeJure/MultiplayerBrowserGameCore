@@ -3,16 +3,21 @@ import { ControllablePlayer } from "../players/controllablePlayer";
 import { CombatResult } from "./combatResult";
 import { EntityAnimationCode, AnimationLayer } from "../../entity/animations";
 import { MapManager } from "../../environment/mapManager";
+import { EntityCombat } from "../../entity/entityCombat";
 
-export class CombatSystem {
+export class CombatSystem implements EntityCombat {
   private attacking: boolean;
+  private player: ControllablePlayer;
   constructor(
-    private player: ControllablePlayer,
     private mapMapanger: MapManager,
     private actions: CombatAction[]
   ) {}
+  init(player: ControllablePlayer) {
+    this.player = player
+    this.actions.forEach(a => a.init(player))
+  }
 
-  processCombat(delta: number) {
+  update(time: number, delta: number) {
     if (!this.attacking) {
       for (const action of this.actions) {
         const execution = action.execute();

@@ -1,16 +1,18 @@
-import { EntityAnimationCode, AnimationLayer } from "../../../entity/animations";
+import {
+  EntityAnimationCode,
+  AnimationLayer,
+} from "../../../entity/animations";
 import { ControllablePlayer } from "../../players/controllablePlayer";
 import { CombatAction } from "./combatAction";
 
 export class DefendCombatAction implements CombatAction {
-  constructor(private player: ControllablePlayer) {}
+  private player: ControllablePlayer;
+  init(player: ControllablePlayer) {
+    this.player = player;
+  }
   execute() {
     const { input } = this.player;
-    if (
-      input.defend &&
-      !input.up &&
-      !input.down
-    ) {
+    if (input.defend && !input.up && !input.down) {
       const attackDuration = 1000 / this.player.stats.basicAttackSpeed;
       this.player.animSystem.executeAnimation(
         EntityAnimationCode.DEFEND,

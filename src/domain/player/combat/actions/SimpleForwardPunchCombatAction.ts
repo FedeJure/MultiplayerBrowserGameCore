@@ -8,7 +8,10 @@ import {
 } from "../../../entity/animations";
 
 export class SimpleForwardPunchCombatAction implements CombatAction {
-  constructor(private player: ControllablePlayer) {}
+  private player: ControllablePlayer;
+  init(player: ControllablePlayer) {
+    this.player = player
+  }
 
   execute() {
     const range = this.player.stats.meleeDistance;

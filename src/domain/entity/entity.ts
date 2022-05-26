@@ -2,6 +2,7 @@ import { Attackable } from "../combat/attackTarget";
 import { CombatResult } from "../player/combat/combatResult";
 import { Side } from "../side";
 import { EntityAnimationCode, AnimationLayer } from "./animations";
+import { EmptyCombat, EntityCombat } from "./entityCombat";
 import { EntityInfo } from "./entityInfo";
 import { EntityState } from "./entityState";
 import { EntityStats } from "./entityStats";
@@ -11,16 +12,19 @@ export class Entity<
   Info extends EntityInfo = EntityInfo,
   State extends EntityState = EntityState,
   View extends EntityView = EntityView,
-  Stats extends EntityStats = EntityStats
+  Stats extends EntityStats = EntityStats,
+  Combat extends EntityCombat = EntityCombat
 > implements Attackable
 {
   constructor(
     protected _info: Info,
     protected _state: State,
     protected _view: View,
-    protected _stats: Stats
-  ) {}
-  receiveAttack(attack: CombatResult) {}
+    protected _stats: Stats,
+    protected _combat: Combat = new EmptyCombat() as Combat
+  ) {
+    this._combat.init(this);
+  }
 
   updateInfo(newInfo: Partial<Info>) {
     this._info = { ...this.info, ...newInfo };
@@ -52,12 +56,17 @@ export class Entity<
   }
 
   update(time: number, delta: number) {
+    this._combat?.update(time, delta);
     this.view.playAnimations(this.state.anim);
     this.view.setLifePercent((this.state.life / this.stats.maxLife) * 100);
     if (!this.state.isAlive) return;
     this.view.setPosition(this.state.position.x, this.state.position.y);
     this.view.setVelocity(this.state.velocity.x, this.state.velocity.y);
     this.view.lookToLeft(this.state.side === Side.LEFT);
+  }
+
+  receiveAttack(attack: CombatResult) {
+    this._combat?.receiveAttack(attack);
   }
 
   get info() {
@@ -74,5 +83,9 @@ export class Entity<
 
   get stats() {
     return this._stats;
+  }
+
+  get combat() {
+    return this._combat;
   }
 }

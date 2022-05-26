@@ -1,17 +1,19 @@
 import { Observable, Subject } from "rxjs";
 import { Attackable } from "../combat/attackTarget";
-import { CombatResult } from "../player/combat/combatResult";
-import { Enemy } from "./enemy";
 import { EnemyCombat } from "./BaseEnemyCombat";
 import { BaseEnemyMovement } from "./BaseEnemyMovement";
 import { EnemyInfo } from "./EnemyInfo";
 import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 import { ServerEnemyView } from "./ServerEnemyView";
+import { Entity } from "../entity/entity";
+import { EnemyView } from "./EnemyView";
 
-export class ServerEnemy extends Enemy implements Attackable {
+export class ServerEnemy
+  extends Entity<EnemyInfo, EnemyState, EnemyView, EnemyStats, EnemyCombat>
+  implements Attackable
+{
   private movement: BaseEnemyMovement;
-  public readonly combat: EnemyCombat;
   private _onDestroy = new Subject<void>();
 
   constructor(
@@ -20,28 +22,23 @@ export class ServerEnemy extends Enemy implements Attackable {
     stats: EnemyStats,
     view: ServerEnemyView
   ) {
-    super(state, info, view, stats);
+    super(info, state, view, stats, new EnemyCombat());
     this.movement = new BaseEnemyMovement(this);
-    this.combat = new EnemyCombat(this);
   }
 
   get view() {
-      return this._view as ServerEnemyView
+    return this._view as ServerEnemyView;
   }
 
   update(time: number, delta: number): void {
     try {
+      this.combat.update(time,delta)
       this.movement.update(time, delta);
-      this.combat.update(time, delta);
       this.updateState({
         position: this.view.positionVector,
         velocity: this.view.velocity,
       });
     } catch (error) {}
-  }
-
-  receiveAttack(attack: CombatResult) {
-    this.combat.receiveAttack(attack);
   }
 
   destroy(): void {

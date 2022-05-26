@@ -18,9 +18,9 @@ export class ControllablePlayer extends Entity<
   PlayerInfo,
   PlayerState,
   PlayerView,
-  PlayerStats
+  PlayerStats,
+  CombatSystem
 > {
-  protected _combatSystem: CombatSystem;
   protected _animationSystem: AnimationSystem;
   constructor(
     _info: PlayerInfo,
@@ -31,12 +31,11 @@ export class ControllablePlayer extends Entity<
     private _input: PlayerInput,
     mapManager: MapManager //usar esto para spawnear al jugador en un spot de spawn al morir.
   ) {
-    super(_info, _state, _view, _stats);
+    super(_info, _state, _view, _stats, new CombatSystem(mapManager, [
+      new SimpleForwardPunchCombatAction(),
+      new DefendCombatAction(),
+    ]));
     this._animationSystem = new AnimationSystem(this);
-    this._combatSystem = new CombatSystem(this, mapManager, [
-      new SimpleForwardPunchCombatAction(this),
-      new DefendCombatAction(this),
-    ]);
   }
   updateStats(newStats: Partial<PlayerStats>) {
     this._stats = { ...this.stats, ...newStats };
@@ -54,14 +53,9 @@ export class ControllablePlayer extends Entity<
   }
 
   update(time: number, delta: number) {
-    this._combatSystem.processCombat(delta);
     this._movementSystem.processMovement(this, time, delta);
     this._animationSystem.processAnimation(this);
     super.update(time, delta);
-  }
-
-  receiveAttack(attack: CombatResult) {
-    this._combatSystem.receiveAttack(attack);
   }
 
   getAttackablesOnArea(
