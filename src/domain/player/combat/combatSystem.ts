@@ -3,17 +3,20 @@ import { ControllablePlayer } from "../players/controllablePlayer";
 import { CombatResult } from "./combatResult";
 import { EntityAnimationCode, AnimationLayer } from "../../entity/animations";
 import { MapManager } from "../../environment/mapManager";
-import { EntityCombat } from "../../entity/entityCombat";
+import { DefaultEntityCombat } from "../../entity/DefaultEntityCombat";
 
-export class CombatSystem implements EntityCombat {
+export class CombatSystem extends DefaultEntityCombat {
   private attacking: boolean;
   private player: ControllablePlayer;
   constructor(
     private mapMapanger: MapManager,
     private actions: CombatAction[]
-  ) {}
+  ) {
+    super();
+  }
   init(player: ControllablePlayer) {
     this.player = player;
+    super.init(player);
     this.actions.forEach((a) => a.init(player));
   }
 
@@ -32,6 +35,7 @@ export class CombatSystem implements EntityCombat {
       }
       this.player.updateState({ attacking: false });
     }
+    super.update(time, delta);
   }
 
   receiveAttack(attack: CombatResult) {
