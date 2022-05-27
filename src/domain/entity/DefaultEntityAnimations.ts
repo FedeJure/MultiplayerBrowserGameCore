@@ -11,7 +11,7 @@ export class DefaultEntityAnimations implements EntityAnimations {
     this.entity = entity;
   }
   update(time: number, delta: number) {
-      this.processAnimation()
+    this.processAnimation();
   }
 
   processAnimation() {
@@ -47,7 +47,12 @@ export class DefaultEntityAnimations implements EntityAnimations {
     const velY = state.velocity.y;
     if (!state.grounded && velY > 2) return EntityAnimationCode.FALLING;
 
-    if (state.grounded && absVelx > 1 && absVely < 2)
+    if (
+      state.grounded &&
+      absVelx > 1 &&
+      absVely < 2 &&
+      !this.entity.view.blocked
+    )
       return EntityAnimationCode.RUNNING;
 
     if (!state.grounded && absVelx < 1 && velY < 2)

@@ -2,7 +2,6 @@ import { AnimationLayer } from "../entity/animations";
 import { DefaultEntityMovement } from "../entity/DefaultMovement";
 import { Side } from "../side";
 import { Vector } from "../vector";
-import { EnemyAnimation } from "./EnemyAnimations";
 import { ServerEnemy } from "./serverEnemy";
 
 enum Actions {
@@ -54,7 +53,7 @@ export class EnemyMovement extends DefaultEntityMovement {
     ) {
       this.enemy.updateState({ reseting: true });
     }
-    this.updateAnimation();
+    // this.updateAnimation();
     if (this.enemy.state.reseting) this.resetingMovement(time);
     else if (this.enemy.combat.target !== null)
       this.resolveCombatMovement(time);
@@ -73,23 +72,23 @@ export class EnemyMovement extends DefaultEntityMovement {
       NonCombatAction[Math.floor(Math.random() * NonCombatAction.length)];
   }
 
-  updateAnimation() {
-    const vel = this.enemy.state.velocity;
-    const xVel = Math.abs(vel.x);
-    if (xVel < 0.1 || this.enemy.view.blocked) {
-      this.enemy.updateState({
-        anim: [{ name: EnemyAnimation.IDLE, layer: AnimationLayer.MOVEMENT }],
-      });
-    } else if (xVel <= this.enemy.stats.walkSpeed) {
-      this.enemy.updateState({
-        anim: [{ name: EnemyAnimation.WALK, layer: AnimationLayer.MOVEMENT }],
-      });
-    } else {
-      this.enemy.updateState({
-        anim: [{ name: EnemyAnimation.RUN, layer: AnimationLayer.MOVEMENT }],
-      });
-    }
-  }
+  // updateAnimation() {
+  //   const vel = this.enemy.state.velocity;
+  //   const xVel = Math.abs(vel.x);
+  //   if (xVel < 0.1 || this.enemy.view.blocked) {
+  //     this.enemy.updateState({
+  //       anim: [{ name: EnemyAnimation.IDLE, layer: AnimationLayer.MOVEMENT }],
+  //     });
+  //   } else if (xVel <= this.enemy.stats.walkSpeed) {
+  //     this.enemy.updateState({
+  //       anim: [{ name: EnemyAnimation.WALK, layer: AnimationLayer.MOVEMENT }],
+  //     });
+  //   } else {
+  //     this.enemy.updateState({
+  //       anim: [{ name: EnemyAnimation.RUN, layer: AnimationLayer.MOVEMENT }],
+  //     });
+  //   }
+  // }
 
   resolveNotCombatMovements(time: number) {
     if (time > this.nextTimeDecide) {

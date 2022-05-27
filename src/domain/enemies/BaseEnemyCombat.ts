@@ -60,7 +60,6 @@ export class EnemyCombat implements EntityCombat {
           this.attacking = true;
           setTimeout(() => {
             this.attacking = false;
-            console.log("asd")
           }, execution.duration);
           return;
         }

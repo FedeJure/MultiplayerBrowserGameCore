@@ -1,4 +1,5 @@
 import { CombatAction, CombatActionExecution } from "../../combat/combatAction";
+import { EntityAnimationCode, AnimationLayer } from "../../entity/animations";
 import { ServerEnemy } from "../serverEnemy";
 
 export class MeleeAttack implements CombatAction {
@@ -14,10 +15,18 @@ export class MeleeAttack implements CombatAction {
         this.enemy.combat.target.state.position
       ) < this.enemy.stats.meleeDistance
     ) {
+      const duration = 1000 / this.enemy.stats.basicAttackSpeed;
+      this.enemy.animations.executeAnimation(
+        EntityAnimationCode.BASIC_ATTACK,
+        AnimationLayer.COMBAT,
+        false,
+        duration
+      );
+
       this.enemy.combat.target.combat.receiveAttack({
         damage: this.enemy.stats.meleeDamage,
       });
-      return { duration: this.enemy.stats.basicAttackSpeed * 1000 };
+      return { duration };
     }
     return undefined;
   }

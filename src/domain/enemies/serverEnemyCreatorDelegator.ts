@@ -1,7 +1,7 @@
 import Phaser, { Scene } from "phaser";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { PhaserEnemyView } from "../../view/enemy/phaserEnemyView";
-import { AnimationLayer } from "../entity/animations";
+import { AnimationLayer, EntityAnimationCode } from "../entity/animations";
 import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { AttackTargetType } from "../combat/attackTargetType";
 import { Delegator } from "../delegator";
@@ -9,7 +9,6 @@ import { SimpleRepository } from "../repository";
 import { RoomManager } from "../roomManager";
 import { Side } from "../side";
 import { Enemy } from "./enemy";
-import { EnemyAnimation } from "./EnemyAnimations";
 import { SpiderEnemyModel } from "./enemyModel/spiderEnemyModel";
 import { EnemySpawner } from "./EnemySpawner";
 import { EnemyState } from "./EnemyState";
@@ -32,7 +31,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
       const state: EnemyState = {
         life: SpiderEnemyModel.stats.maxLife,
         position: { x, y },
-        anim: [{ name: EnemyAnimation.IDLE, layer: AnimationLayer.MOVEMENT }],
+        anim: [{ name: EntityAnimationCode.IDLE, layer: AnimationLayer.MOVEMENT }],
         mapId: 0,
         velocity: { x: 0, y: 0 },
         side: Side.RIGHT,
