@@ -31,6 +31,16 @@ export class EnemyMovement extends DefaultEntityMovement {
   }
 
   resetingMovement(time: number) {
+    if (
+      this.enemy.state.reseting &&
+      Phaser.Math.Distance.BetweenPoints(
+        this.enemy.state.position,
+        this.initialPosition
+      ) < 150
+    ) {
+      this.enemy.updateState({ reseting: false });
+      return;
+    }
     this.moveToPosition(time, this.initialPosition);
   }
 
@@ -44,7 +54,6 @@ export class EnemyMovement extends DefaultEntityMovement {
     ) {
       this.enemy.updateState({ reseting: true });
     }
-
     this.updateAnimation();
     if (this.enemy.state.reseting) this.resetingMovement(time);
     else if (this.enemy.combat.target !== null)
@@ -114,7 +123,7 @@ export class EnemyMovement extends DefaultEntityMovement {
   moveToPosition(
     time: number,
     position: Vector,
-    needUseDetectors: boolean = true
+    needUseDetectors: boolean = false
   ) {
     const xDirection = position.x - this.enemy.state.position.x;
     const yDirection = position.y - this.enemy.state.position.y;
@@ -145,7 +154,7 @@ export class EnemyMovement extends DefaultEntityMovement {
         this.enemy.view.setPositionInTime(
           closePoint.x,
           closePoint.y,
-          distanceToPoint/ 0.4
+          distanceToPoint / 0.4
         );
         return;
       }

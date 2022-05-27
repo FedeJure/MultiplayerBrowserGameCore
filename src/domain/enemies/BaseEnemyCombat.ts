@@ -19,6 +19,7 @@ export class EnemyCombat implements EntityCombat {
   }
 
   receiveAttack(attack: CombatResult) {
+    if (this.enemy.state.reseting) return
     this.enemy.updateState({
       life: this.enemy.state.life - attack.damage,
     });
