@@ -3,21 +3,25 @@ import { AttackTargetType } from "../combat/attackTargetType";
 import { CombatResult } from "../player/combat/combatResult";
 import { Enemy } from "./enemy";
 import { Entity } from "../entity/entity";
-import { EntityCombat } from "../entity/entityCombat";
 import { CombatAction } from "../combat/combatAction";
+import { EntityAnimationCode, AnimationLayer } from "../entity/animations";
+import { DefaultEntityCombat } from "../entity/DefaultEntityCombat";
 
-export class EnemyCombat implements EntityCombat {
+export class EnemyCombat extends DefaultEntityCombat {
   private _target: Entity | null = null;
   private readonly intervalTimeCheck = 500;
   private lastTimeCheck = 0;
   private enemy: Enemy;
   private attacking: boolean;
 
-  constructor(private actions: CombatAction[]) {}
+  constructor(private actions: CombatAction[]) {
+    super();
+  }
 
   init(enemy: Enemy) {
     this.enemy = enemy;
-    this.actions.forEach((a) => a.init(enemy));
+    super.init(enemy);
+    this.actions.forEach((a) => a.init(this.enemy));
   }
   public get target() {
     return this._target;
@@ -28,7 +32,21 @@ export class EnemyCombat implements EntityCombat {
     this.enemy.updateState({
       life: this.enemy.state.life - attack.damage,
     });
-    if (this.enemy.state.life <= 0) this.enemy.die();
+    if (this.enemy.state.life <= 0) this.die();
+  }
+
+  die() {
+    this.enemy.animations.executeAnimation(
+      EntityAnimationCode.DIE,
+      AnimationLayer.COMBAT,
+      false,
+      1000
+    );
+    this.enemy.view.setVelocity(0, this.enemy.state.velocity.y);
+    this.enemy.updateState({ isAlive: false });
+    setTimeout(() => {
+      this.enemy.destroy();
+    }, 1000);
   }
 
   private processCloseTargets(targets: CollisionableEntity[]) {
@@ -66,5 +84,6 @@ export class EnemyCombat implements EntityCombat {
       }
       this.enemy.updateState({ attacking: false });
     }
+    super.update(time, delta);
   }
 }

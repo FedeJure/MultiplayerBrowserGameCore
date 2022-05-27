@@ -45,30 +45,14 @@ export class Entity<
   }
 
   destroy() {
-    this.view.setVelocity(0, 0);
     this._view.destroy();
   }
 
-  die() {
-    this.updateState({
-      isAlive: false,
-      anim: [
-        {
-          name: EntityAnimationCode.DIE,
-          layer: AnimationLayer.MOVEMENT,
-          duration: 1000,
-        },
-      ],
-    } as Partial<State>);
-    this.view.setVelocity(0, this.state.velocity.y);
-    setTimeout(() => {
-      this.destroy();
-    }, 50);
-  }
-
   update(time: number, delta: number) {
-    this.combat.update(time, delta);
-    this.movement.update(time, delta);
+    if (this.state.isAlive) {
+      this.combat.update(time, delta);
+      this.movement.update(time, delta);
+    }
     this._animations.update(time, delta);
   }
 
