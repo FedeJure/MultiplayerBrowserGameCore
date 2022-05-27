@@ -9,6 +9,7 @@ export class PlatformDetector
   public static Type = "PlatformDetector";
   constructor(scene: Scene, x: number, y: number) {
     super(scene, x, y, 30, 30);
+    scene.add.text(x,y,`${x},${y}`, {fontSize: '2'})
     scene.add.existing(this);
     scene.physics.add.existing(this, true);
     this.setName('Playform detector')

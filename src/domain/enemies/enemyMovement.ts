@@ -111,22 +111,29 @@ export class EnemyMovement extends DefaultEntityMovement {
     }
   }
 
-  moveToPosition(time: number, position: Vector) {
+  moveToPosition(
+    time: number,
+    position: Vector,
+    needUseDetectors: boolean = true
+  ) {
     const xDirection = position.x - this.enemy.state.position.x;
+    const yDirection = position.y - this.enemy.state.position.y;
 
-    if (this.lastTimeCheck + this.intervalTimeCheck < time) {
+    if (this.lastTimeCheck + this.intervalTimeCheck < time && yDirection < 0) {
       this.lastTimeCheck = time;
       this.platformDetectors = this.enemy.view.getPlatformDetectorClose();
-
-      if (this.platformDetectors.length > 0 && this.enemy.view.blocked) {
+      if (
+        this.platformDetectors.length > 0 &&
+        (this.enemy.view.blocked || needUseDetectors)
+      ) {
         let closePoint = this.platformDetectors[0];
         let minDistance = Infinity;
         this.platformDetectors.forEach((point) => {
-          const distance = Phaser.Math.Distance.BetweenPoints(
-            position,
-            point
-          );
-          if (distance < minDistance) {
+          const distance = Phaser.Math.Distance.BetweenPoints(position, point);
+          if (
+            point.y <= this.enemy.state.position.y &&
+            distance < minDistance
+          ) {
             minDistance = distance;
             closePoint = point;
           }
@@ -135,11 +142,10 @@ export class EnemyMovement extends DefaultEntityMovement {
           this.enemy.state.position,
           closePoint
         );
-        const aux = distanceToPoint > this.enemy.view.height * 2 ? 0.7 : 0.4;
         this.enemy.view.setPositionInTime(
           closePoint.x,
           closePoint.y,
-          distanceToPoint / aux
+          distanceToPoint/ 0.4
         );
         return;
       }
@@ -162,6 +168,14 @@ export class EnemyMovement extends DefaultEntityMovement {
   }
 
   resolveCombatMovement(time: number) {
-    this.moveToPosition(time, this.enemy.combat.target!.state.position);
+    const yDirection =
+      this.enemy.combat.target!.state.position.y - this.enemy.state.position.y;
+
+    this.moveToPosition(
+      time,
+      this.enemy.combat.target!.state.position,
+      Math.abs(yDirection) > this.enemy.view.height &&
+        this.enemy.combat.target!.state.grounded
+    );
   }
 }
