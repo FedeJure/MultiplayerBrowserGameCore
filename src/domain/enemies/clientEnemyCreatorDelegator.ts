@@ -42,6 +42,7 @@ export class ClientEnemyCreatorDelegator implements Delegator {
       info.name
     );
     const enemy = new Enemy(info, state, view, stats);
+    view.setEntityReference(enemy)
     this.presenterProvider.forEnemy(view, enemy);
     this.spawnedEnemies.save(enemy.info.id, enemy);
   }

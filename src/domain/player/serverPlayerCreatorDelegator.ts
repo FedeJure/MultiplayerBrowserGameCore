@@ -178,6 +178,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       this.playerStateRepository
     );
 
+    view.setEntityReference(player)
+
     this.collisionableTargetRepository.save(view.id, {
       target: player,
       type: AttackTargetType.PLAYER,

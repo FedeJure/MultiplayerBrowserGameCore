@@ -1,7 +1,7 @@
-import { ControllablePlayer } from "../../players/controllablePlayer";
+import { Entity } from "../entity/entity";
 
 export interface CombatAction {
-    init(player: ControllablePlayer)
+    init(player: Entity)
     execute(): undefined | CombatActionExecution
 }
 

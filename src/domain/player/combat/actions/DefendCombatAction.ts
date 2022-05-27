@@ -3,7 +3,7 @@ import {
   AnimationLayer,
 } from "../../../entity/animations";
 import { ControllablePlayer } from "../../players/controllablePlayer";
-import { CombatAction } from "./combatAction";
+import { CombatAction } from "../../../combat/combatAction";
 
 export class DefendCombatAction implements CombatAction {
   private player: ControllablePlayer;

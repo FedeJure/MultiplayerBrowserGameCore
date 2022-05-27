@@ -86,6 +86,7 @@ export class ClientConnectionDelegator implements Delegator {
     this.collisionManager.addPlayer(view);
 
     const player = new Player(info, state, view, DefaultPlayerStats);
+    view.setEntityReference(player)
     this.presenterProvider.forPlayer(player, view);
     this.inGamePlayersRepository.save(player.info.id, player);
   }
@@ -126,6 +127,7 @@ export class ClientConnectionDelegator implements Delegator {
       input,
       this.mapManager
     );
+    view.setEntityReference(player)
     this.collisionableTargetRepository.save(view.id, {
       target: player,
       type: AttackTargetType.PLAYER,

@@ -39,7 +39,8 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         inCombat: false,
         grounded: true,
         isAlive: true,
-        reseting: false
+        reseting: false,
+        attacking: false
       };
       const view = new PhaserEnemyView(
         this.scene.physics.add.sprite(state.position.x, state.position.y, ""),
@@ -65,6 +66,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         SpiderEnemyModel.stats,
         view
       );
+      view.setEntityReference(enemy)
       this.roomManager.joinEnemyToRoom(
         enemy.info.id,
         [enemy.state.mapId.toString()],

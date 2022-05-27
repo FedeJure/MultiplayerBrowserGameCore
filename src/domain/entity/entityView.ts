@@ -1,6 +1,7 @@
 import { AnimationDto } from "./AnimationDto";
 import { Vector } from "../vector";
 import { CollisionableEntity } from "./CollisionableEntity";
+import { Entity } from "./entity";
 
 export interface EntityView {
   velocity: Vector;
@@ -16,13 +17,20 @@ export interface EntityView {
   setAngle(degreeAngle: number): void;
   lookToLeft(value: boolean): void;
   setVelocity(x: number, y: number): void;
-  destroy()
-  playAnimations(anims: AnimationDto[]): void
-  setLifePercent(percent: number): void
-  setDisplayName(name: string) : void
-  getEntitiesClose(distance: number): CollisionableEntity[]
-  setPositionInTime(x:number, y:number, time:number)
-  grounded: boolean
-  id: string
-  blocked: boolean
+  destroy();
+  playAnimations(anims: AnimationDto[]): void;
+  setLifePercent(percent: number): void;
+  setDisplayName(name: string): void;
+  getEntitiesClose(distance: number): CollisionableEntity[];
+  setPositionInTime(x: number, y: number, time: number);
+  grounded: boolean;
+  id: string;
+  blocked: boolean;
+  setEntityReference(entity: Entity);
+  getEntitiesOnArea<T extends Entity>(
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): T[];
 }

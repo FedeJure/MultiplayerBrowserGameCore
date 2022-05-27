@@ -7,9 +7,16 @@ import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 import { ServerEnemyView } from "./ServerEnemyView";
 import { Entity } from "../entity/entity";
+import { MeleeAttack } from "./combatActions/MeleeAttack";
 
 export class ServerEnemy
-  extends Entity<EnemyInfo, EnemyState, ServerEnemyView, EnemyStats, EnemyCombat>
+  extends Entity<
+    EnemyInfo,
+    EnemyState,
+    ServerEnemyView,
+    EnemyStats,
+    EnemyCombat
+  >
   implements Attackable
 {
   private _onDestroy = new Subject<void>();
@@ -20,7 +27,14 @@ export class ServerEnemy
     stats: EnemyStats,
     view: ServerEnemyView
   ) {
-    super(info, state, view, stats, new EnemyMovement(), new EnemyCombat());
+    super(
+      info,
+      state,
+      view,
+      stats,
+      new EnemyMovement(),
+      new EnemyCombat([new MeleeAttack()])
+    );
   }
 
   destroy(): void {

@@ -1,4 +1,4 @@
-import { CombatAction } from "./combatAction";
+import { CombatAction } from "../../../combat/combatAction";
 import { ControllablePlayer } from "../../players/controllablePlayer";
 import { Side } from "../../../side";
 import { CombatResult } from "../combatResult";

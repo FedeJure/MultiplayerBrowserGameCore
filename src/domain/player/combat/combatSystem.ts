@@ -1,4 +1,4 @@
-import { CombatAction } from "./actions/combatAction";
+import { CombatAction } from "../../combat/combatAction";
 import { ControllablePlayer } from "../players/controllablePlayer";
 import { CombatResult } from "./combatResult";
 import { EntityAnimationCode, AnimationLayer } from "../../entity/animations";

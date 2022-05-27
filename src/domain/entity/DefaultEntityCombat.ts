@@ -4,6 +4,7 @@ import { EntityCombat } from "./entityCombat";
 
 export class DefaultEntityCombat implements EntityCombat {
   private entity: Entity;
+  
   init(entity: Entity) {
     this.entity = entity;
   }

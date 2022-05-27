@@ -6,6 +6,8 @@ import { Vector } from "../../domain/vector";
 import { ExistentDepths } from "../existentDepths";
 import { PhaserCombatCollisionResolver } from "../player/combatCollisionResolver";
 import { ViewObject, ViewObjectType } from "../../domain/viewObject";
+import { Entity } from "../../domain/entity/entity";
+import { CollisionableEntity } from "../../domain/entity/CollisionableEntity";
 
 export class PhaserEntityView
   extends Phaser.GameObjects.Container
@@ -109,5 +111,28 @@ export class PhaserEntityView
 
   startFollowWithCam(): void {
     this.scene.cameras.main.startFollow(this, false, 0.1, 0.1);
+  }
+
+  setEntityReference(entity: Entity) {
+    this.setData("entity", entity);
+  }
+
+  getEntitiesOnArea<T extends Entity>(
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): T[] {
+    const bodies = this.scene.physics.overlapRect(
+      x,
+      y,
+      width,
+      height,
+      true,
+      false
+    ) as Physics.Arcade.Body[];
+    return bodies
+      .filter((b) => b.gameObject.getData("entity"))
+      .map((b) => b.gameObject.getData("entity") as T);
   }
 }
