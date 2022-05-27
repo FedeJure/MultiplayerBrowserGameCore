@@ -10,7 +10,7 @@ import {
 export class SimpleForwardPunchCombatAction implements CombatAction {
   private player: ControllablePlayer;
   init(player: ControllablePlayer) {
-    this.player = player
+    this.player = player;
   }
 
   execute() {
@@ -24,7 +24,7 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
       }
       const attackDuration = 1000 / this.player.stats.basicAttackSpeed;
 
-      this.player.animSystem.executeAnimation(
+      this.player.animations.executeAnimation(
         EntityAnimationCode.BASIC_ATTACK,
         AnimationLayer.COMBAT,
         false,

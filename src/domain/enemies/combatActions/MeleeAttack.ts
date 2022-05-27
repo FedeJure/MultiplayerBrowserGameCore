@@ -14,7 +14,7 @@ export class MeleeAttack implements CombatAction {
         this.enemy.combat.target.state.position
       ) < this.enemy.stats.meleeDistance
     ) {
-      this.enemy.combat.target.receiveAttack({
+      this.enemy.combat.target.combat.receiveAttack({
         damage: this.enemy.stats.meleeDamage,
       });
       return { duration: this.enemy.stats.basicAttackSpeed * 1000 };

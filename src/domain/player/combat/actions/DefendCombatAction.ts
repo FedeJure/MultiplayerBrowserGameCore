@@ -14,7 +14,7 @@ export class DefendCombatAction implements CombatAction {
     const { input } = this.player;
     if (input.defend && !input.up && !input.down) {
       const attackDuration = 1000 / this.player.stats.basicAttackSpeed;
-      this.player.animSystem.executeAnimation(
+      this.player.animations.executeAnimation(
         EntityAnimationCode.DEFEND,
         AnimationLayer.COMBAT,
         false,

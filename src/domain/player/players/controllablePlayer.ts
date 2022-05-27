@@ -3,7 +3,6 @@ import { AttackTargetType } from "../../combat/attackTargetType";
 import { Entity } from "../../entity/entity";
 import { MapManager } from "../../environment/mapManager";
 import { PlayerView } from "../../playerView";
-import { AnimationSystem } from "../animations/animationSystem";
 import { DefendCombatAction } from "../combat/actions/DefendCombatAction";
 import { SimpleForwardPunchCombatAction } from "../combat/actions/SimpleForwardPunchCombatAction";
 import { CombatSystem } from "../combat/combatSystem";
@@ -19,7 +18,6 @@ export class ControllablePlayer extends Entity<
   PlayerView,
   PlayerStats
 > {
-  protected _animationSystem: AnimationSystem;
   constructor(
     _info: PlayerInfo,
     _state: PlayerState,
@@ -40,7 +38,6 @@ export class ControllablePlayer extends Entity<
         new DefendCombatAction(),
       ]),
     );
-    this._animationSystem = new AnimationSystem(this);
   }
   updateStats(newStats: Partial<PlayerStats>) {
     this._stats = { ...this.stats, ...newStats };
@@ -53,13 +50,9 @@ export class ControllablePlayer extends Entity<
   get input() {
     return this._input;
   }
-  get animSystem() {
-    return this._animationSystem;
-  }
 
   update(time: number, delta: number) {
     super.update(time, delta);
-    this._animationSystem.processAnimation(this);
   }
 
   getAttackablesOnArea(

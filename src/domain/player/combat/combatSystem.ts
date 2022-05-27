@@ -40,7 +40,7 @@ export class CombatSystem extends DefaultEntityCombat {
 
   receiveAttack(attack: CombatResult) {
     if (attack.damage > 0)
-      this.player.animSystem.executeAnimation(
+      this.player.animations.executeAnimation(
         EntityAnimationCode.TAKING_DAMAGE,
         AnimationLayer.COMBAT,
         false,
@@ -54,7 +54,7 @@ export class CombatSystem extends DefaultEntityCombat {
 
   private die() {
     const dieDuration = 1000;
-    this.player.animSystem.executeAnimation(
+    this.player.animations.executeAnimation(
       EntityAnimationCode.DIE,
       AnimationLayer.COMBAT,
       false,
