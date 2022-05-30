@@ -50,8 +50,8 @@ export class SpinePhaserEntityView extends PhaserEntityView {
         anim.time,
         anim.duration
       );
-
-      this.lastAnimationsByLayer.set(anim.layer, anim);
+      if (anim.name !== EntityAnimationCode.EMPTY_ANIMATION)
+        this.lastAnimationsByLayer.set(anim.layer, anim);
     });
   }
 
@@ -66,29 +66,24 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     time?: number,
     duration?: number
   ) {
+    const lastSameAnimation = this.lastAnimationsByLayer.get(layer);
+    if (
+      anim === EntityAnimationCode.EMPTY_ANIMATION ||
+      (lastSameAnimation &&
+        lastSameAnimation?.name === anim &&
+        lastSameAnimation?.time !== time)
+    ) {
+      this.spine.setEmptyAnimation(layer, 0.2);
+    }
+
     if (duration) {
       const animation = this.spine.findAnimation(anim);
       if (animation) animation.duration = duration;
     }
-    const currentAnim = this.spine.getCurrentAnimation(layer);
-    if (
-      this.lastAnimationsByLayer.get(layer) &&
-      this.lastAnimationsByLayer.get(layer)?.name === anim &&
-      this.lastAnimationsByLayer.get(layer)?.time !== time
-    ) {
-      this.spine.clearTrack(layer);
-      this.spine.setToSetupPose();
-    }
-    if (
-      anim === EntityAnimationCode.EMPTY_ANIMATION &&
-      currentAnim &&
-      currentAnim.name !== anim
-    )
-      this.spine.setToSetupPose();
 
-    if (anim === EntityAnimationCode.EMPTY_ANIMATION) {
-      this.spine.clearTrack(layer);
-    } else {
+    if (anim !== EntityAnimationCode.EMPTY_ANIMATION) {
+      if (lastSameAnimation)
+        this.spine.setMix(lastSameAnimation!.name, anim, 0.1);
       this.spine.setAnimation(layer, anim, loop, true);
     }
   }
