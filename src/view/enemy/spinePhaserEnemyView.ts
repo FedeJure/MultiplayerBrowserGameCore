@@ -15,6 +15,5 @@ export class SpinePhaserEnemyView
     name: string
   ) {
     super(scene, x, y, height, width, name);
-    this.setName("Enemy View");
   }
 }

@@ -6,7 +6,7 @@ export class PlayerMovement extends DefaultEntityMovement {
   private player: ControllablePlayer;
   init(player: ControllablePlayer) {
     this.player = player;
-    super.init(player)
+    super.init(player);
   }
   private lastTimeJump: number | null = null;
   update(time: number, delta: number) {
@@ -14,8 +14,9 @@ export class PlayerMovement extends DefaultEntityMovement {
     let newVelX = this.player.view.velocity.x;
     let newVelY = this.player.view.velocity.y;
     let maxRunVelocity =
-      this.player.stats.runSpeed *
-      (state.attacking && state.grounded ? 0.5 : 1);
+      state.attacking && state.grounded
+        ? this.player.stats.walkSpeed
+        : this.player.stats.runSpeed;
 
     let canJump = state.canJump;
     let passLastTimeJump =

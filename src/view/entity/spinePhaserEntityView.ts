@@ -1,4 +1,4 @@
-import { Scene, Physics } from "phaser";
+import { Scene } from "phaser";
 import {
   AnimationLayer,
   EntityAnimationCode,
@@ -14,6 +14,7 @@ import { Vector } from "../../domain/vector";
 export class SpinePhaserEntityView extends PhaserEntityView {
   protected spine: SpineGameObject;
   protected readonly hud: EntityIngameHud;
+  private lastAnimationsByLayer: Map<AnimationLayer, AnimationDto>;
 
   constructor(
     scene: Scene,
@@ -29,20 +30,29 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     spine.setDisplaySize(currentSize.x / factor + 10, height + 10);
     spine.setSize(width, height);
 
-
     super(spine, x, y, height, width);
     this.hud = new EntityIngameHud(scene, height, width);
     this.hud.setDisplayName(name);
+    this.setName(name);
     this.add(this.hud);
     this.spine = spine;
+    this.lastAnimationsByLayer = new Map();
   }
 
   override playAnimations(anims: AnimationDto[]): void {
     EmptyAnimations.map(
       (anim) => anims.find((a) => a.layer === anim.layer) ?? anim
-    ).forEach((anim) =>
-      this.playAnimation(anim.name, anim.layer, anim.loop, anim.duration)
-    );
+    ).forEach((anim) => {
+      this.playAnimation(
+        anim.name,
+        anim.layer,
+        anim.loop,
+        anim.time,
+        anim.duration
+      );
+
+      this.lastAnimationsByLayer.set(anim.layer, anim);
+    });
   }
 
   override setLifePercent(percent: number): void {
@@ -53,6 +63,7 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     anim: string,
     layer: AnimationLayer,
     loop: boolean = true,
+    time?: number,
     duration?: number
   ) {
     if (duration) {
@@ -60,7 +71,14 @@ export class SpinePhaserEntityView extends PhaserEntityView {
       if (animation) animation.duration = duration;
     }
     const currentAnim = this.spine.getCurrentAnimation(layer);
-
+    if (
+      this.lastAnimationsByLayer.get(layer) &&
+      this.lastAnimationsByLayer.get(layer)?.name === anim &&
+      this.lastAnimationsByLayer.get(layer)?.time !== time
+    ) {
+      this.spine.clearTrack(layer);
+      this.spine.setToSetupPose();
+    }
     if (
       anim === EntityAnimationCode.EMPTY_ANIMATION &&
       currentAnim &&
@@ -74,6 +92,4 @@ export class SpinePhaserEntityView extends PhaserEntityView {
       this.spine.setAnimation(layer, anim, loop, true);
     }
   }
-
-
 }
