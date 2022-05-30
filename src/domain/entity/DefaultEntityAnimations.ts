@@ -41,16 +41,22 @@ export class DefaultEntityAnimations implements EntityAnimations {
   }
 
   private getMovementAnimation() {
-    const { state } = this.entity;
+    const { state, stats } = this.entity;
     const absVelx = Math.abs(state.velocity.x);
     const absVely = Math.abs(state.velocity.y);
     const velY = state.velocity.y;
     if (!state.grounded && velY > 2) return EntityAnimationCode.FALLING;
-
     if (
       state.grounded &&
-      absVelx > 1 &&
-      absVely < 2 &&
+      absVelx === stats.walkSpeed &&
+      absVely < 1 &&
+      !this.entity.view.blocked
+    )
+      return EntityAnimationCode.WALK;
+    if (
+      state.grounded &&
+      absVelx === stats.runSpeed &&
+      absVely < 1 &&
       !this.entity.view.blocked
     )
       return EntityAnimationCode.RUNNING;
