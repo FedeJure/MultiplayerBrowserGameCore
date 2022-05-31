@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from "phaser";
+import Phaser, { GameObjects, Scene } from "phaser";
 import { Observable, Subject } from "rxjs";
 import { Item } from "../domain/items/item";
 
@@ -32,7 +32,6 @@ export class InventoryItemView extends GameObjects.Container {
 
   public setItem(item: Item) {
     if (this.item) throw new Error("Item cell not empty");
-    
     const size = InventoryItemView.SIZE * 0.88;
     this.item = this.scene.add
       .image(InventoryItemView.SIZE / 2, InventoryItemView.SIZE / 2, item.icon)
@@ -76,7 +75,7 @@ export class InventoryItemView extends GameObjects.Container {
   public removeItem() {
     if (this.item) {
       this.remove(this.item, true);
-      this.item = undefined
+      this.item = undefined;
     }
   }
 
@@ -101,10 +100,10 @@ export class InventoryItemView extends GameObjects.Container {
   }
 
   public get onMouseOver(): Observable<Item> {
-    return this._onMouseOver
+    return this._onMouseOver;
   }
 
   public get onMouseExit(): Observable<unknown> {
-    return this._onMouseExit
+    return this._onMouseExit;
   }
 }

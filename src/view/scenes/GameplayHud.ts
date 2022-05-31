@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
 import { SocketServerConnection } from "../../infrastructure/socketServerConnection";
+import { GenericObjectContainers } from "../ui/genericObjectContainers";
 import { SceneNames } from "./SceneNames";
 
 export class GameplayHud extends Scene {
