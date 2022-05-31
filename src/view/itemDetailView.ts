@@ -1,8 +1,8 @@
 import { GameObjects, Scene } from "phaser";
-import { Item } from "../domain/items/item";
 import { FontSize } from "./Fonts";
+import { UiObject } from "./ui/UiObject";
 
-export class ItemDetailView extends GameObjects.Container {
+export class ObjectDetailView extends GameObjects.Container {
   private static WIDTH: number = 100;
   private static HEIGHT: number = 100;
 
@@ -17,8 +17,8 @@ export class ItemDetailView extends GameObjects.Container {
       .rectangle(
         0,
         0,
-        ItemDetailView.WIDTH,
-        ItemDetailView.HEIGHT,
+        ObjectDetailView.WIDTH,
+        ObjectDetailView.HEIGHT,
         Phaser.Display.Color.HexStringToColor("938274").color,
         0.8
       )
@@ -26,13 +26,13 @@ export class ItemDetailView extends GameObjects.Container {
     this.add(this.background);
     this.nameText = scene.add
       .text(0, 0, "Default Text")
-      .setPosition(0, -ItemDetailView.HEIGHT)
+      .setPosition(0, -ObjectDetailView.HEIGHT)
       .setResolution(3)
       .setFontStyle("bold")
       .setFontSize(FontSize.MEDIUM);
     this.detailText = scene.add
       .text(0, 0, "Default Text")
-      .setPosition(0, -ItemDetailView.HEIGHT + this.nameText.height)
+      .setPosition(0, -ObjectDetailView.HEIGHT + this.nameText.height)
       .setResolution(3)
       .setFontStyle("bold")
       .setFontSize(FontSize.MEDIUM_SMALL);
@@ -40,7 +40,7 @@ export class ItemDetailView extends GameObjects.Container {
     this.add(this.detailText);
   }
 
-  setItem(item: Item) {
+  setObject(item: UiObject) {
     this.nameText.setText(item.name).setOrigin(0.25, 0);
     this.detailText
       .setText(item.detail)
@@ -48,7 +48,7 @@ export class ItemDetailView extends GameObjects.Container {
       .setWordWrapWidth(this.nameText.displayWidth);
     this.background.setDisplaySize(
       this.nameText.displayWidth + 10,
-      ItemDetailView.HEIGHT
+      ObjectDetailView.HEIGHT
     );
   }
 }

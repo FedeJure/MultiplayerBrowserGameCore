@@ -1,12 +1,8 @@
 import { GameObjects, Scene } from "phaser";
-import { InventoryView } from "../../domain/items/inventoryView";
-import { Item } from "../../domain/items/item";
 import { PlayerInput } from "../../domain/player/playerInput";
-import { AssetLoader } from "../AssetLoader";
-import { InventoryItemView } from "../clientInventoryItemView";
-import { ItemDetailView } from "../itemDetailView";
-import { SceneNames } from "../scenes/SceneNames";
-import { loadAssetAsync } from "../utils";
+import { GenericObjectCellView } from "../clientInventoryItemView";
+import { ObjectDetailView } from "../itemDetailView";
+import { UiObject } from "./UiObject";
 
 export interface ContainerDto {
   id: number;
@@ -18,13 +14,11 @@ export interface ContainerDto {
 
 export class GenericObjectContainers
   extends GameObjects.GameObject
-  implements InventoryView
 {
   private container: GameObjects.Container;
   private canChange: boolean = false;
-  private extraSpace = 25;
-  private itemContainers: InventoryItemView[] = [];
-  private itemDetail: ItemDetailView;
+  private objectsCells: GenericObjectCellView[] = [];
+  private objectDetailPanel: ObjectDetailView;
 
   constructor(
     scene: Scene,
@@ -45,16 +39,16 @@ export class GenericObjectContainers
     this.container.setVisible(false);
     this.scene.add.group(this, { runChildUpdate: true });
     this.initBackgrounds();
-    this.setupInventoryPosition();
+    this.setupPosition();
     this.scene.scale.addListener(Phaser.Scale.Events.RESIZE, () => {
-      this.setupInventoryPosition();
+      this.setupPosition();
     });
-    this.itemDetail = new ItemDetailView(scene);
-    this.itemDetail.setVisible(false);
-    this.container.add(this.itemDetail);
+    this.objectDetailPanel = new ObjectDetailView(scene);
+    this.objectDetailPanel.setVisible(false);
+    this.container.add(this.objectDetailPanel);
   }
 
-  setupInventoryPosition() {
+  setupPosition() {
     this.container.setPosition(this.x, this.y);
   }
 
@@ -71,23 +65,12 @@ export class GenericObjectContainers
     this.containers.forEach(this.createCell.bind(this));
   }
 
-  async saveItems(items: Item[]) {
-    Promise.all(
-      items.map((i) =>
-        loadAssetAsync(this.scene, () => {
-          if (this.scene.textures.exists(i.icon)) return false;
-          this.scene.load.image(i.icon, AssetLoader.resolveAssetPath(i.icon));
-          return true;
-        })
-      )
-    ).then(() => {
-      this.itemContainers.forEach((container) => {
-        if (container.isEmpty && items.length > 0) {
-          container.setItem(items.pop()!);
-        }
-      });
-      if (items.length > 0) throw new Error("Inventory Full");
-    });
+  addObject(id: number, object: UiObject) {
+    const cell = this.objectsCells.find((c) => c.id === id);
+    if (!cell) throw new Error("Cell not found");
+    if (!cell.isEmpty) throw new Error("Cell not empty");
+
+    cell.setObject(object);
   }
 
   update(): void {
@@ -104,8 +87,9 @@ export class GenericObjectContainers
     if (!this.userInput.inventory && !this.canChange) this.canChange = true;
   }
 
-  createCell({ x, y, width, height }: ContainerDto) {
-    const inventoryItem = new InventoryItemView(
+  createCell({ x, y, width, height, id }: ContainerDto) {
+    const cell = new GenericObjectCellView(
+      id,
       this.scene,
       x + this.config.padding,
       y + this.config.padding,
@@ -113,29 +97,29 @@ export class GenericObjectContainers
       height
     );
 
-    inventoryItem.onMouseOver.subscribe((item) => {
-      this.itemDetail.setItem(item);
-      this.itemDetail.setVisible(true);
-      this.itemDetail.setPosition(inventoryItem.x, inventoryItem.y);
-      this.container.bringToTop(this.itemDetail);
+    cell.onMouseOver.subscribe((object) => {
+      this.objectDetailPanel.setObject(object);
+      this.objectDetailPanel.setVisible(true);
+      this.objectDetailPanel.setPosition(cell.x, cell.y);
+      this.container.bringToTop(this.objectDetailPanel);
     });
 
-    inventoryItem.onMouseExit.subscribe(() => {
-      this.itemDetail.setVisible(false);
+    cell.onMouseExit.subscribe(() => {
+      this.objectDetailPanel.setVisible(false);
     });
 
-    inventoryItem.onDragStart.subscribe(() => {
-      this.itemDetail.setVisible(false);
-      this.container.bringToTop(inventoryItem);
+    cell.onDragStart.subscribe(() => {
+      this.objectDetailPanel.setVisible(false);
+      this.container.bringToTop(cell);
     });
 
-    inventoryItem.onItemDrop.subscribe((item) => {
+    cell.onItemDrop.subscribe(({object, gameObject}) => {
       const vec = new Phaser.Math.Vector2(
-        item.gameObject.getBounds().centerX,
-        item.gameObject.getBounds().centerY
+        gameObject.getBounds().centerX,
+        gameObject.getBounds().centerY
       );
 
-      const nextItemContainer = this.itemContainers.sort(
+      const nextItemContainer = this.objectsCells.sort(
         (a, b) =>
           new Phaser.Math.Vector2(
             a.getBounds().centerX,
@@ -146,17 +130,17 @@ export class GenericObjectContainers
             b.getBounds().centerY
           ).distance(vec)
       )[0];
-      if (nextItemContainer && nextItemContainer !== inventoryItem) {
+      if (nextItemContainer && nextItemContainer !== cell) {
         try {
-          nextItemContainer.setItem(item.item);
-          inventoryItem.removeItem();
+          nextItemContainer.setObject(object);
+          cell.removeItem();
         } catch (error) {
-          inventoryItem.resetItemState();
+          cell.resetItemState();
         }
-      } else inventoryItem.resetItemState();
+      } else cell.resetItemState();
     });
 
-    this.itemContainers.push(inventoryItem);
-    this.container.add(inventoryItem);
+    this.objectsCells.push(cell);
+    this.container.add(cell);
   }
 }

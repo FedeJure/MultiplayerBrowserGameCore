@@ -1,23 +1,27 @@
 import Phaser, { GameObjects, Scene } from "phaser";
 import { Observable, Subject } from "rxjs";
-import { Item } from "../domain/items/item";
+import { UiObject } from "./ui/UiObject";
 
-type ItemDropPayload = {
-  item: Item;
+
+type OnItemDropPayload  = {
+  object: UiObject;
   gameObject: GameObjects.Image;
   dragPosition: Phaser.Math.Vector2;
-};
+}
 
-export class InventoryItemView extends GameObjects.Container {
-  private _onItemDrop = new Subject<ItemDropPayload>();
+
+export class GenericObjectCellView extends GameObjects.Container {
+
+  private _onItemDrop = new Subject<OnItemDropPayload>();
   private _onDragStart = new Subject<null>();
-  private _onMouseOver = new Subject<Item>();
+  private _onMouseOver = new Subject<UiObject>();
   private _onMouseExit = new Subject<null>();
 
   private item?: GameObjects.Image;
   private lastDragPosition: Phaser.Math.Vector2 | null = null;
 
   constructor(
+    public readonly id: number,
     scene: Scene,
     x: number,
     y: number,
@@ -34,7 +38,7 @@ export class InventoryItemView extends GameObjects.Container {
     this.add(background);
   }
   
-  public setItem(item: Item) {
+  public setObject(item: UiObject) {
     if (this.item) throw new Error("Item cell not empty");
     this.item = this.scene.add
       .image(this.width / 2, this.height / 2, item.icon)
@@ -55,7 +59,7 @@ export class InventoryItemView extends GameObjects.Container {
     this.item.on("dragend", () => {
       if (!this.lastDragPosition) return;
       this._onItemDrop.next({
-        item,
+        object: item,
         gameObject: this.item!,
         dragPosition: this.lastDragPosition,
       });
@@ -94,7 +98,7 @@ export class InventoryItemView extends GameObjects.Container {
     return new Boolean(!this.item);
   }
 
-  public get onItemDrop(): Observable<ItemDropPayload> {
+  public get onItemDrop(): Observable<OnItemDropPayload> {
     return this._onItemDrop;
   }
 
@@ -102,7 +106,7 @@ export class InventoryItemView extends GameObjects.Container {
     return this._onDragStart;
   }
 
-  public get onMouseOver(): Observable<Item> {
+  public get onMouseOver(): Observable<UiObject> {
     return this._onMouseOver;
   }
 
