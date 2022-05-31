@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 import { MapEnvironmentObject } from "../../domain/environment/mapEnvironmentObject";
-import { EnvironmentObjectFactory } from "../../domain/environmentObjects/environmentobjectFactory";
+import { EnvironmentObjectFactory } from "../../domain/environmentObjects/environmentObjectFactory";
 import { EnvironmentObjectVariant } from "../../domain/environmentObjects/environmentObjectVariant";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 
