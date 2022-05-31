@@ -3,7 +3,6 @@ import { MapsConfiguration } from "../../infrastructure/configuration/MapsConfig
 import { PlatformDetector } from "../../view/environment/platformDetector";
 import { ExistentDepths } from "../../view/existentDepths";
 import { CollisionManager } from "../collisions/collisionManager";
-import { CollisionCategory } from "../collisions/collisionTypes";
 
 import { ProcessedMap } from "../environment/processedMap";
 import { EnvironmentObjectFactory } from "../environmentObjects/environmentobjectFactory";
