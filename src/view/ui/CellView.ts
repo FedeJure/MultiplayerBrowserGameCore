@@ -1,9 +1,9 @@
 import Phaser, { GameObjects, Scene } from "phaser";
 import { Observable, Subject } from "rxjs";
-import { UiObject } from "./ui/UiObject";
+import { UiObject } from "./UiObject";
 
 
-type OnItemDropPayload  = {
+type OnObjectDropPayload  = {
   object: UiObject;
   gameObject: GameObjects.Image;
   dragPosition: Phaser.Math.Vector2;
@@ -12,12 +12,12 @@ type OnItemDropPayload  = {
 
 export class GenericObjectCellView extends GameObjects.Container {
 
-  private _onItemDrop = new Subject<OnItemDropPayload>();
+  private _onObjectDrop = new Subject<OnObjectDropPayload>();
   private _onDragStart = new Subject<null>();
   private _onMouseOver = new Subject<UiObject>();
   private _onMouseExit = new Subject<null>();
 
-  private item?: GameObjects.Image;
+  private object?: GameObjects.Image;
   private lastDragPosition: Phaser.Math.Vector2 | null = null;
 
   constructor(
@@ -38,68 +38,68 @@ export class GenericObjectCellView extends GameObjects.Container {
     this.add(background);
   }
   
-  public setObject(item: UiObject) {
-    if (this.item) throw new Error("Item cell not empty");
-    this.item = this.scene.add
-      .image(this.width / 2, this.height / 2, item.icon)
+  public setObject(object: UiObject) {
+    if (this.object) throw new Error("Item cell not empty");
+    this.object = this.scene.add
+      .image(this.width / 2, this.height / 2, object.icon)
       .setOrigin(0.5, 0.5)
       .setDisplaySize(this.width * 0.88, this.height * 0.88);
 
-    this.item.setInteractive();
+    this.object.setInteractive();
 
-    this.item.on("drag", (pointe, dragX, dragY) => {
-      this.item?.setPosition(dragX, dragY);
+    this.object.on("drag", (pointe, dragX, dragY) => {
+      this.object?.setPosition(dragX, dragY);
       this.lastDragPosition = new Phaser.Math.Vector2(dragX, dragY);
     });
 
-    this.item.on("dragstart", (pointer) => {
+    this.object.on("dragstart", (pointer) => {
       this._onDragStart.next(null);
     });
 
-    this.item.on("dragend", () => {
+    this.object.on("dragend", () => {
       if (!this.lastDragPosition) return;
-      this._onItemDrop.next({
-        object: item,
-        gameObject: this.item!,
+      this._onObjectDrop.next({
+        object: object,
+        gameObject: this.object!,
         dragPosition: this.lastDragPosition,
       });
     });
 
-    this.item.on("pointerover", () => {
-      this._onMouseOver.next(item);
+    this.object.on("pointerover", () => {
+      this._onMouseOver.next(object);
     });
 
-    this.item.on("pointerout", () => {
+    this.object.on("pointerout", () => {
       this._onMouseExit.next(null);
     });
 
-    this.scene.input.setDraggable(this.item);
+    this.scene.input.setDraggable(this.object);
 
-    this.add(this.item);
-    this.bringToTop(this.item);
+    this.add(this.object);
+    this.bringToTop(this.object);
   }
 
-  public removeItem() {
-    if (this.item) {
-      this.remove(this.item, true);
-      this.item = undefined;
+  public removeObject() {
+    if (this.object) {
+      this.remove(this.object, true);
+      this.object = undefined;
     }
   }
 
-  public resetItemState() {
-    if (this.item)
-      this.item.setPosition(
+  public resetObjectState() {
+    if (this.object)
+      this.object.setPosition(
         this.width / 2,
         this.height / 2
       );
   }
 
   public get isEmpty() {
-    return new Boolean(!this.item);
+    return new Boolean(!this.object);
   }
 
-  public get onItemDrop(): Observable<OnItemDropPayload> {
-    return this._onItemDrop;
+  public get onObjectDrop(): Observable<OnObjectDropPayload> {
+    return this._onObjectDrop;
   }
 
   public get onDragStart(): Observable<unknown> {

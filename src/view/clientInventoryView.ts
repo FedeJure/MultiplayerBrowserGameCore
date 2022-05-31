@@ -5,11 +5,11 @@ import { PlayerInput } from "../domain/player/playerInput";
 import { AssetLoader } from "./AssetLoader";
 import {
   ContainerDto,
-  GenericObjectContainers,
-} from "./ui/genericObjectContainers";
+  CellContainerView,
+} from "./ui/CellContainerView";
 import { loadAssetAsync } from "./utils";
 
-export class ClientInventoryView extends GenericObjectContainers implements InventoryView {
+export class ClientInventoryView extends CellContainerView implements InventoryView {
   private dtos: ContainerDto[];
   constructor(scene: Scene, input: PlayerInput) {
     const dtos: ContainerDto[] = [];

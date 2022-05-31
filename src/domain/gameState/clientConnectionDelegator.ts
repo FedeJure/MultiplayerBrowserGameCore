@@ -18,7 +18,7 @@ import { AttackTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 import { MapManager } from "../environment/mapManager";
 import { CollisionManager } from "../collisions/collisionManager";
-import { GenericObjectContainers } from "../../view/ui/genericObjectContainers";
+import { CellContainerView } from "../../view/ui/CellContainerView";
 import { ClientInventoryView } from "../../view/clientInventoryView";
 import { SceneNames } from "../../view/scenes/SceneNames";
 

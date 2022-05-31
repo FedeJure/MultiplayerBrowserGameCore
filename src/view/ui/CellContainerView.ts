@@ -1,6 +1,6 @@
 import { GameObjects, Scene } from "phaser";
 import { PlayerInput } from "../../domain/player/playerInput";
-import { GenericObjectCellView } from "../clientInventoryItemView";
+import { GenericObjectCellView } from "./CellView";
 import { ObjectDetailView } from "../itemDetailView";
 import { UiObject } from "./UiObject";
 
@@ -12,7 +12,7 @@ export interface ContainerDto {
   width: number;
 }
 
-export class GenericObjectContainers
+export class CellContainerView
   extends GameObjects.GameObject
 {
   private container: GameObjects.Container;
@@ -113,13 +113,13 @@ export class GenericObjectContainers
       this.container.bringToTop(cell);
     });
 
-    cell.onItemDrop.subscribe(({object, gameObject}) => {
+    cell.onObjectDrop.subscribe(({object, gameObject}) => {
       const vec = new Phaser.Math.Vector2(
         gameObject.getBounds().centerX,
         gameObject.getBounds().centerY
       );
 
-      const nextItemContainer = this.objectsCells.sort(
+      const nextCell = this.objectsCells.sort(
         (a, b) =>
           new Phaser.Math.Vector2(
             a.getBounds().centerX,
@@ -130,14 +130,14 @@ export class GenericObjectContainers
             b.getBounds().centerY
           ).distance(vec)
       )[0];
-      if (nextItemContainer && nextItemContainer !== cell) {
+      if (nextCell && nextCell !== cell) {
         try {
-          nextItemContainer.setObject(object);
-          cell.removeItem();
+          nextCell.setObject(object);
+          cell.removeObject();
         } catch (error) {
-          cell.resetItemState();
+          cell.resetObjectState();
         }
-      } else cell.resetItemState();
+      } else cell.resetObjectState();
     });
 
     this.objectsCells.push(cell);
