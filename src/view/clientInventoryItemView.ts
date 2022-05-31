@@ -17,26 +17,29 @@ export class InventoryItemView extends GameObjects.Container {
   private item?: GameObjects.Image;
   private lastDragPosition: Phaser.Math.Vector2 | null = null;
 
-  constructor(scene: Scene, x: number, y: number) {
+  constructor(
+    scene: Scene,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) {
     super(scene, x, y, []);
+    this.width = width
+    this.height = height
     const background = scene.add
       .image(0, 0, "inventoryItemBackground")
-      .setDisplaySize(InventoryItemView.SIZE, InventoryItemView.SIZE)
+      .setDisplaySize(width, height)
       .setOrigin(0, 0);
     this.add(background);
   }
-
-  public static get SIZE() {
-    return 50;
-  }
-
+  
   public setItem(item: Item) {
     if (this.item) throw new Error("Item cell not empty");
-    const size = InventoryItemView.SIZE * 0.88;
     this.item = this.scene.add
-      .image(InventoryItemView.SIZE / 2, InventoryItemView.SIZE / 2, item.icon)
+      .image(this.width / 2, this.height / 2, item.icon)
       .setOrigin(0.5, 0.5)
-      .setDisplaySize(size, size);
+      .setDisplaySize(this.width * 0.88, this.height * 0.88);
 
     this.item.setInteractive();
 
@@ -82,8 +85,8 @@ export class InventoryItemView extends GameObjects.Container {
   public resetItemState() {
     if (this.item)
       this.item.setPosition(
-        InventoryItemView.SIZE / 2,
-        InventoryItemView.SIZE / 2
+        this.width / 2,
+        this.height / 2
       );
   }
 

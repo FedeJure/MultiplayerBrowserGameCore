@@ -12,7 +12,6 @@ import { ViewPresenter } from "../../presentation/viewPresenter";
 import { ClientConnectionDelegator } from "../../domain/gameState/clientConnectionDelegator";
 import { ScenePresenter } from "../../presentation/scenePresenter";
 import { ClientPlayerConnectionDelegator } from "../../domain/player/clientPlayerConnectionDelegator";
-import { ClientInventoryView } from "../../view/clientInventoryView";
 import { PlayerInfo } from "../../domain/player/playerInfo";
 import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
 import { EnvironmentObjectVariant } from "../../domain/environmentObjects/environmentObjectVariant";
@@ -25,6 +24,7 @@ import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator"
 import { ControllablePlayer } from "../../domain/player/players/controllablePlayer";
 import { Player } from "../../domain/player/players/player";
 import { Enemy } from "../../domain/enemies/enemy";
+import { InventoryView } from "../../domain/items/inventoryView";
 
 export class ClientPresenterProvider {
   forLocalPlayer(
@@ -103,7 +103,10 @@ export class ClientPresenterProvider {
       ),
     ]);
   }
-  forInventory(playerId: PlayerInfo["id"], view: ClientInventoryView) {
+  forInventory(
+    playerId: PlayerInfo["id"],
+    view: InventoryView & GameObjects.GameObject
+  ) {
     new ViewPresenter(view, [
       new ClientPlayerInventoryDelegator(
         playerId,

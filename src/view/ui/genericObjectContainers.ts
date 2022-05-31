@@ -23,28 +23,24 @@ export class GenericObjectContainers
   private container: GameObjects.Container;
   private canChange: boolean = false;
   private extraSpace = 25;
-  private width: number = 5;
-  private height: number = 7;
   private itemContainers: InventoryItemView[] = [];
   private itemDetail: ItemDetailView;
-
-  private get displayWidth() {
-    return this.width * InventoryItemView.SIZE + this.extraSpace;
-  }
-
-  private get displayHeight() {
-    return this.height * InventoryItemView.SIZE + this.extraSpace * 2;
-  }
 
   constructor(
     scene: Scene,
     private userInput: PlayerInput,
-    x: number,
-    y: number,
-    width: number,
-    height: number
+    private x: number,
+    private y: number,
+    private width: number,
+    private height: number,
+    private containers: ContainerDto[],
+    private config: {
+      padding: number;
+    } = {
+      padding: 0,
+    }
   ) {
-    super(scene.scene.get(SceneNames.ClientHudScene), "ClientInventoryView");
+    super(scene, "ClientInventoryView");
     this.container = this.scene.add.container(0, 0);
     this.container.setVisible(false);
     this.scene.add.group(this, { runChildUpdate: true });
@@ -59,24 +55,20 @@ export class GenericObjectContainers
   }
 
   setupInventoryPosition() {
-    this.container.setPosition(
-      this.scene.game.canvas.width - this.displayWidth * 1.25,
-      this.scene.game.canvas.height / 2 - this.displayHeight / 2
-    );
+    this.container.setPosition(this.x, this.y);
   }
 
   initBackgrounds() {
     const background = this.scene.add
       .image(0, 0, "inventoryBackground")
-      .setDisplaySize(this.displayWidth, this.displayHeight)
+      .setDisplaySize(
+        this.width + this.config.padding * 2,
+        this.height + this.config.padding * 2
+      )
       .setOrigin(0, 0);
     this.container.add(background);
 
-    for (let h = 0; h < this.height; h++) {
-      for (let w = 0; w < this.width; w++) {
-        this.createInventoryItem(w, h);
-      }
-    }
+    this.containers.forEach(this.createCell.bind(this));
   }
 
   async saveItems(items: Item[]) {
@@ -112,11 +104,13 @@ export class GenericObjectContainers
     if (!this.userInput.inventory && !this.canChange) this.canChange = true;
   }
 
-  createInventoryItem(x: number, y: number) {
+  createCell({ x, y, width, height }: ContainerDto) {
     const inventoryItem = new InventoryItemView(
       this.scene,
-      x * InventoryItemView.SIZE + this.extraSpace / 2,
-      y * InventoryItemView.SIZE + this.extraSpace / 2
+      x + this.config.padding,
+      y + this.config.padding,
+      width,
+      height
     );
 
     inventoryItem.onMouseOver.subscribe((item) => {
