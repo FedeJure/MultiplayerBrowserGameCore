@@ -3,15 +3,18 @@ import { InventoryView } from "../domain/items/inventoryView";
 import { Item } from "../domain/items/item";
 import { PlayerInput } from "../domain/player/playerInput";
 import { AssetLoader } from "./AssetLoader";
-import {
-  ContainerDto,
-  CellContainerView,
-} from "./ui/CellContainerView";
+import { ContainerDto, CellContainerView } from "./ui/CellContainerView";
 import { loadAssetAsync } from "./utils";
 
-export class ClientInventoryView extends CellContainerView implements InventoryView {
+export class ClientInventoryView
+  extends CellContainerView
+  implements InventoryView
+{
   private dtos: ContainerDto[];
-  constructor(scene: Scene, input: PlayerInput) {
+  private canChange: boolean;
+  private userInput: PlayerInput;
+
+  constructor(scene: Scene, userInput: PlayerInput) {
     const dtos: ContainerDto[] = [];
     const cellSize = 50;
     const columnCount = 5;
@@ -25,21 +28,37 @@ export class ClientInventoryView extends CellContainerView implements InventoryV
           x: h * cellSize,
           y: w * cellSize,
           width: cellSize,
-          height: cellSize,
+          height: cellSize
         });
       }
     }
     super(
       scene,
-      input,
       scene.game.canvas.width - width * 1.25,
       scene.game.canvas.height / 2 - height / 2,
       width,
       height,
       dtos,
-      { padding: 10 }
+      { padding: 10,
+      title: 'Inventory' }
     );
     this.dtos = dtos;
+    this.userInput = userInput;
+    this.canChange = false
+  }
+
+  update(): void {
+    if (this.canChange && this.userInput.inventory && !this.container.visible) {
+      this.container.setVisible(true);
+      this.canChange = false;
+      return;
+    }
+    if (this.canChange && this.userInput.inventory && this.container.visible) {
+      this.container.setVisible(false);
+      this.canChange = false;
+      return;
+    }
+    if (!this.userInput.inventory && !this.canChange) this.canChange = true;
   }
 
   saveItems(items: Item[]) {

@@ -2,16 +2,13 @@ import Phaser, { GameObjects, Scene } from "phaser";
 import { Observable, Subject } from "rxjs";
 import { UiObject } from "./UiObject";
 
-
-type OnObjectDropPayload  = {
+type OnObjectDropPayload = {
   object: UiObject;
   gameObject: GameObjects.Image;
   dragPosition: Phaser.Math.Vector2;
-}
-
+};
 
 export class GenericObjectCellView extends GameObjects.Container {
-
   private _onObjectDrop = new Subject<OnObjectDropPayload>();
   private _onDragStart = new Subject<null>();
   private _onMouseOver = new Subject<UiObject>();
@@ -26,18 +23,24 @@ export class GenericObjectCellView extends GameObjects.Container {
     x: number,
     y: number,
     width: number,
-    height: number
+    height: number,
+    title?: string
   ) {
     super(scene, x, y, []);
-    this.width = width
-    this.height = height
+    this.width = width;
+    this.height = height;
     const background = scene.add
       .image(0, 0, "inventoryItemBackground")
       .setDisplaySize(width, height)
       .setOrigin(0, 0);
     this.add(background);
+    if (title) {
+      const text = scene.add.text(0, height, title, { color: "#808080" });
+      text.setPosition(width / 2 - text.width / 2, text.y);
+      this.add(text);
+    }
   }
-  
+
   public setObject(object: UiObject) {
     if (this.object) throw new Error("Item cell not empty");
     this.object = this.scene.add
@@ -87,11 +90,7 @@ export class GenericObjectCellView extends GameObjects.Container {
   }
 
   public resetObjectState() {
-    if (this.object)
-      this.object.setPosition(
-        this.width / 2,
-        this.height / 2
-      );
+    if (this.object) this.object.setPosition(this.width / 2, this.height / 2);
   }
 
   public get isEmpty() {

@@ -1,5 +1,4 @@
 import { GameObjects, Scene } from "phaser";
-import { PlayerInput } from "../../domain/player/playerInput";
 import { GenericObjectCellView } from "./CellView";
 import { ObjectDetailView } from "../itemDetailView";
 import { UiObject } from "./UiObject";
@@ -10,36 +9,51 @@ export interface ContainerDto {
   y: number;
   height: number;
   width: number;
+  title?: string;
 }
 
-export class CellContainerView
-  extends GameObjects.GameObject
-{
-  private container: GameObjects.Container;
-  private canChange: boolean = false;
+type CellContainerConfig = {
+  padding: number;
+  title?: string;
+};
+
+export class CellContainerView extends GameObjects.GameObject {
+  protected container: GameObjects.Container;
   private objectsCells: GenericObjectCellView[] = [];
   private objectDetailPanel: ObjectDetailView;
+  private titleHeight: number = 0;
+
+  private config: CellContainerConfig = {
+    padding: 0,
+  };
 
   constructor(
     scene: Scene,
-    private userInput: PlayerInput,
     private x: number,
     private y: number,
     private width: number,
     private height: number,
     private containers: ContainerDto[],
-    private config: {
-      padding: number;
-    } = {
-      padding: 0,
-    }
+    config?: CellContainerConfig
   ) {
     super(scene, "ClientInventoryView");
+    this.config = config ?? this.config;
     this.container = this.scene.add.container(0, 0);
     this.container.setVisible(false);
     this.scene.add.group(this, { runChildUpdate: true });
+    if (config?.title) {
+      const title = scene.add.text(0, 0, config!.title, {color: "#808080"});
+      
+      this.container.add(title);
+      title.setPosition( (width / 2) - (title.width / 2), title.height / 2)
+      this.container.bringToTop(title)
+      this.titleHeight = title.height;
+    }
     this.initBackgrounds();
+
+    this.containers.forEach(this.createCell.bind(this));
     this.setupPosition();
+
     this.scene.scale.addListener(Phaser.Scale.Events.RESIZE, () => {
       this.setupPosition();
     });
@@ -57,12 +71,14 @@ export class CellContainerView
       .image(0, 0, "inventoryBackground")
       .setDisplaySize(
         this.width + this.config.padding * 2,
-        this.height + this.config.padding * 2
+        this.height + this.config.padding * 2 + this.titleHeight
       )
       .setOrigin(0, 0);
+    this.width = background.width
+    this.height = background.height
     this.container.add(background);
-
-    this.containers.forEach(this.createCell.bind(this));
+    this.container.sendToBack(background)
+    
   }
 
   addObject(id: number, object: UiObject) {
@@ -73,28 +89,15 @@ export class CellContainerView
     cell.setObject(object);
   }
 
-  update(): void {
-    if (this.canChange && this.userInput.inventory && !this.container.visible) {
-      this.container.setVisible(true);
-      this.canChange = false;
-      return;
-    }
-    if (this.canChange && this.userInput.inventory && this.container.visible) {
-      this.container.setVisible(false);
-      this.canChange = false;
-      return;
-    }
-    if (!this.userInput.inventory && !this.canChange) this.canChange = true;
-  }
-
-  createCell({ x, y, width, height, id }: ContainerDto) {
+  createCell({ x, y, width, height, id, title }: ContainerDto) {
     const cell = new GenericObjectCellView(
       id,
       this.scene,
       x + this.config.padding,
-      y + this.config.padding,
+      y + this.config.padding + this.titleHeight,
       width,
-      height
+      height,
+      title
     );
 
     cell.onMouseOver.subscribe((object) => {
@@ -113,7 +116,7 @@ export class CellContainerView
       this.container.bringToTop(cell);
     });
 
-    cell.onObjectDrop.subscribe(({object, gameObject}) => {
+    cell.onObjectDrop.subscribe(({ object, gameObject }) => {
       const vec = new Phaser.Math.Vector2(
         gameObject.getBounds().centerX,
         gameObject.getBounds().centerY
