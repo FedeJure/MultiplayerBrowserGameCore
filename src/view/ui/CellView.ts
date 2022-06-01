@@ -35,7 +35,7 @@ export class GenericObjectCellView extends GameObjects.Container {
       .setOrigin(0, 0);
     this.add(background);
     if (title) {
-      const text = scene.add.text(0, height, title, { color: "#808080" });
+      const text = scene.add.text(0, height, title, { color: "#808080", wordWrap: {width: width} });
       text.setPosition(width / 2 - text.width / 2, text.y);
       this.add(text);
     }

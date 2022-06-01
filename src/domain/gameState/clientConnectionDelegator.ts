@@ -21,6 +21,7 @@ import { CollisionManager } from "../collisions/collisionManager";
 import { CellContainerView } from "../../view/ui/CellContainerView";
 import { ClientInventoryView } from "../../view/clientInventoryView";
 import { SceneNames } from "../../view/scenes/SceneNames";
+import { ClientBuildView } from "../../view/clientBuildView";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -135,6 +136,7 @@ export class ClientConnectionDelegator implements Delegator {
       type: AttackTargetType.PLAYER,
     });
     const inventory = new ClientInventoryView(this.scene.scene.get(SceneNames.ClientHudScene), input);
+    new ClientBuildView(this.scene.scene.get(SceneNames.ClientHudScene), input)
     this.presenterProvider.forInventory(info.id, inventory);
     this.presenterProvider.forLocalPlayer(input, player, view);
     this.inGamePlayersRepository.save(player.info.id, player);
