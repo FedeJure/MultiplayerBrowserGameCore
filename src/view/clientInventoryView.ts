@@ -4,6 +4,7 @@ import { Item } from "../domain/items/item";
 import { PlayerInput } from "../domain/player/playerInput";
 import { AssetLoader } from "./AssetLoader";
 import { ContainerDto, CellContainerView } from "./ui/CellContainerView";
+import { DraggableContext } from "./ui/DraggableContext";
 import { loadAssetAsync } from "./utils";
 
 export class ClientInventoryView
@@ -14,7 +15,11 @@ export class ClientInventoryView
   private canChange: boolean;
   private userInput: PlayerInput;
 
-  constructor(scene: Scene, userInput: PlayerInput) {
+  constructor(
+    scene: Scene,
+    userInput: PlayerInput,
+    draggableContext: DraggableContext
+  ) {
     const dtos: ContainerDto[] = [];
     const cellSize = 50;
     const columnCount = 5;
@@ -28,23 +33,23 @@ export class ClientInventoryView
           x: h * cellSize,
           y: w * cellSize,
           width: cellSize,
-          height: cellSize
+          height: cellSize,
         });
       }
     }
     super(
       scene,
+      draggableContext,
       scene.game.canvas.width - width * 1.25,
       scene.game.canvas.height / 2 - height / 2,
       width,
       height,
       dtos,
-      { padding: 10,
-      title: 'Inventory' }
+      { padding: 10, title: "Inventory" }
     );
     this.dtos = dtos;
     this.userInput = userInput;
-    this.canChange = false
+    this.canChange = false;
   }
 
   update(): void {

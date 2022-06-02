@@ -1,21 +1,13 @@
-import Phaser, { GameObjects, Scene } from "phaser";
+import { GameObjects, Scene } from "phaser";
 import { Observable, Subject } from "rxjs";
+import { UiObjectView } from "./UiObjectView";
 import { UiObject } from "./UiObject";
 
-type OnObjectDropPayload = {
-  object: UiObject;
-  gameObject: GameObjects.Image;
-  dragPosition: Phaser.Math.Vector2;
-};
-
-export class GenericObjectCellView extends GameObjects.Container {
-  private _onObjectDrop = new Subject<OnObjectDropPayload>();
-  private _onDragStart = new Subject<null>();
+export class CellView extends GameObjects.Container {
   private _onMouseOver = new Subject<UiObject>();
-  private _onMouseExit = new Subject<null>();
+  private _onMouseExit = new Subject<void>();
 
   private object?: GameObjects.Image;
-  private lastDragPosition: Phaser.Math.Vector2 | null = null;
 
   constructor(
     public readonly id: number,
@@ -35,48 +27,43 @@ export class GenericObjectCellView extends GameObjects.Container {
       .setOrigin(0, 0);
     this.add(background);
     if (title) {
-      const text = scene.add.text(0, height, title, { color: "#808080", wordWrap: {width: width} });
+      const text = scene.add.text(0, height, title, {
+        color: "#808080",
+        wordWrap: { width: width },
+      });
       text.setPosition(width / 2 - text.width / 2, text.y);
       this.add(text);
     }
   }
 
+  public setExistingObject(object: UiObjectView) {
+    if (this.object && this.object !== object)
+      throw new Error("Item cell not empty");
+    this.object = object
+    this.add(this.object);
+    this.bringToTop(this.object);
+    this.resetObjectState()
+  }
+
   public setObject(object: UiObject) {
     if (this.object) throw new Error("Item cell not empty");
-    this.object = this.scene.add
-      .image(this.width / 2, this.height / 2, object.icon)
-      .setOrigin(0.5, 0.5)
-      .setDisplaySize(this.width * 0.88, this.height * 0.88);
-
-    this.object.setInteractive();
-
-    this.object.on("drag", (pointe, dragX, dragY) => {
-      this.object?.setPosition(dragX, dragY);
-      this.lastDragPosition = new Phaser.Math.Vector2(dragX, dragY);
-    });
-
-    this.object.on("dragstart", (pointer) => {
-      this._onDragStart.next(null);
-    });
-
-    this.object.on("dragend", () => {
-      if (!this.lastDragPosition) return;
-      this._onObjectDrop.next({
-        object: object,
-        gameObject: this.object!,
-        dragPosition: this.lastDragPosition,
-      });
-    });
+    this.object = new UiObjectView(
+      this.scene,
+      this.width / 2,
+      this.height / 2,
+      this.width * 0.88,
+      this.height * 0.88,
+      object.icon,
+      object
+    );
 
     this.object.on("pointerover", () => {
       this._onMouseOver.next(object);
     });
 
     this.object.on("pointerout", () => {
-      this._onMouseExit.next(null);
+      this._onMouseExit.next();
     });
-
-    this.scene.input.setDraggable(this.object);
 
     this.add(this.object);
     this.bringToTop(this.object);
@@ -84,7 +71,7 @@ export class GenericObjectCellView extends GameObjects.Container {
 
   public removeObject() {
     if (this.object) {
-      this.remove(this.object, true);
+      this.remove(this.object);
       this.object = undefined;
     }
   }
@@ -97,13 +84,6 @@ export class GenericObjectCellView extends GameObjects.Container {
     return new Boolean(!this.object);
   }
 
-  public get onObjectDrop(): Observable<OnObjectDropPayload> {
-    return this._onObjectDrop;
-  }
-
-  public get onDragStart(): Observable<unknown> {
-    return this._onDragStart;
-  }
 
   public get onMouseOver(): Observable<UiObject> {
     return this._onMouseOver;

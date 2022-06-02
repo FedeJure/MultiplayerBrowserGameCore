@@ -1,20 +1,20 @@
 import { Scene } from "phaser";
-import { InventoryView } from "../domain/items/inventoryView";
-import { Item } from "../domain/items/item";
 import { PlayerInput } from "../domain/player/playerInput";
-import { AssetLoader } from "./AssetLoader";
 import { ContainerDto, CellContainerView } from "./ui/CellContainerView";
-import { loadAssetAsync } from "./utils";
+import { DraggableContext } from "./ui/DraggableContext";
 
 export class ClientBuildView
   extends CellContainerView
-  implements InventoryView
 {
   private dtos: ContainerDto[];
   private canChange: boolean;
   private userInput: PlayerInput;
 
-  constructor(scene: Scene, userInput: PlayerInput) {
+  constructor(
+    scene: Scene,
+    userInput: PlayerInput,
+    draggableContext: DraggableContext
+  ) {
     const dtos: ContainerDto[] = [];
     const cellSize = 50;
     const columnCount = 5;
@@ -22,7 +22,7 @@ export class ClientBuildView
     const width = columnCount * cellSize;
     const height = rowCount * cellSize;
 
-    const firstY = height / 8
+    const firstY = height / 8;
 
     dtos.push(
       {
@@ -77,6 +77,7 @@ export class ClientBuildView
 
     super(
       scene,
+      draggableContext,
       scene.game.canvas.width / 10,
       scene.game.canvas.height / 2 - height / 2,
       width,
@@ -101,25 +102,5 @@ export class ClientBuildView
       return;
     }
     if (!this.userInput.inventory && !this.canChange) this.canChange = true;
-  }
-
-  saveItems(items: Item[]) {
-    Promise.all(
-      items.map((i) =>
-        loadAssetAsync(this.scene, () => {
-          if (this.scene.textures.exists(i.icon)) return false;
-          this.scene.load.image(i.icon, AssetLoader.resolveAssetPath(i.icon));
-          return true;
-        })
-      )
-    ).then(() => {
-      this.dtos.forEach((dto) => {
-        try {
-          const item = items.shift();
-          if (!item) return;
-          this.addObject(dto.id, item);
-        } catch (error) {}
-      });
-    });
   }
 }
