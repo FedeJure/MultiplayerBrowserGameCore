@@ -1,6 +1,6 @@
 import { GameObjects, Scene } from "phaser";
-import { FontSize } from "./Fonts";
-import { UiObject } from "./ui/UiObject";
+import { FontSize } from "../Fonts";
+import { UiObject } from "./UiObject";
 
 export class ObjectDetailView extends GameObjects.Container {
   private static WIDTH: number = 100;

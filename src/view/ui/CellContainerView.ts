@@ -1,6 +1,6 @@
 import { GameObjects, Scene } from "phaser";
 import { CellView } from "./CellView";
-import { ObjectDetailView } from "../itemDetailView";
+import { ObjectDetailView } from "./objectDetailView";
 import { UiObject } from "./UiObject";
 import { DraggableContext } from "./DraggableContext";
 
@@ -21,12 +21,13 @@ type CellContainerConfig = {
 export class CellContainerView extends GameObjects.GameObject {
   protected container: GameObjects.Container;
   private objectsCells: CellView[] = [];
-  private objectDetailPanel: ObjectDetailView;
   private titleHeight: number = 0;
 
   private config: CellContainerConfig = {
     padding: 0,
   };
+
+  private lastCellContainer: CellView | null = null;
 
   constructor(
     scene: Scene,
@@ -59,40 +60,6 @@ export class CellContainerView extends GameObjects.GameObject {
     this.scene.scale.addListener(Phaser.Scale.Events.RESIZE, () => {
       this.setupPosition();
     });
-    this.objectDetailPanel = new ObjectDetailView(scene);
-    this.objectDetailPanel.setVisible(false);
-    this.container.add(this.objectDetailPanel);
-
-    draggableContext.OnDrag.subscribe(({object}) => {
-      object.container?.removeObject()
-      this.objectDetailPanel.setVisible(false);
-    });
-
-    draggableContext.OnObjectDrop.subscribe(({ object }) => {
-      const vec = new Phaser.Math.Vector2(
-        object.getBounds().centerX,
-        object.getBounds().centerY
-      );
-
-      const nextCell = this.objectsCells.sort(
-        (a, b) =>
-          new Phaser.Math.Vector2(
-            a.getBounds().centerX,
-            a.getBounds().centerY
-          ).distance(vec) -
-          new Phaser.Math.Vector2(
-            b.getBounds().centerX,
-            b.getBounds().centerY
-          ).distance(vec)
-      )[0];
-      if (nextCell) {
-        try {
-          nextCell.setExistingObject(object);
-        } catch (error) {
-          object.container?.resetObjectState();
-        }
-      } else object.container?.resetObjectState();
-    });
   }
 
   setupPosition() {
@@ -121,6 +88,23 @@ export class CellContainerView extends GameObjects.GameObject {
     cell.setObject(object);
   }
 
+  getCellInGlobalPosition(x: number, y: number): CellView | undefined {
+    return this.objectsCells
+      .filter((o) => o.getBounds().contains(x, y))
+      .sort(
+        (a, b) =>
+          new Phaser.Math.Vector2(
+            a.getBounds().centerX,
+            a.getBounds().centerY
+          ).distance({ x, y }) -
+          new Phaser.Math.Vector2(
+            b.getBounds().centerX,
+            b.getBounds().centerY
+          ).distance({ x, y })
+      )[0];
+  }
+
+
   createCell({ x, y, width, height, id, title }: ContainerDto) {
     const cell = new CellView(
       id,
@@ -131,18 +115,6 @@ export class CellContainerView extends GameObjects.GameObject {
       height,
       title
     );
-
-    cell.onMouseOver.subscribe((object) => {
-      this.objectDetailPanel.setObject(object);
-      this.objectDetailPanel.setVisible(true);
-      this.objectDetailPanel.setPosition(cell.x, cell.y);
-      this.container.bringToTop(this.objectDetailPanel);
-    });
-
-    cell.onMouseExit.subscribe(() => {
-      this.objectDetailPanel.setVisible(false);
-    });
-
     this.objectsCells.push(cell);
     this.container.add(cell);
   }

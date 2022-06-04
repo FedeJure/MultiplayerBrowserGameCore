@@ -23,6 +23,7 @@ import { ClientInventoryView } from "../../view/clientInventoryView";
 import { SceneNames } from "../../view/scenes/SceneNames";
 import { ClientBuildView } from "../../view/clientBuildView";
 import { DraggableContext } from "../../view/ui/DraggableContext";
+import { DragAndDropContext } from "../../view/ui/DragAndDropContext";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -139,16 +140,19 @@ export class ClientConnectionDelegator implements Delegator {
     const draggableContent = new DraggableContext(
       this.scene.scene.get(SceneNames.ClientHudScene)
     );
+
     const inventory = new ClientInventoryView(
       this.scene.scene.get(SceneNames.ClientHudScene),
       input,
       draggableContent
     );
-    // new ClientBuildView(
-    //   this.scene.scene.get(SceneNames.ClientHudScene),
-    //   input,
-    //   draggableContent
-    // );
+    ;
+    new DragAndDropContext([inventory, new ClientBuildView(
+      this.scene.scene.get(SceneNames.ClientHudScene),
+      input,
+      draggableContent
+    )],draggableContent, this.scene)
+
     this.presenterProvider.forInventory(info.id, inventory);
     this.presenterProvider.forLocalPlayer(input, player, view);
     this.inGamePlayersRepository.save(player.info.id, player);

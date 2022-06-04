@@ -1,5 +1,6 @@
 import { GameObjects, Scene } from "phaser";
 import { Observable, Subject } from "rxjs";
+import { CellView } from "./CellView";
 import { UiObjectView } from "./UiObjectView";
 
 export type OnObjectDropPayload = {
@@ -13,7 +14,7 @@ export class DraggableContext {
 
   private currentObject?: UiObjectView;
   private lastDragPosition?: Phaser.Math.Vector2;
-  private lastContainer?: GameObjects.Container;
+  private lastContainer?: CellView;
 
   constructor(private scene: Scene) {
     this.scene.input.addListener(
@@ -27,7 +28,7 @@ export class DraggableContext {
         this.currentObject = object;
         if (!this.lastContainer && object.container) {
           this.lastContainer = object.container;
-          this.lastContainer.remove(object);
+        //   this.lastContainer.remove(object);
         }
         object.setPosition(pointer.position.x, pointer.position.y);
         this.lastDragPosition = pointer.position
