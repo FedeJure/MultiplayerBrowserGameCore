@@ -1,6 +1,7 @@
 import { Scene } from "phaser";
 import { InventoryView } from "../domain/items/inventoryView";
 import { Item } from "../domain/items/item";
+import { ItemType } from "../domain/items/itemType";
 import { PlayerInput } from "../domain/player/playerInput";
 import { AssetLoader } from "./AssetLoader";
 import { ContainerDto, CellContainerView } from "./ui/CellContainerView";
@@ -34,6 +35,16 @@ export class ClientInventoryView
           y: w * cellSize,
           width: cellSize,
           height: cellSize,
+          allowedTypes: [
+            ItemType.ARMOR_EQUIPMENT,
+            ItemType.HELMET_EQUIPMENT,
+            ItemType.GLOVES_EQUIPMENT,
+            ItemType.BOOTS_EQUIPMENT,
+            ItemType.PRIMARY_WEAPON,
+            ItemType.SECONDARY_WEAPON,
+            ItemType.CONSUMIBLE,
+            ItemType.QUEST,
+          ],
         });
       }
     }

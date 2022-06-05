@@ -1,8 +1,8 @@
 import { GameObjects, Scene } from "phaser";
-import { CellView } from "./CellView";
-import { ObjectDetailView } from "./objectDetailView";
-import { UiObject } from "./UiObject";
+import { ItemCellView } from "./ItemCellView";
+import { UiItem } from "./UiItem";
 import { DraggableContext } from "./DraggableContext";
+import { ItemType } from "../../domain/items/itemType";
 
 export interface ContainerDto {
   id: number;
@@ -10,6 +10,7 @@ export interface ContainerDto {
   y: number;
   height: number;
   width: number;
+  allowedTypes: ItemType[];
   title?: string;
 }
 
@@ -20,14 +21,14 @@ type CellContainerConfig = {
 
 export class CellContainerView extends GameObjects.GameObject {
   protected container: GameObjects.Container;
-  private objectsCells: CellView[] = [];
+  private objectsCells: ItemCellView[] = [];
   private titleHeight: number = 0;
 
   private config: CellContainerConfig = {
     padding: 0,
   };
 
-  private lastCellContainer: CellView | null = null;
+  private lastCellContainer: ItemCellView | null = null;
 
   constructor(
     scene: Scene,
@@ -80,7 +81,7 @@ export class CellContainerView extends GameObjects.GameObject {
     this.container.sendToBack(background);
   }
 
-  addObject(id: number, object: UiObject) {
+  addObject(id: number, object: UiItem) {
     const cell = this.objectsCells.find((c) => c.id === id);
     if (!cell) throw new Error("Cell not found");
     if (!cell.isEmpty) throw new Error("Cell not empty");
@@ -88,8 +89,13 @@ export class CellContainerView extends GameObjects.GameObject {
     cell.setObject(object);
   }
 
-  getCellInGlobalPosition(x: number, y: number): CellView | undefined {
+  getCellInGlobalPosition(
+    x: number,
+    y: number,
+    types: ItemType[]
+  ): ItemCellView | undefined {
     return this.objectsCells
+      .filter((o) => types.some((t) => o.allowType(t)))
       .filter((o) => o.getBounds().contains(x, y))
       .sort(
         (a, b) =>
@@ -104,15 +110,15 @@ export class CellContainerView extends GameObjects.GameObject {
       )[0];
   }
 
-
-  createCell({ x, y, width, height, id, title }: ContainerDto) {
-    const cell = new CellView(
+  createCell({ x, y, width, height, id, title, allowedTypes }: ContainerDto) {
+    const cell = new ItemCellView(
       id,
       this.scene,
       x + this.config.padding,
       y + this.config.padding + this.titleHeight,
       width,
       height,
+      allowedTypes,
       title
     );
     this.objectsCells.push(cell);

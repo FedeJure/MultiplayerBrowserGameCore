@@ -1,11 +1,10 @@
 import { Scene } from "phaser";
+import { ItemType } from "../domain/items/itemType";
 import { PlayerInput } from "../domain/player/playerInput";
 import { ContainerDto, CellContainerView } from "./ui/CellContainerView";
 import { DraggableContext } from "./ui/DraggableContext";
 
-export class ClientBuildView
-  extends CellContainerView
-{
+export class ClientBuildView extends CellContainerView {
   private dtos: ContainerDto[];
   private canChange: boolean;
   private userInput: PlayerInput;
@@ -32,6 +31,7 @@ export class ClientBuildView
         height: cellSize,
         width: cellSize,
         title: "Helmet",
+        allowedTypes: [ItemType.HELMET_EQUIPMENT],
       },
       {
         id: 1,
@@ -40,6 +40,7 @@ export class ClientBuildView
         height: cellSize * 1.25,
         width: cellSize,
         title: "Armor",
+        allowedTypes: [ItemType.ARMOR_EQUIPMENT],
       },
       {
         id: 2,
@@ -48,6 +49,7 @@ export class ClientBuildView
         height: cellSize,
         width: cellSize,
         title: "Hands",
+        allowedTypes: [ItemType.GLOVES_EQUIPMENT],
       },
       {
         id: 3,
@@ -56,6 +58,7 @@ export class ClientBuildView
         height: cellSize,
         width: cellSize,
         title: "Boots",
+        allowedTypes: [ItemType.BOOTS_EQUIPMENT],
       },
       {
         id: 4,
@@ -64,6 +67,7 @@ export class ClientBuildView
         height: cellSize,
         width: cellSize,
         title: "Primary Weapon",
+        allowedTypes: [ItemType.PRIMARY_WEAPON],
       },
       {
         id: 4,
@@ -72,6 +76,7 @@ export class ClientBuildView
         height: cellSize,
         width: cellSize,
         title: "Secondary Weapon",
+        allowedTypes: [ItemType.SECONDARY_WEAPON],
       }
     );
 

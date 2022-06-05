@@ -1,20 +1,20 @@
 import { CellContainerView } from "./CellContainerView";
 import { DraggableContext } from "./DraggableContext";
-import { CellView } from "./CellView";
-import { ObjectDetailView } from "./objectDetailView";
+import { ItemCellView } from "./ItemCellView";
+import { ItemDetailView } from "./ItemDetailView";
 import { Scene } from "phaser";
 
 export class DragAndDropContext {
-  private lastCellContainer: CellView | null = null;
+  private lastCellContainer: ItemCellView | null = null;
 
-  private objectDetailPanel: ObjectDetailView;
+  private objectDetailPanel: ItemDetailView;
 
   constructor(
     private areas: CellContainerView[],
     private draggableContext: DraggableContext,
     scene: Scene
   ) {
-    this.objectDetailPanel = new ObjectDetailView(scene);
+    this.objectDetailPanel = new ItemDetailView(scene);
     this.objectDetailPanel.setVisible(false);
     draggableContext.OnDrag.subscribe(({ object }) => {
       if (object.container) {
@@ -30,10 +30,10 @@ export class DragAndDropContext {
         object.getBounds().centerY
       );
 
-      let nextCell: CellView | undefined
+      let nextCell: ItemCellView | undefined
 
       for (let i = 0; i < areas.length; i++) {
-          nextCell = areas[i].getCellInGlobalPosition(vec.x, vec.y)
+          nextCell = areas[i].getCellInGlobalPosition(vec.x, vec.y, object.uiObject.types)
           if (nextCell) break
       }
       if (nextCell) {

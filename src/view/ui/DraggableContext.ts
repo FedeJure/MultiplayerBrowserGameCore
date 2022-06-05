@@ -1,10 +1,10 @@
-import { GameObjects, Scene } from "phaser";
+import { Scene } from "phaser";
 import { Observable, Subject } from "rxjs";
-import { CellView } from "./CellView";
-import { UiObjectView } from "./UiObjectView";
+import { ItemCellView } from "./ItemCellView";
+import { UiItemView } from "./UiItemView";
 
 export type OnObjectDropPayload = {
-  object: UiObjectView;
+  object: UiItemView;
   dragPosition: Phaser.Math.Vector2;
 };
 
@@ -12,26 +12,20 @@ export class DraggableContext {
   private _onObjectDrop = new Subject<OnObjectDropPayload>();
   private _onDrag = new Subject<OnObjectDropPayload>();
 
-  private currentObject?: UiObjectView;
+  private currentObject?: UiItemView;
   private lastDragPosition?: Phaser.Math.Vector2;
-  private lastContainer?: CellView;
+  private lastContainer?: ItemCellView;
 
   constructor(private scene: Scene) {
     this.scene.input.addListener(
       "drag",
-      (
-        pointer: Phaser.Input.Pointer,
-        object: UiObjectView,
-        dragX: number,
-        dragY: number
-      ) => {
+      (pointer: Phaser.Input.Pointer, object: UiItemView) => {
         this.currentObject = object;
         if (!this.lastContainer && object.container) {
           this.lastContainer = object.container;
-        //   this.lastContainer.remove(object);
         }
         object.setPosition(pointer.position.x, pointer.position.y);
-        this.lastDragPosition = pointer.position
+        this.lastDragPosition = pointer.position;
         this._onDrag.next({
           object,
           dragPosition: pointer.position,
@@ -46,7 +40,6 @@ export class DraggableContext {
           dragPosition: this.lastDragPosition,
         });
         if (this.lastContainer) {
-        //   this.lastContainer.add(this.currentObject);
         }
       }
       this.currentObject = undefined;

@@ -23,7 +23,7 @@ import { ClientInventoryView } from "../../view/clientInventoryView";
 import { SceneNames } from "../../view/scenes/SceneNames";
 import { ClientBuildView } from "../../view/clientBuildView";
 import { DraggableContext } from "../../view/ui/DraggableContext";
-import { DragAndDropContext } from "../../view/ui/DragAndDropContext";
+import { DragAndDropContext } from "../../view/ui/ItemDragAndDropContext";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(

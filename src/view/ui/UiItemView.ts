@@ -1,10 +1,10 @@
 import { GameObjects, Scene } from "phaser";
-import { CellView } from "./CellView";
-import { ObjectDetailView } from "./objectDetailView";
-import { UiObject } from "./UiObject";
+import { ItemCellView } from "./ItemCellView";
+import { ItemDetailView } from "./ItemDetailView";
+import { UiItem } from "./UiItem";
 
-export class UiObjectView extends GameObjects.Image {
-  private detailView: ObjectDetailView;
+export class UiItemView extends GameObjects.Image {
+  private detailView: ItemDetailView;
   constructor(
     scene: Scene,
     x: number,
@@ -12,13 +12,13 @@ export class UiObjectView extends GameObjects.Image {
     width: number,
     height: number,
     texture: string,
-    public readonly uiObject: UiObject
+    public readonly uiObject: UiItem
   ) {
     super(scene, x, y, texture);
     scene.add.existing(this).setOrigin(0.5, 0.5).setDisplaySize(width, height);
     this.setInteractive();
     this.scene.input.setDraggable(this);
-    this.detailView = new ObjectDetailView(scene);
+    this.detailView = new ItemDetailView(scene);
     this.addListener("dragstart", () => {
       this.detailView.setVisible(false)
     })
@@ -37,6 +37,6 @@ export class UiObjectView extends GameObjects.Image {
   }
 
   get container() {
-    return this.parentContainer as CellView | undefined;
+    return this.parentContainer as ItemCellView | undefined;
   }
 }

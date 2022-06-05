@@ -1,8 +1,11 @@
 import { EnvironmentObjectAssetType } from "../domain/environmentObjects/environmentObject";
 import { EnvironmentObjectVariant } from "../domain/environmentObjects/environmentObjectVariant";
+import { ItemType } from "../domain/items/itemType";
 import { ServerProvider } from "../infrastructure/providers/serverProvider";
 
-export const LoadServerRepositoriesWithMockData = async (provider: ServerProvider) => {
+export const LoadServerRepositoriesWithMockData = async (
+  provider: ServerProvider
+) => {
   //Mock players
   for (let i = 1; i <= 200; i++) {
     await provider.playerInfoRepository.save(i.toString(), {
@@ -14,7 +17,7 @@ export const LoadServerRepositoriesWithMockData = async (provider: ServerProvide
   // Load existent items
   await provider.itemsRepository.save("1", {
     id: "1",
-    types: [],
+    types: [ItemType.QUEST],
     icon: "ui/testItem.png",
     model: "",
     name: "Default Test Item",
@@ -22,7 +25,7 @@ export const LoadServerRepositoriesWithMockData = async (provider: ServerProvide
   });
   await provider.itemsRepository.save("2", {
     id: "2",
-    types: [],
+    types: [ItemType.ARMOR_EQUIPMENT, ItemType.QUEST],
     icon: "ui/testItem.png",
     model: "",
     name: "Ring of Honor",

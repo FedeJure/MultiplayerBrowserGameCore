@@ -1,10 +1,11 @@
 import { GameObjects, Scene } from "phaser";
 import { Observable, Subject } from "rxjs";
-import { UiObjectView } from "./UiObjectView";
-import { UiObject } from "./UiObject";
+import { UiItemView } from "./UiItemView";
+import { UiItem } from "./UiItem";
+import { ItemType } from "../../domain/items/itemType";
 
-export class CellView extends GameObjects.Container {
-  private _onMouseOver = new Subject<UiObject>();
+export class ItemCellView extends GameObjects.Container {
+  private _onMouseOver = new Subject<UiItem>();
   private _onMouseExit = new Subject<void>();
 
   private object?: GameObjects.Image;
@@ -16,6 +17,7 @@ export class CellView extends GameObjects.Container {
     y: number,
     width: number,
     height: number,
+    private allowedTypes: ItemType[] = [],
     title?: string
   ) {
     super(scene, x, y, []);
@@ -36,18 +38,18 @@ export class CellView extends GameObjects.Container {
     }
   }
 
-  public setExistingObject(object: UiObjectView) {
+  public setExistingObject(object: UiItemView) {
     if (this.object && this.object !== object)
       throw new Error("Item cell not empty");
-    this.object = object
+    this.object = object;
     this.add(this.object);
     this.bringToTop(this.object);
-    this.resetObjectState()
+    this.resetObjectState();
   }
 
-  public setObject(object: UiObject) {
+  public setObject(object: UiItem) {
     if (this.object) throw new Error("Item cell not empty");
-    this.object = new UiObjectView(
+    this.object = new UiItemView(
       this.scene,
       this.width / 2,
       this.height / 2,
@@ -84,12 +86,15 @@ export class CellView extends GameObjects.Container {
     return new Boolean(!this.object);
   }
 
-
-  public get onMouseOver(): Observable<UiObject> {
+  public get onMouseOver(): Observable<UiItem> {
     return this._onMouseOver;
   }
 
   public get onMouseExit(): Observable<unknown> {
     return this._onMouseExit;
+  }
+
+  public allowType(type: ItemType) {
+    return this.allowedTypes.includes(type);
   }
 }
