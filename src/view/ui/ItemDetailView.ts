@@ -1,6 +1,6 @@
 import { GameObjects, Scene } from "phaser";
+import { Item } from "../../domain/items/item";
 import { FontSize } from "../Fonts";
-import { UiItem } from "./UiItem";
 
 export class ItemDetailView extends GameObjects.Container {
   private static WIDTH: number = 100;
@@ -40,7 +40,7 @@ export class ItemDetailView extends GameObjects.Container {
     this.add(this.detailText);
   }
 
-  setObject(item: UiItem) {
+  setObject(item: Item) {
     this.nameText.setText(item.name).setOrigin(0.25, 0);
     this.detailText
       .setText(item.detail)

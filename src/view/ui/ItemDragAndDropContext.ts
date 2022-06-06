@@ -19,7 +19,7 @@ export class DragAndDropContext {
     draggableContext.OnDrag.subscribe(({ object }) => {
       if (object.container) {
         this.lastCellContainer = object.container;
-        object.container.removeObject();
+        object.container.removeObjectTemporally();
       }
       this.objectDetailPanel.setVisible(false);
     });
@@ -30,13 +30,18 @@ export class DragAndDropContext {
         object.getBounds().centerY
       );
 
-      let nextCell: ItemCellView | undefined
+      let nextCell: ItemCellView | undefined;
 
       for (let i = 0; i < areas.length; i++) {
-          nextCell = areas[i].getCellInGlobalPosition(vec.x, vec.y, object.uiObject.types)
-          if (nextCell) break
+        nextCell = areas[i].getCellInGlobalPosition(
+          vec.x,
+          vec.y,
+          object.item.types
+        );
+        if (nextCell) break;
       }
       if (nextCell) {
+        this.lastCellContainer?.removeObject();
         nextCell.setExistingObject(object);
       } else {
         if (!object.container)

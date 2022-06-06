@@ -143,15 +143,19 @@ export class ClientConnectionDelegator implements Delegator {
 
     const inventory = new ClientInventoryView(
       this.scene.scene.get(SceneNames.ClientHudScene),
-      input,
-      draggableContent
+      input
     );
-    ;
-    new DragAndDropContext([inventory, new ClientBuildView(
-      this.scene.scene.get(SceneNames.ClientHudScene),
-      input,
-      draggableContent
-    )],draggableContent, this.scene)
+    new DragAndDropContext(
+      [
+        inventory,
+        new ClientBuildView(
+          this.scene.scene.get(SceneNames.ClientHudScene),
+          input
+        ),
+      ],
+      draggableContent,
+      this.scene
+    );
 
     this.presenterProvider.forInventory(info.id, inventory);
     this.presenterProvider.forLocalPlayer(input, player, view);

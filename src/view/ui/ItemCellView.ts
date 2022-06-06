@@ -1,14 +1,15 @@
 import { GameObjects, Scene } from "phaser";
 import { Observable, Subject } from "rxjs";
 import { UiItemView } from "./UiItemView";
-import { UiItem } from "./UiItem";
 import { ItemType } from "../../domain/items/itemType";
+import { Item } from "../../domain/items/item";
 
 export class ItemCellView extends GameObjects.Container {
-  private _onMouseOver = new Subject<UiItem>();
-  private _onMouseExit = new Subject<void>();
+  private _onItemSaved = new Subject<Item>();
+  private _onItemRemoved = new Subject<Item>();
 
   private object?: GameObjects.Image;
+  private isTemporallyRemoved: boolean;
 
   constructor(
     public readonly id: number,
@@ -41,40 +42,30 @@ export class ItemCellView extends GameObjects.Container {
   public setExistingObject(object: UiItemView) {
     if (this.object && this.object !== object)
       throw new Error("Item cell not empty");
+    if (this.object === object && this.isTemporallyRemoved) {
+      this.isTemporallyRemoved = false;
+    } else {
+      this._onItemSaved.next(object.item);
+    }
+
     this.object = object;
     this.add(this.object);
     this.bringToTop(this.object);
     this.resetObjectState();
   }
 
-  public setObject(object: UiItem) {
-    if (this.object) throw new Error("Item cell not empty");
-    this.object = new UiItemView(
-      this.scene,
-      this.width / 2,
-      this.height / 2,
-      this.width * 0.88,
-      this.height * 0.88,
-      object.icon,
-      object
-    );
-
-    this.object.on("pointerover", () => {
-      this._onMouseOver.next(object);
-    });
-
-    this.object.on("pointerout", () => {
-      this._onMouseExit.next();
-    });
-
-    this.add(this.object);
-    this.bringToTop(this.object);
+  public removeObjectTemporally() {
+    if (!this.isTemporallyRemoved && this.object) {
+      this.remove(this.object);
+      this.isTemporallyRemoved = true;
+    }
   }
 
   public removeObject() {
     if (this.object) {
       this.remove(this.object);
       this.object = undefined;
+      this.isTemporallyRemoved = false;
     }
   }
 
@@ -86,15 +77,15 @@ export class ItemCellView extends GameObjects.Container {
     return new Boolean(!this.object);
   }
 
-  public get onMouseOver(): Observable<UiItem> {
-    return this._onMouseOver;
-  }
-
-  public get onMouseExit(): Observable<unknown> {
-    return this._onMouseExit;
-  }
-
   public allowType(type: ItemType) {
     return this.allowedTypes.includes(type);
+  }
+
+  public get onItemSaved(): Observable<Item> {
+    return this._onItemSaved;
+  }
+
+  public get onItemRemoved(): Observable<Item> {
+    return this._onItemRemoved;
   }
 }

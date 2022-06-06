@@ -2,18 +2,13 @@ import { Scene } from "phaser";
 import { ItemType } from "../domain/items/itemType";
 import { PlayerInput } from "../domain/player/playerInput";
 import { ContainerDto, CellContainerView } from "./ui/CellContainerView";
-import { DraggableContext } from "./ui/DraggableContext";
 
 export class ClientBuildView extends CellContainerView {
   private dtos: ContainerDto[];
   private canChange: boolean;
   private userInput: PlayerInput;
 
-  constructor(
-    scene: Scene,
-    userInput: PlayerInput,
-    draggableContext: DraggableContext
-  ) {
+  constructor(scene: Scene, userInput: PlayerInput) {
     const dtos: ContainerDto[] = [];
     const cellSize = 50;
     const columnCount = 5;
@@ -82,7 +77,6 @@ export class ClientBuildView extends CellContainerView {
 
     super(
       scene,
-      draggableContext,
       scene.game.canvas.width / 10,
       scene.game.canvas.height / 2 - height / 2,
       width,

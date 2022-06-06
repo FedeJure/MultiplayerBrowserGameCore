@@ -1,7 +1,7 @@
 import { GameObjects, Scene } from "phaser";
+import { Item } from "../../domain/items/item";
 import { ItemCellView } from "./ItemCellView";
 import { ItemDetailView } from "./ItemDetailView";
-import { UiItem } from "./UiItem";
 
 export class UiItemView extends GameObjects.Image {
   private detailView: ItemDetailView;
@@ -12,7 +12,7 @@ export class UiItemView extends GameObjects.Image {
     width: number,
     height: number,
     texture: string,
-    public readonly uiObject: UiItem
+    public readonly item: Item
   ) {
     super(scene, x, y, texture);
     scene.add.existing(this).setOrigin(0.5, 0.5).setDisplaySize(width, height);
@@ -23,7 +23,7 @@ export class UiItemView extends GameObjects.Image {
       this.detailView.setVisible(false)
     })
     this.addListener("pointerover", (pointer, x, y) => {
-      this.detailView.setObject(this.uiObject);
+      this.detailView.setObject(this.item);
       this.detailView.setVisible(true);
 
       this.detailView.setPosition(

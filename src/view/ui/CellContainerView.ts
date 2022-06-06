@@ -1,8 +1,9 @@
 import { GameObjects, Scene } from "phaser";
 import { ItemCellView } from "./ItemCellView";
-import { UiItem } from "./UiItem";
-import { DraggableContext } from "./DraggableContext";
 import { ItemType } from "../../domain/items/itemType";
+import { Observable, Subject } from "rxjs";
+import { UiItemView } from "./UiItemView";
+import { Item } from "../../domain/items/item";
 
 export interface ContainerDto {
   id: number;
@@ -19,7 +20,14 @@ type CellContainerConfig = {
   title?: string;
 };
 
+type ItemChangePayload = {
+  item: Item;
+  cellId: number;
+};
+
 export class CellContainerView extends GameObjects.GameObject {
+  private _onItemSaved: Subject<ItemChangePayload> = new Subject();
+  private _onItemRemoved: Subject<ItemChangePayload> = new Subject();
   protected container: GameObjects.Container;
   private objectsCells: ItemCellView[] = [];
   private titleHeight: number = 0;
@@ -27,12 +35,8 @@ export class CellContainerView extends GameObjects.GameObject {
   private config: CellContainerConfig = {
     padding: 0,
   };
-
-  private lastCellContainer: ItemCellView | null = null;
-
   constructor(
     scene: Scene,
-    draggableContext: DraggableContext,
     private x: number,
     private y: number,
     private width: number,
@@ -81,12 +85,22 @@ export class CellContainerView extends GameObjects.GameObject {
     this.container.sendToBack(background);
   }
 
-  addObject(id: number, object: UiItem) {
+  addObject(id: number, object: Item) {
     const cell = this.objectsCells.find((c) => c.id === id);
     if (!cell) throw new Error("Cell not found");
     if (!cell.isEmpty) throw new Error("Cell not empty");
 
-    cell.setObject(object);
+    cell.setExistingObject(
+      new UiItemView(
+        this.scene,
+        cell.width / 2,
+        cell.height / 2,
+        cell.width * 0.88,
+        cell.height * 0.88,
+        object.icon,
+        object
+      )
+    );
   }
 
   getCellInGlobalPosition(
@@ -121,7 +135,22 @@ export class CellContainerView extends GameObjects.GameObject {
       allowedTypes,
       title
     );
+    cell.onItemSaved.subscribe((item) => {
+      this._onItemSaved.next({ item, cellId: cell.id });
+    });
+
+    cell.onItemRemoved.subscribe((item) => {
+      this._onItemRemoved.next({ item, cellId: cell.id });
+    });
     this.objectsCells.push(cell);
     this.container.add(cell);
+  }
+
+  public get onItemSaved(): Observable<ItemChangePayload> {
+    return this._onItemSaved;
+  }
+
+  public get onItemRemoved(): Observable<ItemChangePayload> {
+    return this._onItemRemoved;
   }
 }
