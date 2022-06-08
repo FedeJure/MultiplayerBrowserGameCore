@@ -22,13 +22,15 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     y: number,
     height: number,
     width: number,
-    name: string
+    name: string,
+    texture: string = "hero"
   ) {
-    const spine = scene.add.spine(x, y, "hero", undefined, true);
+    const spine = scene.add.spine(x, y, texture, undefined, true);
     const currentSize: Vector = spine.getBounds().size;
     const factor = currentSize.y / height;
     spine.setDisplaySize(currentSize.x / factor + 10, height + 10);
     spine.setSize(width, height);
+
 
     super(spine, x, y, height, width);
     this.hud = new EntityIngameHud(scene, height, width);
@@ -76,15 +78,16 @@ export class SpinePhaserEntityView extends PhaserEntityView {
       this.spine.setEmptyAnimation(layer, 0.2);
     }
 
-    if (duration) {
-      const animation = this.spine.findAnimation(anim);
-      if (animation) animation.duration = duration;
-    }
-
     if (anim !== EntityAnimationCode.EMPTY_ANIMATION) {
       if (lastSameAnimation)
         this.spine.setMix(lastSameAnimation!.name, anim, 0.1);
-      this.spine.setAnimation(layer, anim, loop, true);
+      const track = this.spine.setAnimation(layer, anim, loop, true);
+      if (track && duration) {
+        const animation = this.spine.findAnimation(anim)
+        if (animation) {
+          track.timeScale = duration / (animation.duration * 1000)
+        }
+      } 
     }
   }
 }

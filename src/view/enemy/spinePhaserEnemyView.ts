@@ -14,6 +14,6 @@ export class SpinePhaserEnemyView
     width: number,
     name: string
   ) {
-    super(scene, x, y, height, width, name);
+    super(scene, x, y, height, width, name, "slime");
   }
 }

@@ -25,6 +25,11 @@ export const AssetsConfiguration: {
       jsonPath: "hero.json",
       atlasPath: "hero.atlas",
     },
+    {
+      key: "slime",
+      jsonPath: "spine/enemies/slime/slime.json",
+      atlasPath: "spine/enemies/slime/slime.atlas",
+    },
   ],
   spritesheets: [],
   images: [

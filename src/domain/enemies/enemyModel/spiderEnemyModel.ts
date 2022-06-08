@@ -8,7 +8,7 @@ export const SpiderEnemyModel: EnemyModel = {
     walkSpeed: 40,
     runSpeed: 120,
     width: 25,
-    height: 37,
+    height: 25,
     jumpPower: 1,
     rangedDistance: 200,
     meleeDistance: 25,
