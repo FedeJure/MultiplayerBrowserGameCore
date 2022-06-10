@@ -1,17 +1,17 @@
 import {
-  DefaultPlayerInventoryDto,
-  PlayerInventoryDto,
-} from "../../infrastructure/dtos/playerInventoryDto";
+  DefaultPlayerInventory,
+  PlayerInventory,
+} from "./playerInventory";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { Log } from "../../infrastructure/Logger";
 import { Delegator } from "../delegator";
 import { ServerPlayer } from "../player/players/serverPlayer";
 import { AsyncRepository, SimpleRepository } from "../repository";
-import { DefaultItem, Item } from "./item";
+import { DefaultItem, Item } from "../items/item";
 
 export class ServerPlayerInventoryDelegator implements Delegator {
   constructor(
-    private inventoryRepository: AsyncRepository<PlayerInventoryDto>,
+    private inventoryRepository: AsyncRepository<PlayerInventory>,
     private itemsRepository: AsyncRepository<Item>,
     private inGamePlayersRepository: SimpleRepository<ServerPlayer>
   ) {}
@@ -29,7 +29,7 @@ export class ServerPlayerInventoryDelegator implements Delegator {
           ev.callback(GameEvents.ITEM_DETAILS_RESPONSE.getEvent(items));
         });
         const inventory = await this.inventoryRepository.get(player.info.id);
-        connection.sendInventoryEvent(inventory || DefaultPlayerInventoryDto);
+        connection.sendInventoryEvent(inventory || DefaultPlayerInventory);
       } catch (error: any) {
         Log("ServerPlayerInventoryDelegator [Error]:  ", error);
       }

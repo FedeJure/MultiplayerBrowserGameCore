@@ -1,5 +1,10 @@
-import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
+import { PlayerInventory } from "../../domain/inventory/playerInventory";
 
-export const DefaultPlayerInventory: PlayerInventoryDto = {
-  items: ['1','2'],
+export const DefaultPlayerInventory: PlayerInventory = {
+  items: ['1', '2'],
+  money: {
+    gold: 0,
+    silver: 0,
+    copper: 10,
+  },
 };

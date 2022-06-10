@@ -13,7 +13,7 @@ import { AsyncRepository, SimpleRepository } from "../../domain/repository";
 import { RoomManager } from "../../domain/roomManager";
 import { MapsConfiguration } from "../configuration/MapsConfiguration";
 import { DependencyManager } from "../dependencyManager";
-import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
+import { PlayerInventory } from "../../domain/inventory/playerInventory";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
 import {
@@ -28,10 +28,11 @@ import { CollisionManager } from "../../domain/collisions/collisionManager";
 import { PhaserCollisionManager } from "../../view/collisions/phaserCollisionManager";
 
 //This is necessary because the dependency manager not work with generics
+
 class ClientConnectionRepository extends InMemoryRepository<ClientConnection> {}
 class InGamePlayerRepository extends InMemoryRepository<ServerPlayer> {}
 class PlayerInfoRepository extends InMemoryAsyncRepository<PlayerInfo> {}
-class PlayerInventoryRepository extends InMemoryAsyncRepository<PlayerInventoryDto> {}
+class PlayerInventoryRepository extends InMemoryAsyncRepository<PlayerInventory> {}
 class ItemRepository extends InMemoryAsyncRepository<Item> {}
 class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
 class AttackTargetRepository extends InMemoryRepository<CollisionableEntity> {}
@@ -72,9 +73,9 @@ export class ServerProvider {
     );
   }
 
-  public  get inventoryRepository(): AsyncRepository<PlayerInventoryDto> {
+  public  get inventoryRepository(): AsyncRepository<PlayerInventory> {
     return DependencyManager.GetOrInstantiate<
-      AsyncRepository<PlayerInventoryDto>
+      AsyncRepository<PlayerInventory>
     >(() => new PlayerInventoryRepository());
   }
 

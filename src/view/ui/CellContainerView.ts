@@ -46,9 +46,8 @@ export class CellContainerView extends GameObjects.GameObject {
   ) {
     super(scene, "ClientInventoryView");
     this.config = config ?? this.config;
-    this.container = this.scene.add.container(0, 0);
+    this.container = this.scene.add.container(x, x);
     this.container.setVisible(false);
-    this.scene.add.group(this, { runChildUpdate: true });
     if (config?.title) {
       const title = scene.add.text(0, 0, config!.title, { color: "#808080" });
 
@@ -65,6 +64,14 @@ export class CellContainerView extends GameObjects.GameObject {
     this.scene.scale.addListener(Phaser.Scale.Events.RESIZE, () => {
       this.setupPosition();
     });
+  }
+
+  setVisible(value: boolean) {
+    this.container.setVisible(value)
+  }
+
+  get visible() {
+    return this.container.visible
   }
 
   setupPosition() {

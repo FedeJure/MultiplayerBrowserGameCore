@@ -2,16 +2,16 @@ import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
 import { PlayerInfo } from "../player/playerInfo";
 import { ServerConnection } from "../serverConnection";
-import { DefaultItem, Item } from "./item";
+import { DefaultItem, Item } from "../items/item";
 import { InventoryView } from "./inventoryView";
 import { SimpleRepository } from "../repository";
-import { PlayerInventoryDto } from "../../infrastructure/dtos/playerInventoryDto";
+import { PlayerInventory } from "./playerInventory";
 
 export class ClientPlayerInventoryDelegator implements Delegator {
   private disposer: Disposer = new Disposer();
   constructor(
     private playerId: PlayerInfo["id"],
-    private repository: SimpleRepository<PlayerInventoryDto>,
+    private repository: SimpleRepository<PlayerInventory>,
     private connection: ServerConnection,
     private items: SimpleRepository<Item>,
     private inventoryView: InventoryView

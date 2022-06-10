@@ -147,7 +147,7 @@ export class ClientConnectionDelegator implements Delegator {
     );
     new DragAndDropContext(
       [
-        inventory,
+        inventory.itemInventory,
         new ClientBuildView(
           this.scene.scene.get(SceneNames.ClientHudScene),
           input

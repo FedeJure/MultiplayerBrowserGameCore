@@ -12,7 +12,7 @@ import { CompleteMapDelegator } from "./domain/environment/completeMapDelegator"
 import { MapsConfiguration } from "./infrastructure/configuration/MapsConfiguration";
 import { PlayerStateDelegator } from "./domain/gameState/playerStateDelegator";
 import { ServerPlayerCreatorDelegator } from "./domain/player/serverPlayerCreatorDelegator";
-import { ServerPlayerInventoryDelegator } from "./domain/items/serverPlayerInventoryDelegator";
+import { ServerPlayerInventoryDelegator } from "./domain/inventory/serverPlayerInventoryDelegator";
 import { ScenePresenter } from "./presentation/scenePresenter";
 import { AssetLoader } from "./view/AssetLoader";
 import { AssetsConfiguration } from "./infrastructure/configuration/AssetsConfiguration";

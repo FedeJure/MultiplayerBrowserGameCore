@@ -84,6 +84,8 @@ export class ClientBuildView extends CellContainerView {
       dtos,
       { padding: 10, title: "Build" }
     );
+    this.scene.add.group(this, { runChildUpdate: true });
+
     this.dtos = dtos;
     this.userInput = userInput;
     this.canChange = false;

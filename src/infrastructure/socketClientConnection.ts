@@ -14,7 +14,7 @@ import { Log } from "./Logger";
 import { SocketIOEvents } from "./events/socketIoEvents";
 import { PlayerInitialStateDto } from "./dtos/playerInitialStateDto";
 import { ProcessedMap } from "../domain/environment/processedMap";
-import { PlayerInventoryDto } from "./dtos/playerInventoryDto";
+import { PlayerInventory } from "../domain/inventory/playerInventory";
 import { LocalPlayerInitialStateDto } from "./dtos/localPlayerInitialStateDto";
 
 export class SocketClientConnection implements ClientConnection {
@@ -67,12 +67,10 @@ export class SocketClientConnection implements ClientConnection {
     );
   }
 
-  sendInventoryEvent(inventory: PlayerInventoryDto) {
+  sendInventoryEvent(inventory: PlayerInventory) {
     this.socket.emit(
       GameEvents.INVENTORY_UPDATED.name,
-      GameEvents.INVENTORY_UPDATED.getEvent({
-        items: inventory.items,
-      })
+      GameEvents.INVENTORY_UPDATED.getEvent(inventory)
     );
   }
 

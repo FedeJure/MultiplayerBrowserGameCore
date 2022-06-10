@@ -1,5 +1,6 @@
-import { Scene } from "phaser";
-import { InventoryView } from "../domain/items/inventoryView";
+import { GameObjects, Scene } from "phaser";
+import { InventoryView } from "../domain/inventory/inventoryView";
+import { Money } from "../domain/inventory/Money";
 import { Item } from "../domain/items/item";
 import { ItemType } from "../domain/items/itemType";
 import { PlayerInput } from "../domain/player/playerInput";
@@ -8,12 +9,13 @@ import { ContainerDto, CellContainerView } from "./ui/CellContainerView";
 import { loadAssetAsync } from "./utils";
 
 export class ClientInventoryView
-  extends CellContainerView
+  extends GameObjects.Container
   implements InventoryView
 {
   private dtos: ContainerDto[];
   private canChange: boolean;
   private userInput: PlayerInput;
+  public readonly itemInventory: CellContainerView;
 
   constructor(scene: Scene, userInput: PlayerInput) {
     const dtos: ContainerDto[] = [];
@@ -22,6 +24,13 @@ export class ClientInventoryView
     const rowCount = 7;
     const width = columnCount * cellSize;
     const height = rowCount * cellSize;
+
+    super(
+      scene,
+      scene.game.canvas.width - width * 1.25,
+      scene.game.canvas.height / 2 - height / 2,
+      []
+    );
     for (let h = 0; h < 5; h++) {
       for (let w = 0; w < 7; w++) {
         dtos.push({
@@ -43,33 +52,45 @@ export class ClientInventoryView
         });
       }
     }
-    super(
+    this.itemInventory = new CellContainerView(
       scene,
-      scene.game.canvas.width - width * 1.25,
-      scene.game.canvas.height / 2 - height / 2,
+      this.x,
+      this.y,
       width,
       height,
       dtos,
       { padding: 10, title: "Inventory" }
     );
+    this.scene.add.group(this, { runChildUpdate: true });
+    this.add(this.itemInventory)
     this.dtos = dtos;
     this.userInput = userInput;
     this.canChange = false;
   }
 
   update(): void {
-    if (this.canChange && this.userInput.inventory && !this.container.visible) {
-      this.container.setVisible(true);
+    if (
+      this.canChange &&
+      this.userInput.inventory &&
+      !this.itemInventory.visible
+    ) {
+      this.itemInventory.setVisible(true);
       this.canChange = false;
       return;
     }
-    if (this.canChange && this.userInput.inventory && this.container.visible) {
-      this.container.setVisible(false);
+    if (
+      this.canChange &&
+      this.userInput.inventory &&
+      this.itemInventory.visible
+    ) {
+      this.itemInventory.setVisible(false);
       this.canChange = false;
       return;
     }
     if (!this.userInput.inventory && !this.canChange) this.canChange = true;
   }
+
+  setMoney(money: Money) {}
 
   saveItems(items: Item[]) {
     Promise.all(
@@ -85,7 +106,7 @@ export class ClientInventoryView
         try {
           const item = items.shift();
           if (!item) return;
-          this.addObject(dto.id, item);
+          this.itemInventory.addObject(dto.id, item);
         } catch (error) {}
       });
     });

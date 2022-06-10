@@ -6,7 +6,7 @@ import { EnemyStatesDto } from "../dtos/enemyStatesDto";
 import { LocalPlayerInitialStateDto } from "../dtos/localPlayerInitialStateDto";
 import { PlayerInitialStateDto } from "../dtos/playerInitialStateDto";
 import { PlayerInputDto } from "../dtos/playerInputDto";
-import { PlayerInventoryDto } from "../dtos/playerInventoryDto";
+import { PlayerInventory } from "../../domain/inventory/playerInventory";
 
 export const GameEvents: {
   PLAYER_CONNECTED: {
@@ -51,7 +51,7 @@ export const GameEvents: {
   };
   INVENTORY_UPDATED: {
     name: string;
-    getEvent: (inventory: PlayerInventoryDto) => InventoryUpdatedEvent;
+    getEvent: (inventory: PlayerInventory) => InventoryUpdatedEvent;
   };
   ITEM_DETAILS: {
     name: string;
@@ -123,7 +123,7 @@ export const GameEvents: {
   },
   INVENTORY_UPDATED: {
     name: "inventory_updated",
-    getEvent: (inventory: PlayerInventoryDto) => ({
+    getEvent: (inventory: PlayerInventory) => ({
       time: new Date(),
       inventory,
     }),
@@ -204,7 +204,7 @@ export interface MapUpdateEvent extends BaseEvent {
 }
 
 export interface InventoryUpdatedEvent extends BaseEvent {
-  inventory: PlayerInventoryDto;
+  inventory: PlayerInventory;
 }
 
 export interface ItemDetailRequest extends BaseEvent {

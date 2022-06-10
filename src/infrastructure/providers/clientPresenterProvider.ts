@@ -7,7 +7,7 @@ import { PlayerRemoteMovementDelegator } from "../../domain/player/movement/play
 import { CurrentMapDelegator } from "../../domain/environment/currentMapDelegator";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
 import { BackgroundDelegator } from "../../domain/environment/backgroundDelegator";
-import { ClientPlayerInventoryDelegator } from "../../domain/items/clientPlayerInventoryDelegator";
+import { ClientPlayerInventoryDelegator } from "../../domain/inventory/clientPlayerInventoryDelegator";
 import { ViewPresenter } from "../../presentation/viewPresenter";
 import { ClientConnectionDelegator } from "../../domain/gameState/clientConnectionDelegator";
 import { ScenePresenter } from "../../presentation/scenePresenter";
@@ -24,7 +24,7 @@ import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator"
 import { ControllablePlayer } from "../../domain/player/players/controllablePlayer";
 import { Player } from "../../domain/player/players/player";
 import { Enemy } from "../../domain/enemies/enemy";
-import { InventoryView } from "../../domain/items/inventoryView";
+import { InventoryView } from "../../domain/inventory/inventoryView";
 
 export class ClientPresenterProvider {
   forLocalPlayer(
