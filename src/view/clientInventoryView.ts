@@ -6,6 +6,7 @@ import { ItemType } from "../domain/items/itemType";
 import { PlayerInput } from "../domain/player/playerInput";
 import { AssetLoader } from "./AssetLoader";
 import { ContainerDto, CellContainerView } from "./ui/CellContainerView";
+import { MoneyDisplay } from "./ui/MoneyDisplay";
 import { loadAssetAsync } from "./utils";
 
 export class ClientInventoryView
@@ -16,6 +17,7 @@ export class ClientInventoryView
   private canChange: boolean;
   private userInput: PlayerInput;
   public readonly itemInventory: CellContainerView;
+  public readonly moneyView: MoneyDisplay;
 
   constructor(scene: Scene, userInput: PlayerInput) {
     const dtos: ContainerDto[] = [];
@@ -61,8 +63,9 @@ export class ClientInventoryView
       dtos,
       { padding: 10, title: "Inventory" }
     );
+    this.moneyView = new MoneyDisplay(scene, this.x, this.y + height)
     this.scene.add.group(this, { runChildUpdate: true });
-    this.add(this.itemInventory)
+
     this.dtos = dtos;
     this.userInput = userInput;
     this.canChange = false;
@@ -75,6 +78,7 @@ export class ClientInventoryView
       !this.itemInventory.visible
     ) {
       this.itemInventory.setVisible(true);
+      this.moneyView.setVisible(true)
       this.canChange = false;
       return;
     }
@@ -84,6 +88,8 @@ export class ClientInventoryView
       this.itemInventory.visible
     ) {
       this.itemInventory.setVisible(false);
+      this.moneyView.setVisible(false)
+
       this.canChange = false;
       return;
     }

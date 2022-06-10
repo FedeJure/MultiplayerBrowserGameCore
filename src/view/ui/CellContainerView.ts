@@ -46,6 +46,7 @@ export class CellContainerView extends GameObjects.GameObject {
   ) {
     super(scene, "ClientInventoryView");
     this.config = config ?? this.config;
+    this.initConfigs()
     this.container = this.scene.add.container(x, x);
     this.container.setVisible(false);
     if (config?.title) {
@@ -66,6 +67,16 @@ export class CellContainerView extends GameObjects.GameObject {
     });
   }
 
+  initConfigs() {
+    if (this.config.padding) {
+      this.width += this.config.padding * 2
+      this.height += this.config.padding * 2
+    }
+    if (this.config.title) {
+      this.height += this.titleHeight
+    }
+  }
+
   setVisible(value: boolean) {
     this.container.setVisible(value)
   }
@@ -82,8 +93,8 @@ export class CellContainerView extends GameObjects.GameObject {
     const background = this.scene.add
       .image(0, 0, "inventoryBackground")
       .setDisplaySize(
-        this.width + this.config.padding * 2,
-        this.height + this.config.padding * 2 + this.titleHeight
+        this.width,
+        this.height
       )
       .setOrigin(0, 0);
     this.width = background.width;

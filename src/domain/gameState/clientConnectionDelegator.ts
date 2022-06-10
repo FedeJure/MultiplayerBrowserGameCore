@@ -24,6 +24,7 @@ import { SceneNames } from "../../view/scenes/SceneNames";
 import { ClientBuildView } from "../../view/clientBuildView";
 import { DraggableContext } from "../../view/ui/DraggableContext";
 import { DragAndDropContext } from "../../view/ui/ItemDragAndDropContext";
+import { InventoryView } from "../../view/ui/InventoryView";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -145,6 +146,7 @@ export class ClientConnectionDelegator implements Delegator {
       this.scene.scene.get(SceneNames.ClientHudScene),
       input
     );
+    new InventoryView()
     new DragAndDropContext(
       [
         inventory.itemInventory,
