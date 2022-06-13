@@ -14,8 +14,7 @@ export class LocalPlayerRenderDelegator implements Delegator {
     this.player.view.startFollowWithCam();
     this.player.view.scene.cameras.main.setZoom(this.startZoom);
     this.player.view.scene.cameras.main.setOrigin(0.5, 0.5);
-    this.player.view.scene.cameras.main.setDeadzone(100, 50)
-
+    this.player.view.scene.cameras.main.setDeadzone(50, 50)
     this.player.view.scene.input.on(
       "wheel",
       (pointer, gameObjects, deltaX, deltaY, deltaZ) => {

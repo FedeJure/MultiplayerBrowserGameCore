@@ -46,7 +46,7 @@ export class BackgroundDelegator implements Delegator {
           const isOnlyOne = currentMap.config.backgroundFile.length === 1;
           const factor = isOnlyOne
             ? 0
-            : (i / currentMap.config.backgroundFile.length) *0.9;
+            : (i / currentMap.config.backgroundFile.length) *0.5;
   
           neighborMaps.forEach((nm) => {
             const nb = nm.config.backgroundFile[i];
@@ -55,8 +55,8 @@ export class BackgroundDelegator implements Delegator {
               return;
             }
             const createdNeighbor = this.scene.add
-              .image(nm.originX, nm.originY - nm.height * 0.2, nb.key)
-              .setScrollFactor(factor, factor / 10)
+              .image(nm.originX, nm.originY, nb.key)
+              .setScrollFactor(factor, undefined)
               .setOrigin(0.5, 0)
               .setDepth(ExistentDepths.BACKGROUND);
             this.createdBackgroundsMap[nb.key] = createdNeighbor;
@@ -71,10 +71,10 @@ export class BackgroundDelegator implements Delegator {
           const currentBg = this.scene.add
             .image(
               currentMap.originX,
-              currentMap.originY - currentMap.height * 0.2,
+              currentMap.originY,
               bg.key
             )
-            .setScrollFactor(factor, factor / 10)
+            .setScrollFactor(factor, undefined)
             .setOrigin(0.5, 0)
             .setDepth(ExistentDepths.BACKGROUND);
   
