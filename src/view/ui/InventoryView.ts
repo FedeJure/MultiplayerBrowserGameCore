@@ -3,10 +3,14 @@ import { HtmlElement } from "./HtmlElement";
 export class InventoryView extends HtmlElement {
   private content: HTMLDivElement;
   private cells: HTMLDivElement[]
-  constructor() {
+  constructor(private slotsCount: number = 16) {
     super("Inventory");
-    this.container.style.right = `20%`;
-    this.container.style.top = `30%`;
+    this.container.style.top = `0`;
+    this.container.style.bottom = `0`;
+    this.container.style.right = `5%`;
+    this.container.style.margin = `auto 0`;
+    this.container.style.width = '250px'
+    this.container.style.height = '360px'
     this.initBackground();
     this.initContent();
     this.initTitle();
@@ -50,7 +54,7 @@ export class InventoryView extends HtmlElement {
 
       this.content.appendChild(cellContainer)
 
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < this.slotsCount; i++) {
           const cell = document.createElement('div')
           cell.style.width = '50px'
           cell.style.height = '50px'

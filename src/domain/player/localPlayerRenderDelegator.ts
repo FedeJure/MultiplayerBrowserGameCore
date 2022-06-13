@@ -3,7 +3,7 @@ import { ControllablePlayer } from "./players/controllablePlayer";
 
 export class LocalPlayerRenderDelegator implements Delegator {
   private readonly maxZoom = 3.5;
-  private readonly minZoom = 0.05;
+  private readonly minZoom = 1;
   private readonly startZoom = 1.6;
 
   private zoom = this.startZoom;

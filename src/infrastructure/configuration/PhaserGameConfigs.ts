@@ -4,14 +4,17 @@ import "phaser/plugins/spine/dist/SpinePlugin";
 const scaleOptions = {
   mode: Phaser.Scale.ScaleModes.RESIZE,
   autoCenter: Phaser.Scale.CENTER_BOTH,
-  min: {
-    width: 512,
-    height: 576,
-  },
-  max: {
-    width: 1366,
-    height: 768,
-  },
+  // min: {
+  //   width: 512,
+  //   height: 576,
+  // },
+  // max: {
+  //   width: 1366,
+  //   height: 768,
+  // },
+  width: "100%",
+  height: "100%",
+  orientation: Phaser.Scale.Orientation.PORTRAIT,
 };
 
 export const PhaserClientConfig: GameConfig = {
@@ -25,11 +28,11 @@ export const PhaserClientConfig: GameConfig = {
     target: 60,
   },
   physics: {
-    default: 'arcade',
+    default: "arcade",
     arcade: {
       gravity: {
-        y: 1300
-      }
+        y: 1300,
+      },
     },
   },
   plugins: {
@@ -57,7 +60,7 @@ export const PhaserServerConfig: GameConfig = {
     default: "arcade",
     arcade: {
       gravity: {
-        y: 1300
+        y: 1300,
       },
     },
   },
