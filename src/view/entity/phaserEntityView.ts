@@ -7,7 +7,6 @@ import { ExistentDepths } from "../existentDepths";
 import { PhaserCombatCollisionResolver } from "../player/combatCollisionResolver";
 import { ViewObject, ViewObjectType } from "../../domain/viewObject";
 import { Entity } from "../../domain/entity/entity";
-import { CollisionableEntity } from "../../domain/entity/CollisionableEntity";
 
 export class PhaserEntityView
   extends Phaser.GameObjects.Container

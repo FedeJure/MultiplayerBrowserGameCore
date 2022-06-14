@@ -2,7 +2,7 @@ import { GameConfig } from "../../view/gameConfig";
 import "phaser/plugins/spine/dist/SpinePlugin";
 
 const scaleOptions = {
-  mode: Phaser.Scale.ScaleModes.RESIZE,
+  mode: Phaser.Scale.ScaleModes.FIT,
   autoCenter: Phaser.Scale.CENTER_BOTH,
   // min: {
   //   width: 512,
@@ -12,8 +12,8 @@ const scaleOptions = {
   //   width: 1366,
   //   height: 768,
   // },
-  width: "100%",
-  height: "100%",
+  width: 1366,
+    height: 768,
   orientation: Phaser.Scale.Orientation.PORTRAIT,
 };
 

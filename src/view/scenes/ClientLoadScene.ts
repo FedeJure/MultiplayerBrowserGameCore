@@ -5,7 +5,7 @@ import { SceneNames } from "./SceneNames";
 
 export class ClientLoadScene extends Scene {
   constructor() {
-    super('');
+    super("");
   }
 
   preload(): void {
@@ -13,14 +13,23 @@ export class ClientLoadScene extends Scene {
       this.load.spine(
         s.key,
         AssetLoader.resolveAssetPath(s.jsonPath),
-        AssetLoader.resolveAssetPath(s.atlasPath)
+        AssetLoader.resolveAssetPath(s.atlasPath),
+        undefined,
+        { ...Phaser.Loader.XHRSettings(), async: true },
+        { ...Phaser.Loader.XHRSettings(), async: true }
       );
     });
     AssetsConfiguration.spritesheets.forEach((ss) => {
-      this.load.spritesheet({ ...ss, url: AssetLoader.resolveAssetPath(ss.path) });
+      this.load.spritesheet({
+        ...ss,
+        url: AssetLoader.resolveAssetPath(ss.path),
+      }, undefined, undefined, { ...Phaser.Loader.XHRSettings(), async: true });
     });
     AssetsConfiguration.images.forEach((image) => {
-      this.load.image({ ...image, url: AssetLoader.resolveAssetPath(image.path) });
+      this.load.image({
+        ...image,
+        url: AssetLoader.resolveAssetPath(image.path),
+      }, undefined, { ...Phaser.Loader.XHRSettings(), async: true });
     });
     this.load.once("complete", () => this.scene.launch(SceneNames.MainScene));
   }

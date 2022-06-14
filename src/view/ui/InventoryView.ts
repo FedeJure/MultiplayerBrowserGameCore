@@ -5,6 +5,7 @@ export class InventoryView extends HtmlElement {
   private cells: HTMLDivElement[]
   constructor(private slotsCount: number = 16) {
     super("Inventory");
+    this.container.style.display = "none"
     this.container.style.top = `0`;
     this.container.style.bottom = `0`;
     this.container.style.right = `5%`;
