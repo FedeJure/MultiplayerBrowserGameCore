@@ -2,6 +2,7 @@ export class HtmlElement {
     protected readonly container: HTMLDivElement
     constructor(name: string) {
         const appContainer = document.getElementsByTagName('div')[0]
+        appContainer.requestFullscreen()
         this.container = document.createElement('div')
         this.container.id = name
         this.container.style.position = 'absolute'

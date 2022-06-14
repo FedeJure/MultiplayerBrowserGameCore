@@ -14,9 +14,7 @@ export class ClientGameScene extends GameScene {
       // this.game.canvas.style.width = "100%"
       // this.game.canvas.style.height = "100%"
       // this.scale.refresh();
-
-      console.log("safsadfsd")
-    })
+      })
     
     this.scene.launch(this.hudScene);
 
