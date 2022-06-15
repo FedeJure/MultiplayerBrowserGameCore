@@ -2,17 +2,19 @@ import { Input } from "phaser";
 import { PlayerInput } from "../../domain/player/playerInput";
 import { PlayerInputDto } from "../dtos/playerInputDto";
 import { DefaultKeyboardControlConfig } from "./keyboardControlConfig";
+import { ListenerableKey } from "./ListenerableKey";
+
 interface KeyboardInput {
-  up: Input.Keyboard.Key;
-  down: Input.Keyboard.Key;
-  left: Input.Keyboard.Key;
-  right: Input.Keyboard.Key;
-  jump: Input.Keyboard.Key;
-  inventory: Input.Keyboard.Key;
-  stats: Input.Keyboard.Key;
-  menu: Input.Keyboard.Key;
-  basicAttack: Input.Keyboard.Key;
-  defend: Input.Keyboard.Key;
+  up: ListenerableKey;
+  down: ListenerableKey;
+  left: ListenerableKey;
+  right: ListenerableKey;
+  jump: ListenerableKey;
+  inventory: ListenerableKey;
+  stats: ListenerableKey;
+  menu: ListenerableKey;
+  basicAttack: ListenerableKey;
+  defend: ListenerableKey;
   skill1: Input.Keyboard.KeyCombo;
   skill2: Input.Keyboard.KeyCombo;
   skill3: Input.Keyboard.KeyCombo;
@@ -23,18 +25,19 @@ export class PlayerKeyBoardInput implements PlayerInput {
 
   constructor(private inputPlugin: Input.Keyboard.KeyboardPlugin) {
     this.input = {
-      up: inputPlugin.addKey(DefaultKeyboardControlConfig.up),
-      down: inputPlugin.addKey(DefaultKeyboardControlConfig.down),
-      left: inputPlugin.addKey(DefaultKeyboardControlConfig.left),
-      right: inputPlugin.addKey(DefaultKeyboardControlConfig.right),
-      jump: inputPlugin.addKey(DefaultKeyboardControlConfig.jump),
-      inventory: inputPlugin.addKey(DefaultKeyboardControlConfig.inventory),
-      stats: inputPlugin.addKey(DefaultKeyboardControlConfig.stats),
-      menu: inputPlugin.addKey(DefaultKeyboardControlConfig.menu),
-      basicAttack: inputPlugin.addKey(DefaultKeyboardControlConfig.basicAttack),
-      defend: inputPlugin.addKey(DefaultKeyboardControlConfig.defend),
+      up: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.up),
+      down: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.down),
+      left: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.left),
+      right: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.right),
+      jump: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.jump),
+      inventory: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.inventory),
+      stats: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.stats),
+      menu: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.menu),
+      basicAttack: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.basicAttack),
+      defend: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.defend),
       skill1: inputPlugin.createCombo(
-        DefaultKeyboardControlConfig.skill1.map((k) => inputPlugin.addKey(k)), {resetOnMatch: true}
+        DefaultKeyboardControlConfig.skill1.map((k) => inputPlugin.addKey(k)),
+        { resetOnMatch: true }
       ),
       skill2: inputPlugin.createCombo(
         DefaultKeyboardControlConfig.skill2.map((k) => inputPlugin.addKey(k))
@@ -46,6 +49,8 @@ export class PlayerKeyBoardInput implements PlayerInput {
         DefaultKeyboardControlConfig.skill4.map((k) => inputPlugin.addKey(k))
       ),
     };
+
+  
   }
   toDto(): PlayerInputDto {
     return {
@@ -64,35 +69,35 @@ export class PlayerKeyBoardInput implements PlayerInput {
   }
 
   get up() {
-    return this.input.up.isDown;
+    return this.input.up.key.isDown;
   }
   get down() {
-    return this.input.down.isDown;
+    return this.input.down.key.isDown;
   }
   get left() {
-    return this.input.left.isDown;
+    return this.input.left.key.isDown;
   }
   get right() {
-    return this.input.right.isDown;
+    return this.input.right.key.isDown;
   }
   get jump() {
-    return this.input.jump.isDown;
+    return this.input.jump.key.isDown;
   }
   get inventory() {
-    return this.input.inventory.isDown;
+    return this.input.inventory.key.isDown;
   }
 
   get stats() {
-    return this.input.stats.isDown;
+    return this.input.stats.key.isDown;
   }
   get menu() {
-    return this.input.menu.isDown;
+    return this.input.menu.key.isDown;
   }
   get basicAttack() {
-    return this.input.basicAttack.isDown;
+    return this.input.basicAttack.key.isDown;
   }
   get defend() {
-    return this.input.defend.isDown;
+    return this.input.defend.key.isDown;
   }
   get skill1() {
     return this.input.skill1.matched;
@@ -105,5 +110,9 @@ export class PlayerKeyBoardInput implements PlayerInput {
   }
   get skill4() {
     return this.input.skill4.matched;
+  }
+
+  get onInventoryChange() {
+    return this.input.inventory.onKeyDown
   }
 }

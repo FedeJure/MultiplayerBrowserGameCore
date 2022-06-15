@@ -1,4 +1,4 @@
-import { filter } from "rxjs";
+import { filter, Observable } from "rxjs";
 import { ClientConnection } from "../../domain/clientConnection";
 import { PlayerInput } from "../../domain/player/playerInput";
 import { PlayerInputDto } from "../dtos/playerInputDto";
@@ -96,5 +96,9 @@ export class PlayerSocketInput implements PlayerInput {
   }
   get skill4() {
     return this._skill4;
+  }
+
+  get onInventoryChange() {
+    return new Observable<void>()
   }
 }

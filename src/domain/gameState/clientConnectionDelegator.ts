@@ -18,13 +18,12 @@ import { AttackTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 import { MapManager } from "../environment/mapManager";
 import { CollisionManager } from "../collisions/collisionManager";
-import { CellContainerView } from "../../view/ui/CellContainerView";
 import { ClientInventoryView } from "../../view/clientInventoryView";
 import { SceneNames } from "../../view/scenes/SceneNames";
 import { ClientBuildView } from "../../view/clientBuildView";
 import { DraggableContext } from "../../view/ui/DraggableContext";
 import { DragAndDropContext } from "../../view/ui/ItemDragAndDropContext";
-import { InventoryView } from "../../view/ui/InventoryView";
+import { HtmlInventoryView } from "../../view/ui/HtmlInventoryView";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -138,26 +137,26 @@ export class ClientConnectionDelegator implements Delegator {
       target: player,
       type: AttackTargetType.PLAYER,
     });
-    const draggableContent = new DraggableContext(
-      this.scene.scene.get(SceneNames.ClientHudScene)
-    );
+    // const draggableContent = new DraggableContext(
+    //   this.scene.scene.get(SceneNames.ClientHudScene)
+    // );
 
-    const inventory = new ClientInventoryView(
-      this.scene.scene.get(SceneNames.ClientHudScene),
-      input
-    );
-    new InventoryView()
-    new DragAndDropContext(
-      [
-        inventory.itemInventory,
-        new ClientBuildView(
-          this.scene.scene.get(SceneNames.ClientHudScene),
-          input
-        ),
-      ],
-      draggableContent,
-      this.scene
-    );
+    // const inventory = new ClientInventoryView(
+    //   this.scene.scene.get(SceneNames.ClientHudScene),
+    //   input
+    // );
+    const inventory = new HtmlInventoryView(this.scene, input)
+    // new DragAndDropContext(
+    //   [
+    //     inventory.itemInventory,
+    //     new ClientBuildView(
+    //       this.scene.scene.get(SceneNames.ClientHudScene),
+    //       input
+    //     ),
+    //   ],
+    //   draggableContent,
+    //   this.scene
+    // );
 
     this.presenterProvider.forInventory(info.id, inventory);
     this.presenterProvider.forLocalPlayer(input, player, view);

@@ -1,12 +1,25 @@
-export class HtmlElement {
+import { GameObjects, Scene } from "phaser"
+
+export class HtmlElement extends GameObjects.GameObject {
     protected readonly container: HTMLDivElement
-    constructor(name: string) {
-        const appContainer = document.getElementsByTagName('div')[0]
-        appContainer.requestFullscreen()
+    constructor(scene: Scene, name: string, container: HTMLDivElement) {
+        super(scene, name)
         this.container = document.createElement('div')
         this.container.id = name
         this.container.style.position = 'absolute'
         this.container.setAttribute('name', name)
-        appContainer.appendChild(this.container)
+        container.appendChild(this.container)
+        this.container.hidden = true
+        container.requestFullscreen()
+
+
+    }
+
+    setVisible(visible: boolean) {
+        this.container.hidden = visible
+    }
+
+    get visible() {
+        return !this.container.hidden
     }
 }

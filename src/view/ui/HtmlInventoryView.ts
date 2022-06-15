@@ -1,11 +1,14 @@
+import { Scene } from "phaser";
+import { InventoryView } from "../../domain/inventory/inventoryView";
+import { Item } from "../../domain/items/item";
+import { PlayerInput } from "../../domain/player/playerInput";
 import { HtmlElement } from "./HtmlElement";
 
-export class InventoryView extends HtmlElement {
+export class HtmlInventoryView extends HtmlElement implements InventoryView {
   private content: HTMLDivElement;
   private cells: HTMLDivElement[]
-  constructor(private slotsCount: number = 16) {
-    super("Inventory");
-    // this.container.style.display = "none"
+  constructor(scene: Scene,  playerInput: PlayerInput, private slotsCount: number = 16) {
+    super(scene, "Inventory", document.getElementsByTagName('div')[0]);
     this.container.style.top = `0`;
     this.container.style.bottom = `0`;
     this.container.style.right = `5%`;
@@ -16,6 +19,13 @@ export class InventoryView extends HtmlElement {
     this.initContent();
     this.initTitle();
     this.initCells();
+    this.container.hidden = true
+    playerInput.onInventoryChange.subscribe(() => {
+      this.container.hidden = !this.container.hidden
+    })
+  }
+  saveItems(items: Item[]) {
+    
   }
 
   initContent() {
@@ -59,7 +69,6 @@ export class InventoryView extends HtmlElement {
           const cell = document.createElement('div')
           cell.style.width = '50px'
           cell.style.height = '50px'
-          cell.style.backgroundColor = 'red'
           cell.style.margin = '1px'
 
           cellContainer.appendChild(cell)
