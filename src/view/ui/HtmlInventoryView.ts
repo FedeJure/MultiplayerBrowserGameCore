@@ -1,6 +1,7 @@
 import { Scene } from "phaser";
 import { InventoryView } from "../../domain/inventory/inventoryView";
 import { Item } from "../../domain/items/item";
+import { ItemType } from "../../domain/items/itemType";
 import { PlayerInput } from "../../domain/player/playerInput";
 import { HtmlCellView } from "./HtmlCellView";
 import { HtmlElement } from "./HtmlElement";
@@ -13,7 +14,11 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     playerInput: PlayerInput,
     private slotsCount: number = 16
   ) {
-    super(scene, "Inventory", document.getElementById('gameContainer') as HTMLDivElement);
+    super(
+      scene,
+      "Inventory",
+      document.getElementById("gameContainer") as HTMLDivElement
+    );
     // this.container.ondragstart = function() { return false; };
     this.container.style.top = `0`;
     this.container.style.bottom = `0`;
@@ -31,13 +36,13 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     });
   }
   saveItems(items: Item[]) {
-    this.cells.forEach(cell => {
+    this.cells.forEach((cell) => {
       if (cell.isEmpty) {
-        const item = items.shift()
-        if (!item) return
-        cell.setItem(item)
+        const item = items.shift();
+        if (!item) return;
+        cell.setItem(item);
       }
-    })
+    });
   }
 
   initContent() {
@@ -78,9 +83,18 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     this.content.appendChild(cellContainer);
 
     for (let i = 0; i < this.slotsCount; i++) {
-      const cell = new HtmlCellView(50);
+      const cell = new HtmlCellView(50, [
+        ItemType.ARMOR_EQUIPMENT,
+        ItemType.HELMET_EQUIPMENT,
+        ItemType.GLOVES_EQUIPMENT,
+        ItemType.BOOTS_EQUIPMENT,
+        ItemType.PRIMARY_WEAPON,
+        ItemType.SECONDARY_WEAPON,
+        ItemType.CONSUMIBLE,
+        ItemType.QUEST,
+      ]);
       cellContainer.appendChild(cell.element);
-      this.cells.push(cell)
+      this.cells.push(cell);
     }
   }
 }

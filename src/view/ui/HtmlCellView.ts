@@ -1,11 +1,12 @@
 import { Item } from "../../domain/items/item";
 import { AssetLoader } from "../AssetLoader";
 import interact from "interactjs";
+import { ItemType } from "../../domain/items/itemType";
 
 export class HtmlCellView {
   readonly element: HTMLDivElement;
   private img: HTMLImageElement | null = null;
-  constructor(size: number) {
+  constructor(size: number, acceptedTypes: ItemType[]) {
     this.element = document.createElement("div");
     this.element.style.width = `${size}px`;
     this.element.style.height = `${size}px`;
@@ -13,6 +14,12 @@ export class HtmlCellView {
     this.element.style.backgroundColor = '#b08e6b'
 
     interact(this.element).dropzone({
+        accept: ({draggableElement}) => {
+            const rawTypes = draggableElement.getAttribute('types')
+            if (!rawTypes) return false
+            const types = rawTypes.split(',')
+            return acceptedTypes.some(type => types.includes(type))
+        },
       overlap: 0.25,
       ondrop: (event) => {
         if (!this.img || event.relatedTarget === this.img) {
@@ -54,6 +61,7 @@ export class HtmlCellView {
     if (!this.isEmpty) throw new Error("Cell not empty");
 
     const img = document.createElement("img");
+    img.setAttribute("types", item.types.join(','))
     img.src = AssetLoader.resolveAssetPath(item.icon);
     this.setExistentItem(img);
   }
