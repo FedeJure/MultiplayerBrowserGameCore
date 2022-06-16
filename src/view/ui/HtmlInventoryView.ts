@@ -19,7 +19,6 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
       "Inventory",
       document.getElementById("gameContainer") as HTMLDivElement
     );
-    // this.container.ondragstart = function() { return false; };
     this.container.style.top = `0`;
     this.container.style.bottom = `0`;
     this.container.style.right = `5%`;
@@ -35,7 +34,7 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
       this.container.hidden = !this.container.hidden;
     });
   }
-  saveItems(items: Item[]) {
+  saveItems(items: (Item | null)[]) {
     this.cells.forEach((cell) => {
       if (cell.isEmpty) {
         const item = items.shift();

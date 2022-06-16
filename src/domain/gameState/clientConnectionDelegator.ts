@@ -18,11 +18,6 @@ import { AttackTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 import { MapManager } from "../environment/mapManager";
 import { CollisionManager } from "../collisions/collisionManager";
-import { ClientInventoryView } from "../../view/clientInventoryView";
-import { SceneNames } from "../../view/scenes/SceneNames";
-import { ClientBuildView } from "../../view/clientBuildView";
-import { DraggableContext } from "../../view/ui/DraggableContext";
-import { DragAndDropContext } from "../../view/ui/ItemDragAndDropContext";
 import { HtmlInventoryView } from "../../view/ui/HtmlInventoryView";
 
 export class ClientConnectionDelegator implements Delegator {

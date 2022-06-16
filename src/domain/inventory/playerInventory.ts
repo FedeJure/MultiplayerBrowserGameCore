@@ -2,7 +2,7 @@ import { Item } from "../items/item";
 import { Money } from "./Money";
 
 export interface PlayerInventory {
-  items: Item["id"][];
+  items: (Item["id"] | null)[];
   money: Money;
 }
 

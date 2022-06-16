@@ -21,13 +21,14 @@ export class ClientPlayerInventoryDelegator implements Delegator {
     this.disposer.add(
       this.connection.onInventoryUpdate.subscribe(async ({ inventory }) => {
         this.repository.save(this.playerId, inventory);
-        const newItems = inventory.items.filter((i) => !this.items.get(i));
+        const newItems = inventory.items.filter((i) => i !== null && !this.items.get(i)) as string[];
         const response = await this.connection.emitGetItemDetails(newItems);
         const items = inventory.items.map(
           (id) =>
+            id !== null ?
             this.items.get(id) ??
             response.items.find((item) => item.id === id) ??
-            DefaultItem
+            DefaultItem : null
         );
         this.inventoryView.saveItems(items);
       })
