@@ -52,7 +52,6 @@ export class HtmlCellView {
     interact(this.img).draggable({
       enabled: true,
       onend: (event) => {
-        console.log(event)
         this.setExistentItem(event.currentTarget);
       },
       onmove: this.dragMoveListener,

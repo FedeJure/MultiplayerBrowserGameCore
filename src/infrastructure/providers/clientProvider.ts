@@ -12,14 +12,14 @@ import { ControllablePlayer } from "../../domain/player/players/controllablePlay
 import { SimpleRepository } from "../../domain/repository";
 import { InMemoryRepository } from "../repositories/InMemoryRepository";
 import { Item } from "../../domain/items/item";
-import { PlayerInventory } from "../../domain/inventory/playerInventory";
+import { PlayerInventoryDto } from "../../domain/inventory/playerInventory";
 import { CollisionableEntity } from "../../domain/entity/CollisionableEntity";
 import { MapManager } from "../../domain/environment/mapManager";
 import { Enemy } from "../../domain/enemies/enemy";
 import { CollisionManager } from "../../domain/collisions/collisionManager";
 
 //This is necessary because the dependency manager not work with generics
-class InventoryRepository extends InMemoryRepository<PlayerInventory> {}
+class InventoryRepository extends InMemoryRepository<PlayerInventoryDto> {}
 class ItemRepository extends InMemoryRepository<Item> {}
 class AttackTargetRepository extends InMemoryRepository<CollisionableEntity> {}
 class SpawnedEnemiesRepository extends InMemoryRepository<Enemy> {}
@@ -71,9 +71,9 @@ export class ClientProvider {
     );
   }
 
-  public static get inventoryRepository(): SimpleRepository<PlayerInventory> {
+  public static get inventoryRepository(): SimpleRepository<PlayerInventoryDto> {
     return DependencyManager.GetOrInstantiate<
-      SimpleRepository<PlayerInventory>
+      SimpleRepository<PlayerInventoryDto>
     >(() => new InventoryRepository());
   }
 

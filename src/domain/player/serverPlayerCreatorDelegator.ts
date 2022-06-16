@@ -14,7 +14,7 @@ import { DefaultConfiguration } from "./playerConfiguration";
 import { ServerPlayer } from "./players/serverPlayer";
 import { AsyncRepository, SimpleRepository } from "../repository";
 import { PlayerInfo } from "./playerInfo";
-import { PlayerInventory } from "../inventory/playerInventory";
+import { PlayerInventoryDto } from "../inventory/playerInventory";
 import { Scene } from "phaser";
 import { PlayerMovement } from "./movement/playerMovement";
 import { DefaultPlayerStats, PlayerStats } from "./playerStats";
@@ -24,6 +24,7 @@ import { PhaserCombatCollisionResolver } from "../../view/player/combatCollision
 import { MapManager } from "../environment/mapManager";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
 import { CollisionManager } from "../collisions/collisionManager";
+import { ServerPlayerInventory } from "../inventory/serverPlayerInventory";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -33,7 +34,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private roomManager: RoomManager,
     private playerInfoRepository: AsyncRepository<PlayerInfo>,
     private playerStateRepository: PlayerStateRepository,
-    private inventoryRepository: AsyncRepository<PlayerInventory>,
+    private inventoryRepository: AsyncRepository<PlayerInventoryDto>,
     private presenterProvider: ServerPresenterProvider,
     private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
     private playerStatsRepository: AsyncRepository<PlayerStats>,
@@ -165,6 +166,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       connection,
       this.playerInputRequestRepository
     );
+
     const player = new ServerPlayer(
       playerInfo,
       playerState,

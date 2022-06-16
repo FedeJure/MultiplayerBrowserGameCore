@@ -1,6 +1,6 @@
 import {
   DefaultPlayerInventory,
-  PlayerInventory,
+  PlayerInventoryDto,
 } from "./playerInventory";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { Log } from "../../infrastructure/Logger";
@@ -11,7 +11,7 @@ import { DefaultItem, Item } from "../items/item";
 
 export class ServerPlayerInventoryDelegator implements Delegator {
   constructor(
-    private inventoryRepository: AsyncRepository<PlayerInventory>,
+    private inventoryRepository: AsyncRepository<PlayerInventoryDto>,
     private itemsRepository: AsyncRepository<Item>,
     private inGamePlayersRepository: SimpleRepository<ServerPlayer>
   ) {}

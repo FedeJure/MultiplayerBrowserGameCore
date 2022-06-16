@@ -13,7 +13,7 @@ import { AsyncRepository, SimpleRepository } from "../../domain/repository";
 import { RoomManager } from "../../domain/roomManager";
 import { MapsConfiguration } from "../configuration/MapsConfiguration";
 import { DependencyManager } from "../dependencyManager";
-import { PlayerInventory } from "../../domain/inventory/playerInventory";
+import { PlayerInventoryDto } from "../../domain/inventory/playerInventory";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
 import {
@@ -32,7 +32,7 @@ import { PhaserCollisionManager } from "../../view/collisions/phaserCollisionMan
 class ClientConnectionRepository extends InMemoryRepository<ClientConnection> {}
 class InGamePlayerRepository extends InMemoryRepository<ServerPlayer> {}
 class PlayerInfoRepository extends InMemoryAsyncRepository<PlayerInfo> {}
-class PlayerInventoryRepository extends InMemoryAsyncRepository<PlayerInventory> {}
+class PlayerInventoryRepository extends InMemoryAsyncRepository<PlayerInventoryDto> {}
 class ItemRepository extends InMemoryAsyncRepository<Item> {}
 class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
 class AttackTargetRepository extends InMemoryRepository<CollisionableEntity> {}
@@ -73,9 +73,9 @@ export class ServerProvider {
     );
   }
 
-  public  get inventoryRepository(): AsyncRepository<PlayerInventory> {
+  public  get inventoryRepository(): AsyncRepository<PlayerInventoryDto> {
     return DependencyManager.GetOrInstantiate<
-      AsyncRepository<PlayerInventory>
+      AsyncRepository<PlayerInventoryDto>
     >(() => new PlayerInventoryRepository());
   }
 

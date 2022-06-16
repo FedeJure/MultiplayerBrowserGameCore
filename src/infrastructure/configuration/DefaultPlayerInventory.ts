@@ -1,6 +1,6 @@
-import { PlayerInventory } from "../../domain/inventory/playerInventory";
+import { PlayerInventoryDto } from "../../domain/inventory/playerInventory";
 
-export const DefaultPlayerInventory: PlayerInventory = {
+export const DefaultPlayerInventory: PlayerInventoryDto = {
   items: ['1', null, '2'],
   money: {
     gold: 0,

@@ -24,7 +24,7 @@ import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator"
 import { ControllablePlayer } from "../../domain/player/players/controllablePlayer";
 import { Player } from "../../domain/player/players/player";
 import { Enemy } from "../../domain/enemies/enemy";
-import { InventoryView } from "../../domain/inventory/inventoryView";
+import { LocalCLientPlayer } from "../../domain/player/players/localClientPlayer";
 
 export class ClientPresenterProvider {
   forLocalPlayer(
@@ -104,16 +104,14 @@ export class ClientPresenterProvider {
     ]);
   }
   forInventory(
-    playerId: PlayerInfo["id"],
-    view: InventoryView & GameObjects.GameObject
+    player: LocalCLientPlayer,
+    view: GameObjects.GameObject
   ) {
     new ViewPresenter(view, [
       new ClientPlayerInventoryDelegator(
-        playerId,
-        ClientProvider.inventoryRepository,
+        player,
         ClientProvider.serverConnection,
         ClientProvider.itemsRepository,
-        view
       ),
     ]);
   }

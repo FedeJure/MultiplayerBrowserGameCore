@@ -19,6 +19,8 @@ import { PhaserCombatCollisionResolver } from "../../view/player/combatCollision
 import { MapManager } from "../environment/mapManager";
 import { CollisionManager } from "../collisions/collisionManager";
 import { HtmlInventoryView } from "../../view/ui/HtmlInventoryView";
+import { PlayerInventory } from "../inventory/controllablePlayerInventory";
+import { LocalCLientPlayer } from "../player/players/localClientPlayer";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -118,13 +120,22 @@ export class ClientConnectionDelegator implements Delegator {
     const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
 
     const movementSystem = new PlayerMovement();
-    const player = new ControllablePlayer(
+    const player = new LocalCLientPlayer(
       info,
       state,
       view,
       stats ?? DefaultPlayerStats,
       movementSystem,
       input,
+      new PlayerInventory(
+        new Array(stats.inventorySize),
+        {
+          gold: 0,
+          silver: 0,
+          copper: 0,
+        },
+        new HtmlInventoryView(this.scene, input)
+      ),
       this.mapManager
     );
     view.setEntityReference(player);
@@ -132,29 +143,10 @@ export class ClientConnectionDelegator implements Delegator {
       target: player,
       type: AttackTargetType.PLAYER,
     });
-    // const draggableContent = new DraggableContext(
-    //   this.scene.scene.get(SceneNames.ClientHudScene)
-    // );
 
-    // const inventory = new ClientInventoryView(
-    //   this.scene.scene.get(SceneNames.ClientHudScene),
-    //   input
-    // );
-    const inventory = new HtmlInventoryView(this.scene, input)
-    // new DragAndDropContext(
-    //   [
-    //     inventory.itemInventory,
-    //     new ClientBuildView(
-    //       this.scene.scene.get(SceneNames.ClientHudScene),
-    //       input
-    //     ),
-    //   ],
-    //   draggableContent,
-    //   this.scene
-    // );
-
-    this.presenterProvider.forInventory(info.id, inventory);
+    this.presenterProvider.forInventory(player, view);
     this.presenterProvider.forLocalPlayer(input, player, view);
+
     this.inGamePlayersRepository.save(player.info.id, player);
   }
 }

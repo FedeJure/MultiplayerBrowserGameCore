@@ -1,12 +1,12 @@
 import { Item } from "../items/item";
 import { Money } from "./Money";
 
-export interface PlayerInventory {
+export interface PlayerInventoryDto {
   items: (Item["id"] | null)[];
   money: Money;
 }
 
-export const DefaultPlayerInventory: PlayerInventory = {
+export const DefaultPlayerInventory: PlayerInventoryDto = {
   items: [],
   money: {
     gold: 0,

@@ -1,26 +1,23 @@
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
-import { PlayerInfo } from "../player/playerInfo";
 import { ServerConnection } from "../serverConnection";
 import { DefaultItem, Item } from "../items/item";
-import { InventoryView } from "./inventoryView";
 import { SimpleRepository } from "../repository";
-import { PlayerInventory } from "./playerInventory";
+import { LocalCLientPlayer } from "../player/players/localClientPlayer";
 
 export class ClientPlayerInventoryDelegator implements Delegator {
   private disposer: Disposer = new Disposer();
+  
   constructor(
-    private playerId: PlayerInfo["id"],
-    private repository: SimpleRepository<PlayerInventory>,
+    private player: LocalCLientPlayer,
     private connection: ServerConnection,
     private items: SimpleRepository<Item>,
-    private inventoryView: InventoryView
-  ) {}
+  ) {
+  }
 
   init(): void {
     this.disposer.add(
       this.connection.onInventoryUpdate.subscribe(async ({ inventory }) => {
-        this.repository.save(this.playerId, inventory);
         const newItems = inventory.items.filter((i) => i !== null && !this.items.get(i)) as string[];
         const response = await this.connection.emitGetItemDetails(newItems);
         const items = inventory.items.map(
@@ -30,7 +27,7 @@ export class ClientPlayerInventoryDelegator implements Delegator {
             response.items.find((item) => item.id === id) ??
             DefaultItem : null
         );
-        this.inventoryView.saveItems(items);
+        this.player.inventory.setItems(items)
       })
     );
   }
