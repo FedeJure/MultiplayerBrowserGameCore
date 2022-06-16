@@ -20,7 +20,7 @@ export class HtmlCellView {
             const types = rawTypes.split(',')
             return acceptedTypes.some(type => types.includes(type))
         },
-      overlap: 0.25,
+      overlap: 'center',
       ondrop: (event) => {
         if (!this.img || event.relatedTarget === this.img) {
           this.setExistentItem(event.relatedTarget);
@@ -30,6 +30,7 @@ export class HtmlCellView {
   }
 
   dragMoveListener = (event) => {
+    this.img = null
     var target = event.target;
     var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
     var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
@@ -51,7 +52,8 @@ export class HtmlCellView {
     interact(this.img).draggable({
       enabled: true,
       onend: (event) => {
-        this.setExistentItem(event.target);
+        console.log(event)
+        this.setExistentItem(event.currentTarget);
       },
       onmove: this.dragMoveListener,
     });
