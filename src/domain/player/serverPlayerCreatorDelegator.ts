@@ -14,7 +14,7 @@ import { DefaultConfiguration } from "./playerConfiguration";
 import { ServerPlayer } from "./players/serverPlayer";
 import { AsyncRepository, SimpleRepository } from "../repository";
 import { PlayerInfo } from "./playerInfo";
-import { PlayerInventoryDto } from "../inventory/playerInventory";
+import { PlayerInventoryDto } from "../inventory/playerInventoryDto";
 import { Scene } from "phaser";
 import { PlayerMovement } from "./movement/playerMovement";
 import { DefaultPlayerStats, PlayerStats } from "./playerStats";

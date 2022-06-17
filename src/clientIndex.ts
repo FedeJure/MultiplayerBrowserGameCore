@@ -10,6 +10,7 @@ import { ClientGameScene } from "./view/scenes/ClientGameScene";
 import { AssetsConfiguration } from "./infrastructure/configuration/AssetsConfiguration";
 import { AssetLoader } from "./view/AssetLoader";
 import { PhaserCollisionManager } from "./view/collisions/phaserCollisionManager";
+import { BackgroundScene } from "./view/scenes/BackgroundScene";
 export const InitClientGame = (
   socket: any,
   localPlayerId: string,
@@ -17,6 +18,7 @@ export const InitClientGame = (
 ) => {
   const connectionWithServer = new SocketServerConnection(socket);
   const hudScene = new GameplayHud(connectionWithServer);
+  const bacgrkoundScene = new BackgroundScene();
 
   const scene = new ClientGameScene(hudScene);
   ClientProvider.Init(
@@ -27,7 +29,7 @@ export const InitClientGame = (
   );
   const config = {
     ...PhaserClientConfig,
-    scene: [new ClientLoadScene(), scene, hudScene],
+    scene: [new ClientLoadScene(), scene, hudScene, bacgrkoundScene],
   };
   const game = new Phaser.Game(config);
   AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);

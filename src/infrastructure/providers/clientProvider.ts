@@ -12,7 +12,7 @@ import { ControllablePlayer } from "../../domain/player/players/controllablePlay
 import { SimpleRepository } from "../../domain/repository";
 import { InMemoryRepository } from "../repositories/InMemoryRepository";
 import { Item } from "../../domain/items/item";
-import { PlayerInventoryDto } from "../../domain/inventory/playerInventory";
+import { PlayerInventoryDto } from "../../domain/inventory/playerInventoryDto";
 import { CollisionableEntity } from "../../domain/entity/CollisionableEntity";
 import { MapManager } from "../../domain/environment/mapManager";
 import { Enemy } from "../../domain/enemies/enemy";

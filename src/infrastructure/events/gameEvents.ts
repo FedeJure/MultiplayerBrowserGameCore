@@ -6,7 +6,7 @@ import { EnemyStatesDto } from "../dtos/enemyStatesDto";
 import { LocalPlayerInitialStateDto } from "../dtos/localPlayerInitialStateDto";
 import { PlayerInitialStateDto } from "../dtos/playerInitialStateDto";
 import { PlayerInputDto } from "../dtos/playerInputDto";
-import { PlayerInventoryDto } from "../../domain/inventory/playerInventory";
+import { PlayerInventoryDto } from "../../domain/inventory/playerInventoryDto";
 
 export const GameEvents: {
   PLAYER_CONNECTED: {

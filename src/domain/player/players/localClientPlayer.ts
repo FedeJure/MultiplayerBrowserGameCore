@@ -1,5 +1,5 @@
 import { MapManager } from "../../environment/mapManager";
-import { PlayerInventory } from "../../inventory/controllablePlayerInventory";
+import { PlayerInventory } from "../../inventory/playerInventory";
 import { PlayerView } from "../../playerView";
 import { PlayerMovement } from "../movement/playerMovement";
 import { PlayerInfo } from "../playerInfo";

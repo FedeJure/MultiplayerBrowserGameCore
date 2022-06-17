@@ -1,4 +1,4 @@
-import { PlayerInventory } from "./controllablePlayerInventory";
+import { PlayerInventory } from "./playerInventory";
 
 export class ServerPlayerInventory extends PlayerInventory {
     

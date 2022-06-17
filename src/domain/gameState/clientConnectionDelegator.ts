@@ -19,7 +19,7 @@ import { PhaserCombatCollisionResolver } from "../../view/player/combatCollision
 import { MapManager } from "../environment/mapManager";
 import { CollisionManager } from "../collisions/collisionManager";
 import { HtmlInventoryView } from "../../view/ui/HtmlInventoryView";
-import { PlayerInventory } from "../inventory/controllablePlayerInventory";
+import { PlayerInventory } from "../inventory/playerInventory";
 import { LocalCLientPlayer } from "../player/players/localClientPlayer";
 
 export class ClientConnectionDelegator implements Delegator {

@@ -1,14 +1,17 @@
 import { Scene } from "phaser";
 import { InventoryView } from "../../domain/inventory/inventoryView";
+import { Money } from "../../domain/inventory/Money";
 import { Item } from "../../domain/items/item";
 import { ItemType } from "../../domain/items/itemType";
 import { PlayerInput } from "../../domain/player/playerInput";
 import { HtmlCellView } from "./HtmlCellView";
 import { HtmlElement } from "./HtmlElement";
+import { HtmlMoneyView } from "./HtmlMoneyView";
 
 export class HtmlInventoryView extends HtmlElement implements InventoryView {
   private content: HTMLDivElement;
   private cells: HtmlCellView[] = [];
+  private money: HtmlMoneyView
   constructor(
     scene: Scene,
     playerInput: PlayerInput,
@@ -29,6 +32,7 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     this.initContent();
     this.initTitle();
     this.initCells();
+    this.initMoney();
     this.container.hidden = true;
     playerInput.onInventoryChange.subscribe(() => {
       this.container.hidden = !this.container.hidden;
@@ -42,6 +46,10 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
         cell.setItem(item);
       }
     });
+  }
+
+  setMoney(money: Money) {
+      this.money.setMoney(money)
   }
 
   initContent() {
@@ -64,6 +72,7 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
 
   initTitle() {
     const title = document.createElement("p");
+    title.style.color = 'whitesmoke'
     title.style.position = "relative";
     title.innerText = "Inventory";
     title.style.textAlign = "center";
@@ -95,5 +104,13 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
       cellContainer.appendChild(cell.element);
       this.cells.push(cell);
     }
+  }
+
+  initMoney() {
+    this.money = new HtmlMoneyView()
+    this.money.element.style.position = 'absolute'
+    this.money.element.style.bottom = '0'
+    this.money.element.style.right = '0'
+    this.content.appendChild(this.money.element)
   }
 }

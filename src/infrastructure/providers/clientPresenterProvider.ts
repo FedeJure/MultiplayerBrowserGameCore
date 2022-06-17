@@ -25,6 +25,7 @@ import { ControllablePlayer } from "../../domain/player/players/controllablePlay
 import { Player } from "../../domain/player/players/player";
 import { Enemy } from "../../domain/enemies/enemy";
 import { LocalCLientPlayer } from "../../domain/player/players/localClientPlayer";
+import { SceneNames } from "../../view/scenes/SceneNames";
 
 export class ClientPresenterProvider {
   forLocalPlayer(
@@ -80,7 +81,7 @@ export class ClientPresenterProvider {
         ClientProvider.collisionManager
       ),
       new BackgroundDelegator(
-        scene,
+        scene.scene.get(SceneNames.BackgroundScene),
         ClientProvider.serverConnection,
         ClientProvider.localPlayerRepository,
         ClientProvider.inGamePlayersRepository

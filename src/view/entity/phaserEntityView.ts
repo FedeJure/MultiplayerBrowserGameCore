@@ -7,6 +7,7 @@ import { ExistentDepths } from "../existentDepths";
 import { PhaserCombatCollisionResolver } from "../player/combatCollisionResolver";
 import { ViewObject, ViewObjectType } from "../../domain/viewObject";
 import { Entity } from "../../domain/entity/entity";
+import { SceneNames } from "../scenes/SceneNames";
 
 export class PhaserEntityView
   extends Phaser.GameObjects.Container
@@ -108,8 +109,8 @@ export class PhaserEntityView
     return this;
   }
 
-  startFollowWithCam(): void {
-    this.scene.cameras.main.startFollow(this, false, 0.1, 0.1);
+  startFollowWithCam(cam: Phaser.Cameras.Scene2D.Camera): void {
+    cam.startFollow(this, false, 0.1, 0.1);
   }
 
   setEntityReference(entity: Entity) {

@@ -1,7 +1,7 @@
 import {
   DefaultPlayerInventory,
   PlayerInventoryDto,
-} from "./playerInventory";
+} from "./playerInventoryDto";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { Log } from "../../infrastructure/Logger";
 import { Delegator } from "../delegator";

@@ -9,7 +9,7 @@ export interface PlayerView extends EntityView {
     position: Vector;
     velocity: Vector;
   };
-  startFollowWithCam(): void;
+  startFollowWithCam(cam: Phaser.Cameras.Scene2D.Camera): void;
   scene: Scene;
   destroy(): void;
   add(children: GameObjects.GameObject): this;
