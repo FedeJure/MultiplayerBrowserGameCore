@@ -3,6 +3,7 @@ import { MapUpdateEvent } from "../../infrastructure/events/gameEvents";
 import { ClientProvider } from "../../infrastructure/providers/clientProvider";
 import { ClientEnvironmentObjectFactory } from "../../view/environmentObjects/clientEnvironmentObjectFactory";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
+import { SceneNames } from "../../view/scenes/SceneNames";
 import { createMapOnScene } from "../actions/createMapOnScene";
 import { loadMapAssets } from "../actions/loadMapAssets";
 import { CollisionManager } from "../collisions/collisionManager";
@@ -68,6 +69,9 @@ export class CurrentMapDelegator implements Delegator {
           y +
           ev.newMap.height;
     this.scene.cameras.main.setBounds(x, y, width, height);
+    this.scene.scene
+      .get(SceneNames.BackgroundScene)
+      .cameras.main.setBounds(x, y, width, height);
   }
 
   private removeUnusedMaps(currentMap: ProcessedMap) {

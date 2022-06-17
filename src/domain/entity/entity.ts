@@ -45,6 +45,7 @@ export class Entity<
   }
 
   destroy() {
+    console.log("Destroy")
     this._view.destroy();
   }
 

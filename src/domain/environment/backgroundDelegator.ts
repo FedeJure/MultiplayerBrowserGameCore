@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from "phaser";
+import { GameObjects, Scene, WEBGL } from "phaser";
 import { LocalPlayerRepository } from "../../infrastructure/repositories/localPlayerRepository";
 import { ExistentDepths } from "../../view/existentDepths";
 import { loadBackgroundAssets } from "../actions/loadBackgroundAssets";
@@ -19,23 +19,12 @@ export class BackgroundDelegator implements Delegator {
     private localplayerRepository: LocalPlayerRepository,
     private inGamePlayersRepository: SimpleRepository<ControllablePlayer>
   ) {}
-init(): void {
-
+  init(): void {
+   
     this.connection.onMapUpdated.subscribe(async (ev) => {
       await this.loadAssets([ev.newMap, ...ev.neighborMaps]);
       await this.createBackground(ev.newMap, ev.neighborMaps);
     });
-    // this.scene.input.on(
-    //   "wheel",
-    //   (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
-    //     const scale = this.scene.cameras.main.zoom * this.initialScale / this.initialZoom;
-    //     console.log(scale)
-
-    //     this.createdBackgrounds.forEach(bg => {
-    //       bg.setScale(scale, scale)
-    //     })
-    //   }
-    // );
   }
   stop(): void {}
   update(time: number, delta: number): void {}

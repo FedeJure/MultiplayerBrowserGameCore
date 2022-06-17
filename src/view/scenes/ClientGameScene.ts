@@ -8,15 +8,7 @@ export class ClientGameScene extends GameScene {
   }
 
   create(): void {
-    // this.game.canvas.style.width = "100%"
-    // this.game.canvas.style.height = "100%"
-    window.addEventListener('resize', () => {
-      // this.scale.displaySize.setAspectRatio( window.screen.width/window.screen.height );
-      // this.game.canvas.style.width = "100%"
-      // this.game.canvas.style.height = "100%"
-      // this.scale.refresh();
-      })
-    
+  
     this.scene.launch(this.hudScene);
     this.scene.launch(SceneNames.BackgroundScene);
     this.scene.moveDown(SceneNames.BackgroundScene)
