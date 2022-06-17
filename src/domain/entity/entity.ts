@@ -45,16 +45,13 @@ export class Entity<
   }
 
   destroy() {
-    console.log("Destroy")
     this._view.destroy();
   }
 
   update(time: number, delta: number) {
-    if (this.state.isAlive) {
-      this.combat.update(time, delta);
-      this.movement.update(time, delta);
-    }
     this._animations.update(time, delta);
+    this.combat.update(time, delta);
+    this.movement.update(time, delta);
   }
 
   receiveAttack(attack: CombatResult) {

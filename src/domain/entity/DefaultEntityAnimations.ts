@@ -19,13 +19,24 @@ export class DefaultEntityAnimations implements EntityAnimations {
       anim: [
         ...this.entity.state.anim
           .filter(this.filterCondition)
-          .filter(this.filterFinishedAnimations),
+          .filter(this.filterFinishedAnimations)
+          .filter(this.removeRepetedLayerAnimations),
         {
           name: this.getMovementAnimation(),
           layer: AnimationLayer.MOVEMENT,
         },
       ],
     });
+  }
+
+  private removeRepetedLayerAnimations(
+    anim: AnimationDto,
+    i: number,
+    array: AnimationDto[]
+  ) {
+    const sameLayer = array.filter((a) => a.layer === anim.layer);
+    if (sameLayer.length <= 1) return true;
+    return anim.name === sameLayer[0].name;
   }
 
   private filterCondition(anim: AnimationDto) {
@@ -77,8 +88,10 @@ export class DefaultEntityAnimations implements EntityAnimations {
     duration?: number
   ) {
     const currentAnim = this.currentAnimPerLayer.get(layer);
+    let oldAnims = this.entity.state.anim;
     if (currentAnim) {
       this.currentAnimPerLayer.delete(layer);
+      oldAnims = oldAnims.filter((a) => a.layer === layer);
     }
 
     const newAnim = {
@@ -93,7 +106,11 @@ export class DefaultEntityAnimations implements EntityAnimations {
     });
 
     this.entity.updateState({
-      anim: [...this.entity.state.anim, newAnim],
+      anim: [...oldAnims, newAnim],
     });
+  }
+
+  stopAnimations() {
+    this.entity.updateState({ anim: [] });
   }
 }

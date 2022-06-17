@@ -8,7 +8,7 @@ export class DefaultEntityMovement implements EntityMovement {
   }
   update(time: number, delta: number) {
     this.entity.view.playAnimations(this.entity.state.anim);
-    if (!this.entity.state.isAlive) return;
+    // if (!this.entity.state.isAlive) return;
     this.entity.view.setPosition(this.entity.state.position.x, this.entity.state.position.y);
     this.entity.view.setVelocity(this.entity.state.velocity.x, this.entity.state.velocity.y);
     this.entity.view.lookToLeft(this.entity.state.side === Side.LEFT);

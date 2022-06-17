@@ -36,13 +36,14 @@ export class EnemyCombat extends DefaultEntityCombat {
   }
 
   die() {
+    this.enemy.animations.stopAnimations()
     this.enemy.animations.executeAnimation(
       EntityAnimationCode.DIE,
       AnimationLayer.COMBAT,
       false,
       1000
     );
-    this.enemy.view.setVelocity(0, this.enemy.state.velocity.y);
+    this.enemy.view.setVelocity(0, 0);
     this.enemy.updateState({ isAlive: false });
     setTimeout(() => {
       this.enemy.destroy();
@@ -63,6 +64,8 @@ export class EnemyCombat extends DefaultEntityCombat {
   }
 
   update(time: number, delta: number) {
+    super.update(time, delta);
+
     if (this.lastTimeCheck + this.intervalTimeCheck < time) {
       this.lastTimeCheck = time;
       this.processCloseTargets(
@@ -77,13 +80,12 @@ export class EnemyCombat extends DefaultEntityCombat {
           this.enemy.updateState({ attacking: true });
           this.attacking = true;
           setTimeout(() => {
-              this.attacking = false;
+            this.attacking = false;
           }, execution.duration);
           return;
         }
       }
       this.enemy.updateState({ attacking: false });
     }
-    super.update(time, delta);
   }
 }

@@ -25,7 +25,7 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     texture: string = "hero"
   ) {
     const spine = scene.add.spine(x, y, texture, undefined, true);
-    
+
     const currentSize: Vector = spine.getBounds().size;
     const factor = currentSize.y / height;
 
@@ -49,7 +49,6 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     //   dispose: () => {},
     //   complete: () => {},
     // });
-
 
     this.lastAnimationsByLayer = new Map();
   }
