@@ -12,8 +12,9 @@ export class ClientPlayerView extends SpinePhaserEntityView {
     height: number,
     width: number,
     name: string,
+    showHud: boolean,
     public readonly combatCollisionResolver: PhaserCombatCollisionResolver
   ) {
-    super(scene, x, y, height, width, name);
+    super(scene, x, y, height, width, name, undefined, showHud);
   }
 }

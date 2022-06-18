@@ -16,29 +16,29 @@ export class GameplayHud extends Scene {
 
   create() {
     // this.pointerText = this.add.text(10, 90, 'Move the mouse', { font: "15px Arial", color: "#ffffff", resolution: 10 });
-    this.pingText = new Phaser.GameObjects.Text(
-      this,
-      10,
-      10,
-      this.getPingText(0),
-      { font: "15px Arial", color: "#ffffff", resolution: 10 }
-    );
-    this.fpsText = new Phaser.GameObjects.Text(
-      this,
-      70,
-      10,
-      this.getFpsText(),
-      { font: "15px Arial", color: "#ffffff", resolution: 10 }
-    );
-    this.add.existing(this.pingText);
-    this.add.existing(this.fpsText);
-    this.connection.onPing.subscribe((ping) => {
-      this.pingText?.setText(this.getPingText(ping));
-    });
+    // this.pingText = new Phaser.GameObjects.Text(
+    //   this,
+    //   10,
+    //   10,
+    //   this.getPingText(0),
+    //   { font: "15px Arial", color: "#ffffff", resolution: 10 }
+    // );
+    // this.fpsText = new Phaser.GameObjects.Text(
+    //   this,
+    //   70,
+    //   10,
+    //   this.getFpsText(),
+    //   { font: "15px Arial", color: "#ffffff", resolution: 10 }
+    // );
+    // this.add.existing(this.pingText);
+    // this.add.existing(this.fpsText);
+    // this.connection.onPing.subscribe((ping) => {
+    //   this.pingText?.setText(this.getPingText(ping));
+    // });
   }
 
   update() {
-    this.fpsText?.setText(this.getFpsText());
+    // this.fpsText?.setText(this.getFpsText());
     // var pointer = this.input.activePointer;
     // this.pointerText?.setText([
     //     'x: ' + pointer.x,

@@ -22,7 +22,8 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     height: number,
     width: number,
     name: string,
-    texture: string = "hero"
+    texture: string = "hero",
+    isLocal: boolean = false
   ) {
     const spine = scene.add.spine(x, y, texture, undefined, true);
 
@@ -33,11 +34,11 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     spine.setSize(width, height);
 
     super(spine, x, y, height, width);
-    this.hud = new EntityIngameHud(scene, 0, -height, height, width * 2);
+    this.hud = new EntityIngameHud(scene, 0, -height, height, width * 2, isLocal);
 
     this.hud.setDisplayName(name);
     this.setName(name);
-    this.add(this.hud);
+    if (!isLocal) this.add(this.hud);
     this.spine = spine;
     // this.spine.state.addListener({
     //   event: (track, eventt) => {

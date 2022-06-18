@@ -83,6 +83,7 @@ export class ClientConnectionDelegator implements Delegator {
       DefaultConfiguration.height,
       DefaultConfiguration.width,
       info.name,
+      false,
       collisionResolver
     );
     this.collisionManager.addPlayer(view);
@@ -112,6 +113,7 @@ export class ClientConnectionDelegator implements Delegator {
       DefaultConfiguration.height,
       DefaultConfiguration.width,
       info.name,
+      true,
       collisionResolver
     );
 

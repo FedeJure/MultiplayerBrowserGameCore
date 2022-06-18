@@ -9,10 +9,10 @@ export class HtmlLifeBar  {
   readonly element: HTMLDivElement;
 
   protected bar: HTMLDivElement;
-  constructor(width: number) {
+  constructor(width: number, height: number = 2) {
     this.element = document.createElement("div");
     this.element.style.width = `${width}px`;
-    this.element.style.height = "2px";
+    this.element.style.height = `${height}px`;
     this.element.style.backgroundColor = "#CBC7C7";
     this.element.style.padding = "1px";
     this.element.style.filter = "opacity(0.8)";
