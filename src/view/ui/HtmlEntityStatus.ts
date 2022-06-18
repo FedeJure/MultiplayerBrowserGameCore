@@ -1,4 +1,5 @@
 import { HtmlLifeBar } from "./HtmlLifeBar";
+import { HtmlManaBar } from "./HtmlManaBar";
 
 export class HtmlEntityStatus {
   element: HTMLDivElement;
@@ -21,22 +22,23 @@ export class HtmlEntityStatus {
 
     this.name = document.createElement("p");
     this.name.innerText = "Entity Name";
-    this.name.style.height = "10px";
-    this.name.style.fontSize = "7px";
+    this.name.style.height = "6px";
+    this.name.style.fontSize = "5px";
     this.name.style.margin = "0";
-    this.name.style.textAlign = "center";
+    this.name.style.textAlign = "left";
     this.name.style.whiteSpace = "nowrap";
     this.name.style.fontWeight = "bold";
+    this.name.style.flexGrow = '2'
     nameLevelContainer.appendChild(this.name);
 
     this.level = document.createElement("span");
     this.level.innerText = "4";
-    this.level.style.fontSize = "7px";
-    this.level.style.width = "10px";
-    this.level.style.height = "10px";
+    this.level.style.fontSize = "5px";
+    this.level.style.width = "6px";
+    this.level.style.height = "6px";
     this.level.style.textAlign = "center";
     this.level.style.backgroundColor = "rgb(43 116 149)";
-    this.level.style.border = "1px solid rgb(176 142 107)";
+    this.level.style.border = "0.5px solid rgb(176 142 107)";
     this.level.style.verticalAlign = "middle";
     this.level.style.borderRadius = "10px";
     this.level.style.fontWeight = "bold";
@@ -45,6 +47,7 @@ export class HtmlEntityStatus {
 
     this.lifebar = new HtmlLifeBar(width);
     this.element.appendChild(this.lifebar.element);
+    this.element.appendChild(new HtmlManaBar(width).element)
   }
 
   setName(name: string) {
