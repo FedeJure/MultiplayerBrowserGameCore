@@ -12,6 +12,9 @@ export class DefaultEntityCombat implements EntityCombat {
     this.entity.view.setLifePercent(
       (this.entity.state.life / this.entity.stats.maxLife) * 100
     );
+    this.entity.view.setLevel(
+      this.entity.stats.level
+    );
   }
   receiveAttack(attack: CombatResult) {}
 }

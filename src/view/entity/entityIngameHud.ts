@@ -24,4 +24,8 @@ export class EntityIngameHud extends GameObjects.Container {
   setLifePercent(percent: number) {
     this.entityStatus.setLifePercent(percent);
   }
+
+  setLevel(level: number) {
+    this.entityStatus.setLevel(level)
+  }
 }

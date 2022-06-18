@@ -73,6 +73,10 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     this.hud.setLifePercent(percent);
   }
 
+  override setLevel(level: number): void {
+      this.hud.setLevel(level)
+  }
+
   playAnimation(
     anim: string,
     layer: AnimationLayer,

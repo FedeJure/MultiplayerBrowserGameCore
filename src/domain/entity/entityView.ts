@@ -20,6 +20,7 @@ export interface EntityView {
   destroy();
   playAnimations(anims: AnimationDto[]): void;
   setLifePercent(percent: number): void;
+  setLevel(level: number): void
   setDisplayName(name: string): void;
   getEntitiesClose(distance: number): CollisionableEntity[];
   setPositionInTime(x: number, y: number, time: number);

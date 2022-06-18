@@ -7,7 +7,6 @@ import { ExistentDepths } from "../existentDepths";
 import { PhaserCombatCollisionResolver } from "../player/combatCollisionResolver";
 import { ViewObject, ViewObjectType } from "../../domain/viewObject";
 import { Entity } from "../../domain/entity/entity";
-import { SceneNames } from "../scenes/SceneNames";
 
 export class PhaserEntityView
   extends Phaser.GameObjects.Container
@@ -80,6 +79,7 @@ export class PhaserEntityView
   }
   playAnimations(anims: AnimationDto[]): void {}
   setLifePercent(percent: number): void {}
+  setLevel(level: number): void {}
   setDisplayName(name: string): void {}
   get velocity() {
     return this.arcadeBody.velocity;
