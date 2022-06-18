@@ -2,6 +2,7 @@ import { EnemyModel } from "./enemyModel";
 
 export const SpiderEnemyModel: EnemyModel = {
   stats: {
+    level: 1,
     meleeDamage: 5,
     basicAttackSpeed: 1,
     maxLife: 45,

@@ -11,6 +11,7 @@ export interface PlayerStats extends EntityStats {
 }
 
 export const DefaultPlayerStats: PlayerStats = {
+  level: 1,
   maxLife: 100,
   runSpeed: 200,
   jumpPower: 20,

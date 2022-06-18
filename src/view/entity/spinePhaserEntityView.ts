@@ -33,7 +33,7 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     spine.setSize(width, height);
 
     super(spine, x, y, height, width);
-    this.hud = new EntityIngameHud(scene, height, width);
+    this.hud = new EntityIngameHud(scene, 0, -height, height, width * 2);
 
     this.hud.setDisplayName(name);
     this.setName(name);

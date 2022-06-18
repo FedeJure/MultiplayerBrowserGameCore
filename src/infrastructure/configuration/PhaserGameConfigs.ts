@@ -13,7 +13,7 @@ const scaleOptions = {
   //   height: 768,
   // },
   width: 1366,
-    height: 768,
+  height: 768,
   orientation: Phaser.Scale.Orientation.PORTRAIT,
 };
 
@@ -26,6 +26,9 @@ export const PhaserClientConfig: GameConfig = {
     min: 60,
     forceSetTimeOut: true,
     target: 60,
+  },
+  dom: {
+    createContainer: true,
   },
   physics: {
     default: "arcade",
