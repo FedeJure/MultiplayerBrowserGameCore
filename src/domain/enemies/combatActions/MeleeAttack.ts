@@ -25,6 +25,7 @@ export class MeleeAttack implements CombatAction {
 
       this.enemy.combat.target.combat.receiveAttack({
         damage: this.enemy.stats.meleeDamage,
+        attacker: this.enemy
       });
       return { duration };
     }

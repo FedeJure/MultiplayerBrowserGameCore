@@ -44,6 +44,10 @@ export class Entity<
     this._state = { ...this.state, ...newState };
   }
 
+  updateStats(newStats: Partial<Stats>) {
+    this._stats = {...this.stats, ...newStats}
+  }
+
   destroy() {
     this._view.destroy();
   }

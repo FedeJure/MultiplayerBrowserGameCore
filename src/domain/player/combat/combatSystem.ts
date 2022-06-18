@@ -84,4 +84,8 @@ export class CombatSystem extends DefaultEntityCombat {
       });
     });
   }
+
+  override bringExperience(exp: number) {
+    this.player.updateState({ exp: this.player.state.exp + exp });
+  }
 }

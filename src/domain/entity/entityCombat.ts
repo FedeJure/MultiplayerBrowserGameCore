@@ -5,4 +5,5 @@ export interface EntityCombat {
   init(entity: Entity);
   update(time: number, delta: number);
   receiveAttack(attack: CombatResult);
+  bringExperience(exp: number)
 }

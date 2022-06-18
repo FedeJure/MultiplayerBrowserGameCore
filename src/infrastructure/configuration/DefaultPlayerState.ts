@@ -19,5 +19,6 @@ export const DefaultPlayerState: PlayerState = {
   currentRooms: [],
   jumping: false,
   attacking: false,
-  isAlive: true
+  isAlive: true,
+  exp: 0
 };

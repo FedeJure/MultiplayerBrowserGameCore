@@ -13,7 +13,10 @@ export class EnemyCombat extends DefaultEntityCombat {
   private lastTimeCheck = 0;
   private enemy: Enemy;
   private attacking: boolean;
+  private attackers: { entity: Entity; damage: number }[] = [];
 
+  readonly timeToRemoveCombat = 5000
+  private lastTimeWithTarget: number;
   constructor(private actions: CombatAction[]) {
     super();
   }
@@ -29,14 +32,22 @@ export class EnemyCombat extends DefaultEntityCombat {
 
   receiveAttack(attack: CombatResult) {
     if (this.enemy.state.reseting) return;
+
+    const calculatedDamage = attack.damage;
     this.enemy.updateState({
-      life: this.enemy.state.life - attack.damage,
+      life: this.enemy.state.life - calculatedDamage,
     });
+    const attacker = this.attackers.find(
+      (a) => a.entity.info.id === attack.attacker.info.id
+    );
+    if (!attacker) this.attackers.push({ damage: 0, entity: attack.attacker });
+    else attacker.damage += calculatedDamage;
+
     if (this.enemy.state.life <= 0) this.die();
   }
 
   die() {
-    this.enemy.animations.stopAnimations()
+    this.enemy.animations.stopAnimations();
     this.enemy.animations.executeAnimation(
       EntityAnimationCode.DIE,
       AnimationLayer.COMBAT,
@@ -45,9 +56,23 @@ export class EnemyCombat extends DefaultEntityCombat {
     );
     this.enemy.view.setVelocity(0, 0);
     this.enemy.updateState({ isAlive: false });
+    this.bringExperienceToAttackers();
     setTimeout(() => {
       this.enemy.destroy();
     }, 1000);
+  }
+
+  bringExperienceToAttackers() {
+    let totalDamage = 0;
+    this.attackers.forEach((attacker) => {
+      totalDamage += attacker.damage;
+    });
+    const totalExp = 100; //refactor: calculate experience
+    this.attackers.forEach((attacker) => {
+      attacker.entity.combat.bringExperience(
+        (totalExp * attacker.damage) / totalDamage
+      );
+    });
   }
 
   private processCloseTargets(targets: CollisionableEntity[]) {
@@ -56,6 +81,7 @@ export class EnemyCombat extends DefaultEntityCombat {
     );
     if (this._target && filterTargets.length === 0) {
       this._target = null;
+      this.lastTimeWithTarget = Date.now();
     }
     if (filterTargets.find((t) => t.target === this.target)) return;
     filterTargets.map(({ target }) => {
@@ -71,6 +97,10 @@ export class EnemyCombat extends DefaultEntityCombat {
       this.processCloseTargets(
         this.enemy.view.getEntitiesClose(this.enemy.stats.detectionRange)
       );
+    }
+
+    if (!this.attacking && this.lastTimeWithTarget + this.timeToRemoveCombat > Date.now()) {
+      this.attackers = []
     }
 
     if (!this.attacking && this.target) {

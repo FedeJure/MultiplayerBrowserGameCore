@@ -8,9 +8,11 @@ export interface PlayerStats extends EntityStats {
   maxJumps: number;
   meleeDamage: number;
   basicAttackSpeed: number; // attacks per second
+  exp: number
 }
 
 export const DefaultPlayerStats: PlayerStats = {
+  exp: 0,
   level: 1,
   maxLife: 100,
   runSpeed: 200,

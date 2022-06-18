@@ -53,6 +53,7 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
   getAttackResult(): CombatResult {
     return {
       damage: this.player.stats.meleeDamage,
+      attacker: this.player
     };
   }
 }

@@ -1,4 +1,6 @@
+import { Entity } from "../../entity/entity";
+
 export interface CombatResult {
+    attacker: Entity
     damage: number,
-    from?: {x: number, y: number}
 }
