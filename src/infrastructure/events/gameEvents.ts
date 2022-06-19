@@ -7,6 +7,7 @@ import { LocalPlayerInitialStateDto } from "../dtos/localPlayerInitialStateDto";
 import { PlayerInitialStateDto } from "../dtos/playerInitialStateDto";
 import { PlayerInputDto } from "../dtos/playerInputDto";
 import { PlayerInventoryDto } from "../../domain/inventory/playerInventoryDto";
+import { Loot } from "../../domain/loot/loot";
 
 export const GameEvents: {
   PLAYER_CONNECTED: {
@@ -77,6 +78,14 @@ export const GameEvents: {
     name: string;
     getEvent: (enemyStates: EnemyStatesDto) => EnemiesStatesEvent;
   };
+  LOOT_APPEAR: {
+    name: string
+    getEvent: (loots: Loot[]) => LootsAppearEvent
+  }
+  LOOT_DISAPPEAR: {
+    name: string
+    getEvent: (loots: Loot[]) => LootsDisappearEvent
+  }
 } = {
   PLAYER_CONNECTED: {
     name: "player_connected",
@@ -163,6 +172,20 @@ export const GameEvents: {
       time: new Date(),
     }),
   },
+  LOOT_APPEAR: {
+    name: "loote_appear",
+    getEvent: (loots: Loot[]) => ({
+      loots,
+      time: new Date()
+    })
+  },
+  LOOT_DISAPPEAR: {
+    name: "loote_disappear",
+    getEvent: (loots: Loot[]) => ({
+      loots,
+      time: new Date()
+    })
+  }
 };
 
 interface BaseEvent {
@@ -225,4 +248,12 @@ export interface EnvironmentObjectDetailsRequest extends BaseEvent {
 
 export interface EnemiesStatesEvent extends BaseEvent {
   enemyStates: EnemyStatesDto;
+}
+
+export interface LootsAppearEvent extends BaseEvent {
+  loots: Loot[]
+}
+
+export interface LootsDisappearEvent extends BaseEvent {
+  loots: Loot[]
 }

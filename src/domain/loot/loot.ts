@@ -1,3 +1,4 @@
+import { Map } from "../environment/mapConfiguration"
 import { Money } from "../inventory/Money"
 import { Item } from "../items/item"
 import { Player } from "../player/players/player"
@@ -8,5 +9,6 @@ export interface Loot {
     itemIds: Item['id'][]
     money: Money
     owner: Player['info']['id']
-    position: Vector
+    position: Vector,
+    mapId: Map['id']
 }

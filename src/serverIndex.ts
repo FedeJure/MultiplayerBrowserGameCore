@@ -21,6 +21,7 @@ import { EnvironmentObjectDetailsDispatcherDelegator } from "./domain/environmen
 import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
 import { EnemiesStateSenderDelegator } from "./domain/gameState/enemiesStateSenderDelegator";
 import { PhaserCollisionManager } from "./view/collisions/phaserCollisionManager";
+import { LootUpdaterDelegator } from "./domain/loot/lootUpdaterDelegator";
 
 export const InitGame: (
   socket: Socket,
@@ -33,7 +34,7 @@ export const InitGame: (
     scene: [new LoadScene(), scene],
   };
 
-  const game = new Phaser.Game(config);
+const game = new Phaser.Game(config);
   AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
   game.events.addListener(Phaser.Core.Events.READY, async () => {
     provider.setCollisionManager(new PhaserCollisionManager(scene));
@@ -49,7 +50,8 @@ export const InitGame: (
           provider.environmentObjectsRepository,
           provider.presenterProvider,
           provider.inGamePlayerRepository,
-          provider.collisionManager
+          provider.collisionManager,
+          provider.lootRepository
         ),
         new ServerEnemyCreatorDelegator(
           scene,
@@ -65,6 +67,10 @@ export const InitGame: (
           provider.roomManager,
           provider.inGamePlayerRepository,
           socket
+        ),
+        new LootUpdaterDelegator(
+          socket,
+          provider.lootRepository
         ),
         new EnemiesStateSenderDelegator(
           provider.roomManager,

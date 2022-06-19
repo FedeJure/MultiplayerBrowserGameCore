@@ -25,9 +25,9 @@ import { PlayerStateRepository } from "../repositories/playerStateRepository";
 import { SocketRoomManager } from "../SocketRoomManager";
 import { ServerPresenterProvider } from "./serverPresenterProvider";
 import { CollisionManager } from "../../domain/collisions/collisionManager";
-import { PhaserCollisionManager } from "../../view/collisions/phaserCollisionManager";
 import { LootConfiguration } from "../../domain/loot/lootConfiguration";
 import { LootGenerator } from "../../domain/loot/lootGenerator";
+import { Loot } from "../../domain/loot/loot";
 
 //This is necessary because the dependency manager not work with generics
 
@@ -40,6 +40,7 @@ class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
 class AttackTargetRepository extends InMemoryRepository<CollisionableEntity> {}
 class SpawnedEnemiesRepository extends InMemoryRepository<Enemy> {}
 class LootConfigurationRepository extends InMemoryAsyncRepository<LootConfiguration> {}
+class LootRepository extends InMemoryRepository<Loot> {}
 
 export class ServerProvider {
   constructor(private mapConfig: MapConfiguration) {}
@@ -142,7 +143,13 @@ export class ServerProvider {
 
   public get lootGenerator(): LootGenerator {
     return DependencyManager.GetOrInstantiate<LootGenerator>(
-      () => new LootGenerator()
+      () => new LootGenerator(this.lootRepository)
+    )
+  }
+
+  public get lootRepository(): LootRepository {
+    return DependencyManager.GetOrInstantiate<LootRepository>(
+      () => new LootRepository()
     )
   }
 }

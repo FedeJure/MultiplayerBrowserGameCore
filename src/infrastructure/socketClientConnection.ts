@@ -16,6 +16,7 @@ import { PlayerInitialStateDto } from "./dtos/playerInitialStateDto";
 import { ProcessedMap } from "../domain/environment/processedMap";
 import { PlayerInventoryDto } from "../domain/inventory/playerInventoryDto";
 import { LocalPlayerInitialStateDto } from "./dtos/localPlayerInitialStateDto";
+import { Loot } from "../domain/loot/loot";
 
 export class SocketClientConnection implements ClientConnection {
   public readonly socket: Socket;
@@ -40,6 +41,18 @@ export class SocketClientConnection implements ClientConnection {
     this.socket = socket;
 
     this.listenEvents();
+  }
+  sendLootAppear(loots: Loot[]) {
+    this.socket.emit(
+      GameEvents.LOOT_APPEAR.name,
+      GameEvents.LOOT_APPEAR.getEvent(loots)
+    );
+  }
+  sendLootDisappear(loots: Loot[]) {
+    this.socket.emit(
+      GameEvents.LOOT_DISAPPEAR.name,
+      GameEvents.LOOT_DISAPPEAR.getEvent(loots)
+    );
   }
   playerId?: string;
   setPlayerId(playerId: string) {
@@ -67,8 +80,7 @@ export class SocketClientConnection implements ClientConnection {
     );
   }
 
-  sendInventoryEvent(inventory: PlayerInventoryDto
-    ) {
+  sendInventoryEvent(inventory: PlayerInventoryDto) {
     this.socket.emit(
       GameEvents.INVENTORY_UPDATED.name,
       GameEvents.INVENTORY_UPDATED.getEvent(inventory)
@@ -146,7 +158,12 @@ export class SocketClientConnection implements ClientConnection {
   ) {
     this.socket.emit(
       GameEvents.INITIAL_GAME_STATE.name,
-      GameEvents.INITIAL_GAME_STATE.getEvent(localPlayer, players, currentMap, neighborMaps)
+      GameEvents.INITIAL_GAME_STATE.getEvent(
+        localPlayer,
+        players,
+        currentMap,
+        neighborMaps
+      )
     );
   }
 

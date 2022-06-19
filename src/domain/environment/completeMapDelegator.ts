@@ -15,6 +15,7 @@ import { filter } from "rxjs";
 import { MapManager } from "./mapManager";
 import { PlayerState } from "../player/playerState";
 import { CollisionManager } from "../collisions/collisionManager";
+import { Loot } from "../loot/loot";
 
 export class CompleteMapDelegator implements Delegator {
   public constructor(
@@ -25,7 +26,8 @@ export class CompleteMapDelegator implements Delegator {
     private envObjectsRepository: EnvironmentObjectRepository,
     private presenterProvider: ServerPresenterProvider,
     private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
-    private collisionManager: CollisionManager
+    private collisionManager: CollisionManager,
+    private lootsRepository: SimpleRepository<Loot>
   ) {
     this.inGamePlayersRepository.onSave.subscribe((serverPlayer) => {
       serverPlayer.onStateChange
@@ -61,6 +63,8 @@ export class CompleteMapDelegator implements Delegator {
         joinedRooms
       );
       if (leavingRooms.length === 0) return;
+      this.sendExistentLoots(player, newRooms, leavingRooms);
+
       this.socket
         .in(leavingRooms)
         .emit(
@@ -68,6 +72,26 @@ export class CompleteMapDelegator implements Delegator {
           GameEvents.PLAYER_DISCONNECTED.getEvent(player.info.id)
         );
     });
+  }
+
+  private async sendExistentLoots(
+    player: ServerPlayer,
+    newRooms: string[],
+    leavingRooms: string[]
+  ) {
+    const connection = player.connection;
+    const newLoots = this.lootsRepository
+      .getAll()
+      .filter((l) => newRooms.includes(l.mapId.toString()));
+    const oldLoots = this.lootsRepository
+      .getAll()
+      .filter((l) => leavingRooms.includes(l.mapId.toString()));
+    if (newLoots.length > 0) {
+      connection.sendLootAppear(newLoots);
+    }
+    if (oldLoots.length > 0) {
+      connection.sendLootDisappear(oldLoots);
+    }
   }
 
   private async sendAlreadyConnectedPlayers(
@@ -117,7 +141,10 @@ export class CompleteMapDelegator implements Delegator {
           m,
           this.scene,
           this.envObjectsRepository,
-          new ServerEnvironmentObjectFactory(this.scene, this.presenterProvider),
+          new ServerEnvironmentObjectFactory(
+            this.scene,
+            this.presenterProvider
+          ),
           this.collisionManager
         )
       )

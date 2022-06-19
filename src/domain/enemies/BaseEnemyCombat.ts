@@ -113,7 +113,8 @@ export class EnemyCombat extends DefaultEntityCombat {
         itemsToLoot,
         money,
         this.enemy.state.position,
-        this.target!.info.id
+        this.target!.info.id,
+        this.enemy.state.mapId
       );
     });
   }
