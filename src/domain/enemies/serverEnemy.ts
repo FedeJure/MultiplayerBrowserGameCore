@@ -25,7 +25,8 @@ export class ServerEnemy
     state: EnemyState,
     info: EnemyInfo,
     stats: EnemyStats,
-    view: ServerEnemyView
+    view: ServerEnemyView,
+    combat: EnemyCombat
   ) {
     super(
       info,
@@ -33,7 +34,7 @@ export class ServerEnemy
       view,
       stats,
       new EnemyMovement(),
-      new EnemyCombat([new MeleeAttack()])
+      combat
     );
   }
 

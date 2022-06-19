@@ -32,6 +32,15 @@ export const LoadServerRepositoriesWithMockData = async (
     detail: "This is a Test item used only for testing purpose",
   });
 
+  await provider.lootConfigurationRepository.save("simpleLoot", {
+    id: "simpleLoot",
+    items: [{ itemId: "1", probability: 0.2 }, { itemId: "2", probability: 0.2 }],
+    minMoney: { copper: 50 },
+    maxMoney: { silver: 1, copper: 50 },
+    minItems: 0,
+    maxItems: 2
+  });
+
   provider.environmentObjectsRepository.save({
     id: 1,
     pivotOrigin: { x: 0.5, y: 0 },

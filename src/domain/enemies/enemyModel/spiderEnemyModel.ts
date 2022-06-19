@@ -1,6 +1,7 @@
 import { EnemyModel } from "./enemyModel";
 
 export const SpiderEnemyModel: EnemyModel = {
+  lootConfigId: 'simpleLoot',
   stats: {
     level: 1,
     meleeDamage: 5,

@@ -6,6 +6,12 @@ import { Entity } from "../entity/entity";
 import { CombatAction } from "../combat/combatAction";
 import { EntityAnimationCode, AnimationLayer } from "../entity/animations";
 import { DefaultEntityCombat } from "../entity/DefaultEntityCombat";
+import { LootConfiguration } from "../loot/lootConfiguration";
+import { AsyncRepository } from "../repository";
+import { LootGenerator } from "../loot/lootGenerator";
+import { shuffle } from "lodash";
+import { Money } from "../inventory/Money";
+import { Item } from "../items/item";
 
 export class EnemyCombat extends DefaultEntityCombat {
   private _target: Entity | null = null;
@@ -15,9 +21,14 @@ export class EnemyCombat extends DefaultEntityCombat {
   private attacking: boolean;
   private attackers: { entity: Entity; damage: number }[] = [];
 
-  readonly timeToRemoveCombat = 5000
+  readonly timeToRemoveCombat = 5000;
   private lastTimeWithTarget: number;
-  constructor(private actions: CombatAction[]) {
+  constructor(
+    private actions: CombatAction[],
+    private lootId: LootConfiguration["id"],
+    private lootConfigsRepository: AsyncRepository<LootConfiguration>,
+    private lootGenerator: LootGenerator
+  ) {
     super();
   }
 
@@ -43,7 +54,7 @@ export class EnemyCombat extends DefaultEntityCombat {
     if (!attacker) this.attackers.push({ damage: 0, entity: attack.attacker });
     else attacker.damage += calculatedDamage;
 
-    if (this.enemy.state.life <= 0) this.die();
+    if (this.enemy.state.life <= 0 && this.enemy.state.isAlive) this.die();
   }
 
   die() {
@@ -57,9 +68,54 @@ export class EnemyCombat extends DefaultEntityCombat {
     this.enemy.view.setVelocity(0, 0);
     this.enemy.updateState({ isAlive: false });
     this.bringExperienceToAttackers();
+    this.resolveLoot();
     setTimeout(() => {
       this.enemy.destroy();
     }, 1000);
+  }
+
+  resolveLoot() {
+    if (!this.target) return;
+    this.lootConfigsRepository.get(this.lootId).then((lootConfig) => {
+      if (!lootConfig) return;
+      const itemsCount = Math.floor(
+        Math.random() * (lootConfig.maxItems - lootConfig.minItems + 1) +
+          lootConfig.minItems
+      );
+      const itemsToLoot: Item["id"][] = [];
+      for (let i = 0; i < itemsCount; i++) {
+        const items = shuffle(lootConfig?.items);
+        let prob = Math.random();
+        for (const item of items) {
+          if (item.probability < prob && !itemsToLoot.includes(item.itemId)) {
+            itemsToLoot.push(item.itemId);
+            break;
+          }
+        }
+      }
+      const money: Money = {
+        gold:
+          Math.floor(
+            Math.random() *
+              (lootConfig.maxMoney.gold ?? 0 - (lootConfig.minMoney.gold ?? 0))
+          ) + (lootConfig.minMoney.gold ?? 0),
+        silver: Math.floor(
+          Math.random() *
+            (lootConfig.maxMoney.silver ?? 0 - (lootConfig.minMoney.silver ?? 0))
+        ) + (lootConfig.minMoney.silver ?? 0),
+        copper: Math.floor(
+          Math.random() *
+            (lootConfig.maxMoney.copper ?? 0 - (lootConfig.minMoney.copper ?? 0))
+        ) + (lootConfig.minMoney.copper ?? 0),
+      };
+
+      this.lootGenerator.generateLoot(
+        itemsToLoot,
+        money,
+        this.enemy.state.position,
+        this.target!.info.id
+      );
+    });
   }
 
   bringExperienceToAttackers() {
@@ -99,8 +155,11 @@ export class EnemyCombat extends DefaultEntityCombat {
       );
     }
 
-    if (!this.attacking && this.lastTimeWithTarget + this.timeToRemoveCombat > Date.now()) {
-      this.attackers = []
+    if (
+      !this.attacking &&
+      this.lastTimeWithTarget + this.timeToRemoveCombat > Date.now()
+    ) {
+      this.attackers = [];
     }
 
     if (!this.attacking && this.target) {

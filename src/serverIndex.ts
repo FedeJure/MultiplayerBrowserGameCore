@@ -57,7 +57,9 @@ export const InitGame: (
           provider.roomManager,
           provider.presenterProvider,
           provider.collisionableTargetRepository,
-          provider.collisionManager
+          provider.collisionManager,
+          provider.lootConfigurationRepository,
+          provider.lootGenerator
         ),
         new PlayerStateDelegator(
           provider.roomManager,

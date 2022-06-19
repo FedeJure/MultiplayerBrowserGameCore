@@ -26,6 +26,8 @@ import { SocketRoomManager } from "../SocketRoomManager";
 import { ServerPresenterProvider } from "./serverPresenterProvider";
 import { CollisionManager } from "../../domain/collisions/collisionManager";
 import { PhaserCollisionManager } from "../../view/collisions/phaserCollisionManager";
+import { LootConfiguration } from "../../domain/loot/lootConfiguration";
+import { LootGenerator } from "../../domain/loot/lootGenerator";
 
 //This is necessary because the dependency manager not work with generics
 
@@ -37,97 +39,110 @@ class ItemRepository extends InMemoryAsyncRepository<Item> {}
 class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
 class AttackTargetRepository extends InMemoryRepository<CollisionableEntity> {}
 class SpawnedEnemiesRepository extends InMemoryRepository<Enemy> {}
+class LootConfigurationRepository extends InMemoryAsyncRepository<LootConfiguration> {}
 
 export class ServerProvider {
   constructor(private mapConfig: MapConfiguration) {}
-  public  get connectionsRepository(): SimpleRepository<ClientConnection> {
+  public get connectionsRepository(): SimpleRepository<ClientConnection> {
     return DependencyManager.GetOrInstantiate<
       SimpleRepository<ClientConnection>
     >(() => new ClientConnectionRepository());
   }
-  public  get playerInfoRepository(): AsyncRepository<PlayerInfo> {
+  public get playerInfoRepository(): AsyncRepository<PlayerInfo> {
     return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerInfo>>(
       () => new PlayerInfoRepository()
     );
   }
-  public  get playerStateRepository(): PlayerStateRepository {
+  public get playerStateRepository(): PlayerStateRepository {
     return DependencyManager.GetOrInstantiate<PlayerStateRepository>(
       () => new InMemoryPlayerStateRepository()
     );
   }
-  public  get presenterProvider(): ServerPresenterProvider {
+  public get presenterProvider(): ServerPresenterProvider {
     return DependencyManager.GetOrInstantiate<ServerPresenterProvider>(
       () => new ServerPresenterProvider()
     );
   }
 
-  public  get playerInputRequestRepository(): PlayerInputRequestRepository {
+  public get playerInputRequestRepository(): PlayerInputRequestRepository {
     return DependencyManager.GetOrInstantiate<PlayerInputRequestRepository>(
       () => new PlayerInputRequestRepository()
     );
   }
 
-  public  get roomManager(): RoomManager {
+  public get roomManager(): RoomManager {
     return DependencyManager.GetOrInstantiate<RoomManager>(
       () => new SocketRoomManager()
     );
   }
 
-  public  get inventoryRepository(): AsyncRepository<PlayerInventoryDto> {
+  public get inventoryRepository(): AsyncRepository<PlayerInventoryDto> {
     return DependencyManager.GetOrInstantiate<
       AsyncRepository<PlayerInventoryDto>
     >(() => new PlayerInventoryRepository());
   }
 
-  public  get itemsRepository(): AsyncRepository<Item> {
+  public get itemsRepository(): AsyncRepository<Item> {
     return DependencyManager.GetOrInstantiate<AsyncRepository<Item>>(
       () => new ItemRepository()
     );
   }
 
-  public  get environmentObjectsRepository(): EnvironmentObjectRepository {
+  public get environmentObjectsRepository(): EnvironmentObjectRepository {
     return DependencyManager.GetOrInstantiate<EnvironmentObjectRepository>(
       () => new InMemoryEnvironmentObjectRepository()
     );
   }
 
-  public  get inGamePlayerRepository(): SimpleRepository<ServerPlayer> {
+  public get inGamePlayerRepository(): SimpleRepository<ServerPlayer> {
     return DependencyManager.GetOrInstantiate<SimpleRepository<ServerPlayer>>(
       () => new InGamePlayerRepository()
     );
   }
 
-  public  get collisionableTargetRepository(): SimpleRepository<CollisionableEntity> {
-    return DependencyManager.GetOrInstantiate<SimpleRepository<CollisionableEntity>>(
-      () => new AttackTargetRepository()
-    );
+  public get collisionableTargetRepository(): SimpleRepository<CollisionableEntity> {
+    return DependencyManager.GetOrInstantiate<
+      SimpleRepository<CollisionableEntity>
+    >(() => new AttackTargetRepository());
   }
 
-  public  get playerStatsRepository(): AsyncRepository<PlayerStats> {
+  public get playerStatsRepository(): AsyncRepository<PlayerStats> {
     return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerStats>>(
       () => new PlayerStatsRepository()
     );
   }
 
-  public  get mapMapanger(): MapManager {
+  public get mapMapanger(): MapManager {
     return DependencyManager.GetOrInstantiate<MapManager>(
       () => new CompleteMapManager(this.mapConfig ?? MapsConfiguration)
-    )
+    );
   }
 
-  public  get enemiesRepository(): SimpleRepository<Enemy> {
+  public get enemiesRepository(): SimpleRepository<Enemy> {
     return DependencyManager.GetOrInstantiate<SpawnedEnemiesRepository>(
       () => new SpawnedEnemiesRepository()
-    )
+    );
   }
 
   private _collisionManager: CollisionManager;
 
   public setCollisionManager(collisionManager: CollisionManager) {
-    this._collisionManager = collisionManager
+    this._collisionManager = collisionManager;
   }
 
   public get collisionManager(): CollisionManager {
-    return this._collisionManager
+    return this._collisionManager;
+  }
+
+  public get lootConfigurationRepository(): AsyncRepository<LootConfiguration> {
+    return DependencyManager.GetOrInstantiate<LootConfigurationRepository>(
+      () => new LootConfigurationRepository()
+    );
+  }
+
+  public get lootGenerator(): LootGenerator {
+    return DependencyManager.GetOrInstantiate<LootGenerator>(
+      () => new LootGenerator()
+    )
   }
 }

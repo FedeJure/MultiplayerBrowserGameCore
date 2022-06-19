@@ -5,7 +5,7 @@ import { AnimationLayer, EntityAnimationCode } from "../entity/animations";
 import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { AttackTargetType } from "../combat/attackTargetType";
 import { Delegator } from "../delegator";
-import { SimpleRepository } from "../repository";
+import { AsyncRepository, SimpleRepository } from "../repository";
 import { RoomManager } from "../roomManager";
 import { Side } from "../side";
 import { Enemy } from "./enemy";
@@ -15,6 +15,10 @@ import { EnemyState } from "./EnemyState";
 import { ServerEnemy } from "./serverEnemy";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 import { CollisionManager } from "../collisions/collisionManager";
+import { EnemyCombat } from "./BaseEnemyCombat";
+import { MeleeAttack } from "./combatActions/MeleeAttack";
+import { LootConfiguration } from "../loot/lootConfiguration";
+import { LootGenerator } from "../loot/lootGenerator";
 
 export class ServerEnemyCreatorDelegator implements Delegator {
   constructor(
@@ -23,7 +27,9 @@ export class ServerEnemyCreatorDelegator implements Delegator {
     private roomManager: RoomManager,
     private presenterProvider: ServerPresenterProvider,
     private collisionableTargetRepository: SimpleRepository<CollisionableEntity>,
-    private collisionManager: CollisionManager
+    private collisionManager: CollisionManager,
+    private lootConfigsRepository: AsyncRepository<LootConfiguration>,
+    private lootGenerator: LootGenerator
   ) {}
   init(): void {
     // here, create a EnemySpawner on each enemy spot (from map or random)
@@ -31,7 +37,9 @@ export class ServerEnemyCreatorDelegator implements Delegator {
       const state: EnemyState = {
         life: SpiderEnemyModel.stats.maxLife,
         position: { x, y },
-        anim: [{ name: EntityAnimationCode.IDLE, layer: AnimationLayer.MOVEMENT }],
+        anim: [
+          { name: EntityAnimationCode.IDLE, layer: AnimationLayer.MOVEMENT },
+        ],
         mapId: 0,
         velocity: { x: 0, y: 0 },
         side: Side.RIGHT,
@@ -39,7 +47,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
         grounded: true,
         isAlive: true,
         reseting: false,
-        attacking: false
+        attacking: false,
       };
       const view = new PhaserEnemyView(
         this.scene.physics.add.sprite(state.position.x, state.position.y, ""),
@@ -55,7 +63,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
           this.collisionableTargetRepository
         )
       );
-      this.collisionManager.addEnemy(view)
+      this.collisionManager.addEnemy(view);
       const enemy = new ServerEnemy(
         state,
         {
@@ -63,9 +71,15 @@ export class ServerEnemyCreatorDelegator implements Delegator {
           id: Phaser.Utils.String.UUID(),
         },
         SpiderEnemyModel.stats,
-        view
+        view,
+        new EnemyCombat(
+          [new MeleeAttack()],
+          SpiderEnemyModel.lootConfigId,
+          this.lootConfigsRepository,
+          this.lootGenerator
+        )
       );
-      view.setEntityReference(enemy)
+      view.setEntityReference(enemy);
       this.roomManager.joinEnemyToRoom(
         enemy.info.id,
         [enemy.state.mapId.toString()],
