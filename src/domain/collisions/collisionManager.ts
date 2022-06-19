@@ -5,4 +5,5 @@ export interface CollisionManager {
     addPlayer(player: PlayerView)
     addEnemy(enemy: EnemyView)
     addStaticGround(ground: any)
+    addObject(object: any)
 }

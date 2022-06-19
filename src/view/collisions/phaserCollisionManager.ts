@@ -7,15 +7,20 @@ export class PhaserCollisionManager implements CollisionManager {
   private playerGroup: Phaser.Physics.Arcade.Group;
   private enemyGroup: Phaser.Physics.Arcade.Group;
   private groundGroup: Phaser.Physics.Arcade.StaticGroup;
+  private objectsGroup: Phaser.Physics.Arcade.StaticGroup;
 
   constructor(scene: Scene) {
     this.playerGroup = scene.physics.add.group();
     this.enemyGroup = scene.physics.add.group();
     this.groundGroup = scene.physics.add.staticGroup();
+    this.objectsGroup = scene.physics.add.staticGroup();
 
     scene.physics.add.collider(this.playerGroup, this.groundGroup);
-
     scene.physics.add.collider(this.enemyGroup, this.groundGroup);
+    scene.physics.add.collider(this.objectsGroup, this.groundGroup);
+  }
+  addObject(object: GameObjects.GameObject) {
+    this.objectsGroup.add(object);
   }
 
   addPlayer(player: PhaserPlayerView) {

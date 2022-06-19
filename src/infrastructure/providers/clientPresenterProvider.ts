@@ -26,6 +26,8 @@ import { Player } from "../../domain/player/players/player";
 import { Enemy } from "../../domain/enemies/enemy";
 import { LocalCLientPlayer } from "../../domain/player/players/localClientPlayer";
 import { SceneNames } from "../../view/scenes/SceneNames";
+import { ClientLootUpdaterDelegator } from "../../domain/loot/clientLootUpdaterDelegator";
+import { PhaserClientLootCreatorView } from "../../view/loot/phaserClientLootCreatorView";
 
 export class ClientPresenterProvider {
   forLocalPlayer(
@@ -54,6 +56,13 @@ export class ClientPresenterProvider {
       new PlayerRemoteMovementDelegator(
         player,
         ClientProvider.serverConnection
+      ),
+      new ClientLootUpdaterDelegator(
+        ClientProvider.serverConnection,
+        new PhaserClientLootCreatorView(
+          view.scene,
+          ClientProvider.collisionManager
+        )
       ),
     ]);
   }
@@ -104,15 +113,12 @@ export class ClientPresenterProvider {
       ),
     ]);
   }
-  forInventory(
-    player: LocalCLientPlayer,
-    view: GameObjects.GameObject
-  ) {
+  forInventory(player: LocalCLientPlayer, view: GameObjects.GameObject) {
     new ViewPresenter(view, [
       new ClientPlayerInventoryDelegator(
         player,
         ClientProvider.serverConnection,
-        ClientProvider.itemsRepository,
+        ClientProvider.itemsRepository
       ),
     ]);
   }

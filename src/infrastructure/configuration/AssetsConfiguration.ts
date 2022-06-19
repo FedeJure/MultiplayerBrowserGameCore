@@ -41,5 +41,9 @@ export const AssetsConfiguration: {
       key: "inventoryItemBackground",
       path: "ui/inventory_item_background.png",
     },
+    {
+      key: "loot",
+      path: "objects/lootBag.png",
+    },
   ],
 };

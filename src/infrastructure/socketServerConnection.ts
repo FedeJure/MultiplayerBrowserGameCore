@@ -1,4 +1,4 @@
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { Socket } from "socket.io-client";
 
 import { ServerConnection } from "../domain/serverConnection";
@@ -10,6 +10,8 @@ import {
   InitialGameStateEvent,
   InventoryUpdatedEvent,
   ItemDetailResponse,
+  LootsAppearEvent,
+  LootsDisappearEvent,
   MapUpdateEvent,
   NewPlayerConnectedEvent,
   PlayerDisconnectedEvent,
@@ -30,6 +32,8 @@ export class SocketServerConnection implements ServerConnection {
   private readonly _onMapUpdated = new Subject<MapUpdateEvent>();
   private readonly _onInventoryUpdated = new Subject<InventoryUpdatedEvent>();
   private readonly _onEnemyStates = new Subject<EnemiesStatesEvent>();
+  private readonly _onLootsApprear = new Subject<LootsAppearEvent>();
+  private readonly _onLootsDisapprear = new Subject<LootsDisappearEvent>();
 
   constructor(socket: Socket) {
     this.socket = socket;
@@ -52,7 +56,15 @@ export class SocketServerConnection implements ServerConnection {
     socket.on(GameEvents.INVENTORY_UPDATED.name, (data) =>
       this._onInventoryUpdated.next(data)
     );
-    socket.on(GameEvents.ENEMIES_STATES.name, (data) => this._onEnemyStates.next(data))
+    socket.on(GameEvents.ENEMIES_STATES.name, (data) =>
+      this._onEnemyStates.next(data)
+    );
+    socket.on(GameEvents.LOOT_APPEAR.name, (data) =>
+      this._onLootsApprear.next(data)
+    );
+    socket.on(GameEvents.LOOT_DISAPPEAR.name, (data) =>
+      this._onLootsDisapprear.next(data)
+    );
 
     var startTime = Date.now();
     socket.on(SocketIOEvents.PONG, () =>
@@ -64,7 +76,10 @@ export class SocketServerConnection implements ServerConnection {
     }, 2000);
   }
 
-  emitGetEnvironmentObjectsDetails(ids: number[]): Promise<EnvironmentObjectDetailsResponse> {
+
+  emitGetEnvironmentObjectsDetails(
+    ids: number[]
+  ): Promise<EnvironmentObjectDetailsResponse> {
     return new Promise((res) => {
       this.socket.emit(
         GameEvents.ENVIRONMENT_OBJECT_DETAILS_REQUEST.name,
@@ -105,7 +120,14 @@ export class SocketServerConnection implements ServerConnection {
   }
 
   get onEnemyState() {
-    return this._onEnemyStates
+    return this._onEnemyStates;
+  }
+
+  get onLootsAppear(): Observable<LootsAppearEvent> {
+    return this._onLootsApprear;
+  }
+  get onLootsDisappear(): Observable<LootsDisappearEvent> {
+    return this._onLootsDisapprear;
   }
 
   emitStartNewConnection(playerId: string): void {

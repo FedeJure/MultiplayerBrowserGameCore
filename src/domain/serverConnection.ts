@@ -6,6 +6,8 @@ import {
   InitialGameStateEvent,
   InventoryUpdatedEvent,
   ItemDetailResponse,
+  LootsAppearEvent,
+  LootsDisappearEvent,
   MapUpdateEvent,
   NewPlayerConnectedEvent,
   PlayerDisconnectedEvent,
@@ -27,4 +29,6 @@ export interface ServerConnection {
   onEnemyState: Observable<EnemiesStatesEvent>
   emitGetItemDetails(ids: Item['id'][]): Promise<ItemDetailResponse>
   emitGetEnvironmentObjectsDetails(ids: EnvironmentObject['id'][]): Promise<EnvironmentObjectDetailsResponse>
+  onLootsAppear: Observable<LootsAppearEvent>
+  onLootsDisappear: Observable<LootsDisappearEvent>
 }
