@@ -26,15 +26,10 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     isLocal: boolean = false
   ) {
     const spine = scene.add.spine(x, y, texture, undefined, true);
-
-    const currentSize: Vector = spine.getBounds().size;
-    const factor = currentSize.y / height;
-
-    spine.setDisplaySize(currentSize.x / factor + 10, height + 10);
-    spine.setSize(width, height);
+    spine.setScale(height / spine.height)
 
     super(spine, x, y, height, width);
-    this.hud = new EntityIngameHud(scene, 0, -height, height, width * 2, isLocal);
+    this.hud = new EntityIngameHud(scene, 0, -height, height, 50, isLocal);
 
     this.hud.setDisplayName(name);
     this.setName(name);

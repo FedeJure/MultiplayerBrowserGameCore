@@ -21,7 +21,7 @@ export class PhaserEntityView
     protected collisionResolver?: PhaserCombatCollisionResolver
   ) {
     super(view.scene, x, y, [view as GameObjects.GameObject]);
-    view.setPosition(0, 0);
+    view.setPosition(0, height / 6);
     this.setSize(width, height);
     this.scene.physics.add.existing(this);
     this.scene.add.existing(this);
@@ -55,14 +55,6 @@ export class PhaserEntityView
   }
 
   setPositionInTime(x: number, y: number, time: number) {
-    // this.scene.physics.moveTo(this, x,y,undefined, time)
-    // this.scene.tweens.add({
-    //   targets: this,
-    //   duration: time,
-    //   x,
-    //   y,
-    // });
-
     this.scene.tweens.add({
       targets: this,
       duration: time,
