@@ -14,6 +14,8 @@
     - `colliders` : An object layer composed by rectangles where you want to have ground collisions
     - `objects` : An object layer composed by `Points` objects (detailed on Environment items section) 
     - `tile layer with any name`(optional): You can setup any tile layer you want to setup static objects
+#### Colliders:
+- You can set where to check collisions (left, right, up, down). By defaul, if you dont set any propery, the collision check will be on every collider face.
 
 ### Tiles source File and Object source File (image) 
 * Must have the same key in `MapConfiguration.ts` than inside of Tiled

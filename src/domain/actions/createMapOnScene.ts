@@ -97,6 +97,25 @@ async function createColliders(
         new PlatformDetector(scene, pos.x + 20, pos.y);
         new PlatformDetector(scene, pos.x + (obj.width ?? 0) - 20, pos.y);
         sp = scene.physics.add.existing(rec, true);
+        const up = obj.properties?.find((o) => o.name === "up") ?? undefined;
+        const down =
+          obj.properties?.find((o) => o.name === "down") ?? undefined;
+        const left =
+          obj.properties?.find((o) => o.name === "left") ?? undefined;
+        const right =
+          obj.properties?.find((o) => o.name === "right") ?? undefined;
+        if (
+          up !== undefined ||
+          down !== undefined ||
+          left !== undefined ||
+          right !== undefined
+        ) {
+          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.up = up ?? false;
+          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.down = down ?? false;
+          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.left = left ?? false;
+          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.right = right ?? false;
+        }
+
         sp.setPosition(sp.x + sp.width / 2, sp.y + sp.height / 2);
         sp.angle += obj.rotation || 0;
         sp.setOrigin(0, 0);
