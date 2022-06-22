@@ -166,7 +166,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       connection,
       this.playerInputRequestRepository
     );
-      const playerStats = stats ?? DefaultPlayerStats
+    const playerStats = stats ?? DefaultPlayerStats;
     const player = new ServerPlayer(
       playerInfo,
       playerState,
@@ -175,13 +175,17 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       input,
       playerStats,
       this.mapManager,
-      new ServerPlayerInventory(playerStats.inventorySize),
+      new ServerPlayerInventory(
+        playerId,
+        this.inventoryRepository,
+        playerStats.inventorySize
+      ),
       connection,
       this.playerInfoRepository,
-      this.playerStateRepository,
+      this.playerStateRepository
     );
 
-    view.setEntityReference(player)
+    view.setEntityReference(player);
 
     this.collisionableTargetRepository.save(view.id, {
       target: player,

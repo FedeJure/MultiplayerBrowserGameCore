@@ -2,17 +2,18 @@ import { Item } from "../items/item";
 import { InventoryView } from "./inventoryView";
 import { Balance } from "./balance";
 import { MoneyView } from "./moneyView";
+import { PlayerInventoryDto } from "./playerInventoryDto";
 
 export class PlayerInventory {
-  private _balance: Balance
-  private _items: (Item | null)[]
+  private _balance: Balance;
+  private _items: (Item | null)[];
   constructor(
     capacity: number,
     private view?: InventoryView,
     moneyView?: MoneyView
   ) {
-    this._items = new Array(capacity)
-    this._balance = new Balance(moneyView) 
+    this._items = new Array(capacity);
+    this._balance = new Balance(moneyView);
   }
 
   get items() {
@@ -21,6 +22,13 @@ export class PlayerInventory {
 
   get balance() {
     return this._balance;
+  }
+
+  get dto(): PlayerInventoryDto {
+    return {
+      items: this._items.map((i) => (i ? i.id : null)),
+      balance: this.balance.amount,
+    };
   }
 
   addItem(item: Item) {
@@ -35,6 +43,7 @@ export class PlayerInventory {
   }
 
   setItems(items: (Item | null)[]) {
+    if (items.length > this._items.length) throw new Error("Inventory full");
     this._items = items;
     this.view?.saveItems(items);
   }
