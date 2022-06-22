@@ -79,13 +79,17 @@ export const GameEvents: {
     getEvent: (enemyStates: EnemyStatesDto) => EnemiesStatesEvent;
   };
   LOOT_APPEAR: {
-    name: string
-    getEvent: (loots: Loot[]) => LootsAppearEvent
-  }
+    name: string;
+    getEvent: (loots: Loot[]) => LootsAppearEvent;
+  };
   LOOT_DISAPPEAR: {
-    name: string
-    getEvent: (loots: Loot[]) => LootsDisappearEvent
-  }
+    name: string;
+    getEvent: (loots: Loot[]) => LootsDisappearEvent;
+  };
+  CLAIM_LOOT: {
+    name: string;
+    getEvent: (lootId: Loot["id"], lootIndexes: number[]) => ClaimLootEvent;
+  };
 } = {
   PLAYER_CONNECTED: {
     name: "player_connected",
@@ -124,7 +128,7 @@ export const GameEvents: {
   },
   MAP_UPDATE: {
     name: "map_update",
-    getEvent: (newMap: ProcessedMap, neighborMaps: ProcessedMap[]) => ({
+    getEvent: (newMap, neighborMaps) => ({
       time: new Date(),
       newMap,
       neighborMaps,
@@ -132,60 +136,68 @@ export const GameEvents: {
   },
   INVENTORY_UPDATED: {
     name: "inventory_updated",
-    getEvent: (inventory: PlayerInventoryDto) => ({
+    getEvent: (inventory) => ({
       time: new Date(),
       inventory,
     }),
   },
   ITEM_DETAILS: {
     name: "item_details",
-    getEvent: (ids: Item["id"][]) => ({
+    getEvent: (ids) => ({
       itemIds: ids,
       time: new Date(),
     }),
   },
   ITEM_DETAILS_RESPONSE: {
     name: "item_details_response",
-    getEvent: (items: Item[]) => ({
+    getEvent: (items) => ({
       items,
       time: new Date(),
     }),
   },
   ENVIRONMENT_OBJECT_DETAILS_REQUEST: {
     name: "environment_object_details_request",
-    getEvent: (ids: EnvironmentObject["id"][]) => ({
+    getEvent: (ids) => ({
       objectIds: ids,
       time: new Date(),
     }),
   },
   ENVIRONMENT_OBJECT_DETAILS_RESPONSE: {
     name: "environment_object_details_response",
-    getEvent: (objects: EnvironmentObject[]) => ({
+    getEvent: (objects) => ({
       objects,
       time: new Date(),
     }),
   },
   ENEMIES_STATES: {
     name: "enemies_states_event",
-    getEvent: (enemyStates: EnemyStatesDto) => ({
+    getEvent: (enemyStates) => ({
       enemyStates: enemyStates,
       time: new Date(),
     }),
   },
   LOOT_APPEAR: {
     name: "loote_appear",
-    getEvent: (loots: Loot[]) => ({
+    getEvent: (loots) => ({
       loots,
-      time: new Date()
-    })
+      time: new Date(),
+    }),
   },
   LOOT_DISAPPEAR: {
     name: "loote_disappear",
-    getEvent: (loots: Loot[]) => ({
+    getEvent: (loots) => ({
       loots,
-      time: new Date()
-    })
-  }
+      time: new Date(),
+    }),
+  },
+  CLAIM_LOOT: {
+    name: "claim_loot",
+    getEvent: (lootId, lootIndexes) => ({
+      lootId,
+      lootIndexes,
+      time: new Date(),
+    }),
+  },
 };
 
 interface BaseEvent {
@@ -246,14 +258,19 @@ export interface EnvironmentObjectDetailsRequest extends BaseEvent {
   objectIds: EnvironmentObject["id"][];
 }
 
+export interface ClaimLootEvent extends BaseEvent {
+  lootId: Loot["id"];
+  lootIndexes: number[];
+}
+
 export interface EnemiesStatesEvent extends BaseEvent {
   enemyStates: EnemyStatesDto;
 }
 
 export interface LootsAppearEvent extends BaseEvent {
-  loots: Loot[]
+  loots: Loot[];
 }
 
 export interface LootsDisappearEvent extends BaseEvent {
-  loots: Loot[]
+  loots: Loot[];
 }

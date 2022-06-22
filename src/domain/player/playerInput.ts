@@ -12,6 +12,7 @@ export interface PlayerInput {
   stats: boolean;
   menu: boolean;
   basicAttack: boolean;
+  action: boolean;
   defend: boolean;
   skill1: boolean;
   skill2: boolean;

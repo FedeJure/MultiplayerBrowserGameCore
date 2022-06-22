@@ -15,6 +15,7 @@ interface KeyboardInput {
   menu: ListenerableKey;
   basicAttack: ListenerableKey;
   defend: ListenerableKey;
+  action: ListenerableKey;
   skill1: Input.Keyboard.KeyCombo;
   skill2: Input.Keyboard.KeyCombo;
   skill3: Input.Keyboard.KeyCombo;
@@ -28,13 +29,32 @@ export class PlayerKeyBoardInput implements PlayerInput {
       up: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.up),
       down: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.down),
       left: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.left),
-      right: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.right),
+      right: new ListenerableKey(
+        inputPlugin,
+        DefaultKeyboardControlConfig.right
+      ),
       jump: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.jump),
-      inventory: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.inventory),
-      stats: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.stats),
+      inventory: new ListenerableKey(
+        inputPlugin,
+        DefaultKeyboardControlConfig.inventory
+      ),
+      stats: new ListenerableKey(
+        inputPlugin,
+        DefaultKeyboardControlConfig.stats
+      ),
       menu: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.menu),
-      basicAttack: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.basicAttack),
-      defend: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.defend),
+      basicAttack: new ListenerableKey(
+        inputPlugin,
+        DefaultKeyboardControlConfig.basicAttack
+      ),
+      defend: new ListenerableKey(
+        inputPlugin,
+        DefaultKeyboardControlConfig.defend
+      ),
+      action: new ListenerableKey(
+        inputPlugin,
+        DefaultKeyboardControlConfig.action
+      ),
       skill1: inputPlugin.createCombo(
         DefaultKeyboardControlConfig.skill1.map((k) => inputPlugin.addKey(k)),
         { resetOnMatch: true }
@@ -49,8 +69,6 @@ export class PlayerKeyBoardInput implements PlayerInput {
         DefaultKeyboardControlConfig.skill4.map((k) => inputPlugin.addKey(k))
       ),
     };
-
-  
   }
   toDto(): PlayerInputDto {
     return {
@@ -113,6 +131,10 @@ export class PlayerKeyBoardInput implements PlayerInput {
   }
 
   get onInventoryChange() {
-    return this.input.inventory.onKeyDown
+    return this.input.inventory.onKeyDown;
+  }
+
+  get action() {
+    return this.input.action.key.isDown;
   }
 }

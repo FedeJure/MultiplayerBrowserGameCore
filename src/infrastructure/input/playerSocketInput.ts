@@ -19,6 +19,7 @@ export class PlayerSocketInput implements PlayerInput {
   private _skill3: boolean = false;
   private _skill4: boolean = false;
   private _inventory: boolean = false;
+  private _action: boolean = false;
   constructor(
     playerId: string,
     connection: ClientConnection,
@@ -96,6 +97,10 @@ export class PlayerSocketInput implements PlayerInput {
   }
   get skill4() {
     return this._skill4;
+  }
+
+  get action() { 
+    return this._action
   }
 
   get onInventoryChange() {

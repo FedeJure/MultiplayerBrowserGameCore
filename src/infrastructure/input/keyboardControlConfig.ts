@@ -11,6 +11,7 @@ export interface KeyboardControlConfig {
   stats: KeyCode;
   menu: KeyCode;
   basicAttack: KeyCode;
+  action: KeyCode;
   defend: KeyCode;
   skill1: KeyCode[];
   skill2: KeyCode[];
@@ -29,6 +30,7 @@ export const DefaultKeyboardControlConfig: KeyboardControlConfig = {
   menu: Input.Keyboard.KeyCodes.ESC,
   basicAttack: Input.Keyboard.KeyCodes.J,
   defend: Input.Keyboard.KeyCodes.K,
+  action: Input.Keyboard.KeyCodes.F,
   skill1: [Input.Keyboard.KeyCodes.A, Input.Keyboard.KeyCodes.J],
   skill2: [Input.Keyboard.KeyCodes.D, Input.Keyboard.KeyCodes.J],
   skill3: [Input.Keyboard.KeyCodes.W, Input.Keyboard.KeyCodes.J],
