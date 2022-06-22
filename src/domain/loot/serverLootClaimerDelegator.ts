@@ -40,13 +40,10 @@ export class ServerLootClaimerDelegator implements Delegator {
               const itemsToLoot = lootIndexes
                 .map((lootIndex) => loot.itemIds[lootIndex])
                 .filter((itemId) => itemId !== undefined) as Item["id"][];
-              Promise.all(
-                itemsToLoot.map((itemId) => this.itemsRepository.get(itemId))
-              ).then((items) => {
-                items.forEach((item) => {
-                  if (!item) return;
-                  player.inventory.addItem(item);
-                });
+              itemsToLoot.forEach((itemId) => {
+                try {
+                  player.inventory.addItem(itemId);
+                } catch (error) {}
               });
               if (balance === loot.balance) {
                 player.balance.add(balance);

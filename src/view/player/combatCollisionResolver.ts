@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
 import { CollisionableEntity } from "../../domain/entity/CollisionableEntity";
+import { Loot } from "../../domain/loot/loot";
 import { CombatCollisionResolver } from "../../domain/player/combat/combatCollisionResolver";
 import { SimpleRepository } from "../../domain/repository";
 import { Vector } from "../../domain/vector";
@@ -12,6 +13,22 @@ export class PhaserCombatCollisionResolver implements CombatCollisionResolver {
     private scene: Scene,
     private collisionableTargetRepository: SimpleRepository<CollisionableEntity>
   ) {}
+  getLootsOnDistance(x: number, y: number, distance: number): Loot[] {
+    const bodies = this.scene.physics.overlapCirc(
+      x,
+      y,
+      distance,
+      true,
+      false
+    ) as Phaser.Physics.Arcade.Body[];
+    return bodies
+      .filter((body) => {
+        return (
+          body.gameObject.getData("type") === ViewObjectType.Loot
+        );
+      })
+      .map((body) => body.gameObject.getData("loot") as Loot);
+  }
 
   getTargetsAround(x: number, y: number, distance: number) {
     const bodies = this.scene.physics.overlapCirc(

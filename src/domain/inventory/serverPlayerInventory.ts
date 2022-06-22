@@ -1,10 +1,10 @@
 import { Item } from "../items/item";
 import { PlayerInfo } from "../player/playerInfo";
 import { AsyncRepository } from "../repository";
-import { PlayerInventory } from "./playerInventory";
+import { Inventory } from "./inventory";
 import { PlayerInventoryDto } from "./playerInventoryDto";
 
-export class ServerPlayerInventory extends PlayerInventory {
+export class ServerPlayerInventory extends Inventory<Item['id']> {
   constructor(
     private playerId: PlayerInfo['id'],
     private inventoryRepository: AsyncRepository<PlayerInventoryDto>,
@@ -13,12 +13,18 @@ export class ServerPlayerInventory extends PlayerInventory {
     super(capacity);
   }
 
-  setItems(items: (Item | null)[]): void {
-      super.setItems(items)
+  setItems(itemIds: (Item['id'] | undefined)[]): void {
+      super.setItems(itemIds)
       this.inventoryRepository.save(this.playerId, this.dto)
   }
-  addItem(item: Item): void {
+  addItem(item: Item['id']): void {
       super.addItem(item)
       this.inventoryRepository.save(this.playerId, this.dto)
+  }
+
+  get dto(): PlayerInventoryDto {
+    return {
+      items: this.items
+    }
   }
 }

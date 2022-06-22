@@ -24,7 +24,7 @@ import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator"
 import { ControllablePlayer } from "../../domain/player/players/controllablePlayer";
 import { Player } from "../../domain/player/players/player";
 import { Enemy } from "../../domain/enemies/enemy";
-import { LocalCLientPlayer } from "../../domain/player/players/localClientPlayer";
+import { LocalClientPlayer } from "../../domain/player/players/localClientPlayer";
 import { SceneNames } from "../../view/scenes/SceneNames";
 import { ClientLootUpdaterDelegator } from "../../domain/loot/clientLootUpdaterDelegator";
 import { PhaserClientLootCreatorView } from "../../view/loot/phaserClientLootCreatorView";
@@ -113,7 +113,7 @@ export class ClientPresenterProvider {
       ),
     ]);
   }
-  forInventory(player: LocalCLientPlayer, view: GameObjects.GameObject) {
+  forInventory(player: LocalClientPlayer, view: GameObjects.GameObject) {
     new ViewPresenter(view, [
       new ClientPlayerInventoryDelegator(
         player,

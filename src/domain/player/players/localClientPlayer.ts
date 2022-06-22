@@ -1,26 +1,44 @@
 import { MapManager } from "../../environment/mapManager";
 import { Balance } from "../../inventory/balance";
-import { PlayerInventory } from "../../inventory/playerInventory";
+import { ClientInventory } from "../../inventory/playerInventory";
 import { PlayerView } from "../../playerView";
 import { PlayerMovement } from "../movement/playerMovement";
 import { PlayerInfo } from "../playerInfo";
-import { PlayerInput } from "../playerInput";
+import { ClientPlayerInput, PlayerInput } from "../playerInput";
 import { PlayerState } from "../playerState";
 import { PlayerStats } from "../playerStats";
 import { ControllablePlayer } from "./controllablePlayer";
 
-export class LocalCLientPlayer extends ControllablePlayer {
+export class LocalClientPlayer extends ControllablePlayer {
   constructor(
     info: PlayerInfo,
     state: PlayerState,
     view: PlayerView,
     stats: PlayerStats,
     movementSystem: PlayerMovement,
-    input: PlayerInput,
-    inventory: PlayerInventory,
+    input: ClientPlayerInput,
+    inventory: ClientInventory,
     mapManager: MapManager,
     balance: Balance
   ) {
-    super(info, state, view, stats, movementSystem, input, mapManager, inventory, balance);
+    super(
+      info,
+      state,
+      view,
+      stats,
+      movementSystem,
+      input,
+      mapManager,
+      inventory,
+      balance
+    );
+  }
+
+  get input(): ClientPlayerInput {
+    return this._input as ClientPlayerInput;
+  }
+
+  get inventory() {
+    return this._inventory as ClientInventory;
   }
 }

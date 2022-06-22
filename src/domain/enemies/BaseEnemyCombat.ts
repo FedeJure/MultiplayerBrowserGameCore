@@ -1,5 +1,5 @@
 import { CollisionableEntity } from "../entity/CollisionableEntity";
-import { AttackTargetType } from "../combat/attackTargetType";
+import { CollisionableTargetType } from "../combat/attackTargetType";
 import { CombatResult } from "../player/combat/combatResult";
 import { Enemy } from "./enemy";
 import { Entity } from "../entity/entity";
@@ -125,7 +125,7 @@ export class EnemyCombat extends DefaultEntityCombat {
 
   private processCloseTargets(targets: CollisionableEntity[]) {
     const filterTargets = targets.filter(
-      (t) => t.type === AttackTargetType.PLAYER
+      (t) => t.type === CollisionableTargetType.PLAYER
     );
     if (this._target && filterTargets.length === 0) {
       this._target = null;

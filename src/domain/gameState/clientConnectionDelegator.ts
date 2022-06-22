@@ -3,7 +3,6 @@ import { Log } from "../../infrastructure/Logger";
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
 import { ClientPlayerView } from "../../view/player/clientPlayerView";
 import { Delegator } from "../delegator";
-import { ControllablePlayer } from "../player/players/controllablePlayer";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { ServerConnection } from "../serverConnection";
 import { PlayerState } from "../player/playerState";
@@ -14,15 +13,16 @@ import { Player } from "../player/players/player";
 import { PlayerMovement } from "../player/movement/playerMovement";
 import { DefaultPlayerStats, PlayerStats } from "../player/playerStats";
 import { CollisionableEntity } from "../entity/CollisionableEntity";
-import { AttackTargetType } from "../combat/attackTargetType";
+import { CollisionableTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 import { MapManager } from "../environment/mapManager";
 import { CollisionManager } from "../collisions/collisionManager";
 import { HtmlInventoryView } from "../../view/ui/HtmlInventoryView";
-import { PlayerInventory } from "../inventory/playerInventory";
-import { LocalCLientPlayer } from "../player/players/localClientPlayer";
+import { ClientInventory } from "../inventory/playerInventory";
+import { LocalClientPlayer } from "../player/players/localClientPlayer";
 import { HtmlMoneyView } from "../../view/ui/HtmlMoneyView";
 import { Balance } from "../inventory/balance";
+import { PlayerActionResolve } from "../player/playerActionResolver";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -126,24 +126,25 @@ export class ClientConnectionDelegator implements Delegator {
     const movementSystem = new PlayerMovement();
 
     const moneyView = new HtmlMoneyView();
-    const player = new LocalCLientPlayer(
+    const player = new LocalClientPlayer(
       info,
       state,
       view,
       stats ?? DefaultPlayerStats,
       movementSystem,
       input,
-      new PlayerInventory(
+      new ClientInventory(
         stats.inventorySize,
         new HtmlInventoryView(this.scene, input, moneyView)
       ),
       this.mapManager,
       new Balance(moneyView)
     );
+    new PlayerActionResolve(player, this.connection)
     view.setEntityReference(player);
     this.collisionableTargetRepository.save(view.id, {
       target: player,
-      type: AttackTargetType.PLAYER,
+      type: CollisionableTargetType.PLAYER,
     });
 
     this.presenterProvider.forInventory(player, view);

@@ -2,7 +2,7 @@ import { Scene } from "phaser";
 import { InventoryView } from "../../domain/inventory/inventoryView";
 import { Item } from "../../domain/items/item";
 import { ItemType } from "../../domain/items/itemType";
-import { PlayerInput } from "../../domain/player/playerInput";
+import { ClientPlayerInput } from "../../domain/player/playerInput";
 import { HtmlCellView } from "./HtmlCellView";
 import { HtmlElement } from "./HtmlElement";
 import { HtmlMoneyView } from "./HtmlMoneyView";
@@ -13,9 +13,9 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
   private balanceView: HtmlMoneyView
   constructor(
     scene: Scene,
-    playerInput: PlayerInput,
+    playerInput: ClientPlayerInput,
     moneyView: HtmlMoneyView,
-    private slotsCount: number = 16
+    private slotsCount: number = 20
   ) {
     super(
       scene,
@@ -39,14 +39,14 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
       this.container.hidden = !this.container.hidden;
     });
   }
-  saveItems(items: (Item | null)[]) {
-    this.cells.forEach((cell) => {
-      if (cell.isEmpty) {
-        const item = items.shift();
-        if (!item) return;
-        cell.setItem(item);
-      }
-    });
+  saveItems(items: (Item | undefined)[]) {
+    for (let i = 0; i < this.slotsCount; i++) {
+      const cell = this.cells[i];
+      cell.clear()
+      const item = items[i]
+      if (!item) return 
+      cell.setItem(item) 
+    }
   }
 
   initContent() {

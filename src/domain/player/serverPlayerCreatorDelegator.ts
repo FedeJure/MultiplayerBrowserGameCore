@@ -19,13 +19,12 @@ import { Scene } from "phaser";
 import { PlayerMovement } from "./movement/playerMovement";
 import { DefaultPlayerStats, PlayerStats } from "./playerStats";
 import { CollisionableEntity } from "../entity/CollisionableEntity";
-import { AttackTargetType } from "../combat/attackTargetType";
+import { CollisionableTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
 import { MapManager } from "../environment/mapManager";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
 import { CollisionManager } from "../collisions/collisionManager";
 import { ServerPlayerInventory } from "../inventory/serverPlayerInventory";
-import { Balance } from "../inventory/balance";
 import { BalanceDto } from "../inventory/balanceDto";
 import { DefaultPlayerBalance } from "../../infrastructure/configuration/DefaultPlayerBalance";
 import { ServerBalance } from "../inventory/serverBalance";
@@ -199,7 +198,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
 
     this.collisionableTargetRepository.save(view.id, {
       target: player,
-      type: AttackTargetType.PLAYER,
+      type: CollisionableTargetType.PLAYER,
     });
     connection.setPlayerId(player.info.id);
     this.presenterProvider.forPlayer(view, player);

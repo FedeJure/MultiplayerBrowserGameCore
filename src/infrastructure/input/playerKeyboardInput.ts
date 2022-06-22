@@ -1,5 +1,5 @@
 import { Input } from "phaser";
-import { PlayerInput } from "../../domain/player/playerInput";
+import { ClientPlayerInput, PlayerInput } from "../../domain/player/playerInput";
 import { PlayerInputDto } from "../dtos/playerInputDto";
 import { DefaultKeyboardControlConfig } from "./keyboardControlConfig";
 import { ListenerableKey } from "./ListenerableKey";
@@ -21,7 +21,7 @@ interface KeyboardInput {
   skill3: Input.Keyboard.KeyCombo;
   skill4: Input.Keyboard.KeyCombo;
 }
-export class PlayerKeyBoardInput implements PlayerInput {
+export class PlayerKeyBoardInput implements ClientPlayerInput {
   readonly input: KeyboardInput;
 
   constructor(private inputPlugin: Input.Keyboard.KeyboardPlugin) {
@@ -136,5 +136,9 @@ export class PlayerKeyBoardInput implements PlayerInput {
 
   get action() {
     return this.input.action.key.isDown;
+  }
+
+  get onAction() {
+    return this.input.action.onKeyDown
   }
 }

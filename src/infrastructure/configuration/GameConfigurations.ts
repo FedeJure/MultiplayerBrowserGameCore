@@ -13,5 +13,5 @@ export const DefaultGameConfiguration: GameConfigurations = {
   initialPosition: { x: 1000, y: 1450 },
   gameRate: 60,
   lootDuration: 60000,
-  lootDistance: 20
+  lootDistance: 40
 };

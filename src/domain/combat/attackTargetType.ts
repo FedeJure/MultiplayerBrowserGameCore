@@ -1,4 +1,4 @@
-export enum AttackTargetType {
+export enum CollisionableTargetType {
   PLAYER = "player",
-  MOB = "mob",
+  MOB = "mob"
 }

@@ -60,11 +60,17 @@ export class HtmlCellView {
 
   setItem(item: Item) {
     if (!this.isEmpty) throw new Error("Cell not empty");
-
+    console.log(item)
     const img = document.createElement("img");
     img.setAttribute("types", item.types.join(','))
     img.src = AssetLoader.resolveAssetPath(item.icon);
     this.setExistentItem(img);
+  }
+
+  clear() {
+    if (this.isEmpty) return
+    this.img?.remove()
+    this.img = null
   }
 
   get isEmpty() {

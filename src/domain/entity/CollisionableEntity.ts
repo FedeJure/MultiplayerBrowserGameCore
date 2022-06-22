@@ -1,7 +1,7 @@
 import { Entity } from "./entity";
-import { AttackTargetType } from "../combat/attackTargetType";
+import { CollisionableTargetType } from "../combat/attackTargetType";
 
 export interface CollisionableEntity {
-  type: AttackTargetType;
+  type: CollisionableTargetType;
   target: Entity;
 }

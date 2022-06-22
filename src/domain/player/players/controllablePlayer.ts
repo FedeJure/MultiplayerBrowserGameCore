@@ -1,9 +1,10 @@
 import { Attackable } from "../../combat/attackTarget";
-import { AttackTargetType } from "../../combat/attackTargetType";
+import { CollisionableTargetType } from "../../combat/attackTargetType";
 import { Entity } from "../../entity/entity";
 import { MapManager } from "../../environment/mapManager";
 import { Balance } from "../../inventory/balance";
-import { PlayerInventory } from "../../inventory/playerInventory";
+import { Inventory } from "../../inventory/inventory";
+import { Item } from "../../items/item";
 import { PlayerView } from "../../playerView";
 import { DefendCombatAction } from "../combat/actions/DefendCombatAction";
 import { SimpleForwardPunchCombatAction } from "../combat/actions/SimpleForwardPunchCombatAction";
@@ -26,10 +27,10 @@ export class ControllablePlayer extends Entity<
     _view: PlayerView,
     _stats: PlayerStats,
     _movementSystem: PlayerMovement,
-    private _input: PlayerInput,
+    protected _input: PlayerInput,
     mapManager: MapManager, //usar esto para spawnear al jugador en un spot de spawn al morir.
-    private _inventory: PlayerInventory,
-    private _balance: Balance
+    protected _inventory: Inventory<Item | Item['id']>,
+    protected _balance: Balance
   ) {
     super(
       _info,
@@ -70,8 +71,8 @@ export class ControllablePlayer extends Entity<
       .filter(
         (t) =>
           t.target !== this &&
-          (t.type === AttackTargetType.PLAYER ||
-            t.type === AttackTargetType.MOB)
+          (t.type === CollisionableTargetType.PLAYER ||
+            t.type === CollisionableTargetType.MOB)
       )
       .map((t) => t.target);
   }

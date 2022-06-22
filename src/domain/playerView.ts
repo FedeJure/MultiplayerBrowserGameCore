@@ -1,5 +1,4 @@
 import { GameObjects, Scene } from "phaser";
-import { Observable } from "rxjs";
 import { EntityView } from "./entity/entityView";
 import { CombatCollisionResolver } from "./player/combat/combatCollisionResolver";
 import { Vector } from "./vector";

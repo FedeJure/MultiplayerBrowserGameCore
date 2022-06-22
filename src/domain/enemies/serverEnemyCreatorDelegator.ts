@@ -3,7 +3,7 @@ import { ServerPresenterProvider } from "../../infrastructure/providers/serverPr
 import { PhaserEnemyView } from "../../view/enemy/phaserEnemyView";
 import { AnimationLayer, EntityAnimationCode } from "../entity/animations";
 import { CollisionableEntity } from "../entity/CollisionableEntity";
-import { AttackTargetType } from "../combat/attackTargetType";
+import { CollisionableTargetType } from "../combat/attackTargetType";
 import { Delegator } from "../delegator";
 import { AsyncRepository, SimpleRepository } from "../repository";
 import { RoomManager } from "../roomManager";
@@ -96,7 +96,7 @@ export class ServerEnemyCreatorDelegator implements Delegator {
       this.presenterProvider.forEnemy(view, enemy);
       this.collisionableTargetRepository.save(view.id, {
         target: enemy,
-        type: AttackTargetType.MOB,
+        type: CollisionableTargetType.MOB,
       });
 
       return enemy;

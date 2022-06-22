@@ -1,4 +1,4 @@
-import { filter, Observable } from "rxjs";
+import { filter } from "rxjs";
 import { ClientConnection } from "../../domain/clientConnection";
 import { PlayerInput } from "../../domain/player/playerInput";
 import { PlayerInputDto } from "../dtos/playerInputDto";
@@ -18,7 +18,6 @@ export class PlayerSocketInput implements PlayerInput {
   private _skill2: boolean = false;
   private _skill3: boolean = false;
   private _skill4: boolean = false;
-  private _inventory: boolean = false;
   private _action: boolean = false;
   constructor(
     playerId: string,
@@ -71,9 +70,6 @@ export class PlayerSocketInput implements PlayerInput {
   get jump() {
     return this._jump;
   }
-  get inventory() {
-    return this._inventory;
-  }
   get stats() {
     return this._stats;
   }
@@ -99,11 +95,7 @@ export class PlayerSocketInput implements PlayerInput {
     return this._skill4;
   }
 
-  get action() { 
-    return this._action
-  }
-
-  get onInventoryChange() {
-    return new Observable<void>()
+  get action() {
+    return this._action;
   }
 }

@@ -33,7 +33,7 @@ export const MapsConfiguration: MapConfiguration = {
               { key: "farm", fileName: "mapStaticObjects/farm.png" },
             ],
             objects: [],
-            spawnPositions: [{ x: 650, y: 1678 }],
+            spawnPositions: [{ x: 650, y: 1600 }],
           },
           {
             id: 1,
@@ -55,7 +55,7 @@ export const MapsConfiguration: MapConfiguration = {
               { key: "farm", fileName: "mapStaticObjects/farm.png" },
             ],
             objects: [],
-            spawnPositions: [{ x: 650, y: 1678 }],
+            spawnPositions: [{ x: 650, y: 1600 }],
           },
           {
             id: 2,
@@ -77,7 +77,7 @@ export const MapsConfiguration: MapConfiguration = {
               { key: "farm", fileName: "mapStaticObjects/farm.png" },
             ],
             objects: [],
-            spawnPositions: [{ x: 650, y: 1678 }],
+            spawnPositions: [{ x: 650, y: 1600 }],
           },
           {
             id: 3,
@@ -99,7 +99,7 @@ export const MapsConfiguration: MapConfiguration = {
               { key: "farm", fileName: "mapStaticObjects/farm.png" },
             ],
             objects: [],
-            spawnPositions: [{ x: 650, y: 1678 }],
+            spawnPositions: [{ x: 650, y: 1600 }],
           },
         ],
       ],

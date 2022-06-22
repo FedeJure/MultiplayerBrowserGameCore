@@ -10,8 +10,8 @@ import { PlayerInput } from "../playerInput";
 import { PlayerMovement } from "../movement/playerMovement";
 import { PlayerStats } from "../playerStats";
 import { MapManager } from "../../environment/mapManager";
-import { PlayerInventory } from "../../inventory/playerInventory";
 import { Balance } from "../../inventory/balance";
+import { ServerPlayerInventory } from "../../inventory/serverPlayerInventory";
 
 export class ServerPlayer extends ControllablePlayer {
   private _onStateChange: Subject<{
@@ -26,7 +26,7 @@ export class ServerPlayer extends ControllablePlayer {
     input: PlayerInput,
     stats: PlayerStats,
     mapManager: MapManager,
-    inventory: PlayerInventory,
+    inventory: ServerPlayerInventory,
     balance: Balance,
     private _connection: ClientConnection,
     private playerInfoRepository: AsyncRepository<PlayerInfo>,
@@ -69,5 +69,9 @@ export class ServerPlayer extends ControllablePlayer {
 
   get connection(): ClientConnection {
     return this._connection;
+  }
+
+  get inventory() {
+     return this._inventory as ServerPlayerInventory 
   }
 }
