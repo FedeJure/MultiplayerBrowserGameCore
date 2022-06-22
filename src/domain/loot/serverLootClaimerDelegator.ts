@@ -1,6 +1,5 @@
 import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
 import { Log } from "../../infrastructure/Logger";
-import { ClientConnection } from "../clientConnection";
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
 import { Item } from "../items/item";
@@ -27,6 +26,9 @@ export class ServerLootClaimerDelegator implements Delegator {
               const loot = this.lootsRepository.get(lootId);
               if (!loot) return;
               if (
+                (loot.owner !== player.info.id &&
+                  loot.time + DefaultGameConfiguration.lootDuration >
+                    Date.now()) ||
                 balance !== loot.balance ||
                 Phaser.Math.Distance.BetweenPoints(
                   loot.position,

@@ -10,4 +10,5 @@ export interface Loot {
     owner: Player['info']['id']
     position: Vector,
     mapId: Map['id']
+    time: number
 }

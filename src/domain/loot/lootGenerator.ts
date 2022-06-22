@@ -25,6 +25,7 @@ export class LootGenerator {
       owner,
       position,
       mapId,
+      time: Date.now()
     };
     this.lootsRepository.save(loot.id, loot);
 
