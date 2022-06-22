@@ -1,21 +1,14 @@
-import {
-  PlayerInventoryDto,
-} from "./playerInventoryDto";
 import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { Log } from "../../infrastructure/Logger";
 import { Delegator } from "../delegator";
 import { ServerPlayer } from "../player/players/serverPlayer";
 import { AsyncRepository, SimpleRepository } from "../repository";
 import { DefaultItem, Item } from "../items/item";
-import { DefaultPlayerInventory } from "../../infrastructure/configuration/DefaultPlayerInventory";
-import { BalanceDto } from "./balanceDto";
 
 export class ServerPlayerInventoryDelegator implements Delegator {
   constructor(
-    private inventoryRepository: AsyncRepository<PlayerInventoryDto>,
     private itemsRepository: AsyncRepository<Item>,
     private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
-    private playerBalanceRepository: AsyncRepository<BalanceDto>
   ) {}
   init(): void {
     this.inGamePlayersRepository.onSave.subscribe(async (player) => {
@@ -30,16 +23,13 @@ export class ServerPlayerInventoryDelegator implements Delegator {
           ).map((item) => item ?? DefaultItem);
           ev.callback(GameEvents.ITEM_DETAILS_RESPONSE.getEvent(items));
         });
-        const inventory = await this.inventoryRepository.get(player.info.id);
-        connection.sendInventoryBalanceEvent(inventory || DefaultPlayerInventory);
-
-        this.inventoryRepository.onSave.subscribe((inventory) => {
-          connection.sendInventoryBalanceEvent(inventory);
+        connection.sendInventoryBalanceEvent(player.inventory.dto);
+        player.inventory.onChange.subscribe(() => {
+          connection.sendInventoryBalanceEvent(player.inventory.dto);
         });
-
-        this.playerBalanceRepository.onSave.subscribe((balance) => {
-          connection.sendInventoryBalanceEvent(undefined, balance);
-        })
+        player.balance.onChange.subscribe(() => {
+          connection.sendInventoryBalanceEvent(undefined, player.balance.dto);
+        });
       } catch (error: any) {
         Log("ServerPlayerInventoryDelegator [Error]:  ", error);
       }

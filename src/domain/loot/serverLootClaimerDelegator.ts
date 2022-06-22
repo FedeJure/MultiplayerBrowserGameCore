@@ -1,3 +1,4 @@
+import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
 import { Log } from "../../infrastructure/Logger";
 import { ClientConnection } from "../clientConnection";
 import { Delegator } from "../delegator";
@@ -25,6 +26,15 @@ export class ServerLootClaimerDelegator implements Delegator {
             .subscribe(({ lootId, lootIndexes, balance }) => {
               const loot = this.lootsRepository.get(lootId);
               if (!loot) return;
+              if (
+                balance !== loot.balance ||
+                Phaser.Math.Distance.BetweenPoints(
+                  loot.position,
+                  player.state.position
+                ) > DefaultGameConfiguration.lootDistance
+              ) {
+                return;
+              }
               const itemsToLoot = lootIndexes
                 .map((lootIndex) => loot.itemIds[lootIndex])
                 .filter((itemId) => itemId !== undefined) as Item["id"][];
@@ -36,7 +46,11 @@ export class ServerLootClaimerDelegator implements Delegator {
                   player.inventory.addItem(item);
                 });
               });
-              player.balance.add(balance);
+              if (balance === loot.balance) {
+                player.balance.add(balance);
+              }
+
+              this.lootsRepository.update(lootId, { balance: 0 });
             })
         );
       } catch (error: any) {

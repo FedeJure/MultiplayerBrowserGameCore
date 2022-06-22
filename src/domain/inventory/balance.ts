@@ -1,3 +1,4 @@
+import { Observable, Subject } from "rxjs";
 import { BalanceDto } from "./balanceDto";
 import { MoneyView } from "./moneyView";
 
@@ -10,6 +11,7 @@ export interface GameBalance {
 export class Balance {
   private _amount: number = 0;
   private _gameMoney: GameBalance;
+  private _onChange = new Subject<void>()
   constructor(private _view?: MoneyView) {
     this.updateGameMoney();
   }
@@ -17,18 +19,21 @@ export class Balance {
   set(amount: number) {
     if (amount < 0) return;
     this._amount = amount;
+    this._onChange.next()
     this.updateGameMoney();
   }
 
   add(amount: number) {
     if (amount < 0) return;
     this._amount += amount;
+    this._onChange.next()
     this.updateGameMoney();
   }
 
   substract(amount: number) {
     if (amount < 0) return;
     this._amount -= amount;
+    this._onChange.next()
     this.updateGameMoney();
   }
 
@@ -50,5 +55,9 @@ export class Balance {
 
   get dto(): BalanceDto {
     return { amount: this.amount };
+  }
+
+  get onChange(): Observable<void> {
+    return this._onChange
   }
 }

@@ -93,10 +93,8 @@ export const InitGame: (
           provider.playerBalanceRepository
         ),
         new ServerPlayerInventoryDelegator(
-          provider.inventoryRepository,
           provider.itemsRepository,
           provider.inGamePlayerRepository,
-          provider.playerBalanceRepository
         ),
         new EnvironmentObjectDetailsDispatcherDelegator(
           provider.environmentObjectsRepository,
