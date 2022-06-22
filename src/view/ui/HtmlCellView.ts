@@ -88,9 +88,11 @@ export class HtmlCellView {
   setSelected(selected: boolean) {
     if (selected) {
       this.element.style.border = "2px solid #9ecaed"
+      this.element.style.margin = "-1px"
       this.element.style.boxShadow = "0 0 10px #9ecaed"
     }
     else {
+      this.element.style.margin = "1px"
       this.element.style.border = "none"
       this.element.style.boxShadow = "none"
     }

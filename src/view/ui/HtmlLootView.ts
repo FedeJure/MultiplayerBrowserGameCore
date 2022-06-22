@@ -39,17 +39,22 @@ export class HtmlLootView implements LootView {
     this.mainContainer.style.backgroundImage = 'url("https://img.freepik.com/foto-gratis/textura-estuco-color-ocre_1360-504.jpg?w=2000")'
 
     const title = document.createElement("h4");
+    title.style.margin = '0'
     title.innerText = "Loot";
     this.mainContainer.appendChild(title);
 
     this.cellContainer = document.createElement("div");
-    this.cellContainer.style.height = "150px";
+    this.cellContainer.style.height = "fit-content";
+    this.cellContainer.style.maxHeight = "180px";
     this.cellContainer.style.width = "160px";
     this.cellContainer.style.display = "flex";
     this.cellContainer.style.overflowY = "auto";
     this.cellContainer.style.overflowX = "hidden";
     this.cellContainer.style.flexWrap = "wrap";
     this.cellContainer.style.justifyContent = "center";
+    const style = document.createElement('style')
+    style.innerHTML = 'div::-webkit-scrollbar {display: none;}'
+    this.mainContainer.appendChild(style)
     this.mainContainer.appendChild(this.cellContainer);
 
     this.gameBalance = new HtmlMoneyView()

@@ -64,7 +64,7 @@ export class ServerLootClaimerDelegator implements Delegator {
               this.lootsRepository.update(lootId, {
                 balance: 0,
                 itemIds: loot.itemIds.map((itemId) =>
-                  itemId && lootedItems.includes(itemId) ? itemId : undefined
+                  itemId && lootedItems.includes(itemId) ? undefined : itemId
                 ),
               });
             })
