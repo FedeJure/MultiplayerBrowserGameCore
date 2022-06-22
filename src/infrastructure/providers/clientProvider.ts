@@ -17,6 +17,7 @@ import { CollisionableEntity } from "../../domain/entity/CollisionableEntity";
 import { MapManager } from "../../domain/environment/mapManager";
 import { Enemy } from "../../domain/enemies/enemy";
 import { CollisionManager } from "../../domain/collisions/collisionManager";
+import { ClientItemResolver } from "../../domain/items/clientItemResolver";
 
 //This is necessary because the dependency manager not work with generics
 class InventoryRepository extends InMemoryRepository<PlayerInventoryDto> {}
@@ -119,5 +120,11 @@ export class ClientProvider {
 
   public static get collisionManager(): CollisionManager {
     return this._collisionManager;
+  }
+
+  public static get itemResolver(): ClientItemResolver {
+    return DependencyManager.GetOrInstantiate<ClientItemResolver>(
+      () => new ClientItemResolver(this.serverConnection, this.itemsRepository)
+    )
   }
 }

@@ -103,7 +103,8 @@ export class ClientPresenterProvider {
         ClientProvider.inGamePlayersRepository,
         ClientProvider.collisionableTargetRepository,
         ClientProvider.mapManager,
-        ClientProvider.collisionManager
+        ClientProvider.collisionManager,
+        ClientProvider.itemResolver
       ),
       new ClientEnemyCreatorDelegator(
         scene,
@@ -118,7 +119,7 @@ export class ClientPresenterProvider {
       new ClientPlayerInventoryDelegator(
         player,
         ClientProvider.serverConnection,
-        ClientProvider.itemsRepository
+        ClientProvider.itemResolver
       ),
     ]);
   }

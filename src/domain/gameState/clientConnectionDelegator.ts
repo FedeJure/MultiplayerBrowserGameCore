@@ -22,7 +22,10 @@ import { ClientInventory } from "../inventory/playerInventory";
 import { LocalClientPlayer } from "../player/players/localClientPlayer";
 import { HtmlMoneyView } from "../../view/ui/HtmlMoneyView";
 import { Balance } from "../inventory/balance";
-import { PlayerActionResolve } from "../player/playerActionResolver";
+import { ClientPlayerActionResolve } from "../player/clientPlayerActionResolver";
+import { HtmlLootView } from "../../view/ui/HtmlLootView";
+import { SceneNames } from "../../view/scenes/SceneNames";
+import { ClientItemResolver } from "../items/clientItemResolver";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -33,7 +36,8 @@ export class ClientConnectionDelegator implements Delegator {
     private inGamePlayersRepository: SimpleRepository<Player>,
     private collisionableTargetRepository: SimpleRepository<CollisionableEntity>,
     private mapManager: MapManager,
-    private collisionManager: CollisionManager
+    private collisionManager: CollisionManager,
+    private itemResolver: ClientItemResolver
   ) {}
   init(): void {
     this.connection.onInitialGameState.subscribe(async (data) => {
@@ -140,7 +144,12 @@ export class ClientConnectionDelegator implements Delegator {
       this.mapManager,
       new Balance(moneyView)
     );
-    new PlayerActionResolve(player, this.connection)
+    const lootView = new HtmlLootView()
+    this.scene.scene
+        .get(SceneNames.ClientHudScene)
+        .add.dom(0, 0, lootView.element)
+        .setOrigin(0, 0);
+    new ClientPlayerActionResolve(player, this.connection, lootView, this.itemResolver)
     view.setEntityReference(player);
     this.collisionableTargetRepository.save(view.id, {
       target: player,
