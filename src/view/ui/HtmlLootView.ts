@@ -1,7 +1,9 @@
 import { Observable, Subject } from "rxjs";
+import { GameBalance } from "../../domain/inventory/balance";
 import { Item } from "../../domain/items/item";
 import { LootView } from "../../domain/loot/lootView";
 import { HtmlCellView } from "./HtmlCellView";
+import { HtmlMoneyView } from "./HtmlMoneyView";
 
 export class HtmlLootView implements LootView {
   element: HTMLDivElement;
@@ -10,6 +12,7 @@ export class HtmlLootView implements LootView {
   private cellContainer: HTMLDivElement;
   private selectedIndexes: number[] = [];
   private _onClaimLoot = new Subject<(Item | undefined)[]>();
+  private gameBalance: HtmlMoneyView
 
   private items: (Item | undefined)[] = [];
   constructor() {
@@ -49,6 +52,9 @@ export class HtmlLootView implements LootView {
     this.cellContainer.style.justifyContent = "center";
     this.mainContainer.appendChild(this.cellContainer);
 
+    this.gameBalance = new HtmlMoneyView()
+    this.mainContainer.appendChild(this.gameBalance.element)
+
     const buttonContainer = document.createElement("div");
     buttonContainer.style.display = "flex";
     buttonContainer.style.alignContent = "center";
@@ -71,11 +77,12 @@ export class HtmlLootView implements LootView {
 
     this.setVisible(false)
   }
-  showWith(items: (Item | undefined)[]) {
+  showWith(items: (Item | undefined)[], balance: GameBalance) {
     this.items = items;
     this.createCells(Math.max(6,items.length));
     this.initItems()
     this.setVisible(true)
+    this.gameBalance.setBalance(balance)
     console.log("VISIBLEE")
   }
 

@@ -1,4 +1,5 @@
 import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
+import { Balance } from "../inventory/balance";
 import { ClientItemResolver } from "../items/clientItemResolver";
 import { Loot } from "../loot/loot";
 import { LootView } from "../loot/lootView";
@@ -44,7 +45,9 @@ export class ClientPlayerActionResolve {
     this.currentLoot = loots[0];
 
     this.itemResolver.getItems(this.currentLoot.itemIds).then((items) => {
-      this.view.showWith(items);
+      const balance = new Balance()
+      balance.set(this.currentLoot?.balance ?? 0)
+      this.view.showWith(items, balance.gameMoney);
       this.view.onClaimLoot;
     });
   }
