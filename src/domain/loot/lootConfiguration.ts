@@ -1,4 +1,4 @@
-import { Money } from "../inventory/Money"
+import { Balance } from "../inventory/balance"
 import { Item } from "../items/item"
 
 export interface ItemLootConfiguration {

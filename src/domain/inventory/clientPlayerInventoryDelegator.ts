@@ -28,7 +28,7 @@ export class ClientPlayerInventoryDelegator implements Delegator {
             DefaultItem : null
         );
         this.player.inventory.setItems(items)
-        this.player.inventory.money.set(inventory.moneyNumericRepresentation)
+        this.player.inventory.balance.set(inventory.balance)
       })
     );
   }

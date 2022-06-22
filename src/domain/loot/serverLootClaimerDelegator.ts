@@ -22,7 +22,7 @@ export class ServerLootClaimerDelegator implements Delegator {
     this.disposer.add(
       this.clientConnection
         .onClaimLoot()
-        .subscribe(({ lootId, lootIndexes, money }) => {
+        .subscribe(({ lootId, lootIndexes, balance }) => {
           const loot = this.lootsRepository.get(lootId);
           if (!loot) return;
           const itemsToLoot = lootIndexes
@@ -34,7 +34,7 @@ export class ServerLootClaimerDelegator implements Delegator {
                 player.inventory.addItem(item)
             })
           })
-          player.inventory.money.add(money)
+          player.inventory.balance.add(balance)
         })
     );
   }

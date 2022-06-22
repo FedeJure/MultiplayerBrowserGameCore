@@ -1,4 +1,4 @@
-import { GameMoney } from "../../domain/inventory/Money";
+import { GameBalance } from "../../domain/inventory/balance";
 import { MoneyView } from "../../domain/inventory/moneyView";
 import { AssetLoader } from "../AssetLoader";
 
@@ -35,16 +35,16 @@ export class HtmlMoneyView  implements MoneyView{
     this.container.append(silverIcon);
     this.container.append(this.copper);
     this.container.append(copperIcon);
-    this.setMoney({ gold: 0, silver: 0, copper: 0 });
+    this.setBalance({ gold: 0, silver: 0, copper: 0 });
   }
 
   get element() {
     return this.container;
   }
 
-  setMoney(money: GameMoney) {
-    this.gold.textContent = money.gold.toString();
-    this.silver.textContent = money.silver.toString();
-    this.copper.textContent = money.copper.toString();
+  setBalance(gameBalance: GameBalance) {
+    this.gold.textContent = gameBalance.gold.toString();
+    this.silver.textContent = gameBalance.silver.toString();
+    this.copper.textContent = gameBalance.copper.toString();
   }
 }

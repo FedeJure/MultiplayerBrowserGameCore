@@ -1,5 +1,5 @@
-import { GameMoney } from "./Money";
+import { GameBalance } from "./balance";
 
 export interface MoneyView {
-    setMoney(money: GameMoney)
+    setBalance(gameBalance: GameBalance)
 }

@@ -1,12 +1,11 @@
 import { Item } from "../items/item";
-import { Money } from "./Money";
 
 export interface PlayerInventoryDto {
   items: (Item["id"] | null)[];
-  moneyNumericRepresentation: number;
+  balance: number;
 }
 
 export const DefaultPlayerInventory: PlayerInventoryDto = {
   items: [],
-  moneyNumericRepresentation: 10
+  balance: 10
 };

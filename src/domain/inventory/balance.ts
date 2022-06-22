@@ -1,15 +1,16 @@
 import { MoneyView } from "./moneyView";
 
-export interface GameMoney {
+export interface GameBalance {
   gold: number;
   silver: number;
   copper: number;
 }
 
-export class Money {
+export class Balance {
   private _amount: number = 0;
-  private _gameMoney: GameMoney;
+  private _gameMoney: GameBalance;
   constructor(private _view?: MoneyView) {
+
     this.updateGameMoney();
   }
 
@@ -36,10 +37,10 @@ export class Money {
     const silver = Math.trunc(this.amount / 100) % 100;
     const gold = Math.trunc(this.amount / 10000) % 100;
     this._gameMoney = { copper, silver, gold };
-    this._view?.setMoney(this._gameMoney);
+    this._view?.setBalance(this._gameMoney);
   }
 
-  get gameMoney(): GameMoney {
+  get gameMoney(): GameBalance {
     return this._gameMoney;
   }
 

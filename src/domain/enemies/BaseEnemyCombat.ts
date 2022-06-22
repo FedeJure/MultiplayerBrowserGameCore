@@ -10,7 +10,7 @@ import { LootConfiguration } from "../loot/lootConfiguration";
 import { AsyncRepository } from "../repository";
 import { LootGenerator } from "../loot/lootGenerator";
 import { shuffle } from "lodash";
-import { Money } from "../inventory/Money";
+import { Balance } from "../inventory/balance";
 import { Item } from "../items/item";
 
 export class EnemyCombat extends DefaultEntityCombat {
@@ -93,8 +93,8 @@ export class EnemyCombat extends DefaultEntityCombat {
           }
         }
       }
-      const money = new Money();
-      money.set(
+      const balance = new Balance();
+      balance.set(
         Math.floor(
           Math.random() * (lootConfig.maxMoney - lootConfig.minMoney)
         ) + lootConfig.minMoney
@@ -102,7 +102,7 @@ export class EnemyCombat extends DefaultEntityCombat {
 
       this.lootGenerator.generateLoot(
         itemsToLoot,
-        money,
+        balance,
         this.enemy.state.position,
         this.target!.info.id,
         this.enemy.state.mapId

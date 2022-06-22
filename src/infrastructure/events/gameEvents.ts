@@ -8,7 +8,7 @@ import { PlayerInitialStateDto } from "../dtos/playerInitialStateDto";
 import { PlayerInputDto } from "../dtos/playerInputDto";
 import { PlayerInventoryDto } from "../../domain/inventory/playerInventoryDto";
 import { Loot } from "../../domain/loot/loot";
-import { Money } from "../../domain/inventory/Money";
+import { Balance } from "../../domain/inventory/balance";
 
 export const GameEvents: {
   PLAYER_CONNECTED: {
@@ -92,7 +92,7 @@ export const GameEvents: {
     getEvent: (
       lootId: Loot["id"],
       lootIndexes: number[],
-      money: number
+      balance: number
     ) => ClaimLootEvent;
   };
 } = {
@@ -197,10 +197,10 @@ export const GameEvents: {
   },
   CLAIM_LOOT: {
     name: "claim_loot",
-    getEvent: (lootId, lootIndexes, money) => ({
+    getEvent: (lootId, lootIndexes, balance) => ({
       lootId,
       lootIndexes,
-      money,
+      balance,
       time: new Date(),
     }),
   },
@@ -267,7 +267,7 @@ export interface EnvironmentObjectDetailsRequest extends BaseEvent {
 export interface ClaimLootEvent extends BaseEvent {
   lootId: Loot["id"];
   lootIndexes: number[];
-  money: number;
+  balance: number;
 }
 
 export interface EnemiesStatesEvent extends BaseEvent {

@@ -1,10 +1,10 @@
 import { Item } from "../items/item";
 import { InventoryView } from "./inventoryView";
-import { Money } from "./Money";
+import { Balance } from "./balance";
 import { MoneyView } from "./moneyView";
 
 export class PlayerInventory {
-  private _money: Money
+  private _balance: Balance
   private _items: (Item | null)[]
   constructor(
     capacity: number,
@@ -12,15 +12,15 @@ export class PlayerInventory {
     moneyView?: MoneyView
   ) {
     this._items = new Array(capacity)
-    this._money = new Money(moneyView) 
+    this._balance = new Balance(moneyView) 
   }
 
   get items() {
     return this._items;
   }
 
-  get money() {
-    return this._money;
+  get balance() {
+    return this._balance;
   }
 
   addItem(item: Item) {

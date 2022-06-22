@@ -1,6 +1,6 @@
 import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
 import { Map } from "../environment/mapConfiguration";
-import { Money } from "../inventory/Money";
+import { Balance } from "../inventory/balance";
 import { Item } from "../items/item";
 import { Player } from "../player/players/player";
 import { SimpleRepository } from "../repository";
@@ -13,7 +13,7 @@ export class LootGenerator {
   ) {}
   generateLoot(
     itemIds: Item["id"][],
-    money: Money,
+    balance: Balance,
     position: Vector,
     owner: Player["info"]["id"],
     mapId: Map["id"]
@@ -21,7 +21,7 @@ export class LootGenerator {
     const loot: Loot = {
       id: Phaser.Utils.String.UUID(),
       itemIds,
-      moneyAmount: money.amount,
+      balance: balance.amount,
       owner,
       position,
       mapId,

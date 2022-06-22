@@ -6,7 +6,7 @@ import { Vector } from "../vector"
 export interface Loot {
     id: string
     itemIds: (Item['id'] | undefined)[]
-    moneyAmount: number
+    balance: number
     owner: Player['info']['id']
     position: Vector,
     mapId: Map['id']

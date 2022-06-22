@@ -10,7 +10,7 @@ import { HtmlMoneyView } from "./HtmlMoneyView";
 export class HtmlInventoryView extends HtmlElement implements InventoryView {
   private content: HTMLDivElement;
   private cells: HtmlCellView[] = [];
-  private money: HtmlMoneyView
+  private balanceView: HtmlMoneyView
   constructor(
     scene: Scene,
     playerInput: PlayerInput,
@@ -22,7 +22,7 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
       "Inventory",
       document.getElementById("gameContainer") as HTMLDivElement
     );
-    this.money = moneyView
+    this.balanceView = moneyView
     this.container.style.top = `0`;
     this.container.style.bottom = `0`;
     this.container.style.right = `5%`;
@@ -104,9 +104,9 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
   }
 
   initMoney() {
-    this.money.element.style.position = 'absolute'
-    this.money.element.style.bottom = '0'
-    this.money.element.style.right = '0'
-    this.content.appendChild(this.money.element)
+    this.balanceView.element.style.position = 'absolute'
+    this.balanceView.element.style.bottom = '0'
+    this.balanceView.element.style.right = '0'
+    this.content.appendChild(this.balanceView.element)
   }
 }
