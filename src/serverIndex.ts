@@ -22,6 +22,7 @@ import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreator
 import { EnemiesStateSenderDelegator } from "./domain/gameState/enemiesStateSenderDelegator";
 import { PhaserCollisionManager } from "./view/collisions/phaserCollisionManager";
 import { LootUpdaterDelegator } from "./domain/loot/lootUpdaterDelegator";
+import { ServerLootClaimerDelegator } from "./domain/loot/serverLootClaimerDelegator";
 
 export const InitGame: (
   socket: Socket,
@@ -34,7 +35,7 @@ export const InitGame: (
     scene: [new LoadScene(), scene],
   };
 
-const game = new Phaser.Game(config);
+  const game = new Phaser.Game(config);
   AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
   game.events.addListener(Phaser.Core.Events.READY, async () => {
     provider.setCollisionManager(new PhaserCollisionManager(scene));
@@ -68,10 +69,7 @@ const game = new Phaser.Game(config);
           provider.inGamePlayerRepository,
           socket
         ),
-        new LootUpdaterDelegator(
-          socket,
-          provider.lootRepository
-        ),
+        new LootUpdaterDelegator(socket, provider.lootRepository),
         new EnemiesStateSenderDelegator(
           provider.roomManager,
           socket,
@@ -91,16 +89,23 @@ const game = new Phaser.Game(config);
           provider.collisionableTargetRepository,
           provider.mapMapanger,
           provider.playerInputRequestRepository,
-          provider.collisionManager
+          provider.collisionManager,
+          provider.playerBalanceRepository
         ),
         new ServerPlayerInventoryDelegator(
           provider.inventoryRepository,
           provider.itemsRepository,
-          provider.inGamePlayerRepository
+          provider.inGamePlayerRepository,
+          provider.playerBalanceRepository
         ),
         new EnvironmentObjectDetailsDispatcherDelegator(
           provider.environmentObjectsRepository,
           provider.connectionsRepository
+        ),
+        new ServerLootClaimerDelegator(
+          provider.lootRepository,
+          provider.inGamePlayerRepository,
+          provider.itemsRepository
         ),
       ]);
       socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {

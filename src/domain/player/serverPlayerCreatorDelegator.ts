@@ -25,6 +25,10 @@ import { MapManager } from "../environment/mapManager";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
 import { CollisionManager } from "../collisions/collisionManager";
 import { ServerPlayerInventory } from "../inventory/serverPlayerInventory";
+import { Balance } from "../inventory/balance";
+import { BalanceDto } from "../inventory/balanceDto";
+import { DefaultPlayerBalance } from "../../infrastructure/configuration/DefaultPlayerBalance";
+import { ServerBalance } from "../inventory/serverBalance";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -41,7 +45,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private collisionableTargetRepository: SimpleRepository<CollisionableEntity>,
     private mapManager: MapManager,
     private playerInputRequestRepository: PlayerInputRequestRepository,
-    private collisionManager: CollisionManager
+    private collisionManager: CollisionManager,
+    private balanceRepository: AsyncRepository<BalanceDto>
   ) {}
   init(): void {
     this.connectionsRepository.onSave.subscribe((connection) => {
@@ -141,6 +146,10 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     if (!inventory)
       await this.inventoryRepository.save(playerId, DefaultPlayerInventory);
 
+    const balance = await this.balanceRepository.get(playerId)
+    if (!balance)
+      await this.balanceRepository.save(playerId, DefaultPlayerBalance)
+
     const stats = await this.playerStatsRepository.get(playerId);
     if (!stats)
       await this.playerStatsRepository.save(playerId, DefaultPlayerStats);
@@ -180,6 +189,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
         this.inventoryRepository,
         playerStats.inventorySize
       ),
+      new ServerBalance(playerId, this.balanceRepository),
       connection,
       this.playerInfoRepository,
       this.playerStateRepository

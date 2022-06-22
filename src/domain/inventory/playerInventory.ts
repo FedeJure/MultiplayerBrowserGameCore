@@ -1,33 +1,23 @@
 import { Item } from "../items/item";
 import { InventoryView } from "./inventoryView";
-import { Balance } from "./balance";
-import { MoneyView } from "./moneyView";
-import { PlayerInventoryDto } from "./playerInventoryDto";
 
 export class PlayerInventory {
-  private _balance: Balance;
   private _items: (Item | null)[];
   constructor(
     capacity: number,
-    private view?: InventoryView,
-    moneyView?: MoneyView
+    private view?: InventoryView
   ) {
     this._items = new Array(capacity);
-    this._balance = new Balance(moneyView);
   }
 
   get items() {
     return this._items;
   }
 
-  get balance() {
-    return this._balance;
-  }
 
-  get dto(): PlayerInventoryDto {
+  get dto() {
     return {
       items: this._items.map((i) => (i ? i.id : null)),
-      balance: this.balance.amount,
     };
   }
 

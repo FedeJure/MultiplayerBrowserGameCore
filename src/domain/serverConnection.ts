@@ -4,7 +4,7 @@ import {
   EnemiesStatesEvent,
   EnvironmentObjectDetailsResponse,
   InitialGameStateEvent,
-  InventoryUpdatedEvent,
+  InventoryBalanceUpdatedEvent,
   ItemDetailResponse,
   LootsAppearEvent,
   LootsDisappearEvent,
@@ -15,6 +15,7 @@ import {
 } from "../infrastructure/events/gameEvents";
 import { EnvironmentObject } from "./environmentObjects/environmentObject";
 import { Item } from "./items/item";
+import { Loot } from "./loot/loot";
 
 export interface ServerConnection {
   onNewPlayerConnected: Observable<NewPlayerConnectedEvent>;
@@ -23,12 +24,19 @@ export interface ServerConnection {
   onPlayerDisconnected: Observable<PlayerDisconnectedEvent>;
   onPing: Observable<number>;
   emitStartNewConnection(playerId: string): void;
-  emitInput(playerId: string, input: PlayerInputDto, inputRequest: number): void;
-  onMapUpdated: Observable<MapUpdateEvent>
-  onInventoryUpdate: Observable<InventoryUpdatedEvent>
-  onEnemyState: Observable<EnemiesStatesEvent>
-  emitGetItemDetails(ids: Item['id'][]): Promise<ItemDetailResponse>
-  emitGetEnvironmentObjectsDetails(ids: EnvironmentObject['id'][]): Promise<EnvironmentObjectDetailsResponse>
-  onLootsAppear: Observable<LootsAppearEvent>
-  onLootsDisappear: Observable<LootsDisappearEvent>
+  emitInput(
+    playerId: string,
+    input: PlayerInputDto,
+    inputRequest: number
+  ): void;
+  onMapUpdated: Observable<MapUpdateEvent>;
+  onInventoryUpdate: Observable<InventoryBalanceUpdatedEvent>;
+  onEnemyState: Observable<EnemiesStatesEvent>;
+  emitGetItemDetails(ids: Item["id"][]): Promise<ItemDetailResponse>;
+  emitGetEnvironmentObjectsDetails(
+    ids: EnvironmentObject["id"][]
+  ): Promise<EnvironmentObjectDetailsResponse>;
+  emitClaimLoot(lootId: Loot["id"], lootIndexes: number[], balance: number);
+  onLootsAppear: Observable<LootsAppearEvent>;
+  onLootsDisappear: Observable<LootsDisappearEvent>;
 }

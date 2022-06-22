@@ -22,6 +22,7 @@ import { HtmlInventoryView } from "../../view/ui/HtmlInventoryView";
 import { PlayerInventory } from "../inventory/playerInventory";
 import { LocalCLientPlayer } from "../player/players/localClientPlayer";
 import { HtmlMoneyView } from "../../view/ui/HtmlMoneyView";
+import { Balance } from "../inventory/balance";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -134,10 +135,10 @@ export class ClientConnectionDelegator implements Delegator {
       input,
       new PlayerInventory(
         stats.inventorySize,
-        new HtmlInventoryView(this.scene, input, moneyView),
-        moneyView
+        new HtmlInventoryView(this.scene, input, moneyView)
       ),
-      this.mapManager
+      this.mapManager,
+      new Balance(moneyView)
     );
     view.setEntityReference(player);
     this.collisionableTargetRepository.save(view.id, {

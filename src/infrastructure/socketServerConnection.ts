@@ -8,7 +8,7 @@ import {
   EnvironmentObjectDetailsResponse,
   GameEvents,
   InitialGameStateEvent,
-  InventoryUpdatedEvent,
+  InventoryBalanceUpdatedEvent,
   ItemDetailResponse,
   LootsAppearEvent,
   LootsDisappearEvent,
@@ -30,7 +30,7 @@ export class SocketServerConnection implements ServerConnection {
     new Subject<PlayerDisconnectedEvent>();
   private readonly _onPing = new Subject<number>();
   private readonly _onMapUpdated = new Subject<MapUpdateEvent>();
-  private readonly _onInventoryUpdated = new Subject<InventoryUpdatedEvent>();
+  private readonly _onInventoryUpdated = new Subject<InventoryBalanceUpdatedEvent>();
   private readonly _onEnemyStates = new Subject<EnemiesStatesEvent>();
   private readonly _onLootsApprear = new Subject<LootsAppearEvent>();
   private readonly _onLootsDisapprear = new Subject<LootsDisappearEvent>();
@@ -75,7 +75,12 @@ export class SocketServerConnection implements ServerConnection {
       socket.emit(SocketIOEvents.PING);
     }, 2000);
   }
-
+  emitClaimLoot(lootId: string, lootIndexes: number[], balance: number) {
+    this.socket.emit(
+      GameEvents.CLAIM_LOOT.name,
+      GameEvents.CLAIM_LOOT.getEvent(lootId, lootIndexes, balance)
+    );
+  }
 
   emitGetEnvironmentObjectsDetails(
     ids: number[]

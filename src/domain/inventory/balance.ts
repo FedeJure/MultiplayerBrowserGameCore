@@ -1,3 +1,4 @@
+import { BalanceDto } from "./balanceDto";
 import { MoneyView } from "./moneyView";
 
 export interface GameBalance {
@@ -10,7 +11,6 @@ export class Balance {
   private _amount: number = 0;
   private _gameMoney: GameBalance;
   constructor(private _view?: MoneyView) {
-
     this.updateGameMoney();
   }
 
@@ -46,5 +46,9 @@ export class Balance {
 
   get amount() {
     return this._amount;
+  }
+
+  get dto(): BalanceDto {
+    return { amount: this.amount };
   }
 }

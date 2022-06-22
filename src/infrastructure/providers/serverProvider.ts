@@ -28,6 +28,7 @@ import { CollisionManager } from "../../domain/collisions/collisionManager";
 import { LootConfiguration } from "../../domain/loot/lootConfiguration";
 import { LootGenerator } from "../../domain/loot/lootGenerator";
 import { Loot } from "../../domain/loot/loot";
+import { BalanceDto } from "../../domain/inventory/balanceDto";
 
 //This is necessary because the dependency manager not work with generics
 
@@ -35,6 +36,7 @@ class ClientConnectionRepository extends InMemoryRepository<ClientConnection> {}
 class InGamePlayerRepository extends InMemoryRepository<ServerPlayer> {}
 class PlayerInfoRepository extends InMemoryAsyncRepository<PlayerInfo> {}
 class PlayerInventoryRepository extends InMemoryAsyncRepository<PlayerInventoryDto> {}
+class PlayerBalanceRepository extends InMemoryAsyncRepository<BalanceDto> {}
 class ItemRepository extends InMemoryAsyncRepository<Item> {}
 class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
 class AttackTargetRepository extends InMemoryRepository<CollisionableEntity> {}
@@ -150,6 +152,12 @@ export class ServerProvider {
   public get lootRepository(): LootRepository {
     return DependencyManager.GetOrInstantiate<LootRepository>(
       () => new LootRepository()
+    );
+  }
+
+  public get playerBalanceRepository(): PlayerBalanceRepository {
+    return DependencyManager.GetOrInstantiate<PlayerBalanceRepository>(
+      () => new PlayerBalanceRepository()
     );
   }
 }

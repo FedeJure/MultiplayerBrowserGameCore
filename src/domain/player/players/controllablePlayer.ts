@@ -2,6 +2,7 @@ import { Attackable } from "../../combat/attackTarget";
 import { AttackTargetType } from "../../combat/attackTargetType";
 import { Entity } from "../../entity/entity";
 import { MapManager } from "../../environment/mapManager";
+import { Balance } from "../../inventory/balance";
 import { PlayerInventory } from "../../inventory/playerInventory";
 import { PlayerView } from "../../playerView";
 import { DefendCombatAction } from "../combat/actions/DefendCombatAction";
@@ -27,7 +28,8 @@ export class ControllablePlayer extends Entity<
     _movementSystem: PlayerMovement,
     private _input: PlayerInput,
     mapManager: MapManager, //usar esto para spawnear al jugador en un spot de spawn al morir.
-    private _inventory: PlayerInventory
+    private _inventory: PlayerInventory,
+    private _balance: Balance
   ) {
     super(
       _info,
@@ -76,5 +78,9 @@ export class ControllablePlayer extends Entity<
 
   get inventory() {
     return this._inventory
+  }
+
+  get balance() {
+    return this._balance
   }
 }

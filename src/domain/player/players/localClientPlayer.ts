@@ -1,4 +1,5 @@
 import { MapManager } from "../../environment/mapManager";
+import { Balance } from "../../inventory/balance";
 import { PlayerInventory } from "../../inventory/playerInventory";
 import { PlayerView } from "../../playerView";
 import { PlayerMovement } from "../movement/playerMovement";
@@ -17,8 +18,9 @@ export class LocalCLientPlayer extends ControllablePlayer {
     movementSystem: PlayerMovement,
     input: PlayerInput,
     inventory: PlayerInventory,
-    mapManager: MapManager
+    mapManager: MapManager,
+    balance: Balance
   ) {
-    super(info, state, view, stats, movementSystem, input, mapManager, inventory);
+    super(info, state, view, stats, movementSystem, input, mapManager, inventory, balance);
   }
 }

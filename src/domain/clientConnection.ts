@@ -12,6 +12,7 @@ import {
 } from "../infrastructure/events/gameEvents";
 import { ProcessedMap } from "./environment/processedMap";
 import { Loot } from "./loot/loot";
+import { BalanceDto } from "./inventory/balanceDto";
 
 export interface ClientConnection {
   connectionId: string;
@@ -30,7 +31,7 @@ export interface ClientConnection {
     newCurrentMap: ProcessedMap,
     neighborMaps: ProcessedMap[]
   ): void;
-  sendInventoryEvent(inventory: PlayerInventoryDto);
+  sendInventoryBalanceEvent(inventory?: PlayerInventoryDto, balance?: BalanceDto);
   sendConnectedPlayer(player: PlayerInitialStateDto);
   onItemDetailRequest(): Observable<{
     ev: ItemDetailRequest;

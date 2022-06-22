@@ -18,6 +18,7 @@ import { ProcessedMap } from "../domain/environment/processedMap";
 import { PlayerInventoryDto } from "../domain/inventory/playerInventoryDto";
 import { LocalPlayerInitialStateDto } from "./dtos/localPlayerInitialStateDto";
 import { Loot } from "../domain/loot/loot";
+import { BalanceDto } from "../domain/inventory/balanceDto";
 
 export class SocketClientConnection implements ClientConnection {
   public readonly socket: Socket;
@@ -129,10 +130,10 @@ export class SocketClientConnection implements ClientConnection {
     );
   }
 
-  sendInventoryEvent(inventory: PlayerInventoryDto) {
+  sendInventoryBalanceEvent(inventory?: PlayerInventoryDto, balance?: BalanceDto) {
     this.socket.emit(
       GameEvents.INVENTORY_UPDATED.name,
-      GameEvents.INVENTORY_UPDATED.getEvent(inventory)
+      GameEvents.INVENTORY_UPDATED.getEvent(inventory, balance)
     );
   }
 
