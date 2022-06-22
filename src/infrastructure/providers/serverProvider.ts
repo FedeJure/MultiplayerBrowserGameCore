@@ -28,7 +28,6 @@ import { CollisionManager } from "../../domain/collisions/collisionManager";
 import { LootConfiguration } from "../../domain/loot/lootConfiguration";
 import { LootGenerator } from "../../domain/loot/lootGenerator";
 import { Loot } from "../../domain/loot/loot";
-import { LootGeneratorView } from "../../domain/loot/lootGeneratorView";
 
 //This is necessary because the dependency manager not work with generics
 
@@ -144,7 +143,7 @@ export class ServerProvider {
 
   public get lootGenerator(): LootGenerator {
     return DependencyManager.GetOrInstantiate<LootGenerator>(
-      () => new LootGenerator(this.lootRepository, this.lootGeneratorView)
+      () => new LootGenerator(this.lootRepository)
     );
   }
 
@@ -152,13 +151,5 @@ export class ServerProvider {
     return DependencyManager.GetOrInstantiate<LootRepository>(
       () => new LootRepository()
     );
-  }
-
-  private _lootGeneratorView: LootGeneratorView;
-  public setLootGeneratorView(view: LootGeneratorView) {
-    this._lootGeneratorView = view
-  }
-  public get lootGeneratorView(): LootGeneratorView {
-    return this._lootGeneratorView;
   }
 }

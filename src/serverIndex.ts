@@ -22,7 +22,6 @@ import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreator
 import { EnemiesStateSenderDelegator } from "./domain/gameState/enemiesStateSenderDelegator";
 import { PhaserCollisionManager } from "./view/collisions/phaserCollisionManager";
 import { LootUpdaterDelegator } from "./domain/loot/lootUpdaterDelegator";
-import { PhaserLootGeneratorView } from "./view/loot/phaserLootGeneratorView";
 
 export const InitGame: (
   socket: Socket,
@@ -39,7 +38,6 @@ const game = new Phaser.Game(config);
   AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
   game.events.addListener(Phaser.Core.Events.READY, async () => {
     provider.setCollisionManager(new PhaserCollisionManager(scene));
-    provider.setLootGeneratorView(new PhaserLootGeneratorView(scene))
     await LoadServerRepositoriesWithMockData(provider);
 
     scene.events.addListener(Phaser.Scenes.Events.CREATE, () => {
