@@ -22,4 +22,8 @@ export class PhaserClientLootView
   get viewType() {
     return this.getData("type");
   }
+
+  updateLoot(loot: Loot) {
+    this.setData("loot", loot);
+  }
 }

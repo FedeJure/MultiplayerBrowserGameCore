@@ -1,6 +1,6 @@
 import { Loot } from "./loot";
 
 export interface LootCreator {
-    createLoot(loot: Loot)
+    createOrUpdateLoot(loot: Loot)
     destroyLoot(id: Loot['id'])
 }

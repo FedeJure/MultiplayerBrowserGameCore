@@ -9,7 +9,7 @@ export class ClientLootUpdaterDelegator implements Delegator {
   ) {}
   init(): void {
     this.serverConnection.onLootsAppear.subscribe(({ loots }) => {
-      loots.forEach((loot) => this.lootCreator.createLoot(loot));
+      loots.forEach((loot) => this.lootCreator.createOrUpdateLoot(loot));
     });
 
     this.serverConnection.onLootsDisappear.subscribe(({ loots }) => {

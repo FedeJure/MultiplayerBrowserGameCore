@@ -37,19 +37,36 @@ export class ServerLootClaimerDelegator implements Delegator {
               ) {
                 return;
               }
+
               const itemsToLoot = lootIndexes
                 .map((lootIndex) => loot.itemIds[lootIndex])
                 .filter((itemId) => itemId !== undefined) as Item["id"][];
+              const lootedItems: Item["id"][] = [];
               itemsToLoot.forEach((itemId) => {
                 try {
                   player.inventory.addItem(itemId);
+                  lootedItems.push(itemId);
                 } catch (error) {}
               });
+
               if (balance === loot.balance) {
                 player.balance.add(balance);
               }
 
-              this.lootsRepository.update(lootId, { balance: 0 });
+              const unlootedItems = loot.itemIds.filter(
+                (itemId) => itemId && !lootedItems.includes(itemId)
+              );
+              if (unlootedItems.length === 0) {
+                this.lootsRepository.remove(loot.id);
+                return;
+              }
+
+              this.lootsRepository.update(lootId, {
+                balance: 0,
+                itemIds: loot.itemIds.map((itemId) =>
+                  itemId && lootedItems.includes(itemId) ? itemId : undefined
+                ),
+              });
             })
         );
       } catch (error: any) {

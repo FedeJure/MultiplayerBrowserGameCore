@@ -10,7 +10,12 @@ export class PhaserClientLootCreatorView implements LootCreator {
     private scene: Scene,
     private collisionManager: CollisionManager
   ) {}
-  createLoot(loot: Loot) {
+  createOrUpdateLoot(loot: Loot) {
+    if (this.views[loot.id]) {
+      const view = this.views[loot.id]
+      view.updateLoot(loot)
+      return
+    }
     const view = new PhaserClientLootView(this.scene, loot);
     this.views[loot.id] = view;
     this.collisionManager.addObject(view);

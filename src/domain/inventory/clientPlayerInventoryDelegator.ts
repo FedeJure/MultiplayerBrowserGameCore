@@ -1,7 +1,7 @@
 import { Delegator } from "../delegator";
 import { Disposer } from "../disposer";
 import { ServerConnection } from "../serverConnection";
-import { DefaultItem, Item } from "../items/item";
+import { Item } from "../items/item";
 import { SimpleRepository } from "../repository";
 import { LocalClientPlayer } from "../player/players/localClientPlayer";
 
