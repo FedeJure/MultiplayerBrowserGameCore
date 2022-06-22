@@ -21,6 +21,7 @@ import { CollisionManager } from "../collisions/collisionManager";
 import { HtmlInventoryView } from "../../view/ui/HtmlInventoryView";
 import { PlayerInventory } from "../inventory/playerInventory";
 import { LocalCLientPlayer } from "../player/players/localClientPlayer";
+import { HtmlMoneyView } from "../../view/ui/HtmlMoneyView";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -122,6 +123,8 @@ export class ClientConnectionDelegator implements Delegator {
     const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
 
     const movementSystem = new PlayerMovement();
+
+    const moneyView = new HtmlMoneyView();
     const player = new LocalCLientPlayer(
       info,
       state,
@@ -130,13 +133,9 @@ export class ClientConnectionDelegator implements Delegator {
       movementSystem,
       input,
       new PlayerInventory(
-        new Array(stats.inventorySize),
-        {
-          gold: 0,
-          silver: 0,
-          copper: 0,
-        },
-        new HtmlInventoryView(this.scene, input)
+        stats.inventorySize,
+        new HtmlInventoryView(this.scene, input, moneyView),
+        moneyView
       ),
       this.mapManager
     );

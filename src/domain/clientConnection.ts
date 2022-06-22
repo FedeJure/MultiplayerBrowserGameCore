@@ -3,6 +3,7 @@ import { LocalPlayerInitialStateDto } from "../infrastructure/dtos/localPlayerIn
 import { PlayerInitialStateDto } from "../infrastructure/dtos/playerInitialStateDto";
 import { PlayerInventoryDto } from "./inventory/playerInventoryDto";
 import {
+  ClaimLootEvent,
   EnvironmentObjectDetailsRequest,
   EnvironmentObjectDetailsResponse,
   ItemDetailRequest,
@@ -42,4 +43,5 @@ export interface ClientConnection {
   setPlayerId(playerId: string);
   sendLootAppear(loots: Loot[]);
   sendLootDisappear(loots: Loot[]);
+  onClaimLoot(): Observable<ClaimLootEvent>
 }

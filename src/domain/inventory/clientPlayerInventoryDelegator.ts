@@ -27,9 +27,8 @@ export class ClientPlayerInventoryDelegator implements Delegator {
             response.items.find((item) => item.id === id) ??
             DefaultItem : null
         );
-        console.log(inventory)
         this.player.inventory.setItems(items)
-        this.player.inventory.setMoney(inventory.money)
+        this.player.inventory.money.set(inventory.moneyNumericRepresentation)
       })
     );
   }

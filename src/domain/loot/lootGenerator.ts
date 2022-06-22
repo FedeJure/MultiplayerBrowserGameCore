@@ -21,7 +21,7 @@ export class LootGenerator {
     const loot: Loot = {
       id: Phaser.Utils.String.UUID(),
       itemIds,
-      money,
+      moneyAmount: money.amount,
       owner,
       position,
       mapId,

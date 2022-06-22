@@ -11,6 +11,6 @@ export interface LootConfiguration {
     items: ItemLootConfiguration[]
     minItems: number
     maxItems: number
-    minMoney: Partial<Money>
-    maxMoney: Partial<Money>
+    minMoney: number
+    maxMoney: number
 }

@@ -1,6 +1,5 @@
 import { Scene } from "phaser";
 import { InventoryView } from "../../domain/inventory/inventoryView";
-import { Money } from "../../domain/inventory/Money";
 import { Item } from "../../domain/items/item";
 import { ItemType } from "../../domain/items/itemType";
 import { PlayerInput } from "../../domain/player/playerInput";
@@ -15,6 +14,7 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
   constructor(
     scene: Scene,
     playerInput: PlayerInput,
+    moneyView: HtmlMoneyView,
     private slotsCount: number = 16
   ) {
     super(
@@ -22,6 +22,7 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
       "Inventory",
       document.getElementById("gameContainer") as HTMLDivElement
     );
+    this.money = moneyView
     this.container.style.top = `0`;
     this.container.style.bottom = `0`;
     this.container.style.right = `5%`;
@@ -46,10 +47,6 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
         cell.setItem(item);
       }
     });
-  }
-
-  setMoney(money: Money) {
-      this.money.setMoney(money)
   }
 
   initContent() {
@@ -107,7 +104,6 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
   }
 
   initMoney() {
-    this.money = new HtmlMoneyView()
     this.money.element.style.position = 'absolute'
     this.money.element.style.bottom = '0'
     this.money.element.style.right = '0'

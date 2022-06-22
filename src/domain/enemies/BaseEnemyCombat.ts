@@ -93,21 +93,12 @@ export class EnemyCombat extends DefaultEntityCombat {
           }
         }
       }
-      const money: Money = {
-        gold:
-          Math.floor(
-            Math.random() *
-              (lootConfig.maxMoney.gold ?? 0 - (lootConfig.minMoney.gold ?? 0))
-          ) + (lootConfig.minMoney.gold ?? 0),
-        silver: Math.floor(
-          Math.random() *
-            (lootConfig.maxMoney.silver ?? 0 - (lootConfig.minMoney.silver ?? 0))
-        ) + (lootConfig.minMoney.silver ?? 0),
-        copper: Math.floor(
-          Math.random() *
-            (lootConfig.maxMoney.copper ?? 0 - (lootConfig.minMoney.copper ?? 0))
-        ) + (lootConfig.minMoney.copper ?? 0),
-      };
+      const money = new Money();
+      money.set(
+        Math.floor(
+          Math.random() * (lootConfig.maxMoney - lootConfig.minMoney)
+        ) + lootConfig.minMoney
+      );
 
       this.lootGenerator.generateLoot(
         itemsToLoot,

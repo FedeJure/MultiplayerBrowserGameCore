@@ -166,18 +166,19 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       connection,
       this.playerInputRequestRepository
     );
-
+      const playerStats = stats ?? DefaultPlayerStats
     const player = new ServerPlayer(
       playerInfo,
       playerState,
       view,
       new PlayerMovement(),
       input,
-      stats ?? DefaultPlayerStats,
+      playerStats,
       this.mapManager,
+      new ServerPlayerInventory(playerStats.inventorySize),
       connection,
       this.playerInfoRepository,
-      this.playerStateRepository
+      this.playerStateRepository,
     );
 
     view.setEntityReference(player)

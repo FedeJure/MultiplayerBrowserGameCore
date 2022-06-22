@@ -1,7 +1,8 @@
-import { Money } from "../../domain/inventory/Money";
+import { GameMoney } from "../../domain/inventory/Money";
+import { MoneyView } from "../../domain/inventory/moneyView";
 import { AssetLoader } from "../AssetLoader";
 
-export class HtmlMoneyView {
+export class HtmlMoneyView  implements MoneyView{
   private container: HTMLDivElement;
   private gold: HTMLSpanElement;
   private silver: HTMLSpanElement;
@@ -41,7 +42,7 @@ export class HtmlMoneyView {
     return this.container;
   }
 
-  setMoney(money: Money) {
+  setMoney(money: GameMoney) {
     this.gold.textContent = money.gold.toString();
     this.silver.textContent = money.silver.toString();
     this.copper.textContent = money.copper.toString();

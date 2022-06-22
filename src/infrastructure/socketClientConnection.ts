@@ -2,6 +2,7 @@ import { Observable, Subject } from "rxjs";
 import { Socket } from "socket.io";
 import { ClientConnection } from "../domain/clientConnection";
 import {
+  ClaimLootEvent,
   EnvironmentObjectDetailsRequest,
   EnvironmentObjectDetailsResponse,
   GameEvents,
@@ -33,6 +34,7 @@ export class SocketClientConnection implements ClientConnection {
     ev: EnvironmentObjectDetailsRequest;
     callback: (ev: EnvironmentObjectDetailsResponse) => void;
   }>();
+  private _onClaimLoot = new Subject<ClaimLootEvent>();
   private currentRooms: string[] = [];
 
   constructor(socket: Socket) {
@@ -41,6 +43,53 @@ export class SocketClientConnection implements ClientConnection {
     this.socket = socket;
 
     this.listenEvents();
+  }
+
+  listenEvents() {
+    this.socket.on(SocketIOEvents.PING, () => {
+      this.socket.emit(SocketIOEvents.PONG);
+    });
+    this.socket.on(
+      GameEvents.PLAYER_CONNECTED.name,
+      (data: PlayerConnectedEvent) => {
+        try {
+          const { playerId } = data;
+          this.onPlayerConnectionSubject.next({
+            playerId: playerId.toString(),
+          });
+        } catch (error) {
+          Log(this, `[Socket Client Connection] :: Error: ${error}`);
+        }
+      }
+    );
+    this.socket.on(GameEvents.PLAYER_INPUT.name, (dto: PlayerInputEvent) => {
+      this.onInputSubject.next(dto);
+    });
+    this.socket.on(
+      GameEvents.ITEM_DETAILS.name,
+      (dto: ItemDetailRequest, callback: (ev: ItemDetailResponse) => {}) => {
+        this.onItemDetailRequestSubject.next({ ev: dto, callback });
+      }
+    );
+
+    this.socket.on(GameEvents.CLAIM_LOOT.name, (ev) =>
+      this._onClaimLoot.next(ev)
+    );
+    this.socket.on(
+      GameEvents.ENVIRONMENT_OBJECT_DETAILS_REQUEST.name,
+      (
+        dto: EnvironmentObjectDetailsRequest,
+        callback: (ev: EnvironmentObjectDetailsResponse) => void
+      ) => {
+        this.onEnvironmentObjectDetailRequestSubject.next({
+          ev: dto,
+          callback,
+        });
+      }
+    );
+  }
+  onClaimLoot(): Observable<ClaimLootEvent> {
+    return this._onClaimLoot;
   }
   sendLootAppear(loots: Loot[]) {
     this.socket.emit(
@@ -107,47 +156,6 @@ export class SocketClientConnection implements ClientConnection {
     this.currentRooms = [...roomName];
     await this.socket.join(roomName);
     return { previousRooms };
-  }
-
-  listenEvents() {
-    this.socket.on(SocketIOEvents.PING, () => {
-      this.socket.emit(SocketIOEvents.PONG);
-    });
-    this.socket.on(
-      GameEvents.PLAYER_CONNECTED.name,
-      (data: PlayerConnectedEvent) => {
-        try {
-          const { playerId } = data;
-          this.onPlayerConnectionSubject.next({
-            playerId: playerId.toString(),
-          });
-        } catch (error) {
-          Log(this, `[Socket Client Connection] :: Error: ${error}`);
-        }
-      }
-    );
-    this.socket.on(GameEvents.PLAYER_INPUT.name, (dto: PlayerInputEvent) => {
-      this.onInputSubject.next(dto);
-    });
-    this.socket.on(
-      GameEvents.ITEM_DETAILS.name,
-      (dto: ItemDetailRequest, callback: (ev: ItemDetailResponse) => {}) => {
-        this.onItemDetailRequestSubject.next({ ev: dto, callback });
-      }
-    );
-
-    this.socket.on(
-      GameEvents.ENVIRONMENT_OBJECT_DETAILS_REQUEST.name,
-      (
-        dto: EnvironmentObjectDetailsRequest,
-        callback: (ev: EnvironmentObjectDetailsResponse) => void
-      ) => {
-        this.onEnvironmentObjectDetailRequestSubject.next({
-          ev: dto,
-          callback,
-        });
-      }
-    );
   }
 
   public sendInitialStateEvent(

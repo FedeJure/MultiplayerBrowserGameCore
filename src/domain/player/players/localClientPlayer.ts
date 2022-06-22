@@ -16,9 +16,9 @@ export class LocalCLientPlayer extends ControllablePlayer {
     stats: PlayerStats,
     movementSystem: PlayerMovement,
     input: PlayerInput,
-    readonly inventory: PlayerInventory,
+    inventory: PlayerInventory,
     mapManager: MapManager
   ) {
-    super(info, state, view, stats, movementSystem, input, mapManager);
+    super(info, state, view, stats, movementSystem, input, mapManager, inventory);
   }
 }

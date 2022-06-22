@@ -1,27 +1,33 @@
 import { Item } from "../items/item";
 import { InventoryView } from "./inventoryView";
 import { Money } from "./Money";
+import { MoneyView } from "./moneyView";
 
 export class PlayerInventory {
+  private _money: Money
+  private _items: (Item | null)[]
   constructor(
-    private _items: (Item | null)[],
-    private _money: Money,
+    capacity: number,
     private view?: InventoryView,
-  ) {}
+    moneyView?: MoneyView
+  ) {
+    this._items = new Array(capacity)
+    this._money = new Money(moneyView) 
+  }
 
   get items() {
     return this._items;
   }
 
   get money() {
-    return this._money
+    return this._money;
   }
 
   addItem(item: Item) {
     for (let i = 0; i < this.items.length; i++) {
       const foundedItem = this.items[i];
       if (foundedItem === null) {
-        this.items[i] = item;
+        this._items[i] = item;
         return;
       }
     }
@@ -30,11 +36,6 @@ export class PlayerInventory {
 
   setItems(items: (Item | null)[]) {
     this._items = items;
-    this.view?.saveItems(items)
-  }
-
-  setMoney(money: Partial<Money>) {
-    this._money = {...this._money, ...money}
-    this.view?.setMoney(this._money)
+    this.view?.saveItems(items);
   }
 }
