@@ -125,7 +125,6 @@ export class HtmlLootView implements LootView {
     this.initItems();
     this.setVisible(true);
     this.gameBalance.setBalance(balance);
-    console.log("VISIBLEE");
   }
 
   private initItems() {
@@ -180,28 +179,12 @@ export class HtmlLootView implements LootView {
       autoScroll: false,
 
       listeners: {
-        // call this function on every dragmove event
         move: this.dragMoveListener,
-
-        // call this function on every dragend event
-        end(event) {
-          var textEl = event.target.querySelector("p");
-
-          textEl &&
-            (textEl.textContent =
-              "moved a distance of " +
-              Math.sqrt(
-                (Math.pow(event.pageX - event.x0, 2) +
-                  Math.pow(event.pageY - event.y0, 2)) |
-                  0
-              ).toFixed(2) +
-              "px");
-        },
       },
     });
   }
 
-  dragMoveListener (event) {
+  private dragMoveListener (event) {
     var target = event.target
     var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
     var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy

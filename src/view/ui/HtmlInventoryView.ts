@@ -1,3 +1,4 @@
+import interact from "interactjs";
 import { Scene } from "phaser";
 import { InventoryView } from "../../domain/inventory/inventoryView";
 import { Item } from "../../domain/items/item";
@@ -38,6 +39,7 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     playerInput.onInventoryChange.subscribe(() => {
       this.container.hidden = !this.container.hidden;
     });
+    this.initDrag()
   }
   saveItems(items: (Item | undefined)[]) {
     for (let i = 0; i < this.slotsCount; i++) {
@@ -108,5 +110,33 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     this.balanceView.element.style.bottom = '0'
     this.balanceView.element.style.right = '0'
     this.content.appendChild(this.balanceView.element)
+  }
+
+  private initDrag() {
+    interact(this.container).draggable({
+      inertia: false,
+      modifiers: [
+        interact.modifiers.restrictRect({
+          restriction: "parent",
+          endOnly: true,
+        }),
+      ],
+      autoScroll: false,
+
+      listeners: {
+        move: this.dragMoveListener,
+      },
+    });
+  }
+
+  private dragMoveListener (event) {
+    var target = event.target
+    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
+    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+  
+    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
+  
+    target.setAttribute('data-x', x)
+    target.setAttribute('data-y', y)
   }
 }
