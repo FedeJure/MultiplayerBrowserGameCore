@@ -4,5 +4,6 @@ import { Item } from "../items/item";
 
 export interface LootView {
     showWith(items: (Item | undefined)[], balance: GameBalance)
+    close()
     onClaimLoot: Observable<(Item | undefined)[]>
 }

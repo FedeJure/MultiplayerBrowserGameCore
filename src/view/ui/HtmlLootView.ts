@@ -90,16 +90,12 @@ export class HtmlLootView implements LootView {
           this.selectedIndexes.includes(i) ? item : undefined
         )
       );
-      this.selectedIndexes = [];
-      this.items = [];
-      this.setVisible(false);
+      this.close();
     });
 
     claimAllButton.addEventListener("click", () => {
       this._onClaimLoot.next(this.items);
-      this.selectedIndexes = [];
-      this.items = [];
-      this.setVisible(false);
+      this.close()
     });
 
     const closeButton = document.createElement("span");
@@ -109,14 +105,17 @@ export class HtmlLootView implements LootView {
     closeButton.style.top = "10px";
     closeButton.innerText = "❎";
     closeButton.addEventListener("click", () => {
-      this.selectedIndexes = [];
-      this.items = [];
-      this.setVisible(false);
+      this.close()
     });
     this.mainContainer.appendChild(closeButton);
 
     this.setVisible(false);
     this.initDrag();
+  }
+  close() {
+    this.selectedIndexes = [];
+    this.items = [];
+    this.setVisible(false);
   }
 
   showWith(items: (Item | undefined)[], balance: GameBalance) {
@@ -184,14 +183,14 @@ export class HtmlLootView implements LootView {
     });
   }
 
-  private dragMoveListener (event) {
-    var target = event.target
-    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
-    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
-  
-    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
-  
-    target.setAttribute('data-x', x)
-    target.setAttribute('data-y', y)
+  private dragMoveListener(event) {
+    var target = event.target;
+    var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
+    var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+
+    target.style.transform = "translate(" + x + "px, " + y + "px)";
+
+    target.setAttribute("data-x", x);
+    target.setAttribute("data-y", y);
   }
 }
