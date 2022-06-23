@@ -11,6 +11,7 @@ export class HtmlMoneyView  implements MoneyView{
     this.container = document.createElement("div");
     this.container.style.display = "flex";
     this.container.style.alignItems = "center";
+    this.container.style.justifyContent = "end";
     this.gold = document.createElement("span");
     this.gold.style.color = "whitesmoke";
     this.silver = document.createElement("span");
