@@ -14,11 +14,16 @@ export class HtmlMoneyView  implements MoneyView{
     this.container.style.justifyContent = "end";
     this.gold = document.createElement("span");
     this.gold.style.color = "whitesmoke";
+    this.gold.style.textShadow = '1px 1px 3px grey'
     this.silver = document.createElement("span");
     this.silver.style.color = "whitesmoke";
+    this.silver.style.textShadow = '1px 1px 3px grey'
+
 
     this.copper = document.createElement("span");
     this.copper.style.color = "whitesmoke";
+    this.copper.style.textShadow = '1px 1px 3px grey'
+
 
     const goldIcon = document.createElement("img");
     const silverIcon = document.createElement("img");

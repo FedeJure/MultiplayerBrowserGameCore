@@ -144,11 +144,10 @@ export class ClientConnectionDelegator implements Delegator {
       this.mapManager,
       new Balance(moneyView)
     );
-    const lootView = new HtmlLootView()
+    const lootView = new HtmlLootView(this.scene)
     this.scene.scene
         .get(SceneNames.ClientHudScene)
-        .add.dom(0, 0, lootView.element)
-        .setOrigin(0, 0);
+        .add.dom(this.scene.game.scale.width / 2, this.scene.game.scale.height / 2, lootView.element)
     new ClientPlayerActionResolve(player, this.connection, lootView, this.itemResolver)
     view.setEntityReference(player);
     this.collisionableTargetRepository.save(view.id, {

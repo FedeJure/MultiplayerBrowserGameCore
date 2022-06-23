@@ -80,7 +80,9 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     title.innerText = "Inventory";
     title.style.textAlign = "center";
     title.style.width = "100%";
-    title.style.marginTop = "0";
+    title.style.margin = "0";
+    title.style.fontSize = '25px'
+    title.style.textShadow = '1px 1px 3px grey'
     this.content.appendChild(title);
   }
 

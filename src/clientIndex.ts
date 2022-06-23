@@ -11,6 +11,7 @@ import { AssetsConfiguration } from "./infrastructure/configuration/AssetsConfig
 import { AssetLoader } from "./view/AssetLoader";
 import { PhaserCollisionManager } from "./view/collisions/phaserCollisionManager";
 import { BackgroundScene } from "./view/scenes/BackgroundScene";
+
 export const InitClientGame = (
   socket: any,
   localPlayerId: string,
@@ -34,10 +35,13 @@ export const InitClientGame = (
   const game = new Phaser.Game(config);
   AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
 
+  
+
+
   game.events.addListener(Phaser.Core.Events.READY, () => {
     ClientProvider.setCollisionManager(new PhaserCollisionManager(scene));
     ClientProvider.presenterProvider.forGameplay(scene);
-  
+
     game.canvas.oncontextmenu = function (e) {
       e.preventDefault();
       e.stopPropagation();

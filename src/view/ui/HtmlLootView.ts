@@ -1,4 +1,5 @@
 import interact from "interactjs";
+import { Scene } from "phaser";
 import { Observable, Subject } from "rxjs";
 import { GameBalance } from "../../domain/inventory/balance";
 import { Item } from "../../domain/items/item";
@@ -16,16 +17,18 @@ export class HtmlLootView implements LootView {
   private gameBalance: HtmlMoneyView;
 
   private items: (Item | undefined)[] = [];
-  constructor() {
+  constructor(private scene: Scene) {
     this.element = document.createElement("div");
-    this.element.style.height = "100%";
-    this.element.style.width = "100%";
+    // this.element.style.height = "100%";
+    // this.element.style.width = "100%";
     this.element.style.zIndex = "100";
+
+
     this.mainContainer = document.createElement("div");
 
     const auxContainer = document.createElement("div");
-    auxContainer.style.height = "100%";
-    auxContainer.style.width = "100%";
+    // auxContainer.style.height = "100%";
+    // auxContainer.style.width = "100%";
     auxContainer.style.display = "flex";
     auxContainer.style.alignItems = "center";
     auxContainer.style.justifyContent = "center";
@@ -95,17 +98,17 @@ export class HtmlLootView implements LootView {
 
     claimAllButton.addEventListener("click", () => {
       this._onClaimLoot.next(this.items);
-      this.close()
+      this.close();
     });
 
     const closeButton = document.createElement("span");
     closeButton.style.cursor = "pointer";
     closeButton.style.position = "absolute";
-    closeButton.style.right = "10px";
-    closeButton.style.top = "10px";
+    closeButton.style.right = "5px";
+    closeButton.style.top = "5px";
     closeButton.innerText = "❎";
     closeButton.addEventListener("click", () => {
-      this.close()
+      this.close();
     });
     this.mainContainer.appendChild(closeButton);
 
@@ -171,8 +174,8 @@ export class HtmlLootView implements LootView {
       inertia: false,
       modifiers: [
         interact.modifiers.restrictRect({
-          restriction: "parent",
-          endOnly: true,
+          // restriction: "parent",
+          // endOnly: true,
         }),
       ],
       autoScroll: false,
