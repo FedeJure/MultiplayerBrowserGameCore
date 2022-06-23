@@ -11,7 +11,7 @@ import { HtmlMoneyView } from "./HtmlMoneyView";
 export class HtmlInventoryView extends HtmlElement implements InventoryView {
   private content: HTMLDivElement;
   private cells: HtmlCellView[] = [];
-  private balanceView: HtmlMoneyView
+  private balanceView: HtmlMoneyView;
   constructor(
     scene: Scene,
     playerInput: ClientPlayerInput,
@@ -23,7 +23,7 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
       "Inventory",
       document.getElementById("gameContainer") as HTMLDivElement
     );
-    this.balanceView = moneyView
+    this.balanceView = moneyView;
     this.container.style.top = `0`;
     this.container.style.bottom = `0`;
     this.container.style.right = `5%`;
@@ -39,15 +39,15 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     playerInput.onInventoryChange.subscribe(() => {
       this.container.hidden = !this.container.hidden;
     });
-    this.initDrag()
+    this.initDrag();
   }
   saveItems(items: (Item | undefined)[]) {
     for (let i = 0; i < this.slotsCount; i++) {
       const cell = this.cells[i];
-      cell.clear()
-      const item = items[i]
-      if (!item) return 
-      cell.setItem(item) 
+      cell.clear();
+      const item = items[i];
+      if (!item) return;
+      cell.setItem(item);
     }
   }
 
@@ -64,14 +64,18 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     const background = document.createElement("img");
 
     background.src =
-      "https://t4.ftcdn.net/jpg/02/65/26/93/360_F_265269365_KeYTSwRToCIegESwDdQluBxEFRqzuQF4.jpg";
+      'https://img.freepik.com/foto-gratis/textura-estuco-color-ocre_1360-504.jpg?w=2000';
+      background.style.height = "100%"
+      background.style.width = "100%"
+      background.style.objectFit = 'none'
+
 
     this.container.appendChild(background);
   }
 
   initTitle() {
     const title = document.createElement("p");
-    title.style.color = 'whitesmoke'
+    title.style.color = "whitesmoke";
     title.style.position = "relative";
     title.innerText = "Inventory";
     title.style.textAlign = "center";
@@ -106,10 +110,10 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
   }
 
   initMoney() {
-    this.balanceView.element.style.position = 'absolute'
-    this.balanceView.element.style.bottom = '0'
-    this.balanceView.element.style.right = '0'
-    this.content.appendChild(this.balanceView.element)
+    this.balanceView.element.style.position = "absolute";
+    this.balanceView.element.style.bottom = "0";
+    this.balanceView.element.style.right = "0";
+    this.content.appendChild(this.balanceView.element);
   }
 
   private initDrag() {
@@ -129,14 +133,14 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     });
   }
 
-  private dragMoveListener (event) {
-    var target = event.target
-    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
-    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
-  
-    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
-  
-    target.setAttribute('data-x', x)
-    target.setAttribute('data-y', y)
+  private dragMoveListener(event) {
+    var target = event.target;
+    var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
+    var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+
+    target.style.transform = "translate(" + x + "px, " + y + "px)";
+
+    target.setAttribute("data-x", x);
+    target.setAttribute("data-y", y);
   }
 }
