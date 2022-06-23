@@ -1,3 +1,4 @@
+import interact from "interactjs";
 import { Observable, Subject } from "rxjs";
 import { GameBalance } from "../../domain/inventory/balance";
 import { Item } from "../../domain/items/item";
@@ -19,6 +20,7 @@ export class HtmlLootView implements LootView {
     this.element = document.createElement("div");
     this.element.style.height = "100%";
     this.element.style.width = "100%";
+    this.element.style.zIndex = "100";
     this.mainContainer = document.createElement("div");
 
     const auxContainer = document.createElement("div");
@@ -114,7 +116,9 @@ export class HtmlLootView implements LootView {
     this.mainContainer.appendChild(closeButton);
 
     this.setVisible(false);
+    this.initDrag();
   }
+
   showWith(items: (Item | undefined)[], balance: GameBalance) {
     this.items = items;
     this.createCells(Math.max(6, items.length));
@@ -142,7 +146,7 @@ export class HtmlLootView implements LootView {
       this.cells.push(cell);
       this.cellContainer.appendChild(cell.element);
       if (this.items[i]) {
-        cell.element.style.cursor = 'pointer'
+        cell.element.style.cursor = "pointer";
         cell.element.addEventListener("click", () => {
           if (this.selectedIndexes.includes(i)) {
             this.selectedIndexes = this.selectedIndexes.filter((j) => j !== i);
@@ -162,5 +166,49 @@ export class HtmlLootView implements LootView {
 
   private setVisible(visible: boolean) {
     this.mainContainer.style.display = visible ? "flex" : "none";
+  }
+
+  private initDrag() {
+    interact(this.mainContainer).draggable({
+      inertia: false,
+      modifiers: [
+        interact.modifiers.restrictRect({
+          restriction: "parent",
+          endOnly: true,
+        }),
+      ],
+      autoScroll: false,
+
+      listeners: {
+        // call this function on every dragmove event
+        move: this.dragMoveListener,
+
+        // call this function on every dragend event
+        end(event) {
+          var textEl = event.target.querySelector("p");
+
+          textEl &&
+            (textEl.textContent =
+              "moved a distance of " +
+              Math.sqrt(
+                (Math.pow(event.pageX - event.x0, 2) +
+                  Math.pow(event.pageY - event.y0, 2)) |
+                  0
+              ).toFixed(2) +
+              "px");
+        },
+      },
+    });
+  }
+
+  dragMoveListener (event) {
+    var target = event.target
+    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
+    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+  
+    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
+  
+    target.setAttribute('data-x', x)
+    target.setAttribute('data-y', y)
   }
 }
