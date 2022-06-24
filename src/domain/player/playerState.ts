@@ -7,8 +7,7 @@ export interface PlayerState extends EntityState {
   readonly canJump: boolean;
   readonly inputNumber: number;
   readonly currentRooms: string[];
-  readonly jumping: boolean
-  readonly attacking: boolean
-  readonly exp: number
-  readonly inLadder: boolean
+  readonly jumping: boolean;
+  readonly attacking: boolean;
+  readonly exp: number;
 }
