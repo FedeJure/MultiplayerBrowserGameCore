@@ -12,7 +12,7 @@ import { PhaserEntityView } from "./phaserEntityView";
 
 export class SpinePhaserEntityView extends PhaserEntityView {
   protected spine: SpineGameObject;
-  protected readonly hud: EntityIngameHud;
+  protected hud: EntityIngameHud;
   private lastAnimationsByLayer: Map<AnimationLayer, AnimationDto>;
 
   constructor(
@@ -22,18 +22,13 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     height: number,
     width: number,
     name: string,
-    texture: string = "hero",
-    isLocal: boolean = false
+    texture: string = "hero"
   ) {
     const spine = scene.add.spine(x, y, texture, undefined, true);
-    spine.setScale(height / spine.height)
+    spine.setScale(height / spine.height);
 
     super(spine, x, y, height, width);
-    this.hud = new EntityIngameHud(scene, 0, -height, height, 50, isLocal);
-
-    this.hud.setDisplayName(name);
     this.setName(name);
-    if (!isLocal) this.add(this.hud);
     this.spine = spine;
     // this.spine.state.addListener({
     //   event: (track, eventt) => {
@@ -70,7 +65,18 @@ export class SpinePhaserEntityView extends PhaserEntityView {
   }
 
   override setLevel(level: number): void {
-      this.hud.setLevel(level)
+    this.hud.setLevel(level);
+  }
+
+  die(): void {
+    this.playAnimation(
+      EntityAnimationCode.DIE,
+      AnimationLayer.COMBAT,
+      false,
+      Date.now(),
+      1000
+    );
+    
   }
 
   playAnimation(

@@ -59,6 +59,8 @@ export class PhaserEntityView
     return this.body as Phaser.Physics.Arcade.Body;
   }
 
+  die() {}
+
   setPositionInTime(x: number, y: number, time: number) {
     this.scene.tweens.add({
       targets: this,

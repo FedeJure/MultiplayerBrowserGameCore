@@ -1,10 +1,9 @@
-import {  Scene } from "phaser";
-
+import { Scene } from "phaser";
+import { EntityIngameHud } from "../entity/entityIngameHud";
 import { SpinePhaserEntityView } from "../entity/spinePhaserEntityView";
 import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
 
-export class ClientPlayerView extends SpinePhaserEntityView {
-
+export class SpineLocalPlayerView extends SpinePhaserEntityView {
   constructor(
     scene: Scene,
     x: number,
@@ -12,9 +11,11 @@ export class ClientPlayerView extends SpinePhaserEntityView {
     height: number,
     width: number,
     name: string,
-    showHud: boolean,
+    texture: string = "hero",
     public readonly combatCollisionResolver: PhaserCombatCollisionResolver
   ) {
-    super(scene, x, y, height, width, name, undefined, showHud);
+    super(scene, x, y, height, width, name, texture);
+    this.hud = new EntityIngameHud(scene, 0, -height, height, 50, true);
+    this.hud.setDisplayName(name);
   }
 }

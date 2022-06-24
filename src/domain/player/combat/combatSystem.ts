@@ -49,14 +49,14 @@ export class CombatSystem extends DefaultEntityCombat {
     this.player.updateState({
       life: this.player.state.life - attack.damage,
     });
-    if (this.player.state.life <= 0) this.die();
+    if (this.player.state.isAlive && this.player.state.life <= 0) this.die();
   }
 
   private die() {
     const dieDuration = 1000;
     this.player.animations.executeAnimation(
       EntityAnimationCode.DIE,
-      AnimationLayer.COMBAT,
+      AnimationLayer.MOVEMENT,
       false,
       dieDuration
     );
@@ -74,13 +74,16 @@ export class CombatSystem extends DefaultEntityCombat {
           )
         );
       });
-    const newPosition = closestSpawnPosition[0] ?? { x: 100, y: 100 };
+    const newPosition = closestSpawnPosition[0] ?? { x: 0, y: 0 };
+    this.player.updateState({ isAlive: false });
     this.player.view.scene.time.delayedCall(dieDuration, () => {
+      console.log("asdasdasd");
       this.player.view.setPosition(newPosition.x, newPosition.y);
       this.player.updateState({
         life: this.player.stats.maxLife,
         anim: [],
         position: newPosition,
+        isAlive: true,
       });
     });
   }

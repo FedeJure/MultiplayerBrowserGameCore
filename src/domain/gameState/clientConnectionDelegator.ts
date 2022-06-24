@@ -1,7 +1,6 @@
 import { PlayerKeyBoardInput } from "../../infrastructure/input/playerKeyboardInput";
 import { Log } from "../../infrastructure/Logger";
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
-import { ClientPlayerView } from "../../view/player/clientPlayerView";
 import { Delegator } from "../delegator";
 import { DefaultConfiguration } from "../player/playerConfiguration";
 import { ServerConnection } from "../serverConnection";
@@ -27,6 +26,8 @@ import { HtmlLootView } from "../../view/ui/HtmlLootView";
 import { SceneNames } from "../../view/scenes/SceneNames";
 import { ClientItemResolver } from "../items/clientItemResolver";
 import { TransitionView } from "../../view/ui/TransitionView";
+import { SpineLocalPlayerView } from "../../view/player/spineLocalPlayerView";
+import { SpinePlayerView } from "../../view/player/spinePlayerView";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -83,14 +84,14 @@ export class ClientConnectionDelegator implements Delegator {
       this.scene,
       this.collisionableTargetRepository
     );
-    const view = new ClientPlayerView(
+    const view = new SpinePlayerView(
       this.scene,
       state.position.x,
       state.position.y,
       DefaultConfiguration.height,
       DefaultConfiguration.width,
       info.name,
-      false,
+      "hero",
       collisionResolver
     );
     this.collisionManager.addPlayer(view);
@@ -113,14 +114,14 @@ export class ClientConnectionDelegator implements Delegator {
       this.collisionableTargetRepository
     );
 
-    const view = new ClientPlayerView(
+    const view = new SpineLocalPlayerView(
       this.scene,
       state.position.x,
       state.position.y,
       DefaultConfiguration.height,
       DefaultConfiguration.width,
       info.name,
-      true,
+      "hero",
       collisionResolver
     );
 

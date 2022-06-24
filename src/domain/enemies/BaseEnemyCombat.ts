@@ -138,6 +138,7 @@ export class EnemyCombat extends DefaultEntityCombat {
   }
 
   update(time: number, delta: number) {
+    if (!this.enemy.state.isAlive) return
     super.update(time, delta);
 
     if (this.lastTimeCheck + this.intervalTimeCheck < time) {

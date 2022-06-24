@@ -35,5 +35,6 @@ export interface EntityView {
     width: number,
     height: number
   ): T[];
+  die()
   setAllowGravity(value: boolean)
 }
