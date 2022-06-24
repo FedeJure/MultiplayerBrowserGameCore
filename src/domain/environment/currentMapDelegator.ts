@@ -121,8 +121,9 @@ export class CurrentMapDelegator implements Delegator {
                 ClientProvider.presenterProvider
               ),
               this.collisionManager
-            ).then((createdObjects) => {
+            ).then(({ createdObjects, spawnPositions }) => {
               this.loadedMaps[m.id] = { map: m, createdObjects };
+              this.mapManager.setSpawnPositions(m.id, spawnPositions);
               return createdObjects;
             });
           })

@@ -1,4 +1,5 @@
 import { GameObjects, Scene } from "phaser";
+import { async } from "rxjs";
 import { MapsConfiguration } from "../../infrastructure/configuration/MapsConfiguration";
 import { PlatformDetector } from "../../view/environment/platformDetector";
 import { ExistentDepths } from "../../view/existentDepths";
@@ -8,6 +9,12 @@ import { CollisionManager } from "../collisions/collisionManager";
 import { ProcessedMap } from "../environment/processedMap";
 import { EnvironmentObjectFactory } from "../environmentObjects/environmentObjectFactory";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
+import { Vector } from "../vector";
+
+type MapCreationResponse = {
+  createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[];
+  spawnPositions: Vector[];
+};
 
 export function createMapOnScene(
   map: ProcessedMap,
@@ -16,65 +23,72 @@ export function createMapOnScene(
   objectsFactory: EnvironmentObjectFactory,
   collisionManager: CollisionManager
 ) {
-  return new Promise<(GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[]>(
-    async (res, _) => {
-      const createdObjects: (
-        | GameObjects.GameObject
-        | Phaser.Tilemaps.Tilemap
-      )[] = [];
+  return new Promise<MapCreationResponse>(async (res, _) => {
+    const createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[] =
+      [];
 
-      const tilemap = scene.make.tilemap({
-        key: map.config.jsonFile.key,
+    const tilemap = scene.make.tilemap({
+      key: map.config.jsonFile.key,
+    });
+    createdObjects.push(tilemap);
+
+    map.config.sourceFiles.forEach((sourceFile) => {
+      tilemap.addTilesetImage(sourceFile.key, sourceFile.key);
+    });
+    const tilesets = map.config.sourceFiles.map((s) => s.key);
+    tilemap.layers.forEach((l) => {
+      tilemap
+        .createLayer(l.name, tilesets, map.originX, map.originY)
+        .setDepth(ExistentDepths.GROUND_BACKGROUND);
+    });
+
+    createBounds(map, scene, collisionManager);
+
+    const colLayer = tilemap.getObjectLayer(
+      MapsConfiguration.layerNames.colliders
+    );
+    const objectLayers = tilemap.getObjectLayer(
+      MapsConfiguration.layerNames.objects
+    );
+    if (objectLayers) {
+      objectLayers.objects.forEach(async (o) => {
+        if (o.properties?.find((p) => p.name === "type")?.value === "ladder") {
+          createLadder(scene, map, o, collisionManager);
+          return;
+        }
+        const id = o.properties?.find((p) => p.name === "id")?.value as
+          | number
+          | undefined;
+
+        if (!id) return;
+        const object = await envObjectsRepository.get(id);
+        objectsFactory.createObjects([
+          {
+            object,
+            position: { x: o.x! + map.originX, y: o.y! + map.originY },
+          },
+        ]);
       });
-      createdObjects.push(tilemap);
-
-      map.config.sourceFiles.forEach((sourceFile) => {
-        tilemap.addTilesetImage(sourceFile.key, sourceFile.key);
-      });
-      const tilesets = map.config.sourceFiles.map((s) => s.key);
-      tilemap.layers.forEach((l) => {
-        tilemap
-          .createLayer(l.name, tilesets, map.originX, map.originY)
-          .setDepth(ExistentDepths.GROUND_BACKGROUND);
-      });
-
-      createBounds(map, scene, collisionManager);
-
-      const colLayer = tilemap.getObjectLayer(
-        MapsConfiguration.layerNames.colliders
-      );
-      const objectLayers = tilemap.getObjectLayer(
-        MapsConfiguration.layerNames.objects
-      );
-      if (objectLayers) {
-        objectLayers.objects.forEach(async (o) => {
-          if (
-            o.properties?.find((p) => p.name === "type")?.value === "ladder"
-          ) {
-            createLadder(scene, map, o, collisionManager);
-            return;
-          }
-          const id = o.properties?.find((p) => p.name === "id")?.value as
-            | number
-            | undefined;
-
-          if (!id) return;
-          const object = await envObjectsRepository.get(id);
-          objectsFactory.createObjects([
-            {
-              object,
-              position: { x: o.x! + map.originX, y: o.y! + map.originY },
-            },
-          ]);
-        });
-      }
-      await Promise.all([
-        createColliders(colLayer, map, scene, createdObjects, collisionManager),
-      ]);
-
-      res(createdObjects);
     }
-  );
+    await Promise.all([
+      createColliders(colLayer, map, scene, createdObjects, collisionManager),
+    ]);
+
+    const spawnPositionsLayer = tilemap.getObjectLayer(
+      MapsConfiguration.layerNames.spawnPositions
+    );
+
+    res({
+      createdObjects,
+      spawnPositions: spawnPositionsLayer
+        ? getSpawnPositions(spawnPositionsLayer)
+        : [],
+    });
+  });
+}
+
+function getSpawnPositions(layer: Phaser.Tilemaps.ObjectLayer): Vector[] {
+  return layer.objects.map((o) => ({ x: o.x!, y: o.y! }));
 }
 
 async function createLadder(

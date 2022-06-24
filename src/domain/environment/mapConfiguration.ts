@@ -8,7 +8,8 @@ export interface MapConfiguration {
     layerNames: {
         colliders: string,
         ground: string,
-        objects: string
+        objects: string,
+        spawnPositions: string
     }
 }
 
@@ -23,7 +24,6 @@ export interface Map {
     jsonFile: {key: string, fileName: string}
     sourceFiles: {key: string, fileName: string}[]
     objects: MapEnvironmentObject[]
-    spawnPositions: Vector[]
   }
   
 

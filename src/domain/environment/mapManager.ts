@@ -1,4 +1,5 @@
 import { ControllablePlayer } from "../player/players/controllablePlayer";
+import { Vector } from "../vector";
 import { Map } from "./mapConfiguration";
 import { ProcessedMap } from "./processedMap";
 
@@ -7,11 +8,11 @@ export class MapManager {
   protected processedMapsAsList: ProcessedMap[] = [];
 
   setMaps(maps: ProcessedMap[]) {
-    this.processedMapsAsList = [...maps]
-    this.processedMaps = {}
-    maps.forEach(m => {
-      this.processedMaps[m.id] = m
-    })
+    this.processedMapsAsList = maps;
+    this.processedMaps = {};
+    maps.forEach((m) => {
+      this.processedMaps[m.id] = m;
+    });
   }
 
   protected isInside(x: number, y: number, map: ProcessedMap) {
@@ -29,6 +30,10 @@ export class MapManager {
 
   public getMap(id: Map["id"]) {
     return this.processedMaps[id];
+  }
+
+  public setSpawnPositions(id: Map["id"], positions: Vector[]) {
+    this.processedMaps[id].spawnPositions = positions;
   }
 
   getMapForPlayer(player: ControllablePlayer) {

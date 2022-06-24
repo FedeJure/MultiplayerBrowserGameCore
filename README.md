@@ -14,6 +14,14 @@
     - `colliders` : An object layer composed by rectangles where you want to have ground collisions
     - `objects` : An object layer composed by `Points` objects (detailed on Environment items section) 
     - `tile layer with any name`(optional): You can setup any tile layer you want to setup static objects
+    - `entrances`: An object layer to set with `Points` all the possible entrances with this properties:
+        * `id (string)`
+    - `exits`: An object layer to set with `Points` all the possible exits with this properties:
+        * `id (string)`
+        * `action_required (boolean)`
+        * `destination_map_id (string)`
+        * `destination_entrance_id (string)`
+    - `spawn_positions`: An object layer to use `Points` to setup all the possible spawns position.
 #### Colliders:
 - You can set where to check collisions (left, right, up, down). By defaul, if you dont set any propery, the collision check will be on every collider face.
 
