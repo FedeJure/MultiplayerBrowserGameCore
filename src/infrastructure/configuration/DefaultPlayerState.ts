@@ -20,5 +20,6 @@ export const DefaultPlayerState: PlayerState = {
   jumping: false,
   attacking: false,
   isAlive: true,
-  exp: 0
+  exp: 0,
+  inLadder: false
 };

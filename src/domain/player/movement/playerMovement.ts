@@ -10,7 +10,10 @@ export class PlayerMovement extends DefaultEntityMovement {
   }
   private lastTimeJump: number | null = null;
   update(time: number, delta: number) {
-    if (this.player.view.inLadder) this.resolveLadderMovement(time, delta);
+    if (this.player.input.up && this.player.view.inLadder)
+      this.player.updateState({ inLadder: true });
+    if (this.player.state.inLadder && this.player.view.inLadder)
+      this.resolveLadderMovement(time, delta);
     else this.resolveNormalMovement(time, delta);
     super.update(time, delta);
   }
@@ -91,6 +94,7 @@ export class PlayerMovement extends DefaultEntityMovement {
       side,
       jumping,
       grounded: this.player.view.grounded,
+      inLadder: false,
     });
   }
 }
