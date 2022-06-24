@@ -35,4 +35,5 @@ export interface EntityView {
     width: number,
     height: number
   ): T[];
+  setAllowGravity(value: boolean)
 }

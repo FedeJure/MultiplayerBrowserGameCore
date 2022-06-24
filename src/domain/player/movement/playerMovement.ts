@@ -10,6 +10,36 @@ export class PlayerMovement extends DefaultEntityMovement {
   }
   private lastTimeJump: number | null = null;
   update(time: number, delta: number) {
+    if (this.player.view.inLadder) this.resolveLadderMovement(time, delta);
+    else this.resolveNormalMovement(time, delta);
+    super.update(time, delta);
+  }
+
+  resolveLadderMovement(time: number, delta: number) {
+    this.player.view.setAllowGravity(false);
+
+    const directionVector = new Phaser.Math.Vector2(
+      this.player.input.left ? -1 : this.player.input.right ? 1 : 0,
+      this.player.input.up ? -1 : this.player.input.down ? 1 : 0
+    );
+
+    const velocity = directionVector
+      .normalize()
+      .scale(this.player.stats.walkSpeed);
+    this.player.updateState({
+      velocity: { x: velocity.x, y: velocity.y },
+      position: this.player.view.positionVector,
+      side:
+        directionVector.x === 0
+          ? this.player.state.side
+          : directionVector.x > 0
+          ? Side.RIGHT
+          : Side.LEFT,
+    });
+  }
+  a;
+  resolveNormalMovement(time: number, delta: number) {
+    this.player.view.setAllowGravity(true);
     const { state, input } = this.player;
     let newVelX = this.player.view.velocity.x;
     let newVelY = this.player.view.velocity.y;
@@ -62,6 +92,5 @@ export class PlayerMovement extends DefaultEntityMovement {
       jumping,
       grounded: this.player.view.grounded,
     });
-    super.update(time, delta);
   }
 }

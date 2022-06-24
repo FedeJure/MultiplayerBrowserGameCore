@@ -17,14 +17,20 @@ export class PhaserLadderView extends GameObjects.Rectangle {
 
     const leftAntiOverlap = scene.add.rectangle(x - (AntiOverlapSize * 2), y, AntiOverlapSize, height)
     leftAntiOverlap.setOrigin(0, 0)
-    this.scene.physics.add.existing(leftAntiOverlap, false)
 
     const rightAntiOverlap = scene.add.rectangle(x + width + (AntiOverlapSize), y, AntiOverlapSize, height)
     rightAntiOverlap.setOrigin(0, 0)
-    this.scene.physics.add.existing(rightAntiOverlap, false)
+
+    const topAntiOverlap = scene.add.rectangle(x, y - (AntiOverlapSize) * 2, AntiOverlapSize, AntiOverlapSize)
+    topAntiOverlap.setOrigin(0, 0)
+    
+    const bottomAntiOverlap = scene.add.rectangle(x, y + height, AntiOverlapSize, AntiOverlapSize)
+    bottomAntiOverlap.setOrigin(0, 0)
 
     collisionManager.addLadder(this)
     collisionManager.addAntiLadder(leftAntiOverlap)
     collisionManager.addAntiLadder(rightAntiOverlap)
+    collisionManager.addAntiLadder(topAntiOverlap)
+    collisionManager.addAntiLadder(bottomAntiOverlap)
   }
 }
