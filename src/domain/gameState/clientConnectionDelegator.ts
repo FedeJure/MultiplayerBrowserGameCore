@@ -26,6 +26,7 @@ import { ClientPlayerActionResolve } from "../player/clientPlayerActionResolver"
 import { HtmlLootView } from "../../view/ui/HtmlLootView";
 import { SceneNames } from "../../view/scenes/SceneNames";
 import { ClientItemResolver } from "../items/clientItemResolver";
+import { TransitionView } from "../../view/ui/TransitionView";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -154,6 +155,7 @@ export class ClientConnectionDelegator implements Delegator {
       target: player,
       type: CollisionableTargetType.PLAYER,
     });
+    new TransitionView(this.scene).fadeIn()
 
     this.presenterProvider.forInventory(player, view);
     this.presenterProvider.forLocalPlayer(input, player, view);

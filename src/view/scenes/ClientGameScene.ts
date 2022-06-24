@@ -16,6 +16,5 @@ export class ClientGameScene extends GameScene {
   update(time: number, delta: number): void {
     super.update(time, delta);
     this.game.canvas.style.margin = "0px"; //this is because phaser adds a margin on canvas
-    
   }
 }
