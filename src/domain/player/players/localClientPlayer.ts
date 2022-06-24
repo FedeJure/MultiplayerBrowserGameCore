@@ -33,7 +33,7 @@ export class LocalClientPlayer extends ControllablePlayer {
       balance
     );
   }
-
+  
   get input(): ClientPlayerInput {
     return this._input as ClientPlayerInput;
   }

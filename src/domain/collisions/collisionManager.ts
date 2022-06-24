@@ -6,4 +6,6 @@ export interface CollisionManager {
     addEnemy(enemy: EnemyView)
     addStaticGround(ground: any)
     addObject(object: any)
+    addLadder(ladder: any)
+    addAntiLadder(antiLadder: any)
 }

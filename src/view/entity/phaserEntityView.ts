@@ -32,6 +32,8 @@ export class PhaserEntityView
     this.initCollisions();
     this.setData("id", uuidv4());
     this.setData("type", ViewObjectType.Entity);
+    this.arcadeBody.onOverlap = true
+    this.scene.game.events.addListener('overlap',console.log)
   }
 
   get id() {
@@ -127,4 +129,9 @@ export class PhaserEntityView
       .filter((b) => b.gameObject.getData("entity"))
       .map((b) => b.gameObject.getData("entity") as T);
   }
+
+  get inLadder() {
+    return this.getData('inLadder') ?? false
+  }
+
 }

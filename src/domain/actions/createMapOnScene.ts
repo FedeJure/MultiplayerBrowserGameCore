@@ -2,6 +2,7 @@ import { GameObjects, Scene } from "phaser";
 import { MapsConfiguration } from "../../infrastructure/configuration/MapsConfiguration";
 import { PlatformDetector } from "../../view/environment/platformDetector";
 import { ExistentDepths } from "../../view/existentDepths";
+import { PhaserLadderView } from "../../view/ladder/phaserLadderView";
 import { CollisionManager } from "../collisions/collisionManager";
 
 import { ProcessedMap } from "../environment/processedMap";
@@ -47,6 +48,12 @@ export function createMapOnScene(
       );
       if (objectLayers) {
         objectLayers.objects.forEach(async (o) => {
+          if (
+            o.properties?.find((p) => p.name === "type")?.value === "ladder"
+          ) {
+            createLadder(scene, map, o, collisionManager);
+            return;
+          }
           const id = o.properties?.find((p) => p.name === "id")?.value as
             | number
             | undefined;
@@ -67,6 +74,22 @@ export function createMapOnScene(
 
       res(createdObjects);
     }
+  );
+}
+
+async function createLadder(
+  scene: Scene,
+  map: ProcessedMap,
+  object: Phaser.Types.Tilemaps.TiledObject,
+  collisionManager: CollisionManager
+) {
+  new PhaserLadderView(
+    scene,
+    (object.x || 0) + map.originX,
+    (object.y || 0) + map.originY,
+    object.width ?? 0,
+    object.height ?? 0,
+    collisionManager
   );
 }
 
@@ -110,10 +133,14 @@ async function createColliders(
           left !== undefined ||
           right !== undefined
         ) {
-          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.up = up ?? false;
-          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.down = down ?? false;
-          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.left = left ?? false;
-          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.right = right ?? false;
+          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.up =
+            up ?? false;
+          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.down =
+            down ?? false;
+          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.left =
+            left ?? false;
+          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.right =
+            right ?? false;
         }
 
         sp.setPosition(sp.x + sp.width / 2, sp.y + sp.height / 2);

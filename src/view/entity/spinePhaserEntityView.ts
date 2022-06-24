@@ -9,7 +9,7 @@ import {
 } from "../../domain/entity/AnimationDto";
 import { EntityIngameHud } from "./entityIngameHud";
 import { PhaserEntityView } from "./phaserEntityView";
-import { Vector } from "../../domain/vector";
+
 export class SpinePhaserEntityView extends PhaserEntityView {
   protected spine: SpineGameObject;
   protected readonly hud: EntityIngameHud;
