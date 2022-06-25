@@ -1,10 +1,11 @@
 import { GameObjects, Scene } from "phaser";
-import { async } from "rxjs";
 import { MapsConfiguration } from "../../infrastructure/configuration/MapsConfiguration";
 import { PlatformDetector } from "../../view/environment/platformDetector";
 import { ExistentDepths } from "../../view/existentDepths";
 import { PhaserLadderView } from "../../view/ladder/phaserLadderView";
 import { CollisionManager } from "../collisions/collisionManager";
+import { Entrance } from "../environment/entrance";
+import { Exit } from "../environment/exit";
 
 import { ProcessedMap } from "../environment/processedMap";
 import { EnvironmentObjectFactory } from "../environmentObjects/environmentObjectFactory";
@@ -14,6 +15,8 @@ import { Vector } from "../vector";
 type MapCreationResponse = {
   createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[];
   spawnPositions: Vector[];
+  entrances: Entrance[];
+  exits: Exit[];
 };
 
 export function createMapOnScene(
@@ -74,21 +77,77 @@ export function createMapOnScene(
       createColliders(colLayer, map, scene, createdObjects, collisionManager),
     ]);
 
-    const spawnPositionsLayer = tilemap.getObjectLayer(
-      MapsConfiguration.layerNames.spawnPositions
-    );
-
     res({
       createdObjects,
-      spawnPositions: spawnPositionsLayer
-        ? getSpawnPositions(spawnPositionsLayer)
-        : [],
+      spawnPositions: getSpawnPositions(tilemap),
+      exits: getExits(tilemap),
+      entrances: getEntrances(tilemap),
     });
   });
 }
 
-function getSpawnPositions(layer: Phaser.Tilemaps.ObjectLayer): Vector[] {
-  return layer.objects.map((o) => ({ x: o.x!, y: o.y! }));
+function getEntrances(tilemap: Phaser.Tilemaps.Tilemap): Entrance[] {
+  const layer = tilemap.getObjectLayer(MapsConfiguration.layerNames.entrances);
+  if (!layer) return [];
+  const entrances: Entrance[] = [];
+  layer.objects.forEach((o) => {
+    const { height, width, rectangle, x, y } = o;
+    if (rectangle || !x || !y || !height || !width) return;
+    const id: string = o.properties.find((p) => p.name === "id");
+    if (id === undefined) return;
+    entrances.push({
+      id,
+      position: { x: x, y: y },
+      height,
+      width,
+    });
+  });
+  return entrances;
+}
+
+function getExits(tilemap: Phaser.Tilemaps.Tilemap): Exit[] {
+  const layer = tilemap.getObjectLayer(MapsConfiguration.layerNames.exits);
+  if (!layer) return [];
+  const exits: Exit[] = [];
+  layer.objects.forEach((o) => {
+    const { height, width, rectangle, x, y } = o;
+    if (rectangle || !x || !y || !height || !width) return;
+    const id = o.properties.find((p) => p.name === "id");
+    const actionRequired = o.properties.find(
+      (p) => p.name === "action_required"
+    );
+    const destinationMapId = o.properties.find(
+      (p) => p.name === "destination_map_id"
+    );
+    const destinationEntranceId = o.properties.find(
+      (p) => p.name === "destination_entrance_id"
+    );
+    if (
+      id === undefined ||
+      actionRequired === undefined ||
+      destinationEntranceId === undefined ||
+      destinationEntranceId === undefined
+    )
+      return;
+    exits.push({
+      id,
+      actionRequired,
+      destinationEntranceId,
+      destinationMapId,
+      position: { x: x, y: y },
+      height,
+      width,
+    });
+  });
+  return exits;
+}
+
+function getSpawnPositions(tilemap: Phaser.Tilemaps.Tilemap): Vector[] {
+  const layer = tilemap.getObjectLayer(
+    MapsConfiguration.layerNames.spawnPositions
+  );
+
+  return layer ? layer.objects.map((o) => ({ x: o.x!, y: o.y! })) : [];
 }
 
 async function createLadder(

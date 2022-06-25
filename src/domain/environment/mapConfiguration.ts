@@ -10,6 +10,8 @@ export interface MapConfiguration {
         ground: string,
         objects: string,
         spawnPositions: string
+        entrances: string,
+        exits: string
     }
 }
 

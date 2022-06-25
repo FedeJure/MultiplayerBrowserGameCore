@@ -37,6 +37,8 @@ export class CompleteMapManager extends MapManager {
           leftBottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j - 1]?.id,
           rightBottomMapId: (layer.mapsInOrder[i + 1] ?? {})[j + 1]?.id,
           spawnPositions: [],
+          entrances: [],
+          exits: []
         });
 
         const nextX =

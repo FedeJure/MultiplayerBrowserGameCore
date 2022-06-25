@@ -32,8 +32,12 @@ export class MapManager {
     return this.processedMaps[id];
   }
 
-  public setSpawnPositions(id: Map["id"], positions: Vector[]) {
-    this.processedMaps[id].spawnPositions = positions;
+  public updateMap(id: Map['id'], map: Partial<ProcessedMap>) {
+    if (!this.processedMaps[id]) return
+
+    Object.keys(map).forEach(key => {
+      this.processedMaps[id][key] = map[key]
+    })
   }
 
   getMapForPlayer(player: ControllablePlayer) {

@@ -146,8 +146,8 @@ export class CompleteMapDelegator implements Delegator {
             this.presenterProvider
           ),
           this.collisionManager
-        ).then(({ spawnPositions }) => {
-          this.mapManager.setSpawnPositions(m.id, spawnPositions);
+        ).then(({ spawnPositions, entrances, exits }) => {
+          this.mapManager.updateMap(m.id, { spawnPositions, entrances, exits });
         })
       )
     );

@@ -1,4 +1,6 @@
 import { Vector } from "../vector";
+import { Entrance } from "./entrance";
+import { Exit } from "./exit";
 import { Map } from "./mapConfiguration";
 
 export interface ProcessedMap {
@@ -18,4 +20,6 @@ export interface ProcessedMap {
   leftBottomMapId: number | undefined;
   rightBottomMapId: number | undefined;
   spawnPositions: Vector[]
+  entrances: Entrance[]
+  exits: Exit[]
 }

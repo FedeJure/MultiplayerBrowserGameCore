@@ -14,9 +14,9 @@
     - `colliders` : An object layer composed by rectangles where you want to have ground collisions
     - `objects` : An object layer composed by `Points` objects (detailed on Environment items section) 
     - `tile layer with any name`(optional): You can setup any tile layer you want to setup static objects
-    - `entrances`: An object layer to set with `Points` all the possible entrances with this properties:
+    - `entrances`: An object layer to set with `Rectangle` all the possible entrances with this properties:
         * `id (string)`
-    - `exits`: An object layer to set with `Points` all the possible exits with this properties:
+    - `exits`: An object layer to set with `Rectangle` all the possible exits with this properties:
         * `id (string)`
         * `action_required (boolean)`
         * `destination_map_id (string)`

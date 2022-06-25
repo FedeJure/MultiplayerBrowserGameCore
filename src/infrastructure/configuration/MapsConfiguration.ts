@@ -7,7 +7,9 @@ export const MapsConfiguration: MapConfiguration = {
     colliders: "colliders",
     ground: "ground",
     objects: "objects",
-    spawnPositions: 'spawn_positions'
+    spawnPositions: 'spawn_positions',
+    entrances: 'entrances',
+    exits: 'extis'
   },
   mapLayers: [
     {
