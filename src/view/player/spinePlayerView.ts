@@ -1,9 +1,10 @@
 import { Scene } from "phaser";
+import { PlayerView } from "../../domain/playerView";
 import { EntityIngameHud } from "../entity/entityIngameHud";
 import { SpinePhaserEntityView } from "../entity/spinePhaserEntityView";
 import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
 
-export class SpinePlayerView extends SpinePhaserEntityView {
+export class SpinePlayerView extends SpinePhaserEntityView implements PlayerView {
     public readonly inLadder: boolean = false
     constructor(
         scene: Scene,
@@ -20,4 +21,6 @@ export class SpinePlayerView extends SpinePhaserEntityView {
         this.hud.setDisplayName(name);
         this.add(this.hud)
     }
+
+    
 }

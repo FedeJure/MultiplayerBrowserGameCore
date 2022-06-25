@@ -15,9 +15,9 @@ export const loadAssetAsync = async (scene: Scene, func: () => boolean) => {
 
 export function IsInsidePropertyOrRemove<
   T extends { position: Vector; height: number; width: number }
->(gameObject: GameObjects.GameObject & { x: number; y: number }, key: string) {
+>(gameObject: GameObjects.GameObject & { x: number; y: number }, key: string): T | undefined {
   const container: T | undefined = gameObject.getData(key);
-  if (!container) return false;
+  if (!container) return undefined;
   const { x, y } = gameObject;
   const isInsideContainer = !(
     x < container.position.x ||
@@ -26,5 +26,5 @@ export function IsInsidePropertyOrRemove<
     y > container.position.y + container.height
   );
   if (container && !isInsideContainer) gameObject.setData(key, undefined);
-  return isInsideContainer;
+  return isInsideContainer ? container : undefined;
 }

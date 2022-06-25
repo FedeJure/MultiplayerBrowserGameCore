@@ -1,5 +1,6 @@
 import { GameObjects, Scene } from "phaser";
 import { EntityView } from "./entity/entityView";
+import { Entrance } from "./environment/entrance";
 import { CombatCollisionResolver } from "./player/combat/combatCollisionResolver";
 
 export interface PlayerView extends EntityView {
@@ -9,4 +10,5 @@ export interface PlayerView extends EntityView {
   add(children: GameObjects.GameObject): this;
   combatCollisionResolver: CombatCollisionResolver;
   inLadder: boolean;
+  currentEntrance?: Entrance
 }

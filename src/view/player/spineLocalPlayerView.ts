@@ -32,6 +32,6 @@ export class SpineLocalPlayerView extends SpinePhaserEntityView {
   }
 
   get inLadder() {
-    return IsInsidePropertyOrRemove<Ladder>(this, "ladder");
+    return IsInsidePropertyOrRemove<Ladder>(this, "ladder") !== undefined;
   }
 }
