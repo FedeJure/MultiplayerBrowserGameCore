@@ -4,17 +4,17 @@ export class TransitionView {
   private readonly fadeDuration = 2000;
   constructor(private scene: Scene) {}
 
-  fadeOff() {
+  fadeOff(duration?: number) {
     this.scene.cameras.cameras.forEach((c, i) => {
-      c.fadeOut(this.fadeDuration, 0, 0, 0, (_, value) => {
+      c.fadeOut(duration ?? this.fadeDuration, 0, 0, 0, (_, value) => {
         this.scene.game.domContainer.style.opacity = value.toString();
       });
     });
   }
 
-  fadeIn() {
+  fadeIn(duration?: number) {
     this.scene.cameras.cameras.forEach((c, i) => {
-      c.fadeIn(this.fadeDuration, 0, 0, 0, (_, value) => {
+      c.fadeIn(duration ?? this.fadeDuration, 0, 0, 0, (_, value) => {
         this.scene.game.domContainer.style.opacity = value.toString();
       });
     });

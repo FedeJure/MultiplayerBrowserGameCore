@@ -23,9 +23,9 @@ export class SpineLocalPlayerView extends SpinePhaserEntityView {
   }
 
   die(): void {
-      this.transitionView.fadeOff()
+      this.transitionView.fadeOff(1000)
       this.scene.time.delayedCall(1000, () => {
-        this.transitionView.fadeIn()
+        this.transitionView.fadeIn(1000)
       })
   }
 }

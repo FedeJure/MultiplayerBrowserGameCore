@@ -1,6 +1,5 @@
 import { Attackable } from "../combat/attackTarget";
 import { CombatResult } from "../player/combat/combatResult";
-import { EntityAnimationCode, AnimationLayer } from "./animations";
 import { DefaultEntityAnimations } from "./DefaultEntityAnimations";
 import { DefaultEntityCombat } from "./DefaultEntityCombat";
 import { DefaultEntityMovement } from "./DefaultMovement";
