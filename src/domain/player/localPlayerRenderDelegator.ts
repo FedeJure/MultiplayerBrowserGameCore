@@ -3,6 +3,7 @@ import { BackgroundScene } from "../../view/scenes/BackgroundScene";
 import { SceneNames } from "../../view/scenes/SceneNames";
 import { Delegator } from "../delegator";
 import { ControllablePlayer } from "./players/controllablePlayer";
+import { LocalClientPlayer } from "./players/localClientPlayer";
 
 export class LocalPlayerRenderDelegator implements Delegator {
   private readonly maxZoom = 3.5;
@@ -11,7 +12,7 @@ export class LocalPlayerRenderDelegator implements Delegator {
 
   private zoom = this.startZoom;
   private zooms: { [key: string]: number } = {};
-  constructor(private player: ControllablePlayer) {
+  constructor(private player: LocalClientPlayer) {
     this.player = player;
   }
   init(): void {

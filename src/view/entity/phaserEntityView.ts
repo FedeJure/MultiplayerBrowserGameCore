@@ -108,10 +108,6 @@ export class PhaserEntityView
     return this;
   }
 
-  startFollowWithCam(cam: Phaser.Cameras.Scene2D.Camera): void {
-    cam.startFollow(this, false, 0.1, 0.1);
-  }
-
   setEntityReference(entity: Entity) {
     this.setData("entity", entity);
   }

@@ -17,9 +17,6 @@ export class PhaserPlayerView extends PhaserEntityView implements PlayerView {
     super(view, x, y, height, width, combatCollisionResolver);
     this.setName("Player View");
   }
-
-  startFollowWithCam(): void {}
-
   get inLadder() {
     return IsInsidePropertyOrRemove<Ladder>(this, "ladder") !== undefined;
   }

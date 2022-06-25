@@ -32,7 +32,7 @@ import { PhaserClientLootCreatorView } from "../../view/loot/phaserClientLootCre
 export class ClientPresenterProvider {
   forLocalPlayer(
     input: PlayerInput,
-    player: ControllablePlayer,
+    player: LocalClientPlayer,
     view: GameObjects.GameObject
   ): void {
     new ViewPresenter(view, [

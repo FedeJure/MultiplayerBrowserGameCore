@@ -14,13 +14,9 @@ import { PlayerInfo } from "../playerInfo";
 import { PlayerInput } from "../playerInput";
 import { PlayerState } from "../playerState";
 import { PlayerStats } from "../playerStats";
+import { Player } from "./player";
 
-export class ControllablePlayer extends Entity<
-  PlayerInfo,
-  PlayerState,
-  PlayerView,
-  PlayerStats
-> {
+export class ControllablePlayer extends Player {
   constructor(
     _info: PlayerInfo,
     _state: PlayerState,
@@ -54,10 +50,6 @@ export class ControllablePlayer extends Entity<
 
   get input() {
     return this._input;
-  }
-
-  update(time: number, delta: number) {
-    super.update(time, delta);
   }
 
   getAttackablesOnArea(
