@@ -8,4 +8,5 @@ export interface PlayerView extends EntityView {
   destroy(): void;
   add(children: GameObjects.GameObject): this;
   combatCollisionResolver: CombatCollisionResolver;
+  inLadder: boolean;
 }

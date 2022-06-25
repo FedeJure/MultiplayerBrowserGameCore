@@ -2,6 +2,7 @@ import { Physics } from "phaser";
 import { PlayerView } from "../../domain/playerView";
 import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
 import { PhaserEntityView } from "../entity/phaserEntityView";
+import { IsInsideLadder } from "../ladder/phaserLadderView";
 
 export class PhaserPlayerView extends PhaserEntityView implements PlayerView {
   constructor(
@@ -17,4 +18,9 @@ export class PhaserPlayerView extends PhaserEntityView implements PlayerView {
   }
 
   startFollowWithCam(): void {}
+
+  get inLadder() {
+    console.log(IsInsideLadder(this))
+    return IsInsideLadder(this)
+  }
 }

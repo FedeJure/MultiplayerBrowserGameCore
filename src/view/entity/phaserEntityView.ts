@@ -7,7 +7,6 @@ import { ExistentDepths } from "../existentDepths";
 import { PhaserCombatCollisionResolver } from "../player/combatCollisionResolver";
 import { ViewObject, ViewObjectType } from "../../domain/viewObject";
 import { Entity } from "../../domain/entity/entity";
-import { Ladder } from "../../domain/environment/ladder";
 
 export class PhaserEntityView
   extends Phaser.GameObjects.Container
@@ -134,22 +133,5 @@ export class PhaserEntityView
     return bodies
       .filter((b) => b.gameObject.getData("entity"))
       .map((b) => b.gameObject.getData("entity") as T);
-  }
-
-  get inLadder() {
-    const ladder: Ladder = this.getData("ladder");
-    if (ladder) {
-      if (
-        this.x < ladder.position.x ||
-        this.y < ladder.position.y ||
-        this.x > ladder.position.x + ladder.width ||
-        this.y > ladder.position.y + ladder.height
-      ) {
-        this.setData("ladder", undefined);
-        return false;
-      }
-      return true;
-    }
-    return false;
   }
 }

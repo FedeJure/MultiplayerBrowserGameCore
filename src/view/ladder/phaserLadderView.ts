@@ -2,7 +2,6 @@ import { GameObjects, Scene } from "phaser";
 import { CollisionManager } from "../../domain/collisions/collisionManager";
 import { Ladder } from "../../domain/environment/ladder";
 
-const AntiOverlapSize = 25;
 export class PhaserLadderView extends GameObjects.Rectangle {
   constructor(
     scene: Scene,
@@ -21,4 +20,16 @@ export class PhaserLadderView extends GameObjects.Rectangle {
 
     collisionManager.addLadder(this);
   }
+}
+
+export function IsInsideLadder(gameObject: GameObjects.GameObject & {x: number, y: number}) {
+  const ladder: Ladder | undefined = gameObject.getData('ladder') 
+  if (!ladder) return false
+  const {x, y} = gameObject
+  const isInsideLadder = !(x < ladder.position.x ||
+      y < ladder.position.y ||
+      x > ladder.position.x + ladder.width ||
+      y > ladder.position.y + ladder.height)
+  if (ladder && !isInsideLadder) gameObject.setData('ladder', undefined) 
+  return isInsideLadder
 }

@@ -36,7 +36,6 @@ export class PhaserCollisionManager implements CollisionManager {
       this.playerGroup,
       this.laddersGroup,
       (player: GameObjects.GameObject, ladder: GameObjects.GameObject) => {
-        player.setData("inLadder", true);
         player.setData("ladder", ladder.getData('ladder'));
         return false;
       }

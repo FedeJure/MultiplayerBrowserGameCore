@@ -4,6 +4,7 @@ import { SpinePhaserEntityView } from "../entity/spinePhaserEntityView";
 import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
 
 export class SpinePlayerView extends SpinePhaserEntityView {
+    public readonly inLadder: boolean = false
     constructor(
         scene: Scene,
         x: number,
