@@ -11,6 +11,10 @@ export class DefaultEntityAnimations implements EntityAnimations {
     this.entity = entity;
   }
   update(time: number, delta: number) {
+    if (!this.entity.state.isAlive) {
+      this.entity.updateState({anim: [{layer: AnimationLayer.MOVEMENT, name: EntityAnimationCode.DIE}]})
+      return
+    }
     this.processAnimation();
   }
 

@@ -4,7 +4,7 @@ import { ClientInventory } from "../../inventory/playerInventory";
 import { PlayerView } from "../../playerView";
 import { PlayerMovement } from "../movement/playerMovement";
 import { PlayerInfo } from "../playerInfo";
-import { ClientPlayerInput, PlayerInput } from "../playerInput";
+import { ClientPlayerInput  } from "../playerInput";
 import { PlayerState } from "../playerState";
 import { PlayerStats } from "../playerStats";
 import { ControllablePlayer } from "./controllablePlayer";
@@ -40,5 +40,12 @@ export class LocalClientPlayer extends ControllablePlayer {
 
   get inventory() {
     return this._inventory as ClientInventory;
+  }
+
+  updateState(newState: Partial<PlayerState>): void {
+      super.updateState(newState)
+      if (this._prevState.isAlive && !this.state.isAlive) {
+        this.view.die()
+      }
   }
 }

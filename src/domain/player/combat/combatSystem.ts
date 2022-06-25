@@ -53,7 +53,7 @@ export class CombatSystem extends DefaultEntityCombat {
   }
 
   private die() {
-    const dieDuration = 1000;
+    const dieDuration = 1500;
     this.player.animations.executeAnimation(
       EntityAnimationCode.DIE,
       AnimationLayer.MOVEMENT,
@@ -77,7 +77,6 @@ export class CombatSystem extends DefaultEntityCombat {
     const newPosition = closestSpawnPosition[0] ?? { x: 0, y: 0 };
     this.player.updateState({ isAlive: false });
     this.player.view.scene.time.delayedCall(dieDuration, () => {
-      console.log("asdasdasd");
       this.player.view.setPosition(newPosition.x, newPosition.y);
       this.player.updateState({
         life: this.player.stats.maxLife,

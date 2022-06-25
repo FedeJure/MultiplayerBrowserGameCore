@@ -22,6 +22,7 @@ export class Entity<
   Animations extends EntityAnimations = EntityAnimations
 > implements Attackable
 {
+  protected _prevState: EntityState
   constructor(
     protected _info: Info,
     protected _state: State,
@@ -31,6 +32,7 @@ export class Entity<
     protected _combat: Combat = new DefaultEntityCombat() as any as Combat,
     protected _animations: Animations = new DefaultEntityAnimations() as any as Animations
   ) {
+    this._prevState = this._state
     this._movement.init(this);
     this._combat.init(this);
     this._animations.init(this);
@@ -41,7 +43,9 @@ export class Entity<
   }
 
   updateState(newState: Partial<State>) {
+    this._prevState = this._state
     this._state = { ...this.state, ...newState };
+
   }
 
   updateStats(newStats: Partial<Stats>) {
