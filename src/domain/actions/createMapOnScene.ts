@@ -6,6 +6,7 @@ import { PhaserLadderView } from "../../view/ladder/phaserLadderView";
 import { CollisionManager } from "../collisions/collisionManager";
 import { Entrance } from "../environment/entrance";
 import { Exit } from "../environment/exit";
+import { Ladder } from "../environment/ladder";
 
 import { ProcessedMap } from "../environment/processedMap";
 import { EnvironmentObjectFactory } from "../environmentObjects/environmentObjectFactory";
@@ -156,12 +157,14 @@ async function createLadder(
   object: Phaser.Types.Tilemaps.TiledObject,
   collisionManager: CollisionManager
 ) {
+  const ladder: Ladder  = {
+    position : {x: (object.x || 0) + map.originX, y: (object.y || 0) + map.originY},
+    height: object.height ?? 0,
+    width: object.width ?? 0
+  }
   new PhaserLadderView(
     scene,
-    (object.x || 0) + map.originX,
-    (object.y || 0) + map.originY,
-    object.width ?? 0,
-    object.height ?? 0,
+    ladder,
     collisionManager
   );
 }

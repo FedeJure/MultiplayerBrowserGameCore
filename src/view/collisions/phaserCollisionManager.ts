@@ -10,17 +10,22 @@ export class PhaserCollisionManager implements CollisionManager {
   private groundGroup: Phaser.Physics.Arcade.StaticGroup;
   private objectsGroup: Phaser.Physics.Arcade.StaticGroup;
   private laddersGroup: Phaser.Physics.Arcade.Group;
-  private antiLadderGroup: Phaser.Physics.Arcade.Group;
+  private entrancesGroup: Phaser.Physics.Arcade.Group;
+  private exitsGroup: Phaser.Physics.Arcade.Group;
 
   constructor(scene: Scene) {
-    this.playerGroup = scene.physics.add.group();
-    this.enemyGroup = scene.physics.add.group();
+    this.playerGroup = scene.physics.add.group({ allowRotation: false });
+    this.enemyGroup = scene.physics.add.group({ allowRotation: false });
     this.groundGroup = scene.physics.add.staticGroup();
     this.objectsGroup = scene.physics.add.staticGroup();
     this.laddersGroup = scene.physics.add.group({
       allowGravity: false,
     });
-    this.antiLadderGroup = scene.physics.add.group({
+    this.entrancesGroup = scene.physics.add.group({
+      allowGravity: false,
+    });
+
+    this.exitsGroup = scene.physics.add.group({
       allowGravity: false,
     });
 
@@ -30,32 +35,44 @@ export class PhaserCollisionManager implements CollisionManager {
     scene.physics.add.overlap(
       this.playerGroup,
       this.laddersGroup,
-      (player: Phaser.Types.Physics.Arcade.GameObjectWithBody) => {
+      (player: GameObjects.GameObject, ladder: GameObjects.GameObject) => {
         player.setData("inLadder", true);
+        player.setData("ladder", ladder.getData('ladder'));
         return false;
       }
     );
 
     scene.physics.add.overlap(
       this.playerGroup,
-      this.antiLadderGroup,
-      (player: Phaser.Types.Physics.Arcade.GameObjectWithBody) => {
-        player.setData("inLadder", false);
+      this.entrancesGroup,
+      (player: GameObjects.GameObject, entrance: GameObjects.GameObject) => {
+        player.setData("entrance", entrance.getData("entrance"));
+        return false;
+      }
+    );
+
+    scene.physics.add.overlap(
+      this.playerGroup,
+      this.exitsGroup,
+      (player: GameObjects.GameObject, exit: GameObjects.GameObject) => {
+        player.setData("exit", exit.getData("exit"));
+
         return false;
       }
     );
   }
+  addEntrance(entrance: GameObjects.GameObject) {
+    this.entrancesGroup.add(entrance);
+  }
+  addExit(exit: GameObjects.GameObject) {
+    this.exitsGroup.add(exit);
+  }
   addLadder(ladder: PhaserLadderView) {
     this.laddersGroup.add(ladder);
-  }
-
-  addAntiLadder(ladder: GameObjects.Rectangle) {
-    this.antiLadderGroup.add(ladder);
   }
   addObject(object: GameObjects.GameObject) {
     this.objectsGroup.add(object);
   }
-
   addPlayer(player: PhaserPlayerView) {
     this.playerGroup.add(player);
   }
