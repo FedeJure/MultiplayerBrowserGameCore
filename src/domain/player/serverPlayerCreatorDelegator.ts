@@ -28,6 +28,7 @@ import { ServerPlayerInventory } from "../inventory/serverPlayerInventory";
 import { BalanceDto } from "../inventory/balanceDto";
 import { DefaultPlayerBalance } from "../../infrastructure/configuration/DefaultPlayerBalance";
 import { ServerBalance } from "../inventory/serverBalance";
+import { PlayerTransportation } from "./playerTransportation";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -191,7 +192,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       new ServerBalance(playerId, this.balanceRepository),
       connection,
       this.playerInfoRepository,
-      this.playerStateRepository
+      this.playerStateRepository,
+      new PlayerTransportation(this.mapManager)
     );
 
     view.setEntityReference(player);

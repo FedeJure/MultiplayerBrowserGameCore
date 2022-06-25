@@ -6,13 +6,10 @@ import { Entrance } from "../../domain/environment/entrance";
 export class PhaserEntranceView extends GameObjects.Rectangle {
   constructor(
     scene: Scene,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
     entrance: Entrance,
     collisionMananger: CollisionManager
   ) {
+    const {position: {x,y}, height, width} = entrance
     super(scene, x, y, width, height);
     this.setData('entrance', entrance)
     this.setOrigin(0, 0);

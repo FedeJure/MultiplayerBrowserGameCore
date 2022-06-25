@@ -1,5 +1,7 @@
 import { GameObjects, Scene } from "phaser";
 import { MapsConfiguration } from "../../infrastructure/configuration/MapsConfiguration";
+import { PhaserEntranceView } from "../../view/environment/phaserEntranceView";
+import { PhaserExitView } from "../../view/environment/phaserExitView";
 import { PlatformDetector } from "../../view/environment/platformDetector";
 import { ExistentDepths } from "../../view/existentDepths";
 import { PhaserLadderView } from "../../view/ladder/phaserLadderView";
@@ -81,38 +83,50 @@ export function createMapOnScene(
     res({
       createdObjects,
       spawnPositions: getSpawnPositions(tilemap),
-      exits: getExits(tilemap),
-      entrances: getEntrances(tilemap),
+      exits: getExits(tilemap, collisionManager),
+      entrances: getEntrances(tilemap, collisionManager),
     });
   });
 }
 
-function getEntrances(tilemap: Phaser.Tilemaps.Tilemap): Entrance[] {
+function getEntrances(
+  tilemap: Phaser.Tilemaps.Tilemap,
+  collisionManager: CollisionManager
+): Entrance[] {
   const layer = tilemap.getObjectLayer(MapsConfiguration.layerNames.entrances);
   if (!layer) return [];
   const entrances: Entrance[] = [];
   layer.objects.forEach((o) => {
     const { height, width, rectangle, x, y } = o;
     if (rectangle || !x || !y || !height || !width) return;
-    const id: string = o.properties.find((p) => p.name === "id");
+    const id = o.properties.find((p) => p.name === "id");
     if (id === undefined) return;
-    entrances.push({
-      id,
+    const entrance = {
+      id: id.value,
       position: { x: x, y: y },
       height,
       width,
-    });
+    };
+    new PhaserEntranceView(tilemap.scene, entrance, collisionManager);
+    entrances.push(entrance);
   });
   return entrances;
 }
 
-function getExits(tilemap: Phaser.Tilemaps.Tilemap): Exit[] {
+function getExits(
+  tilemap: Phaser.Tilemaps.Tilemap,
+  collisionManager: CollisionManager
+): Exit[] {
   const layer = tilemap.getObjectLayer(MapsConfiguration.layerNames.exits);
+
   if (!layer) return [];
+
   const exits: Exit[] = [];
   layer.objects.forEach((o) => {
     const { height, width, rectangle, x, y } = o;
-    if (rectangle || !x || !y || !height || !width) return;
+
+    if (!rectangle || x === undefined || y === undefined || !height || !width)
+      return;
     const id = o.properties.find((p) => p.name === "id");
     const actionRequired = o.properties.find(
       (p) => p.name === "action_required"
@@ -130,15 +144,18 @@ function getExits(tilemap: Phaser.Tilemaps.Tilemap): Exit[] {
       destinationEntranceId === undefined
     )
       return;
-    exits.push({
-      id,
-      actionRequired,
-      destinationEntranceId,
-      destinationMapId,
+
+    const exit = {
+      id: id.value,
+      actionRequired: actionRequired.value,
+      destinationEntranceId: destinationEntranceId.value,
+      destinationMapId: destinationMapId.value,
       position: { x: x, y: y },
       height,
       width,
-    });
+    };
+    new PhaserExitView(tilemap.scene, exit, collisionManager);
+    exits.push(exit);
   });
   return exits;
 }
@@ -157,16 +174,15 @@ async function createLadder(
   object: Phaser.Types.Tilemaps.TiledObject,
   collisionManager: CollisionManager
 ) {
-  const ladder: Ladder  = {
-    position : {x: (object.x || 0) + map.originX, y: (object.y || 0) + map.originY},
+  const ladder: Ladder = {
+    position: {
+      x: (object.x || 0) + map.originX,
+      y: (object.y || 0) + map.originY,
+    },
     height: object.height ?? 0,
-    width: object.width ?? 0
-  }
-  new PhaserLadderView(
-    scene,
-    ladder,
-    collisionManager
-  );
+    width: object.width ?? 0,
+  };
+  new PhaserLadderView(scene, ladder, collisionManager);
 }
 
 async function createColliders(

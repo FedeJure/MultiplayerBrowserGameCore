@@ -10,4 +10,5 @@ export interface PlayerState extends EntityState {
   readonly jumping: boolean;
   readonly attacking: boolean;
   readonly exp: number;
+  readonly transporting: boolean
 }

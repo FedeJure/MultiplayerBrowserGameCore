@@ -9,7 +9,7 @@ export const MapsConfiguration: MapConfiguration = {
     objects: "objects",
     spawnPositions: 'spawn_positions',
     entrances: 'entrances',
-    exits: 'extis'
+    exits: 'exits'
   },
   mapLayers: [
     {

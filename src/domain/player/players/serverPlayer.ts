@@ -12,6 +12,7 @@ import { PlayerStats } from "../playerStats";
 import { MapManager } from "../../environment/mapManager";
 import { Balance } from "../../inventory/balance";
 import { ServerPlayerInventory } from "../../inventory/serverPlayerInventory";
+import { PlayerTransportation } from "../playerTransportation";
 
 export class ServerPlayer extends ControllablePlayer {
   private _onStateChange: Subject<{
@@ -30,7 +31,8 @@ export class ServerPlayer extends ControllablePlayer {
     balance: Balance,
     private _connection: ClientConnection,
     private playerInfoRepository: AsyncRepository<PlayerInfo>,
-    private playerStateRepository: PlayerStateRepository
+    private playerStateRepository: PlayerStateRepository,
+    private playerTransportation: PlayerTransportation
   ) {
     super(
       info,
@@ -43,6 +45,7 @@ export class ServerPlayer extends ControllablePlayer {
       inventory,
       balance
     );
+    playerTransportation.init(this)
   }
   updateInfo(newInfo: Omit<Partial<PlayerInfo>, "id">): void {
     super.updateInfo(newInfo);
@@ -58,6 +61,11 @@ export class ServerPlayer extends ControllablePlayer {
   destroy(): void {
     super.destroy();
     this._onStateChange.complete();
+  }
+
+  update(time: number, delta: number): void {
+      super.update(time,delta)
+      this.playerTransportation.update(time,delta)
   }
 
   get onStateChange(): Observable<{

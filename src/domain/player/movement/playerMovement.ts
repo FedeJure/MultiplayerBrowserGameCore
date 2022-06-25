@@ -40,7 +40,6 @@ export class PlayerMovement extends DefaultEntityMovement {
           : Side.LEFT,
     });
   }
-  a;
   resolveNormalMovement(time: number, delta: number) {
     this.player.view.setAllowGravity(true);
     const { state, input } = this.player;

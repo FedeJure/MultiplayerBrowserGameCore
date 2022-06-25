@@ -55,7 +55,6 @@ export class PhaserCollisionManager implements CollisionManager {
       this.exitsGroup,
       (player: GameObjects.GameObject, exit: GameObjects.GameObject) => {
         player.setData("exit", exit.getData("exit"));
-
         return false;
       }
     );
