@@ -1,8 +1,9 @@
 import { Scene } from "phaser";
+import { Ladder } from "../../domain/environment/ladder";
 import { EntityIngameHud } from "../entity/entityIngameHud";
 import { SpinePhaserEntityView } from "../entity/spinePhaserEntityView";
-import { IsInsideLadder } from "../ladder/phaserLadderView";
 import { TransitionView } from "../ui/TransitionView";
+import { IsInsidePropertyOrRemove } from "../utils";
 import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
 
 export class SpineLocalPlayerView extends SpinePhaserEntityView {
@@ -31,6 +32,6 @@ export class SpineLocalPlayerView extends SpinePhaserEntityView {
   }
 
   get inLadder() {
-    return IsInsideLadder(this)
+    return IsInsidePropertyOrRemove<Ladder>(this, "ladder");
   }
 }
