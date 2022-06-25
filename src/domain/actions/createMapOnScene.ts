@@ -83,27 +83,29 @@ export function createMapOnScene(
     res({
       createdObjects,
       spawnPositions: getSpawnPositions(tilemap),
-      exits: getExits(tilemap, collisionManager),
-      entrances: getEntrances(tilemap, collisionManager),
+      exits: getExits(tilemap, collisionManager, map),
+      entrances: getEntrances(tilemap, collisionManager, map),
     });
   });
 }
 
 function getEntrances(
   tilemap: Phaser.Tilemaps.Tilemap,
-  collisionManager: CollisionManager
+  collisionManager: CollisionManager,
+  map: ProcessedMap
 ): Entrance[] {
   const layer = tilemap.getObjectLayer(MapsConfiguration.layerNames.entrances);
   if (!layer) return [];
   const entrances: Entrance[] = [];
   layer.objects.forEach((o) => {
     const { height, width, rectangle, x, y } = o;
-    if (rectangle || !x || !y || !height || !width) return;
+    if (!rectangle || x === undefined || y === undefined || !height || !width)
+      return;
     const id = o.properties.find((p) => p.name === "id");
     if (id === undefined) return;
     const entrance = {
       id: id.value,
-      position: { x: x, y: y },
+      position: { x: x + map.originX, y: y + map.originY },
       height,
       width,
     };
@@ -115,7 +117,9 @@ function getEntrances(
 
 function getExits(
   tilemap: Phaser.Tilemaps.Tilemap,
-  collisionManager: CollisionManager
+  collisionManager: CollisionManager,
+  map: ProcessedMap
+
 ): Exit[] {
   const layer = tilemap.getObjectLayer(MapsConfiguration.layerNames.exits);
 
@@ -150,7 +154,7 @@ function getExits(
       actionRequired: actionRequired.value,
       destinationEntranceId: destinationEntranceId.value,
       destinationMapId: destinationMapId.value,
-      position: { x: x, y: y },
+      position: { x: x + map.originX, y: y + map.originY },
       height,
       width,
     };

@@ -1,6 +1,8 @@
 import { PhaserPlayerView } from "./phaserPlayerView";
 import { Scene } from "phaser";
 import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
+import { IsInsidePropertyOrRemove } from "../utils";
+import { Exit } from "../../domain/environment/exit";
 
 export class ServerPlayerView extends PhaserPlayerView {
   private readonly spine: SpineGameObject;
@@ -14,5 +16,9 @@ export class ServerPlayerView extends PhaserPlayerView {
   ) {
     const sprite = scene.physics.add.sprite(x, y, "");
     super(sprite, x, y, height, width, combatCollisionResolver);
+  }
+
+  get currentExit() {
+    return IsInsidePropertyOrRemove<Exit>(this, "exit")
   }
 }

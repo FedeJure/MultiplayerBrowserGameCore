@@ -1,7 +1,6 @@
 import { GameObjects, Scene } from "phaser";
 import { CollisionManager } from "../../domain/collisions/collisionManager";
 import { Ladder } from "../../domain/environment/ladder";
-import { IsInsidePropertyOrRemove } from "../utils";
 
 export class PhaserLadderView extends GameObjects.Rectangle {
   constructor(

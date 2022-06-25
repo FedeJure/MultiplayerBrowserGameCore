@@ -4,8 +4,6 @@ import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
 import { PhaserEntityView } from "../entity/phaserEntityView";
 import { IsInsidePropertyOrRemove } from "../utils";
 import { Ladder } from "../../domain/environment/ladder";
-import { Entrance } from "../../domain/environment/entrance";
-import { Exit } from "../../domain/environment/exit";
 
 export class PhaserPlayerView extends PhaserEntityView implements PlayerView {
   constructor(
@@ -26,7 +24,4 @@ export class PhaserPlayerView extends PhaserEntityView implements PlayerView {
     return IsInsidePropertyOrRemove<Ladder>(this, "ladder") !== undefined;
   }
 
-  get currentExit() {
-    return IsInsidePropertyOrRemove<Exit>(this, "exit")
-  }
 }
