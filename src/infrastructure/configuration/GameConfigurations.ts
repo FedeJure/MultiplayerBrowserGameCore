@@ -6,6 +6,7 @@ export interface GameConfigurations {
   gameRate: 30 | 60 | 120
   lootDuration: number // in milliseconds
   lootDistance: number
+  timeBetweenTransportations: number
 }
 
 export const DefaultGameConfiguration: GameConfigurations = {
@@ -13,5 +14,6 @@ export const DefaultGameConfiguration: GameConfigurations = {
   initialPosition: { x: 1000, y: 1450 },
   gameRate: 60,
   lootDuration: 60000,
-  lootDistance: 40
+  lootDistance: 40,
+  timeBetweenTransportations: 5000
 };

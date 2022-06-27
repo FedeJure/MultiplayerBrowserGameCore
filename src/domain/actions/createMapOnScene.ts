@@ -39,7 +39,7 @@ export function createMapOnScene(
     createdObjects.push(tilemap);
 
     map.config.sourceFiles.forEach((sourceFile) => {
-      tilemap.addTilesetImage(sourceFile.key, sourceFile.key);
+      const tileset = tilemap.addTilesetImage(sourceFile.key, sourceFile.key);
     });
     const tilesets = map.config.sourceFiles.map((s) => s.key);
     tilemap.layers.forEach((l) => {

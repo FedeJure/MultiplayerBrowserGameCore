@@ -34,6 +34,7 @@ export const MapsConfiguration: MapConfiguration = {
             sourceFiles: [
               { key: "forest", fileName: "mapTiles/forest.png" },
               { key: "farm", fileName: "mapStaticObjects/farm.png" },
+              { key: "plants", fileName: "mapStaticObjects/plants.xml" },
             ],
             objects: [],
           },
@@ -58,48 +59,28 @@ export const MapsConfiguration: MapConfiguration = {
             ],
             objects: [],
           },
-          {
-            id: 2,
-            backgroundFile: [
-              { key: "forest-20", fileName: "mapsBgs/forest-00.png" },
-              { key: "forest-21", fileName: "mapsBgs/forest-01.png" },
-              { key: "forest-22", fileName: "mapsBgs/forest-02.png" },
-              { key: "forest-23", fileName: "mapsBgs/forest-03.png" },
-              { key: "forest-24", fileName: "mapsBgs/forest-04.png" },
-              { key: "forest-25", fileName: "mapsBgs/forest-05.png" },
-              { key: "forest-26", fileName: "mapsBgs/forest-06.png" },
-            ],
-            jsonFile: {
-              key: "forest-2",
-              fileName: "mapConfigFiles/forest/forest-2.json",
-            },
-            sourceFiles: [
-              { key: "forest", fileName: "mapTiles/forest.png" },
-              { key: "farm", fileName: "mapStaticObjects/farm.png" },
-            ],
-            objects: [],
-          },
-          {
-            id: 3,
-            backgroundFile: [
-              { key: "forest-30", fileName: "mapsBgs/forest-00.png" },
-              { key: "forest-31", fileName: "mapsBgs/forest-01.png" },
-              { key: "forest-32", fileName: "mapsBgs/forest-02.png" },
-              { key: "forest-33", fileName: "mapsBgs/forest-03.png" },
-              { key: "forest-34", fileName: "mapsBgs/forest-04.png" },
-              { key: "forest-35", fileName: "mapsBgs/forest-05.png" },
-              { key: "forest-36", fileName: "mapsBgs/forest-06.png" },
-            ],
-            jsonFile: {
-              key: "forest-2",
-              fileName: "mapConfigFiles/forest/forest-2.json",
-            },
-            sourceFiles: [
-              { key: "forest", fileName: "mapTiles/forest.png" },
-              { key: "farm", fileName: "mapStaticObjects/farm.png" },
-            ],
-            objects: [],
-          },
+          // {
+          //   id: 2,
+          //   backgroundFile: [
+          //     { key: "forest-30", fileName: "mapsBgs/forest-00.png" },
+          //     { key: "forest-31", fileName: "mapsBgs/forest-01.png" },
+          //     { key: "forest-32", fileName: "mapsBgs/forest-02.png" },
+          //     { key: "forest-33", fileName: "mapsBgs/forest-03.png" },
+          //     { key: "forest-34", fileName: "mapsBgs/forest-04.png" },
+          //     { key: "forest-35", fileName: "mapsBgs/forest-05.png" },
+          //     { key: "forest-36", fileName: "mapsBgs/forest-06.png" },
+          //   ],
+          //   jsonFile: {
+          //     key: "forest-village-0",
+          //     fileName: "mapConfigFiles/forest/forest-village-0.json",
+          //   },
+          //   sourceFiles: [
+          //     { key: "forest", fileName: "mapTiles/forest.png" },
+          //     { key: "farm", fileName: "mapStaticObjects/farm.png" },
+          //     { key: "buildings1", fileName: "mapTiles/buildings1.png" },
+          //   ],
+          //   objects: [],
+          // },
         ],
       ],
     },
