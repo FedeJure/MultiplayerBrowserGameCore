@@ -35,7 +35,8 @@ export const PhaserClientConfig: GameConfig = {
     arcade: {
       gravity: {
         y: 1300,
-      }
+      },
+      debug: true
     },
   },
   plugins: {

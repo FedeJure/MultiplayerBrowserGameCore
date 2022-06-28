@@ -15,6 +15,7 @@ import { ProcessedMap } from "../environment/processedMap";
 import { EnvironmentObjectFactory } from "../environmentObjects/environmentObjectFactory";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
 import { Vector } from "../vector";
+import { createMapCollidersOnScene } from "./createMapCollidersOnScene";
 
 type MapCreationResponse = {
   createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[];
@@ -77,9 +78,7 @@ export function createMapOnScene(
         ]);
       });
     }
-    await Promise.all([
-      createColliders(colLayer, map, scene, createdObjects, collisionManager),
-    ]);
+    createMapCollidersOnScene(map, scene, collisionManager)
     createMapObjects(scene, map);
     res({
       createdObjects,
