@@ -37,6 +37,8 @@ export const MapsConfiguration: MapConfiguration = {
               { key: "plants", fileName: "mapStaticObjects/plants.xml" },
             ],
             objects: [],
+            mapAtlases: [{key: 'texture', jsonFileName: 'atlas/forest/texture.json', textureFileName: 'atlas/forest/texture.png'}],
+            mapObjects: {key: 'forest-0', fileName: 'mapConfigFiles/forest/forest-0-objects.json'}
           },
           {
             id: 1,
@@ -58,6 +60,8 @@ export const MapsConfiguration: MapConfiguration = {
               { key: "farm", fileName: "mapStaticObjects/farm.png" },
             ],
             objects: [],
+            mapAtlases: [{key: 'texture', jsonFileName: 'atlas/forest/texture.json', textureFileName: 'atlas/forest/texture.png'}],
+            mapObjects: {key: 'forest-0', fileName: 'mapConfigFiles/forest/forest-0-objects.json'}
           },
           // {
           //   id: 2,

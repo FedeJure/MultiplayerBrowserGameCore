@@ -5,6 +5,7 @@ import { PhaserExitView } from "../../view/environment/phaserExitView";
 import { PlatformDetector } from "../../view/environment/platformDetector";
 import { ExistentDepths } from "../../view/existentDepths";
 import { PhaserLadderView } from "../../view/ladder/phaserLadderView";
+import { jsonToGameObjects } from "../../view/utils";
 import { CollisionManager } from "../collisions/collisionManager";
 import { Entrance } from "../environment/entrance";
 import { Exit } from "../environment/exit";
@@ -39,7 +40,7 @@ export function createMapOnScene(
     createdObjects.push(tilemap);
 
     map.config.sourceFiles.forEach((sourceFile) => {
-      const tileset = tilemap.addTilesetImage(sourceFile.key, sourceFile.key);
+      tilemap.addTilesetImage(sourceFile.key, sourceFile.key);
     });
     const tilesets = map.config.sourceFiles.map((s) => s.key);
     tilemap.layers.forEach((l) => {
@@ -79,7 +80,7 @@ export function createMapOnScene(
     await Promise.all([
       createColliders(colLayer, map, scene, createdObjects, collisionManager),
     ]);
-
+    createMapObjects(scene, map);
     res({
       createdObjects,
       spawnPositions: getSpawnPositions(tilemap),
@@ -87,6 +88,10 @@ export function createMapOnScene(
       entrances: getEntrances(tilemap, collisionManager, map),
     });
   });
+}
+
+function createMapObjects(scene: Scene, map: ProcessedMap) {
+  jsonToGameObjects(scene, scene.cache.json.get(map.config.jsonFile.key));
 }
 
 function getEntrances(
@@ -119,7 +124,6 @@ function getExits(
   tilemap: Phaser.Tilemaps.Tilemap,
   collisionManager: CollisionManager,
   map: ProcessedMap
-
 ): Exit[] {
   const layer = tilemap.getObjectLayer(MapsConfiguration.layerNames.exits);
 

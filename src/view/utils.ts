@@ -31,3 +31,33 @@ export function IsInsidePropertyOrRemove<
   if (container && !isInsideContainer) gameObject.setData(key, undefined);
   return isInsideContainer ? container : undefined;
 }
+
+export function jsonToGameObjects(
+  scene: Scene,
+  json: Phaser.Types.GameObjects.JSONGameObject[]
+) {
+  const createdObjects : GameObjects.GameObject[]= []
+  json.forEach(object => {
+    if (object.type && object.type === "Image") {
+      console.log(object)
+      createdObjects.push(scene.add
+        .image(object.x, object.y, object.textureKey, object.frameKey)
+        .setOrigin(object["origin.x"], object["origin.y"])
+        .setScale((object.scale as Vector).x, (object.scale as Vector).y)
+        .setRotation(object.rotation)
+        .setDepth(object["depth"]));
+    }
+  
+    if (object.type && object.type === "Rectangle") {
+      createdObjects.push(scene.add
+        .rectangle(object.x, object.y, 1, 1)
+        .setRotation(object.rotation)
+        .setOrigin(object["origin.x"], object["origin.y"])
+        .setScale(object["scale.x"], object["scale.y"])
+        .setDepth(object["depth"]));
+    }
+  })
+  console.log(createdObjects)
+  return createdObjects
+  
+}

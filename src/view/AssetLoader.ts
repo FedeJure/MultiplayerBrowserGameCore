@@ -1,11 +1,17 @@
+import { Scene } from "phaser";
+
 export class AssetLoader {
-  private static baseUrl: string = "";
+  private static _baseUrl: string = "";
   static setBaseUrl(url: string) {
-    this.baseUrl = url;
+    this._baseUrl = url;
   }
 
   static resolveAssetPath(asset: string) {
-    return `${this.baseUrl}${asset}`;
+    return `${this._baseUrl}${asset}`;
+  }
+
+  static get baseUrl() {
+    return this._baseUrl
   }
 
   static resolveSpineConfig(texture: string): {

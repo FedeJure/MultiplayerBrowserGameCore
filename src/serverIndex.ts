@@ -1,5 +1,6 @@
-import { Socket } from "socket.io";
 import * as Phaser from "phaser";
+import { Socket } from "socket.io";
+
 
 import { SocketIOEvents } from "./infrastructure/events/socketIoEvents";
 import { ServerProvider } from "./infrastructure/providers/serverProvider";
@@ -37,6 +38,7 @@ export const InitGame: (
 
   const game = new Phaser.Game(config);
   AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
+
   game.events.addListener(Phaser.Core.Events.READY, async () => {
     provider.setCollisionManager(new PhaserCollisionManager(scene));
     await LoadServerRepositoriesWithMockData(provider);

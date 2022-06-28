@@ -20,17 +20,27 @@ export class ClientLoadScene extends Scene {
       );
     });
     AssetsConfiguration.spritesheets.forEach((ss) => {
-      this.load.spritesheet({
-        ...ss,
-        url: AssetLoader.resolveAssetPath(ss.path),
-      }, undefined, undefined, { ...Phaser.Loader.XHRSettings(), async: true });
+      this.load.spritesheet(
+        {
+          ...ss,
+          url: AssetLoader.resolveAssetPath(ss.path),
+        },
+        undefined,
+        undefined,
+        { ...Phaser.Loader.XHRSettings(), async: true }
+      );
     });
     AssetsConfiguration.images.forEach((image) => {
-      this.load.image({
-        ...image,
-        url: AssetLoader.resolveAssetPath(image.path),
-      }, undefined, { ...Phaser.Loader.XHRSettings(), async: true });
+      this.load.image(
+        {
+          ...image,
+          url: AssetLoader.resolveAssetPath(image.path),
+        },
+        undefined,
+        { ...Phaser.Loader.XHRSettings(), async: true }
+      );
     });
+
     this.load.once("complete", () => this.scene.launch(SceneNames.MainScene));
   }
 }
