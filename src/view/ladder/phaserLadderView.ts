@@ -16,7 +16,6 @@ export class PhaserLadderView extends GameObjects.Rectangle {
     super(scene, x, y, width, height);
     this.setData("ladder", ladder);
     this.scene.physics.add.existing(this, false);
-    this.setOrigin(0, 0);
 
     collisionManager.addLadder(this);
   }

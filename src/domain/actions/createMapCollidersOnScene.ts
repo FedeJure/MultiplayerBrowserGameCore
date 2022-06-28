@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from "phaser";
+import { Scene } from "phaser";
 import { PlatformDetector } from "../../view/environment/platformDetector";
 import { CollisionManager } from "../collisions/collisionManager";
 import { ProcessedMap } from "../environment/processedMap";
@@ -8,14 +8,18 @@ export function createMapCollidersOnScene(
   scene: Scene,
   collisionManager: CollisionManager
 ) {
+  createBounds(map, scene, collisionManager);
   const jsonObject = scene.cache.json.get(
     map.config.mapObjects.key
   ) as (Phaser.Types.GameObjects.JSONGameObject & {
     scale: { x: number; y: number };
-  } & { origin: { x: number; y: number }} & { depth: number })[];
-  const createdObjects: GameObjects.Rectangle[] = [];
+  } & { origin: { x: number; y: number } } & { depth: number })[];
   jsonObject.forEach((object) => {
-    if (object.type && object.type === "Rectangle") {
+    if (
+      object.name === "collider" &&
+      object.type &&
+      object.type === "Rectangle"
+    ) {
       const pos = {
         x: object.x + map.originX,
         y: object.y + map.originY,
@@ -31,8 +35,6 @@ export function createMapCollidersOnScene(
         .setRotation(object.rotation)
         .setOrigin(object.origin.x, object.origin.y)
         .setDepth(object.depth);
-
-      createdObjects.push(rectangle);
       scene.physics.add.existing(rectangle, true);
 
       new PlatformDetector(scene, pos.x + 20, pos.y);
@@ -48,4 +50,65 @@ export function createMapCollidersOnScene(
       collisionManager.addStaticGround(rectangle);
     }
   });
+}
+
+function createBounds(
+  map: ProcessedMap,
+  scene: Scene,
+  collisionManager: CollisionManager
+) {
+  const boundSize = 32;
+  if (map.leftMapId === undefined) {
+    addBound(
+      map.originX,
+      map.originY + map.height / 2,
+      boundSize,
+      map.height + boundSize,
+      scene,
+      collisionManager
+    );
+  }
+  if (map.rightMapId === undefined) {
+    addBound(
+      map.originX + map.width,
+      map.originY + map.height / 2,
+      boundSize,
+      map.height + boundSize,
+      scene,
+      collisionManager
+    );
+  }
+  if (map.topMapId === undefined) {
+    addBound(
+      map.originX,
+      map.originY,
+      map.width + boundSize,
+      boundSize,
+      scene,
+      collisionManager
+    );
+  }
+  if (map.bottomMapId === undefined) {
+    addBound(
+      map.originX,
+      map.originY + map.height,
+      map.width + boundSize,
+      boundSize,
+      scene,
+      collisionManager
+    );
+  }
+}
+
+function addBound(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  scene: Scene,
+  collisionManager: CollisionManager
+) {
+  collisionManager.addStaticGround(
+    scene.physics.add.existing(scene.add.rectangle(x, y, width, height), true)
+  );
 }

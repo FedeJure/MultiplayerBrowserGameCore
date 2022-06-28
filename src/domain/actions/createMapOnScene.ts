@@ -15,6 +15,7 @@ import { ProcessedMap } from "../environment/processedMap";
 import { EnvironmentObjectFactory } from "../environmentObjects/environmentObjectFactory";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
 import { Vector } from "../vector";
+import { createLaddersOnScene } from "./createLaddersOnScene";
 import { createMapCollidersOnScene } from "./createMapCollidersOnScene";
 
 type MapCreationResponse = {
@@ -49,21 +50,11 @@ export function createMapOnScene(
         .createLayer(l.name, tilesets, map.originX, map.originY)
         .setDepth(ExistentDepths.GROUND_BACKGROUND);
     });
-
-    createBounds(map, scene, collisionManager);
-
-    const colLayer = tilemap.getObjectLayer(
-      MapsConfiguration.layerNames.colliders
-    );
     const objectLayers = tilemap.getObjectLayer(
       MapsConfiguration.layerNames.objects
     );
     if (objectLayers) {
       objectLayers.objects.forEach(async (o) => {
-        if (o.properties?.find((p) => p.name === "type")?.value === "ladder") {
-          createLadder(scene, map, o, collisionManager);
-          return;
-        }
         const id = o.properties?.find((p) => p.name === "id")?.value as
           | number
           | undefined;
@@ -78,7 +69,9 @@ export function createMapOnScene(
         ]);
       });
     }
-    createMapCollidersOnScene(map, scene, collisionManager)
+
+    createMapCollidersOnScene(map, scene, collisionManager);
+    createLaddersOnScene(map, scene, collisionManager);
     createMapObjects(scene, map);
     res({
       createdObjects,
@@ -173,147 +166,4 @@ function getSpawnPositions(tilemap: Phaser.Tilemaps.Tilemap): Vector[] {
   );
 
   return layer ? layer.objects.map((o) => ({ x: o.x!, y: o.y! })) : [];
-}
-
-async function createLadder(
-  scene: Scene,
-  map: ProcessedMap,
-  object: Phaser.Types.Tilemaps.TiledObject,
-  collisionManager: CollisionManager
-) {
-  const ladder: Ladder = {
-    position: {
-      x: (object.x || 0) + map.originX,
-      y: (object.y || 0) + map.originY,
-    },
-    height: object.height ?? 0,
-    width: object.width ?? 0,
-  };
-  new PhaserLadderView(scene, ladder, collisionManager);
-}
-
-async function createColliders(
-  colLayer: Phaser.Tilemaps.ObjectLayer,
-  map: ProcessedMap,
-  scene: Scene,
-  createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[],
-  collisionManager: CollisionManager
-) {
-  return new Promise((res) => {
-    colLayer.objects.forEach((obj) => {
-      var sp: Phaser.GameObjects.Rectangle | undefined;
-      const pos = {
-        x: (obj.x || 0) + map.originX,
-        y: (obj.y || 0) + map.originY,
-      };
-      if (obj.rectangle) {
-        const rec = new Phaser.GameObjects.Rectangle(
-          scene,
-          pos.x,
-          pos.y,
-          obj.width,
-          obj.height
-        );
-        rec.setOrigin(0, 0);
-
-        new PlatformDetector(scene, pos.x + 20, pos.y);
-        new PlatformDetector(scene, pos.x + (obj.width ?? 0) - 20, pos.y);
-        sp = scene.physics.add.existing(rec, true);
-        const up = obj.properties?.find((o) => o.name === "up") ?? undefined;
-        const down =
-          obj.properties?.find((o) => o.name === "down") ?? undefined;
-        const left =
-          obj.properties?.find((o) => o.name === "left") ?? undefined;
-        const right =
-          obj.properties?.find((o) => o.name === "right") ?? undefined;
-        if (
-          up !== undefined ||
-          down !== undefined ||
-          left !== undefined ||
-          right !== undefined
-        ) {
-          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.up =
-            up ?? false;
-          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.down =
-            down ?? false;
-          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.left =
-            left ?? false;
-          (sp.body as Phaser.Physics.Arcade.Body).checkCollision.right =
-            right ?? false;
-        }
-
-        sp.setPosition(sp.x + sp.width / 2, sp.y + sp.height / 2);
-        sp.angle += obj.rotation || 0;
-        sp.setOrigin(0, 0);
-        collisionManager.addStaticGround(rec);
-        createdObjects.push(rec);
-      }
-
-      if (sp !== undefined) {
-        createdObjects.push(sp);
-      }
-      res(createdObjects);
-    });
-  });
-}
-
-function createBounds(
-  map: ProcessedMap,
-  scene: Scene,
-  collisionManager: CollisionManager
-) {
-  const boundSize = 32;
-  if (map.leftMapId === undefined) {
-    addBound(
-      map.originX,
-      map.originY + map.height / 2,
-      boundSize,
-      map.height + boundSize,
-      scene,
-      collisionManager
-    );
-  }
-  if (map.rightMapId === undefined) {
-    addBound(
-      map.originX + map.width,
-      map.originY + map.height / 2,
-      boundSize,
-      map.height + boundSize,
-      scene,
-      collisionManager
-    );
-  }
-  if (map.topMapId === undefined) {
-    addBound(
-      map.originX,
-      map.originY,
-      map.width + boundSize,
-      boundSize,
-      scene,
-      collisionManager
-    );
-  }
-  if (map.bottomMapId === undefined) {
-    addBound(
-      map.originX,
-      map.originY + map.height,
-      map.width + boundSize,
-      boundSize,
-      scene,
-      collisionManager
-    );
-  }
-}
-
-function addBound(
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  scene: Scene,
-  collisionManager: CollisionManager
-) {
-  collisionManager.addStaticGround(
-    scene.physics.add.existing(scene.add.rectangle(x, y, width, height), true)
-  );
 }
