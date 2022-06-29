@@ -36,17 +36,19 @@ export function jsonToGameObjects(
   scene: Scene,
   json: Phaser.Types.GameObjects.JSONGameObject[]
 ) {
-  const createdObjects : GameObjects.GameObject[]= []
-  json.forEach(object => {
+  const createdObjects: GameObjects.GameObject[] = [];
+  json.forEach((object) => {
     if (object.type && object.type === "Image") {
-      createdObjects.push(scene.add
-        .image(object.x, object.y, object.textureKey, object.frameKey)
-        .setOrigin(object["origin.x"], object["origin.y"])
-        .setScale((object.scale as Vector).x, (object.scale as Vector).y)
-        .setRotation(object.rotation)
-        .setDepth(object["depth"]));
+      createdObjects.push(
+        scene.add
+          .image(object.x, object.y, object.textureKey, object.frameKey)
+          .setOrigin(object["origin.x"], object["origin.y"])
+          .setScale((object.scale as Vector).x, (object.scale as Vector).y)
+          .setRotation(object.rotation)
+          .setFlip(object.flipX, object.flipY)
+          .setDepth(object["depth"])
+      );
     }
-  })
-  return createdObjects
-  
+  });
+  return createdObjects;
 }

@@ -29,7 +29,6 @@ export function createLaddersOnScene(
         height: 128 * object.scale.y,
         width: 128 * object.scale.x,
       };
-      console.log(object)
       new PhaserLadderView(scene, ladder, collisionManager).setOrigin(
         object.origin.x,
         object.origin.y

@@ -83,7 +83,23 @@ export function createMapOnScene(
 }
 
 function createMapObjects(scene: Scene, map: ProcessedMap) {
-  jsonToGameObjects(scene, scene.cache.json.get(map.config.jsonFile.key));
+  const json = scene.cache.json.get(map.config.jsonFile.key) as (Phaser.Types.GameObjects.JSONGameObject & {
+    scale: { x: number; y: number };
+  } & { origin: { x: number; y: number } } & { depth: number })[]
+  const group = scene.add.group()
+  json.forEach((object) => {
+    if (object.type && object.type === "Image") {
+      group.add(
+        scene.add
+          .image(object.x + map.originX, object.y + map.originY, object.textureKey, object.frameKey)
+          .setOrigin(object.origin.x, object.origin.y)
+          .setScale(object.scale.x, object.scale.y)
+          .setRotation(object.rotation)
+          .setFlip(object.flipX, object.flipY)
+          .setDepth(object.depth)
+      );
+    }
+  });
 }
 
 function getEntrances(

@@ -52,16 +52,16 @@ export const MapsConfiguration: MapConfiguration = {
               { key: "forest-16", fileName: "mapsBgs/forest-06.png" },
             ],
             jsonFile: {
-              key: "forest-1",
-              fileName: "mapConfigFiles/forest/forest-1.json",
+              key: "forest-village",
+              fileName: "mapConfigFiles/forest/forest_2_village.json",
             },
             sourceFiles: [
               { key: "forest", fileName: "mapTiles/forest.png" },
               { key: "farm", fileName: "mapStaticObjects/farm.png" },
             ],
             objects: [],
-            mapAtlases: [{key: 'texture', jsonFileName: 'atlas/forest/texture.json', textureFileName: 'atlas/forest/texture.png'}],
-            mapObjects: {key: 'forest-0', fileName: 'mapConfigFiles/forest/forest-0-objects.json'}
+            mapAtlases: [{key: 'village', jsonFileName: 'atlas/forest/village.json', textureFileName: 'atlas/forest/village.png'}],
+            mapObjects: {key: 'forest-village', fileName: 'mapConfigFiles/forest/forestVille-objects.json'}
           },
           // {
           //   id: 2,
