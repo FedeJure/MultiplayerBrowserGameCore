@@ -11,7 +11,6 @@
 ### Structure of a Map on Tiled:
 * Must have this layers:
     - `ground` : A tile layer where will be place all the simple ground tiles
-    - `colliders` : An object layer composed by rectangles where you want to have ground collisions
     - `objects` : An object layer composed by `Points` objects (detailed on Environment items section) 
     - `tile layer with any name`(optional): You can setup any tile layer you want to setup static objects
     - `entrances`: An object layer to set with `Rectangle` all the possible entrances with this properties:
@@ -22,6 +21,11 @@
         * `destination_map_id (string)`
         * `destination_entrance_id (string)`
     - `spawn_positions`: An object layer to use `Points` to setup all the possible spawns position.
+
+### Maps on [Level creator project](https://github.com/FedeJure/MultiplayerBorwserGameLevelCreator)
+* `colliders`: Create rectangles adding Collider component
+
+
 #### Colliders:
 - You can set where to check collisions (left, right, up, down). By defaul, if you dont set any propery, the collision check will be on every collider face.
 

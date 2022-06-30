@@ -18,7 +18,7 @@ export const AssetsConfiguration: {
   images: ImageAsset[];
   spines: SpineAsset[];
 } = {
-  assetsPath: '/assets/',
+  assetsPath: '/AssetManagerProject/assets/',
   spines: [
     {
       key: "hero",
