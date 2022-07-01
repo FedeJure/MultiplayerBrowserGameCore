@@ -72,100 +72,126 @@ export function createMapOnScene(
     res({
       createdObjects,
       spawnPositions: getSpawnPositions(tilemap),
-      exits: getExits(tilemap, collisionManager, map),
-      entrances: getEntrances(tilemap, collisionManager, map),
+      exits: getExits(scene, map, collisionManager),
+      entrances: getEntrances(scene, map, collisionManager),
     });
   });
 }
 
 function createMapObjects(scene: Scene, map: ProcessedMap) {
-  const json = scene.cache.json.get(map.config.jsonFile.key) as (Phaser.Types.GameObjects.JSONGameObject & {
+  const json = scene.cache.json.get(
+    map.config.jsonFile.key
+  ) as (Phaser.Types.GameObjects.JSONGameObject & {
     scale: { x: number; y: number };
-  } & { origin: { x: number; y: number } } & { depth: number })[]
+  } & { origin: { x: number; y: number } } & { depth: number })[];
   json.forEach((object) => {
     if (object.type && object.type === "Image") {
-        scene.add
-          .image(object.x + map.originX, object.y + map.originY, object.textureKey, object.frameKey)
-          .setOrigin(object.origin.x, object.origin.y)
-          .setScale(object.scale.x, object.scale.y)
-          .setRotation(object.rotation)
-          .setFlip(object.flipX, object.flipY)
-          .setDepth(object.depth)
-      
+      scene.add
+        .image(
+          object.x + map.originX,
+          object.y + map.originY,
+          object.textureKey,
+          object.frameKey
+        )
+        .setOrigin(object.origin.x, object.origin.y)
+        .setScale(object.scale.x, object.scale.y)
+        .setRotation(object.rotation)
+        .setFlip(object.flipX, object.flipY)
+        .setDepth(object.depth);
     }
   });
 }
 
 function getEntrances(
-  tilemap: Phaser.Tilemaps.Tilemap,
-  collisionManager: CollisionManager,
-  map: ProcessedMap
-): Entrance[] {
-  const layer = tilemap.getObjectLayer(MapsConfiguration.layerNames.entrances);
-  if (!layer) return [];
+  scene: Scene,
+  map: ProcessedMap,
+  collisionManager: CollisionManager
+) {
+  const json = scene.cache.json.get(
+    map.config.jsonFile.key
+  ) as (Phaser.Types.GameObjects.JSONGameObject & {
+    scale: { x: number; y: number };
+  } & { origin: { x: number; y: number } } & { depth: number })[];
   const entrances: Entrance[] = [];
-  layer.objects.forEach((o) => {
-    const { height, width, rectangle, x, y } = o;
-    if (!rectangle || x === undefined || y === undefined || !height || !width)
-      return;
-    const id = o.properties.find((p) => p.name === "id");
-    if (id === undefined) return;
-    const entrance = {
-      id: id.value,
-      position: { x: x + map.originX, y: y + map.originY },
-      height,
-      width,
-    };
-    new PhaserEntranceView(tilemap.scene, entrance, collisionManager);
-    entrances.push(entrance);
+  json.forEach((object) => {
+    if (
+      object.name === "entrance" &&
+      object.type &&
+      object.type === "Rectangle"
+    ) {
+      const data = object.data as {
+        id?: string;
+      };
+      if (!data.id) return;
+      const entrance = {
+        id: data.id,
+        position: { x: object.x + map.originX, y: object.y + map.originY },
+        height: 128 * object.scale.y,
+        width: 128 * object.scale.x,
+      };
+
+      new PhaserEntranceView(
+        scene,
+        entrance,
+        collisionManager,
+        object.origin.x,
+        object.origin.y
+      );
+      entrances.push(entrance);
+    }
   });
   return entrances;
 }
 
 function getExits(
-  tilemap: Phaser.Tilemaps.Tilemap,
-  collisionManager: CollisionManager,
-  map: ProcessedMap
-): Exit[] {
-  const layer = tilemap.getObjectLayer(MapsConfiguration.layerNames.exits);
-
-  if (!layer) return [];
-
+  scene: Scene,
+  map: ProcessedMap,
+  collisionManager: CollisionManager
+) {
+  const json = scene.cache.json.get(
+    map.config.jsonFile.key
+  ) as (Phaser.Types.GameObjects.JSONGameObject & {
+    scale: { x: number; y: number };
+  } & { origin: { x: number; y: number } } & { depth: number })[];
   const exits: Exit[] = [];
-  layer.objects.forEach((o) => {
-    const { height, width, rectangle, x, y } = o;
-
-    if (!rectangle || x === undefined || y === undefined || !height || !width)
-      return;
-    const id = o.properties.find((p) => p.name === "id");
-    const actionRequired = o.properties.find(
-      (p) => p.name === "action_required"
-    );
-    const destinationMapId = o.properties.find(
-      (p) => p.name === "destination_map_id"
-    );
-    const destinationEntranceId = o.properties.find(
-      (p) => p.name === "destination_entrance_id"
-    );
+  json.forEach((object) => {
     if (
-      id === undefined ||
-      actionRequired === undefined ||
-      destinationEntranceId === undefined ||
-      destinationEntranceId === undefined
-    )
-      return;
+      object.name === "entrance" &&
+      object.type &&
+      object.type === "Rectangle"
+    ) {
+      const data = object.data as {
+        id?: string;
+        action_required?: boolean;
+        destination_map_id?: number;
+        destination_entrance_id?: string;
+      };
+      if (
+        !data.id ||
+        data.action_required === undefined ||
+        !data.destination_map_id ||
+        !data.destination_entrance_id
+      )
+        return;
+      const exit: Exit = {
+        id: data.id,
+        position: { x: object.x + map.originX, y: object.y + map.originY },
+        height: 128 * object.scale.y,
+        width: 128 * object.scale.x,
+        actionRequired: data.action_required,
+        destinationMapId: data.destination_map_id,
+        destinationEntranceId: data.destination_entrance_id,
+      };
 
-    const exit = {
-      id: id.value,
-      actionRequired: actionRequired.value,
-      destinationEntranceId: destinationEntranceId.value,
-      destinationMapId: destinationMapId.value,
-      position: { x: x + map.originX, y: y + map.originY },
-      height,
-      width,
-    };
-    new PhaserExitView(tilemap.scene, exit, collisionManager);
-    exits.push(exit);
+      new PhaserExitView(
+        scene,
+        exit,
+        collisionManager,
+        object.origin.x,
+        object.origin.y
+      );
+      exits.push(exit);
+    }
   });
   return exits;
 }

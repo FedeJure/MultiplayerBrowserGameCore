@@ -6,12 +6,14 @@ export class PhaserExitView extends GameObjects.Rectangle {
   constructor(
     scene: Scene,
     exit: Exit,
-    collisionMananger: CollisionManager
+    collisionMananger: CollisionManager,
+    originX: number,
+    originY: number
   ) {
     const {position: {x,y}, height, width} = exit
     super(scene, x, y, width, height);
     this.setData('exit', exit)
-    this.setOrigin(0, 0);
+    this.setOrigin(originX, originY);
     collisionMananger.addExit(this)
   }
 }

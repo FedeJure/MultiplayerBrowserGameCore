@@ -13,13 +13,6 @@
     - `ground` : A tile layer where will be place all the simple ground tiles
     - `objects` : An object layer composed by `Points` objects (detailed on Environment items section) 
     - `tile layer with any name`(optional): You can setup any tile layer you want to setup static objects
-    - `entrances`: An object layer to set with `Rectangle` all the possible entrances with this properties:
-        * `id (string)`
-    - `exits`: An object layer to set with `Rectangle` all the possible exits with this properties:
-        * `id (string)`
-        * `action_required (boolean)`
-        * `destination_map_id (string)`
-        * `destination_entrance_id (string)`
     - `spawn_positions`: An object layer to use `Points` to setup all the possible spawns position.
 
 ### Maps on [Level creator project](https://github.com/FedeJure/MultiplayerBorwserGameLevelCreator)
@@ -57,12 +50,6 @@ At the moment there are two kind of assets supported: `Spine` and `Atlas`.
 
 *   `Spine`: Will be loaded like a separated object and can have all the animations you want
 *   (WIP) `Atlas`: This is for object with no animations (mostly environment decorations) and will use the atlas system, which will load a single atlas (preferably one single atlas per map) and use the texture saved on the db object inside that atlas.
-
-# Ladders
-
-Create a ladder insid `Tiled`:
-*   You need to add a new `Rectangle object` inside the `objects` layer.
-*   add a `string` attribute called `type` with `"ladder"` value
 
 # Character
 
