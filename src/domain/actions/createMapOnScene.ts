@@ -2,14 +2,10 @@ import { GameObjects, Scene } from "phaser";
 import { MapsConfiguration } from "../../infrastructure/configuration/MapsConfiguration";
 import { PhaserEntranceView } from "../../view/environment/phaserEntranceView";
 import { PhaserExitView } from "../../view/environment/phaserExitView";
-import { PlatformDetector } from "../../view/environment/platformDetector";
 import { ExistentDepths } from "../../view/existentDepths";
-import { PhaserLadderView } from "../../view/ladder/phaserLadderView";
-import { jsonToGameObjects } from "../../view/utils";
 import { CollisionManager } from "../collisions/collisionManager";
 import { Entrance } from "../environment/entrance";
 import { Exit } from "../environment/exit";
-import { Ladder } from "../environment/ladder";
 
 import { ProcessedMap } from "../environment/processedMap";
 import { EnvironmentObjectFactory } from "../environmentObjects/environmentObjectFactory";

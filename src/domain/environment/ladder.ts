@@ -1,4 +1,3 @@
-import { GameObjects } from "phaser";
 import { Vector } from "../vector";
 
 export interface Ladder {

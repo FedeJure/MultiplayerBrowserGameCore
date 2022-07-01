@@ -11,7 +11,7 @@ export class PlayerMovement extends DefaultEntityMovement {
   private lastTimeJump: number | null = null;
   update(time: number, delta: number) {
     if (this.player.state.transporting) return
-    if (this.player.input.up && this.player.view.inLadder)
+    if (this.player.view.inLadder && (this.player.input.up || this.player.view.falling))
       this.player.updateState({ inLadder: true });
     if (this.player.state.inLadder && this.player.view.inLadder)
       this.resolveLadderMovement(time, delta);

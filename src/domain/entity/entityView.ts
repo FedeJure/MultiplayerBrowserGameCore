@@ -27,6 +27,7 @@ export interface EntityView {
   grounded: boolean;
   id: string;
   blocked: boolean;
+  falling: boolean
   setEntityReference(entity: Entity);
   getEntitiesOnArea<T extends Entity>(
     x: number,

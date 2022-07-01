@@ -37,7 +37,7 @@ export const MapsConfiguration: MapConfiguration = {
             ],
             objects: [],
             mapAtlases: [{key: 'texture', jsonFileName: 'atlas/forest/texture.json', textureFileName: 'atlas/forest/texture.png'}],
-            mapObjects: {key: 'forest-0', fileName: 'mapConfigs/forest/forest_2_village_config.json'}
+            mapObjects: {key: 'forest-0', fileName: 'mapConfigs/forest/forest_0_objects.json'}
           },
           {
             id: 1,

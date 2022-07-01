@@ -51,6 +51,10 @@ export class PhaserEntityView
     return this.arcadeBody.touching.down;
   }
 
+  get falling() {
+    return this.arcadeBody.velocity.y  > 3
+  }
+
   setVelocity(x: number, y: number): void {
     this.arcadeBody.setVelocity(x, y);
   }
