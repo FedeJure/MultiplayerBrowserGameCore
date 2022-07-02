@@ -29,6 +29,8 @@ import { BalanceDto } from "../inventory/balanceDto";
 import { DefaultPlayerBalance } from "../../infrastructure/configuration/DefaultPlayerBalance";
 import { ServerBalance } from "../inventory/serverBalance";
 import { PlayerTransportation } from "./playerTransportation";
+import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
+import { PlayerState } from "./playerState";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -54,7 +56,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
         const player = await this.createPlayerInGame(
           playerId,
           this.gameScene,
-          connection
+          connection,
+          this.mapManager
         );
 
         const { foundedMap, neighborMaps } =
@@ -130,7 +133,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
   async createPlayerInGame(
     playerId: string,
     scene: Scene,
-    connection: ClientConnection
+    connection: ClientConnection,
+    mapManager: MapManager
   ) {
     const playerInfo = await this.playerInfoRepository.get(playerId);
     if (playerInfo === undefined)
@@ -138,17 +142,31 @@ export class ServerPlayerCreatorDelegator implements Delegator {
 
     let playerState = this.playerStateRepository.get(playerId);
     if (!playerState) {
-      this.playerStateRepository.save(playerId, DefaultPlayerState);
-      playerState = DefaultPlayerState;
+      const startMap = mapManager.getMap(DefaultGameConfiguration.initialMapId);
+      const startSpawnPoint = startMap.spawnPositions.find((p) => p.default);
+      if (!startSpawnPoint)
+        throw new Error(
+          `The initial Map id:${DefaultGameConfiguration.initialMapId} must have at least one spawn point marked as Default`
+        );
+
+      const newState: PlayerState = {
+        ...DefaultPlayerState,
+        position: {
+          x: startSpawnPoint.position.x + startMap.originX,
+          y: startSpawnPoint.position.y + startMap.originY,
+        },
+      };
+      this.playerStateRepository.save(playerId, newState);
+      playerState = newState;
     }
 
     const inventory = await this.inventoryRepository.get(playerId);
     if (!inventory)
       await this.inventoryRepository.save(playerId, DefaultPlayerInventory);
 
-    const balance = await this.balanceRepository.get(playerId)
+    const balance = await this.balanceRepository.get(playerId);
     if (!balance)
-      await this.balanceRepository.save(playerId, DefaultPlayerBalance)
+      await this.balanceRepository.save(playerId, DefaultPlayerBalance);
 
     const stats = await this.playerStatsRepository.get(playerId);
     if (!stats)

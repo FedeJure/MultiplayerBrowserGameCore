@@ -8,15 +8,15 @@ import { Entrance } from "../environment/entrance";
 import { Exit } from "../environment/exit";
 
 import { ProcessedMap } from "../environment/processedMap";
+import { SpawnPoint } from "../environment/spawnPoint";
 import { EnvironmentObjectFactory } from "../environmentObjects/environmentObjectFactory";
 import { EnvironmentObjectRepository } from "../environmentObjects/environmentObjectRepository";
-import { Vector } from "../vector";
 import { createLaddersOnScene } from "./createLaddersOnScene";
 import { createMapCollidersOnScene } from "./createMapCollidersOnScene";
 
 type MapCreationResponse = {
   createdObjects: (GameObjects.GameObject | Phaser.Tilemaps.Tilemap)[];
-  spawnPositions: Vector[];
+  spawnPositions: SpawnPoint[];
   entrances: Entrance[];
   exits: Exit[];
 };
@@ -71,7 +71,7 @@ export function createMapOnScene(
     createMapObjects(scene, map);
     res({
       createdObjects,
-      spawnPositions: getSpawnPositions(tilemap),
+      spawnPositions: getSpawnPositions(scene, map),
       exits: getExits(scene, map, collisionManager),
       entrances: getEntrances(scene, map, collisionManager),
     });
@@ -196,10 +196,23 @@ function getExits(
   return exits;
 }
 
-function getSpawnPositions(tilemap: Phaser.Tilemaps.Tilemap): Vector[] {
-  const layer = tilemap.getObjectLayer(
-    MapsConfiguration.layerNames.spawnPositions
-  );
-
-  return layer ? layer.objects.map((o) => ({ x: o.x!, y: o.y! })) : [];
+function getSpawnPositions(scene: Scene, map: ProcessedMap): SpawnPoint[] {
+  const json = scene.cache.json.get(
+    map.config.jsonFile.key
+  ) as (Phaser.Types.GameObjects.JSONGameObject & {
+    scale: { x: number; y: number };
+  } & { origin: { x: number; y: number } } & { depth: number })[];
+  const points: SpawnPoint[] = [];
+  json.forEach((object) => {
+    if (object.name === "spawn" && object.type && object.type === "Rectangle") {
+      const data = object.data as {
+        default?: boolean;
+      };
+      points.push({
+        default: data.default ?? false,
+        position: { x: object.x, y: object.y },
+      });
+    }
+  });
+  return points;
 }

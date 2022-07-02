@@ -65,16 +65,16 @@ export class CombatSystem extends DefaultEntityCombat {
       .spawnPositions.sort((p1, p2) => {
         return (
           Math.sqrt(
-            Math.pow(p1.x - this.player.state.position.x, 2) +
-              Math.pow(p1.y - this.player.state.position.y, 2)
+            Math.pow(p1.position.x - this.player.state.position.x, 2) +
+              Math.pow(p1.position.y - this.player.state.position.y, 2)
           ) -
           Math.sqrt(
-            Math.pow(p2.x - this.player.state.position.x, 2) +
-              Math.pow(p2.y - this.player.state.position.y, 2)
+            Math.pow(p2.position.x - this.player.state.position.x, 2) +
+              Math.pow(p2.position.y - this.player.state.position.y, 2)
           )
         );
       });
-    const newPosition = closestSpawnPosition[0] ?? { x: 0, y: 0 };
+    const newPosition = closestSpawnPosition[0].position ?? { x: 0, y: 0 };
     this.player.updateState({ isAlive: false });
     this.player.view.scene.time.delayedCall(dieDuration, () => {
       this.player.view.setPosition(newPosition.x, newPosition.y);

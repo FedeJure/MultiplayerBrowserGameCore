@@ -2,6 +2,7 @@ import { Vector } from "../vector";
 import { Entrance } from "./entrance";
 import { Exit } from "./exit";
 import { Map } from "./mapConfiguration";
+import { SpawnPoint } from "./spawnPoint";
 
 export interface ProcessedMap {
   config: Map
@@ -19,7 +20,7 @@ export interface ProcessedMap {
   rightTopMapId: number | undefined;
   leftBottomMapId: number | undefined;
   rightBottomMapId: number | undefined;
-  spawnPositions: Vector[]
+  spawnPositions: SpawnPoint[]
   entrances: Entrance[]
   exits: Exit[]
 }

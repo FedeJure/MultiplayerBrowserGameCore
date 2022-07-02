@@ -7,7 +7,7 @@ export const DefaultPlayerState: PlayerState = {
   life: 100,
   jumpsAvailable: 2,
   inInertia: false,
-  position: DefaultGameConfiguration.initialPosition,
+  position: {x: 0, y: 0},
   velocity: { x: 0, y: 0 },
   canMove: true,
   canJump: true,
