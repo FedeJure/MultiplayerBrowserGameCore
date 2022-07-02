@@ -152,9 +152,10 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       const newState: PlayerState = {
         ...DefaultPlayerState,
         position: {
-          x: startSpawnPoint.position.x + startMap.originX,
-          y: startSpawnPoint.position.y + startMap.originY,
+          x: startSpawnPoint.position.x,
+          y: startSpawnPoint.position.y,
         },
+        lastSpawnPoint: startSpawnPoint
       };
       this.playerStateRepository.save(playerId, newState);
       playerState = newState;

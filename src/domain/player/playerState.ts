@@ -1,4 +1,5 @@
 import { EntityState } from "../entity/entityState";
+import { SpawnPoint } from "../environment/spawnPoint";
 
 export interface PlayerState extends EntityState {
   readonly jumpsAvailable: number;
@@ -11,4 +12,5 @@ export interface PlayerState extends EntityState {
   readonly attacking: boolean;
   readonly exp: number;
   readonly transporting: boolean
+  readonly lastSpawnPoint: SpawnPoint
 }

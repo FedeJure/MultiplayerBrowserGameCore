@@ -74,7 +74,10 @@ export class CombatSystem extends DefaultEntityCombat {
           )
         );
       });
-    const newPosition = closestSpawnPosition[0].position ?? { x: 0, y: 0 };
+    const newPosition =
+      closestSpawnPosition.length > 0
+        ? closestSpawnPosition[0].position
+        : this.player.state.lastSpawnPoint.position;
     this.player.updateState({ isAlive: false });
     this.player.view.scene.time.delayedCall(dieDuration, () => {
       this.player.view.setPosition(newPosition.x, newPosition.y);

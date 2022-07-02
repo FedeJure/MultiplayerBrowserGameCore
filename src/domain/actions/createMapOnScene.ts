@@ -210,7 +210,7 @@ function getSpawnPositions(scene: Scene, map: ProcessedMap): SpawnPoint[] {
       };
       points.push({
         default: data.default ?? false,
-        position: { x: object.x, y: object.y },
+        position: { x: object.x + map.originX, y: object.y + map.originY },
       });
     }
   });
