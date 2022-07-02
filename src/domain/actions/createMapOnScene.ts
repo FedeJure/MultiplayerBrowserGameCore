@@ -4,6 +4,7 @@ import { PhaserEntranceView } from "../../view/environment/phaserEntranceView";
 import { PhaserExitView } from "../../view/environment/phaserExitView";
 import { ExistentDepths } from "../../view/existentDepths";
 import { CollisionManager } from "../collisions/collisionManager";
+import { EnemySpawnerConfig } from "../enemies/enemySpawnerConfig";
 import { Entrance } from "../environment/entrance";
 import { Exit } from "../environment/exit";
 
@@ -19,6 +20,7 @@ type MapCreationResponse = {
   spawnPositions: SpawnPoint[];
   entrances: Entrance[];
   exits: Exit[];
+  enemySpawners: EnemySpawnerConfig[];
 };
 
 export function createMapOnScene(
@@ -74,8 +76,48 @@ export function createMapOnScene(
       spawnPositions: getSpawnPositions(scene, map),
       exits: getExits(scene, map, collisionManager),
       entrances: getEntrances(scene, map, collisionManager),
+      enemySpawners: getEnemySpawners(scene, map),
     });
   });
+}
+
+function getEnemySpawners(scene: Scene, map: ProcessedMap) {
+  const json = scene.cache.json.get(
+    map.config.jsonFile.key
+  ) as (Phaser.Types.GameObjects.JSONGameObject & {
+    scale: { x: number; y: number };
+  } & { origin: { x: number; y: number } } & { depth: number })[];
+  const spawners: EnemySpawnerConfig[] = [];
+  json.forEach((object) => {
+    if (
+      object.name === "enemySpawner" &&
+      object.type &&
+      object.type === "Rectangle"
+    ) {
+      const data = object.data as {
+        enemyModelId?: string;
+        maxEnemies?: number;
+        minInterval?: number;
+        maxInterval?: number;
+      };
+      if (
+        !data.enemyModelId ||
+        !data.maxEnemies ||
+        !data.minInterval ||
+        !data.maxInterval
+      ) {
+        return;
+      }
+      spawners.push({
+        position: { x: object.x + map.originX, y: object.y + map.originY },
+        enemyModelId: data.enemyModelId,
+        maxEnemies: data.maxEnemies,
+        minInterval: data.minInterval,
+        maxInterval: data.maxEnemies,
+      });
+    }
+  });
+  return spawners;
 }
 
 function createMapObjects(scene: Scene, map: ProcessedMap) {

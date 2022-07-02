@@ -1,7 +1,6 @@
 import * as Phaser from "phaser";
 import { Socket } from "socket.io";
 
-
 import { SocketIOEvents } from "./infrastructure/events/socketIoEvents";
 import { ServerProvider } from "./infrastructure/providers/serverProvider";
 import { GameScene } from "./view/scenes/GameScene";
@@ -54,17 +53,12 @@ export const InitGame: (
           provider.presenterProvider,
           provider.inGamePlayerRepository,
           provider.collisionManager,
-          provider.lootRepository
-        ),
-        new ServerEnemyCreatorDelegator(
-          scene,
+          provider.lootRepository,
           provider.enemiesRepository,
-          provider.roomManager,
-          provider.presenterProvider,
           provider.collisionableTargetRepository,
-          provider.collisionManager,
           provider.lootConfigurationRepository,
-          provider.lootGenerator
+          provider.lootGenerator,
+          provider.enemiesModelRepository
         ),
         new PlayerStateDelegator(
           provider.roomManager,
@@ -96,7 +90,7 @@ export const InitGame: (
         ),
         new ServerPlayerInventoryDelegator(
           provider.itemsRepository,
-          provider.inGamePlayerRepository,
+          provider.inGamePlayerRepository
         ),
         new EnvironmentObjectDetailsDispatcherDelegator(
           provider.environmentObjectsRepository,

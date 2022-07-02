@@ -29,6 +29,7 @@ import { LootConfiguration } from "../../domain/loot/lootConfiguration";
 import { LootGenerator } from "../../domain/loot/lootGenerator";
 import { Loot } from "../../domain/loot/loot";
 import { BalanceDto } from "../../domain/inventory/balanceDto";
+import { EnemyModel } from "../../domain/enemies/enemyModel/enemyModel";
 
 //This is necessary because the dependency manager not work with generics
 
@@ -43,6 +44,7 @@ class AttackTargetRepository extends InMemoryRepository<CollisionableEntity> {}
 class SpawnedEnemiesRepository extends InMemoryRepository<Enemy> {}
 class LootConfigurationRepository extends InMemoryAsyncRepository<LootConfiguration> {}
 class LootRepository extends InMemoryRepository<Loot> {}
+class EnemiesModelRepository extends InMemoryAsyncRepository<EnemyModel> {}
 
 export class ServerProvider {
   constructor(private mapConfig: MapConfiguration) {}
@@ -159,5 +161,11 @@ export class ServerProvider {
     return DependencyManager.GetOrInstantiate<PlayerBalanceRepository>(
       () => new PlayerBalanceRepository()
     );
+  }
+
+  public get enemiesModelRepository(): EnemiesModelRepository {
+    return DependencyManager.GetOrInstantiate<EnemiesModelRepository>(
+      () => new EnemiesModelRepository()
+    )
   }
 }

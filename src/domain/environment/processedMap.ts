@@ -1,11 +1,11 @@
-import { Vector } from "../vector";
+import { EnemySpawnerConfig } from "../enemies/enemySpawnerConfig";
 import { Entrance } from "./entrance";
 import { Exit } from "./exit";
 import { Map } from "./mapConfiguration";
 import { SpawnPoint } from "./spawnPoint";
 
 export interface ProcessedMap {
-  config: Map
+  config: Map;
   layerId: number;
   id: number;
   originX: number;
@@ -20,7 +20,8 @@ export interface ProcessedMap {
   rightTopMapId: number | undefined;
   leftBottomMapId: number | undefined;
   rightBottomMapId: number | undefined;
-  spawnPositions: SpawnPoint[]
-  entrances: Entrance[]
-  exits: Exit[]
+  spawnPositions: SpawnPoint[];
+  entrances: Entrance[];
+  enemySpawners: EnemySpawnerConfig[];
+  exits: Exit[];
 }

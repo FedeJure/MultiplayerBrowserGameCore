@@ -10,12 +10,18 @@ import { EnvironmentObjectRepository } from "../environmentObjects/environmentOb
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { ServerEnvironmentObjectFactory } from "../../view/environmentObjects/serverEnvironmentObjectFactory";
 import { ServerPlayer } from "../player/players/serverPlayer";
-import { SimpleRepository } from "../repository";
+import { AsyncRepository, SimpleRepository } from "../repository";
 import { filter } from "rxjs";
 import { MapManager } from "./mapManager";
 import { PlayerState } from "../player/playerState";
 import { CollisionManager } from "../collisions/collisionManager";
 import { Loot } from "../loot/loot";
+import { Enemy } from "../enemies/enemy";
+import { CollisionableEntity } from "../entity/CollisionableEntity";
+import { LootConfiguration } from "../loot/lootConfiguration";
+import { LootGenerator } from "../loot/lootGenerator";
+import { EnemyModel } from "../enemies/enemyModel/enemyModel";
+import { createEnemiesSpawner } from "../actions/createEnemiesSpawner";
 
 export class CompleteMapDelegator implements Delegator {
   public constructor(
@@ -27,7 +33,12 @@ export class CompleteMapDelegator implements Delegator {
     private presenterProvider: ServerPresenterProvider,
     private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
     private collisionManager: CollisionManager,
-    private lootsRepository: SimpleRepository<Loot>
+    private lootsRepository: SimpleRepository<Loot>,
+    private enemiesRepository: SimpleRepository<Enemy>,
+    private collisionableTargetRepository: SimpleRepository<CollisionableEntity>,
+    private lootConfigsRepository: AsyncRepository<LootConfiguration>,
+    private lootGenerator: LootGenerator,
+    private enemiesModelRepository: AsyncRepository<EnemyModel>
   ) {
     this.inGamePlayersRepository.onSave.subscribe((serverPlayer) => {
       serverPlayer.onStateChange
@@ -146,8 +157,26 @@ export class CompleteMapDelegator implements Delegator {
             this.presenterProvider
           ),
           this.collisionManager
-        ).then(({ spawnPositions, entrances, exits }) => {
-          this.mapManager.updateMap(m.id, { spawnPositions, entrances, exits });
+        ).then(({ spawnPositions, entrances, exits, enemySpawners }) => {
+          this.mapManager.updateMap(m.id, {
+            spawnPositions,
+            entrances,
+            exits,
+          });
+          enemySpawners.forEach((spawnerConfig) =>
+            createEnemiesSpawner(
+              this.scene,
+              spawnerConfig,
+              this.collisionableTargetRepository,
+              this.collisionManager,
+              this.lootConfigsRepository,
+              this.lootGenerator,
+              this.roomManager,
+              this.presenterProvider,
+              this.enemiesRepository,
+              this.enemiesModelRepository
+            )
+          );
         })
       )
     );

@@ -1,3 +1,4 @@
+import { SpiderEnemyModel } from "../domain/enemies/enemyModel/spiderEnemyModel";
 import { EnvironmentObjectAssetType } from "../domain/environmentObjects/environmentObject";
 import { EnvironmentObjectVariant } from "../domain/environmentObjects/environmentObjectVariant";
 import { ItemType } from "../domain/items/itemType";
@@ -34,11 +35,14 @@ export const LoadServerRepositoriesWithMockData = async (
 
   await provider.lootConfigurationRepository.save("simpleLoot", {
     id: "simpleLoot",
-    items: [{ itemId: "1", probability: 0.2 }, { itemId: "2", probability: 0.2 }],
+    items: [
+      { itemId: "1", probability: 0.2 },
+      { itemId: "2", probability: 0.2 },
+    ],
     minMoney: 50,
     maxMoney: 150,
     minItems: 0,
-    maxItems: 2
+    maxItems: 2,
   });
 
   provider.environmentObjectsRepository.save({
@@ -50,4 +54,6 @@ export const LoadServerRepositoriesWithMockData = async (
     assetType: EnvironmentObjectAssetType.spine,
     objectVariant: EnvironmentObjectVariant.decorative,
   });
+
+  await provider.enemiesModelRepository.save(SpiderEnemyModel.id, SpiderEnemyModel);
 };
