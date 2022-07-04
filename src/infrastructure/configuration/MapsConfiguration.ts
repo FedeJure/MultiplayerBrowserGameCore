@@ -33,7 +33,6 @@ export const MapsConfiguration: MapConfiguration = {
             },
             sourceFiles: [
               { key: "forest", fileName: "tiles/forest.png" },
-              { key: "farm", fileName: "tiles/farm.png" },
             ],
             objects: [],
             mapAtlases: [{key: 'texture', jsonFileName: 'atlas/forest/texture.json', textureFileName: 'atlas/forest/texture.png'}],
