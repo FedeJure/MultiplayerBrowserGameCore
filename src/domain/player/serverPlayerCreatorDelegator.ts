@@ -137,7 +137,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     mapManager: MapManager
   ) {
     const playerInfo = await this.playerInfoRepository.get(playerId);
-    if (playerInfo === undefined)
+    if (!playerInfo)
       throw new Error(`Player with ID: ${playerId} not found`);
 
     let playerState = this.playerStateRepository.get(playerId);

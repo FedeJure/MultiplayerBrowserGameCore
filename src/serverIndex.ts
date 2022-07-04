@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import { Socket } from "socket.io";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
 import { SocketIOEvents } from "./infrastructure/events/socketIoEvents";
 import { ServerProvider } from "./infrastructure/providers/serverProvider";
@@ -18,17 +19,30 @@ import { AssetLoader } from "./view/AssetLoader";
 import { AssetsConfiguration } from "./infrastructure/configuration/AssetsConfiguration";
 import { LoadServerRepositoriesWithMockData } from "./infrastructure/mockUtils";
 import { EnvironmentObjectDetailsDispatcherDelegator } from "./domain/environmentObjects/environmentObjectDetailsDispatcherDelegator";
-import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
 import { EnemiesStateSenderDelegator } from "./domain/gameState/enemiesStateSenderDelegator";
 import { PhaserCollisionManager } from "./view/collisions/phaserCollisionManager";
 import { LootUpdaterDelegator } from "./domain/loot/lootUpdaterDelegator";
 import { ServerLootClaimerDelegator } from "./domain/loot/serverLootClaimerDelegator";
+import { DBConfiguration } from "./infrastructure/DBConfiguration";
+import mongoose from "mongoose";
 
 export const InitGame: (
   socket: Socket,
   originUrl: string,
   provider: ServerProvider
-) => void = (socket: Socket, originUrl: string, provider) => {
+) => void = async (socket: Socket, originUrl: string, provider) => {
+  // This will create an new instance of "MongoMemoryServer" and automatically start it
+  let mongod;
+  (async () => {
+    const mongod = await MongoMemoryServer.create({
+      instance: {
+        dbName: DBConfiguration.dbName,
+      },
+    });
+    await mongoose.connect(mongod.getUri(), { dbName: DBConfiguration.dbName });
+  })();
+
+
   const scene = new GameScene();
   const config = {
     ...PhaserServerConfig,
@@ -38,11 +52,16 @@ export const InitGame: (
   const game = new Phaser.Game(config);
   AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
 
+  game.events.addListener(Phaser.Core.Events.DESTROY, async () => {
+    await mongod.stop();
+    await mongoose.disconnect();
+  });
+
   game.events.addListener(Phaser.Core.Events.READY, async () => {
     provider.setCollisionManager(new PhaserCollisionManager(scene));
+    scene.events.addListener(Phaser.Scenes.Events.CREATE,async  () => {
     await LoadServerRepositoriesWithMockData(provider);
 
-    scene.events.addListener(Phaser.Scenes.Events.CREATE, () => {
       const __ = new ScenePresenter(scene, [
         new CompleteMapDelegator(
           provider.mapMapanger,

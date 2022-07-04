@@ -30,6 +30,7 @@ import { LootGenerator } from "../../domain/loot/lootGenerator";
 import { Loot } from "../../domain/loot/loot";
 import { BalanceDto } from "../../domain/inventory/balanceDto";
 import { EnemyModel } from "../../domain/enemies/enemyModel/enemyModel";
+import { MongooseItemRepository } from "../repositories/mongoose/mongooseItemRepository";
 
 //This is necessary because the dependency manager not work with generics
 
@@ -38,7 +39,6 @@ class InGamePlayerRepository extends InMemoryRepository<ServerPlayer> {}
 class PlayerInfoRepository extends InMemoryAsyncRepository<PlayerInfo> {}
 class PlayerInventoryRepository extends InMemoryAsyncRepository<PlayerInventoryDto> {}
 class PlayerBalanceRepository extends InMemoryAsyncRepository<BalanceDto> {}
-class ItemRepository extends InMemoryAsyncRepository<Item> {}
 class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
 class AttackTargetRepository extends InMemoryRepository<CollisionableEntity> {}
 class SpawnedEnemiesRepository extends InMemoryRepository<Enemy> {}
@@ -89,7 +89,7 @@ export class ServerProvider {
 
   public get itemsRepository(): AsyncRepository<Item> {
     return DependencyManager.GetOrInstantiate<AsyncRepository<Item>>(
-      () => new ItemRepository()
+      () => new MongooseItemRepository()
     );
   }
 
