@@ -28,23 +28,23 @@ import { CollisionManager } from "../../domain/collisions/collisionManager";
 import { LootConfiguration } from "../../domain/loot/lootConfiguration";
 import { LootGenerator } from "../../domain/loot/lootGenerator";
 import { Loot } from "../../domain/loot/loot";
-import { BalanceDto } from "../../domain/inventory/balanceDto";
 import { EnemyModel } from "../../domain/enemies/enemyModel/enemyModel";
 import { MongooseItemRepository } from "../repositories/mongoose/mongooseItemRepository";
+import { PlayerBalance } from "../../domain/inventory/playerBalance";
+import { MongoosePlayerInfoRepository } from "../repositories/mongoose/MongoosePlayerInfoRepository";
+import { MongoosePlayerInventoryRepository } from "../repositories/mongoose/MongoosePlayerInventoryRepository";
+import { MongoosePlayerStatsRepository } from "../repositories/mongoose/MongoosePlayerStatsRepository";
+import { MongooseLootConfigurationRepository } from "../repositories/mongoose/MongooseLootConfigurationRepository";
+import { MongoosePlayerBalanceRepository } from "../repositories/mongoose/MongoosePlayerBalanceRepository";
+import { MongooseEnemiesModelRepository } from "../repositories/mongoose/MongooseEnemiesModelRepository";
 
 //This is necessary because the dependency manager not work with generics
 
 class ClientConnectionRepository extends InMemoryRepository<ClientConnection> {}
 class InGamePlayerRepository extends InMemoryRepository<ServerPlayer> {}
-class PlayerInfoRepository extends InMemoryAsyncRepository<PlayerInfo> {}
-class PlayerInventoryRepository extends InMemoryAsyncRepository<PlayerInventoryDto> {}
-class PlayerBalanceRepository extends InMemoryAsyncRepository<BalanceDto> {}
-class PlayerStatsRepository extends InMemoryAsyncRepository<PlayerStats> {}
 class AttackTargetRepository extends InMemoryRepository<CollisionableEntity> {}
 class SpawnedEnemiesRepository extends InMemoryRepository<Enemy> {}
-class LootConfigurationRepository extends InMemoryAsyncRepository<LootConfiguration> {}
 class LootRepository extends InMemoryRepository<Loot> {}
-class EnemiesModelRepository extends InMemoryAsyncRepository<EnemyModel> {}
 
 export class ServerProvider {
   constructor(private mapConfig: MapConfiguration) {}
@@ -55,7 +55,7 @@ export class ServerProvider {
   }
   public get playerInfoRepository(): AsyncRepository<PlayerInfo> {
     return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerInfo>>(
-      () => new PlayerInfoRepository()
+      () => new MongoosePlayerInfoRepository()
     );
   }
   public get playerStateRepository(): PlayerStateRepository {
@@ -84,7 +84,7 @@ export class ServerProvider {
   public get inventoryRepository(): AsyncRepository<PlayerInventoryDto> {
     return DependencyManager.GetOrInstantiate<
       AsyncRepository<PlayerInventoryDto>
-    >(() => new PlayerInventoryRepository());
+    >(() => new MongoosePlayerInventoryRepository());
   }
 
   public get itemsRepository(): AsyncRepository<Item> {
@@ -113,7 +113,7 @@ export class ServerProvider {
 
   public get playerStatsRepository(): AsyncRepository<PlayerStats> {
     return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerStats>>(
-      () => new PlayerStatsRepository()
+      () => new MongoosePlayerStatsRepository()
     );
   }
 
@@ -140,8 +140,8 @@ export class ServerProvider {
   }
 
   public get lootConfigurationRepository(): AsyncRepository<LootConfiguration> {
-    return DependencyManager.GetOrInstantiate<LootConfigurationRepository>(
-      () => new LootConfigurationRepository()
+    return DependencyManager.GetOrInstantiate<AsyncRepository<LootConfiguration>>(
+      () => new MongooseLootConfigurationRepository()
     );
   }
 
@@ -157,15 +157,15 @@ export class ServerProvider {
     );
   }
 
-  public get playerBalanceRepository(): PlayerBalanceRepository {
-    return DependencyManager.GetOrInstantiate<PlayerBalanceRepository>(
-      () => new PlayerBalanceRepository()
+  public get playerBalanceRepository(): AsyncRepository<PlayerBalance> {
+    return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerBalance>>(
+      () => new MongoosePlayerBalanceRepository()
     );
   }
 
-  public get enemiesModelRepository(): EnemiesModelRepository {
-    return DependencyManager.GetOrInstantiate<EnemiesModelRepository>(
-      () => new EnemiesModelRepository()
+  public get enemiesModelRepository(): AsyncRepository<EnemyModel> {
+    return DependencyManager.GetOrInstantiate<AsyncRepository<EnemyModel>>(
+      () => new MongooseEnemiesModelRepository()
     )
   }
 }

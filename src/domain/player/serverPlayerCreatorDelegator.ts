@@ -31,6 +31,7 @@ import { ServerBalance } from "../inventory/serverBalance";
 import { PlayerTransportation } from "./playerTransportation";
 import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
 import { PlayerState } from "./playerState";
+import { PlayerBalance } from "../inventory/playerBalance";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -48,7 +49,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private mapManager: MapManager,
     private playerInputRequestRepository: PlayerInputRequestRepository,
     private collisionManager: CollisionManager,
-    private balanceRepository: AsyncRepository<BalanceDto>
+    private balanceRepository: AsyncRepository<PlayerBalance>
   ) {}
   init(): void {
     this.connectionsRepository.onSave.subscribe((connection) => {
@@ -137,8 +138,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     mapManager: MapManager
   ) {
     const playerInfo = await this.playerInfoRepository.get(playerId);
-    if (!playerInfo)
-      throw new Error(`Player with ID: ${playerId} not found`);
+    if (!playerInfo) throw new Error(`Player with ID: ${playerId} not found`);
 
     let playerState = this.playerStateRepository.get(playerId);
     if (!playerState) {
@@ -155,7 +155,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
           x: startSpawnPoint.position.x,
           y: startSpawnPoint.position.y,
         },
-        lastSpawnPoint: startSpawnPoint
+        lastSpawnPoint: startSpawnPoint,
       };
       this.playerStateRepository.save(playerId, newState);
       playerState = newState;
@@ -167,7 +167,10 @@ export class ServerPlayerCreatorDelegator implements Delegator {
 
     const balance = await this.balanceRepository.get(playerId);
     if (!balance)
-      await this.balanceRepository.save(playerId, DefaultPlayerBalance);
+      await this.balanceRepository.save(playerId, {
+        playerId,
+        ...DefaultPlayerBalance,
+      });
 
     const stats = await this.playerStatsRepository.get(playerId);
     if (!stats)

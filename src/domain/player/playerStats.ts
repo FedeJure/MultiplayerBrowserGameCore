@@ -2,12 +2,7 @@ import { EntityStats } from "../entity/entityStats";
 
 export interface PlayerStats extends EntityStats {
   inventorySize: number;
-  maxLife: number;
-  runSpeed: number;
-  jumpPower: number;
   maxJumps: number;
-  meleeDamage: number;
-  basicAttackSpeed: number; // attacks per second
   exp: number
 }
 
