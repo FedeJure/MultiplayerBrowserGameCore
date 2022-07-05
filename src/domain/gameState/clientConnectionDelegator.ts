@@ -74,7 +74,6 @@ export class ClientConnectionDelegator implements Delegator {
       this.connection
         .emitStartNewConnection(this.localPlayerId)
         .then(({ success, message }) => {
-          console.log(success, message)
           if (!success) {
             alert(`Connecting error! | ${message}`);
             location.reload()

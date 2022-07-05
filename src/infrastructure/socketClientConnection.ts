@@ -56,7 +56,6 @@ export class SocketClientConnection implements ClientConnection {
     });
     this.socket.on(GameEvents.PLAYER_CONNECTED.name, (data, callback) => {
       try {
-        console.log(data,callback)
         const { playerId } = data;
         this.onPlayerConnectionSubject.next({
           playerId: playerId.toString(),

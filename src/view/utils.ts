@@ -39,7 +39,6 @@ export function jsonToGameObjects(
   const createdObjects: GameObjects.GameObject[] = [];
   json.forEach((object) => {
     if (object.type && object.type === "Image") {
-      console.log(object)
       createdObjects.push(
         scene.add
           .image(object.x, object.y, object.textureKey, object.frameKey)

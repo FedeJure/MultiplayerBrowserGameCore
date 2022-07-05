@@ -38,7 +38,6 @@ export class ServerEnemyCreatorDelegator implements Delegator {
   init(): void {
     // here, create a EnemySpawner on each enemy spot (from map or random)
     this.mapManager.maps.forEach((map) => {
-      console.log(map.enemySpawners)
       map.enemySpawners.forEach(async (spawnerConfig) => {
 
         const model = await this.enemiesModelRepository.get(
