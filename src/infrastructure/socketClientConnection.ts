@@ -9,6 +9,7 @@ import {
   ItemDetailRequest,
   ItemDetailResponse,
   PlayerConnectedEvent,
+  PlayerConnectionResponseEvent,
   PlayerInputEvent,
 } from "./events/gameEvents";
 import { Log } from "./Logger";
@@ -25,7 +26,10 @@ export class SocketClientConnection implements ClientConnection {
   public readonly connectionId: string;
   public readonly connectionTime: Date;
 
-  private onPlayerConnectionSubject = new Subject<{ playerId: string }>();
+  private onPlayerConnectionSubject = new Subject<{
+    playerId: string;
+    callback: (ev: PlayerConnectionResponseEvent) => void;
+  }>();
   private onInputSubject = new Subject<PlayerInputEvent>();
   private onItemDetailRequestSubject = new Subject<{
     ev: ItemDetailRequest;
@@ -50,38 +54,31 @@ export class SocketClientConnection implements ClientConnection {
     this.socket.on(SocketIOEvents.PING, () => {
       this.socket.emit(SocketIOEvents.PONG);
     });
-    this.socket.on(
-      GameEvents.PLAYER_CONNECTED.name,
-      (data: PlayerConnectedEvent) => {
-        try {
-          const { playerId } = data;
-          this.onPlayerConnectionSubject.next({
-            playerId: playerId.toString(),
-          });
-        } catch (error) {
-          Log(this, `[Socket Client Connection] :: Error: ${error}`);
-        }
+    this.socket.on(GameEvents.PLAYER_CONNECTED.name, (data, callback) => {
+      try {
+        console.log(data,callback)
+        const { playerId } = data;
+        this.onPlayerConnectionSubject.next({
+          playerId: playerId.toString(),
+          callback,
+        });
+      } catch (error) {
+        Log(this, `[Socket Client Connection] :: Error: ${error}`);
       }
-    );
-    this.socket.on(GameEvents.PLAYER_INPUT.name, (dto: PlayerInputEvent) => {
+    });
+    this.socket.on(GameEvents.PLAYER_INPUT.name, (dto) => {
       this.onInputSubject.next(dto);
     });
-    this.socket.on(
-      GameEvents.ITEM_DETAILS.name,
-      (dto: ItemDetailRequest, callback: (ev: ItemDetailResponse) => {}) => {
-        this.onItemDetailRequestSubject.next({ ev: dto, callback });
-      }
-    );
+    this.socket.on(GameEvents.ITEM_DETAILS.name, (dto, callback) => {
+      this.onItemDetailRequestSubject.next({ ev: dto, callback });
+    });
 
     this.socket.on(GameEvents.CLAIM_LOOT.name, (ev) =>
       this._onClaimLoot.next(ev)
     );
     this.socket.on(
       GameEvents.ENVIRONMENT_OBJECT_DETAILS_REQUEST.name,
-      (
-        dto: EnvironmentObjectDetailsRequest,
-        callback: (ev: EnvironmentObjectDetailsResponse) => void
-      ) => {
+      (dto, callback) => {
         this.onEnvironmentObjectDetailRequestSubject.next({
           ev: dto,
           callback,
@@ -130,7 +127,10 @@ export class SocketClientConnection implements ClientConnection {
     );
   }
 
-  sendInventoryBalanceEvent(inventory?: PlayerInventoryDto, balance?: BalanceDto) {
+  sendInventoryBalanceEvent(
+    inventory?: PlayerInventoryDto,
+    balance?: BalanceDto
+  ) {
     this.socket.emit(
       GameEvents.INVENTORY_UPDATED.name,
       GameEvents.INVENTORY_UPDATED.getEvent(inventory, balance)

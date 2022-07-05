@@ -14,6 +14,7 @@ import {
   LootsDisappearEvent,
   MapUpdateEvent,
   NewPlayerConnectedEvent,
+  PlayerConnectionResponseEvent,
   PlayerDisconnectedEvent,
   PlayerStatesEvent,
 } from "./events/gameEvents";
@@ -30,7 +31,8 @@ export class SocketServerConnection implements ServerConnection {
     new Subject<PlayerDisconnectedEvent>();
   private readonly _onPing = new Subject<number>();
   private readonly _onMapUpdated = new Subject<MapUpdateEvent>();
-  private readonly _onInventoryUpdated = new Subject<InventoryBalanceUpdatedEvent>();
+  private readonly _onInventoryUpdated =
+    new Subject<InventoryBalanceUpdatedEvent>();
   private readonly _onEnemyStates = new Subject<EnemiesStatesEvent>();
   private readonly _onLootsApprear = new Subject<LootsAppearEvent>();
   private readonly _onLootsDisapprear = new Subject<LootsDisappearEvent>();
@@ -135,11 +137,18 @@ export class SocketServerConnection implements ServerConnection {
     return this._onLootsDisapprear;
   }
 
-  emitStartNewConnection(playerId: string): void {
-    this.socket.emit(
-      GameEvents.PLAYER_CONNECTED.name,
-      GameEvents.PLAYER_CONNECTED.getEvent(playerId)
-    );
+  emitStartNewConnection(
+    playerId: string
+  ): Promise<PlayerConnectionResponseEvent> {
+    return new Promise((res) => {
+      this.socket.emit(
+        GameEvents.PLAYER_CONNECTED.name,
+        GameEvents.PLAYER_CONNECTED.getEvent(playerId),
+        (response) => {
+          res(response);
+        }
+      );
+    });
   }
 
   emitInput(

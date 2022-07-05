@@ -53,7 +53,10 @@ export const GameEvents: {
   };
   INVENTORY_UPDATED: {
     name: string;
-    getEvent: (inventory?: PlayerInventoryDto, balance?: BalanceDto) => InventoryBalanceUpdatedEvent;
+    getEvent: (
+      inventory?: PlayerInventoryDto,
+      balance?: BalanceDto
+    ) => InventoryBalanceUpdatedEvent;
   };
   ITEM_DETAILS: {
     name: string;
@@ -94,6 +97,13 @@ export const GameEvents: {
       lootIndexes: number[],
       balance: number
     ) => ClaimLootEvent;
+  };
+  PLAYER_CONNECTION_RESPONSE: {
+    name: string;
+    getEvent: (
+      success: boolean,
+      message: string
+    ) => PlayerConnectionResponseEvent;
   };
 } = {
   PLAYER_CONNECTED: {
@@ -144,7 +154,7 @@ export const GameEvents: {
     getEvent: (inventory, balance) => ({
       time: new Date(),
       inventory,
-      balance
+      balance,
     }),
   },
   ITEM_DETAILS: {
@@ -205,6 +215,14 @@ export const GameEvents: {
       time: new Date(),
     }),
   },
+  PLAYER_CONNECTION_RESPONSE: {
+    name: "player_connection_response",
+    getEvent: (success, message) => ({
+      success,
+      message,
+      time: new Date(),
+    }),
+  },
 };
 
 interface BaseEvent {
@@ -213,6 +231,11 @@ interface BaseEvent {
 
 export interface PlayerConnectedEvent extends BaseEvent {
   playerId: string;
+}
+
+export interface PlayerConnectionResponseEvent extends BaseEvent {
+  success: boolean;
+  message: string;
 }
 
 export interface PlayerStatesEvent extends BaseEvent {
@@ -247,7 +270,7 @@ export interface MapUpdateEvent extends BaseEvent {
 
 export interface InventoryBalanceUpdatedEvent extends BaseEvent {
   inventory?: PlayerInventoryDto;
-  balance?: BalanceDto
+  balance?: BalanceDto;
 }
 
 export interface ItemDetailRequest extends BaseEvent {

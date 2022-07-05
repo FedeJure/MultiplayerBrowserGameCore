@@ -53,59 +53,76 @@ export class ServerPlayerCreatorDelegator implements Delegator {
   ) {}
   init(): void {
     this.connectionsRepository.onSave.subscribe((connection) => {
-      connection.onPlayerConnection().subscribe(async ({ playerId }) => {
-        const player = await this.createPlayerInGame(
-          playerId,
-          this.gameScene,
-          connection,
-          this.mapManager
-        );
+      connection
+        .onPlayerConnection()
+        .subscribe(async ({ playerId, callback }) => {
+          if (this.inGamePlayersRepository.get(playerId)) {
+            callback(
+              GameEvents.PLAYER_CONNECTION_RESPONSE.getEvent(
+                false,
+                "This account is already connected"
+              )
+            );
+            return;
+          }
+          const player = await this.createPlayerInGame(
+            playerId,
+            this.gameScene,
+            connection,
+            this.mapManager
+          );
 
-        const { foundedMap, neighborMaps } =
-          this.mapManager.getMapForPlayer(player);
+          const { foundedMap, neighborMaps } =
+            this.mapManager.getMapForPlayer(player);
 
-        connection.sendInitialStateEvent(
-          {
-            id: player.info.id,
-            state: player.state,
-            stats: player.stats,
-            info: player.info,
-          },
-          this.inGamePlayersRepository.getAll().map((player) => ({
-            id: player.info.id,
-            state: player.state,
-            info: player.info,
-          })),
-          foundedMap,
-          neighborMaps
-        );
-        this.inGamePlayersRepository.save(player.info.id, player);
+          connection.sendInitialStateEvent(
+            {
+              id: player.info.id,
+              state: player.state,
+              stats: player.stats,
+              info: player.info,
+            },
+            this.inGamePlayersRepository.getAll().map((player) => ({
+              id: player.info.id,
+              state: player.state,
+              info: player.info,
+            })),
+            foundedMap,
+            neighborMaps
+          );
+          this.inGamePlayersRepository.save(player.info.id, player);
 
-        if (!foundedMap || !neighborMaps) return;
+          if (!foundedMap || !neighborMaps) return;
 
-        //WARNING duplicated code
-        //TODO: convert completeMapDelegator into MapManager and move all logic there
-        const joinedRooms = await this.roomManager.joinToRoom(
-          playerId,
-          connection,
-          [foundedMap, ...neighborMaps]
-        );
-        player.updateState({ currentRooms: joinedRooms });
-        connection.sendMapUpdateEvent(foundedMap, neighborMaps);
-        this.socket.in(joinedRooms).emit(
-          GameEvents.NEW_PLAYER_CONNECTED.name,
-          GameEvents.NEW_PLAYER_CONNECTED.getEvent({
-            id: player.info.id,
-            info: player.info,
-            state: player.state,
-          })
-        );
+          //WARNING duplicated code
+          //TODO: convert completeMapDelegator into MapManager and move all logic there
+          const joinedRooms = await this.roomManager.joinToRoom(
+            playerId,
+            connection,
+            [foundedMap, ...neighborMaps]
+          );
+          player.updateState({ currentRooms: joinedRooms });
+          connection.sendMapUpdateEvent(foundedMap, neighborMaps);
+          this.socket.in(joinedRooms).emit(
+            GameEvents.NEW_PLAYER_CONNECTED.name,
+            GameEvents.NEW_PLAYER_CONNECTED.getEvent({
+              id: player.info.id,
+              info: player.info,
+              state: player.state,
+            })
+          );
+          callback(
+            GameEvents.PLAYER_CONNECTION_RESPONSE.getEvent(
+              true,
+              "Happy gaming :)"
+            )
+          );
 
-        Log(
-          this,
-          `[Game addPlayer] player added to scene with id: ${playerId}`
-        );
-      });
+          Log(
+            this,
+            `[Game addPlayer] player added to scene with id: ${playerId}`
+          );
+        });
     });
 
     this.connectionsRepository.onRemove.subscribe((connection) => {

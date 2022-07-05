@@ -71,7 +71,15 @@ export class ClientConnectionDelegator implements Delegator {
     });
 
     this.scene.events.addListener(Phaser.Scenes.Events.CREATE, () => {
-      this.connection.emitStartNewConnection(this.localPlayerId);
+      this.connection
+        .emitStartNewConnection(this.localPlayerId)
+        .then(({ success, message }) => {
+          console.log(success, message)
+          if (!success) {
+            alert(`Connecting error! | ${message}`);
+            location.reload()
+          }
+        });
     });
   }
   stop(): void {}
@@ -146,17 +154,26 @@ export class ClientConnectionDelegator implements Delegator {
       this.mapManager,
       new Balance(moneyView)
     );
-    const lootView = new HtmlLootView(this.scene)
+    const lootView = new HtmlLootView(this.scene);
     this.scene.scene
-        .get(SceneNames.ClientHudScene)
-        .add.dom(this.scene.game.scale.width / 2, this.scene.game.scale.height / 2, lootView.element)
-    new ClientPlayerActionResolve(player, this.connection, lootView, this.itemResolver)
+      .get(SceneNames.ClientHudScene)
+      .add.dom(
+        this.scene.game.scale.width / 2,
+        this.scene.game.scale.height / 2,
+        lootView.element
+      );
+    new ClientPlayerActionResolve(
+      player,
+      this.connection,
+      lootView,
+      this.itemResolver
+    );
     view.setEntityReference(player);
     this.collisionableTargetRepository.save(view.id, {
       target: player,
       type: CollisionableTargetType.PLAYER,
     });
-    new TransitionView(this.scene).fadeIn()
+    new TransitionView(this.scene).fadeIn();
 
     this.presenterProvider.forInventory(player, view);
     this.presenterProvider.forLocalPlayer(input, player, view);

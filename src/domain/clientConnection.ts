@@ -8,6 +8,7 @@ import {
   EnvironmentObjectDetailsResponse,
   ItemDetailRequest,
   ItemDetailResponse,
+  PlayerConnectionResponseEvent,
   PlayerInputEvent,
 } from "../infrastructure/events/gameEvents";
 import { ProcessedMap } from "./environment/processedMap";
@@ -18,7 +19,10 @@ export interface ClientConnection {
   connectionId: string;
   connectionTime: Date;
   playerId?: string;
-  onPlayerConnection(): Observable<{ playerId: string }>;
+  onPlayerConnection(): Observable<{
+    playerId: string;
+    callback: (ev: PlayerConnectionResponseEvent) => void;
+  }>;
   sendInitialStateEvent(
     localPlayer: LocalPlayerInitialStateDto,
     players: PlayerInitialStateDto[],
@@ -31,7 +35,10 @@ export interface ClientConnection {
     newCurrentMap: ProcessedMap,
     neighborMaps: ProcessedMap[]
   ): void;
-  sendInventoryBalanceEvent(inventory?: PlayerInventoryDto, balance?: BalanceDto);
+  sendInventoryBalanceEvent(
+    inventory?: PlayerInventoryDto,
+    balance?: BalanceDto
+  );
   sendConnectedPlayer(player: PlayerInitialStateDto);
   onItemDetailRequest(): Observable<{
     ev: ItemDetailRequest;
@@ -44,5 +51,5 @@ export interface ClientConnection {
   setPlayerId(playerId: string);
   sendLootAppear(loots: Loot[]);
   sendLootDisappear(loots: Loot[]);
-  onClaimLoot(): Observable<ClaimLootEvent>
+  onClaimLoot(): Observable<ClaimLootEvent>;
 }

@@ -24,7 +24,7 @@ export const InitClientGame = (
   const scene = new ClientGameScene(hudScene);
   ClientProvider.Init(
     connectionWithServer,
-    new LocalPlayerRepository(localPlayerId),
+    new LocalPlayerRepository("1"),
     originUrl,
     hudScene
   );

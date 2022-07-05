@@ -10,6 +10,7 @@ import {
   LootsDisappearEvent,
   MapUpdateEvent,
   NewPlayerConnectedEvent,
+  PlayerConnectionResponseEvent,
   PlayerDisconnectedEvent,
   PlayerStatesEvent,
 } from "../infrastructure/events/gameEvents";
@@ -23,7 +24,9 @@ export interface ServerConnection {
   onInitialGameState: Observable<InitialGameStateEvent>;
   onPlayerDisconnected: Observable<PlayerDisconnectedEvent>;
   onPing: Observable<number>;
-  emitStartNewConnection(playerId: string): void;
+  emitStartNewConnection(
+    playerId: string
+  ): Promise<PlayerConnectionResponseEvent>;
   emitInput(
     playerId: string,
     input: PlayerInputDto,
