@@ -29,8 +29,6 @@
     "@types/babel__core": "^7.1.16",
     "@types/jest": "^27.0.3",
     "@types/lodash.difference": "^4.5.6",
-    "@types/socket.io": "^3.0.2",
-    "@types/socket.io-client": "^3.0.0",
     "@types/uuid": "^8.3.4",
     "jest": "^27.3.1",
     "npm-link-watch": "^1.0.26",

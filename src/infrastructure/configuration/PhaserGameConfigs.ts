@@ -20,6 +20,9 @@ const scaleOptions = {
 export const PhaserClientConfig: GameConfig = {
   type: Phaser.AUTO,
   parent: "gameContainer",
+  disableContextMenu: true,
+  version: 'v0.0.1',
+  desynchronized: true,
   scale: scaleOptions,
   autoFocus: true,
   fps: {

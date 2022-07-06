@@ -41,10 +41,5 @@ export const InitClientGame = (
   game.events.addListener(Phaser.Core.Events.READY, () => {
     ClientProvider.setCollisionManager(new PhaserCollisionManager(scene));
     ClientProvider.presenterProvider.forGameplay(scene);
-
-    game.canvas.oncontextmenu = function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    };
   });
 };
