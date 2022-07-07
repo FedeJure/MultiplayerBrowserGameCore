@@ -1,9 +1,9 @@
 import { GameConfig } from "../../view/gameConfig";
 import "phaser/plugins/spine/dist/SpinePlugin";
 
-const scaleOptions = {
-  mode: Phaser.Scale.ScaleModes.FIT,
-  autoCenter: Phaser.Scale.CENTER_BOTH,
+const scaleOptions: Phaser.Types.Core.ScaleConfig = {
+  mode: Phaser.Scale.ScaleModes.NONE,
+  // autoCenter: Phaser.Scale.CENTER_BOTH,
   // min: {
   //   width: 512,
   //   height: 576,
@@ -12,9 +12,10 @@ const scaleOptions = {
   //   width: 1366,
   //   height: 768,
   // },
-  width: 1366,
-  height: 768,
-  orientation: Phaser.Scale.Orientation.PORTRAIT,
+  autoCenter: Phaser.Scale.CENTER_BOTH,
+  width: 854,
+  height: 480,
+  zoom: 1.5
 };
 
 export const PhaserClientConfig: GameConfig = {
@@ -27,7 +28,6 @@ export const PhaserClientConfig: GameConfig = {
   autoFocus: true,
   fps: {
     min: 60,
-    forceSetTimeOut: true,
     target: 60,
   },
   dom: {
@@ -56,11 +56,13 @@ export const PhaserClientConfig: GameConfig = {
 export const PhaserServerConfig: GameConfig = {
   type: Phaser.HEADLESS,
   parent: "gameContainer",
-  scale: scaleOptions,
   autoFocus: true,
+  scale: {
+    width: 10,
+    height: 10
+  },
   fps: {
     min: 60,
-    forceSetTimeOut: true,
     target: 60,
   },
   physics: {

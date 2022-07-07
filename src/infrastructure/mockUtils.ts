@@ -7,13 +7,30 @@ import { ServerProvider } from "../infrastructure/providers/serverProvider";
 export const LoadServerRepositoriesWithMockData = async (
   provider: ServerProvider
 ) => {
-  //Mock players
-  for (let i = 1; i <= 200; i++) {
-    await provider.playerInfoRepository.save(i.toString(), {
-      id: i.toString(),
-      name: "Test Player " + i,
-    });
-  }
+  //Mock player
+
+  // for (let i = 1; i <= 200; i++) {
+  //   await provider.playerInfoRepository.save(i.toString(), {
+  //     id: i.toString(),
+  //     name: "Test Player " + i,
+  //   });
+  // }
+
+  await provider.accountRepository.save(
+    "f1718a6b-1159-48f9-b07a-901d48775ba1",
+    {
+      id: "f1718a6b-1159-48f9-b07a-901d48775ba1",
+      email: "asd",
+      hashedPassword:
+        "$2b$10$wxXsqcb7zaE0RAoay19SIOaxFIA0jDYWHTHHOTSvtTuU2KabYVwjC", //asd
+      creationDate: 1657159261664,
+    }
+  );
+
+  await provider.playerInfoRepository.save("f1718a6b-1159-48f9-b07a-901d48775ba1", {
+    id: "f1718a6b-1159-48f9-b07a-901d48775ba1",
+    name: "Test Player",
+  });
 
   // Load existent items
   await provider.itemsRepository.save("1", {
@@ -55,5 +72,8 @@ export const LoadServerRepositoriesWithMockData = async (
     objectVariant: EnvironmentObjectVariant.decorative,
   });
 
-  await provider.enemiesModelRepository.save(SpiderEnemyModel.id, SpiderEnemyModel);
+  await provider.enemiesModelRepository.save(
+    SpiderEnemyModel.id,
+    SpiderEnemyModel
+  );
 };
