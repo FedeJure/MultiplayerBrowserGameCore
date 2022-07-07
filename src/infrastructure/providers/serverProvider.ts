@@ -37,6 +37,8 @@ import { MongoosePlayerStatsRepository } from "../repositories/mongoose/Mongoose
 import { MongooseLootConfigurationRepository } from "../repositories/mongoose/MongooseLootConfigurationRepository";
 import { MongoosePlayerBalanceRepository } from "../repositories/mongoose/MongoosePlayerBalanceRepository";
 import { MongooseEnemiesModelRepository } from "../repositories/mongoose/MongooseEnemiesModelRepository";
+import { Account } from "../../domain/account/account";
+import { MongooseAccountRepository } from "../repositories/mongoose/MongooseAccountRepository";
 
 //This is necessary because the dependency manager not work with generics
 
@@ -166,6 +168,12 @@ export class ServerProvider {
   public get enemiesModelRepository(): AsyncRepository<EnemyModel> {
     return DependencyManager.GetOrInstantiate<AsyncRepository<EnemyModel>>(
       () => new MongooseEnemiesModelRepository()
+    )
+  }
+
+  public get accountRepository(): AsyncRepository<Account> {
+    return DependencyManager.GetOrInstantiate<AsyncRepository<Account>>(
+      () => new MongooseAccountRepository()
     )
   }
 }
