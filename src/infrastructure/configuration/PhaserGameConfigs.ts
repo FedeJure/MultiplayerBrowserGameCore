@@ -39,7 +39,7 @@ export const PhaserClientConfig: GameConfig = {
       gravity: {
         y: 1300,
       },
-      // debug: true
+      debug: true
     },
   },
   plugins: {

@@ -44,7 +44,6 @@ class ServerApi {
           return
         }
         bcrypt.compare(password, accounts[0].hashedPassword, function (err, result) {
-          console.log(result,err, password, accounts)
           if (result && !err)
             res({
               success: true,
@@ -201,7 +200,7 @@ export const InitGame: (
 };
 
 const InitServerDependencies = () => {
-  return new ServerProvider(MapsConfiguration);
+  return new ServerProvider(MapsConfiguration, false);
 };
 
 export const InitGameStateSender = (

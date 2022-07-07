@@ -20,21 +20,18 @@ export class PlayerMovementValidationDelegator implements Delegator {
     this.inputRepository = inputRepository;
   }
   update(time: number, delta: number): void {
-    const localState = this.player.state;
-    if (localState) {
-      const currentPosition = this.player.view.positionVector;
-      const x = Phaser.Math.Interpolation.SmoothStep(
-        0.5,
-        currentPosition.x,
-        this.remotePosition.x
-      );
-      const y = Phaser.Math.Interpolation.SmoothStep(
-        0.5,
-        currentPosition.y,
-        this.remotePosition.y
-      );
-      this.player.view.setPosition(x, y);
-    }
+    const currentPosition = this.player.view.positionVector;
+    const x = Phaser.Math.Interpolation.SmoothStep(
+      0.5,
+      currentPosition.x,
+      this.remotePosition.x
+    );
+    const y = Phaser.Math.Interpolation.SmoothStep(
+      0.5,
+      currentPosition.y,
+      this.remotePosition.y
+    );
+    this.player.view.setPosition(x, y);
   }
 
   init() {

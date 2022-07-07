@@ -35,9 +35,6 @@ export const InitClientGame = (
   const game = new Phaser.Game(config);
   AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
 
-  
-
-
   game.events.addListener(Phaser.Core.Events.READY, () => {
     ClientProvider.setCollisionManager(new PhaserCollisionManager(scene));
     ClientProvider.presenterProvider.forGameplay(scene);

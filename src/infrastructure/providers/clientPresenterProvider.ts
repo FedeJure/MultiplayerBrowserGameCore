@@ -51,10 +51,10 @@ export class ClientPresenterProvider {
         player
       ),
       new PlayerStateUpdaterDelegator(player),
-      // new PlayerRemoteMovementDelegator(
-      //   player,
-      //   ClientProvider.serverConnection
-      // ),
+      new PlayerRemoteMovementDelegator(
+        player,
+        ClientProvider.serverConnection
+      ),
       new ClientLootUpdaterDelegator(
         ClientProvider.serverConnection,
         new PhaserClientLootCreatorView(
