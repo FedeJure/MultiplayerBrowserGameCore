@@ -28,6 +28,7 @@ import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import { Account } from "./domain/account/account";
+import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
 
 class ServerApi {
   constructor(private provider: ServerProvider) {}
@@ -37,21 +38,29 @@ class ServerApi {
       this.provider.accountRepository.getAll({ email }).then((accounts) => {
         if (accounts.length === 0) {
           res({ success: false, message: "Account not found" });
-          return
+          return;
         }
         if (accounts.length > 1) {
-          res({ success: false, message: "Invalid Account | Duplicated email. Please contact to support." });
-          return
+          res({
+            success: false,
+            message:
+              "Invalid Account | Duplicated email. Please contact to support.",
+          });
+          return;
         }
-        bcrypt.compare(password, accounts[0].hashedPassword, function (err, result) {
-          if (result && !err)
-            res({
-              success: true,
-              message: "Happy gaming!",
-              playerId: accounts[0].id,
-            });
-          else res({ success: false, message: "Wrong password" });
-        });
+        bcrypt.compare(
+          password,
+          accounts[0].hashedPassword,
+          function (err, result) {
+            if (result && !err)
+              res({
+                success: true,
+                message: "Happy gaming!",
+                playerId: accounts[0].id,
+              });
+            else res({ success: false, message: "Wrong password" });
+          }
+        );
       });
     });
   }
@@ -173,6 +182,18 @@ export const InitGame: (
             provider.lootRepository,
             provider.inGamePlayerRepository,
             provider.itemsRepository
+          ),
+          new ServerEnemyCreatorDelegator(
+            scene,
+            provider.enemiesRepository,
+            provider.roomManager,
+            provider.presenterProvider,
+            provider.collisionableTargetRepository,
+            provider.collisionManager,
+            provider.lootConfigurationRepository,
+            provider.lootGenerator,
+            provider.mapMapanger,
+            provider.enemiesModelRepository
           ),
         ]);
         socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {

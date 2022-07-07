@@ -1,5 +1,6 @@
 import { Input } from "phaser";
-import { ClientPlayerInput, PlayerInput } from "../../domain/player/playerInput";
+import { Observable, Subject } from "rxjs";
+import { ClientPlayerInput } from "../../domain/player/playerInput";
 import { PlayerInputDto } from "../dtos/playerInputDto";
 import { DefaultKeyboardControlConfig } from "./keyboardControlConfig";
 import { ListenerableKey } from "./ListenerableKey";
@@ -24,7 +25,7 @@ interface KeyboardInput {
 export class PlayerKeyBoardInput implements ClientPlayerInput {
   readonly input: KeyboardInput;
 
-  constructor(private inputPlugin: Input.Keyboard.KeyboardPlugin) {
+  constructor(inputPlugin: Input.Keyboard.KeyboardPlugin) {
     this.input = {
       up: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.up),
       down: new ListenerableKey(inputPlugin, DefaultKeyboardControlConfig.down),
