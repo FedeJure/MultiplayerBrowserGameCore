@@ -1,6 +1,12 @@
 import { GameConfig } from "../../view/gameConfig";
 import "phaser/plugins/spine/dist/SpinePlugin";
-
+var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+var clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+const gameHeight = 720
+const gameWidth = 1280
+const intendedZoom = clientWidth / gameWidth
+const alternativeZoom = clientHeight / gameHeight
+const useIntended = gameHeight * intendedZoom <= clientHeight
 const scaleOptions: Phaser.Types.Core.ScaleConfig = {
   mode: Phaser.Scale.ScaleModes.NONE,
   // autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -13,9 +19,9 @@ const scaleOptions: Phaser.Types.Core.ScaleConfig = {
   //   height: 768,
   // },
   autoCenter: Phaser.Scale.CENTER_BOTH,
-  width: 854,
-  height: 480,
-  zoom: 1.5
+  width: gameWidth,
+  height: gameHeight,
+  zoom: useIntended ? intendedZoom : alternativeZoom,
 };
 
 export const PhaserClientConfig: GameConfig = {
@@ -23,15 +29,17 @@ export const PhaserClientConfig: GameConfig = {
   parent: "gameContainer",
   disableContextMenu: true,
   version: 'v0.0.1',
-  desynchronized: true,
   scale: scaleOptions,
   autoFocus: true,
-  fps: {
-    min: 60,
-    target: 60,
-  },
+  roundPixels: true,
+  pixelArt: false,
   dom: {
     createContainer: true,
+  },
+  fps: {
+    forceSetTimeOut: true,
+    target: 60,
+    smoothStep: true,
   },
   physics: {
     default: "arcade",
@@ -61,9 +69,11 @@ export const PhaserServerConfig: GameConfig = {
     width: 10,
     height: 10
   },
+  customEnvironment: true,
   fps: {
-    min: 60,
-    target: 60,
+    forceSetTimeOut: true,
+    smoothStep: true,
+    target: 60
   },
   physics: {
     default: "arcade",

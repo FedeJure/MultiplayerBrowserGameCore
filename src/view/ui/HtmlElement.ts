@@ -10,7 +10,6 @@ export class HtmlElement extends GameObjects.GameObject {
     this.container.setAttribute("name", name);
     container.appendChild(this.container);
     this.container.hidden = true;
-    container.requestFullscreen();
   }
 
   setVisible(visible: boolean) {
