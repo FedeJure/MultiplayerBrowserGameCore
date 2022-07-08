@@ -100,11 +100,13 @@ export const InitGame: (
       const mongod = await MongoMemoryServer.create({
         instance: {
           dbName: DBConfiguration.dbName,
+          port: 52404
         },
       });
       await mongoose.connect(mongod.getUri(), {
         dbName: DBConfiguration.dbName,
       });
+      console.log(mongod.getUri())
     })();
 
     const scene = new GameScene();
