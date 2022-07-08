@@ -9,15 +9,6 @@ const alternativeZoom = clientHeight / gameHeight
 const useIntended = gameHeight * intendedZoom <= clientHeight
 const scaleOptions: Phaser.Types.Core.ScaleConfig = {
   mode: Phaser.Scale.ScaleModes.NONE,
-  // autoCenter: Phaser.Scale.CENTER_BOTH,
-  // min: {
-  //   width: 512,
-  //   height: 576,
-  // },
-  // max: {
-  //   width: 1366,
-  //   height: 768,
-  // },
   autoCenter: Phaser.Scale.CENTER_BOTH,
   width: gameWidth,
   height: gameHeight,
