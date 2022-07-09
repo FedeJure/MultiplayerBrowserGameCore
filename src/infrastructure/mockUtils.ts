@@ -16,41 +16,43 @@ export const LoadServerRepositoriesWithMockData = async (
   //   });
   // }
 
-  const playerId = "f1718a6b-1159-48f9-b07a-901d48775ba1"
-
-  await provider.accountRepository.save(
-    playerId,
-    {
+  const playerId = "f1718a6b-1159-48f9-b07a-901d48775ba1";
+try {
+  if (!(await provider.accountRepository.get(playerId))) {
+    await provider.accountRepository.save(playerId, {
       id: playerId,
       email: "asd",
       hashedPassword:
         "$2b$10$wxXsqcb7zaE0RAoay19SIOaxFIA0jDYWHTHHOTSvtTuU2KabYVwjC", //asd
       creationDate: 1657159261664,
-    }
-  );
+    });
+    
 
-  await provider.playerInfoRepository.save(playerId, {
-    id: playerId,
-    name: "Test Player",
-  });
+    await provider.playerInfoRepository.save(playerId, {
+      id: playerId,
+      name: "Test Player",
+    });
+  }
+} catch (error) {
+  console.log(error)
+}
 
-  const anotherId = "f1718a6b-1159-48f9-b07a-901d48775ba2"
-  
-  await provider.accountRepository.save(
-    anotherId,
-    {
+  const anotherId = "f1718a6b-1159-48f9-b07a-901d48775ba2";
+
+  if (!(await provider.accountRepository.get(anotherId))) {
+    await provider.accountRepository.save(anotherId, {
       id: anotherId,
       email: "asd1",
       hashedPassword:
         "$2b$10$wxXsqcb7zaE0RAoay19SIOaxFIA0jDYWHTHHOTSvtTuU2KabYVwjC", //asd
       creationDate: 1657159261664,
-    }
-  );
+    });
 
-  await provider.playerInfoRepository.save(anotherId, {
-    id: anotherId,
-    name: "Another Test Player",
-  });
+    await provider.playerInfoRepository.save(anotherId, {
+      id: anotherId,
+      name: "Another Test Player",
+    });
+  }
 
   // Load existent items
   await provider.itemsRepository.save("1", {

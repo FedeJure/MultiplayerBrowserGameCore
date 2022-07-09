@@ -97,16 +97,18 @@ export const InitGame: (
     // This will create an new instance of "MongoMemoryServer" and automatically start it
     let mongod;
     (async () => {
-      const mongod = await MongoMemoryServer.create({
-        instance: {
-          dbName: DBConfiguration.dbName,
-          port: 52404
-        },
-      });
-      await mongoose.connect(mongod.getUri(), {
-        dbName: DBConfiguration.dbName,
-      });
-      console.log(mongod.getUri())
+      // const mongod = await MongoMemoryServer.create({
+      //   instance: {
+      //     dbName: DBConfiguration.dbName,
+      //     port: DBConfiguration.port
+      //   },
+      // });
+      // await mongoose.connect("mongodb://localhost:27017", {
+      //   dbName: DBConfiguration.dbName
+      // });
+      await mongoose.connect("mongodb://localhost:27017", {
+        dbName: DBConfiguration.dbName
+      })
     })();
 
     const scene = new GameScene();
@@ -119,7 +121,7 @@ export const InitGame: (
     AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
 
     game.events.addListener(Phaser.Core.Events.DESTROY, async () => {
-      await mongod.stop();
+      // await mongod.stop();
       await mongoose.disconnect();
     });
 

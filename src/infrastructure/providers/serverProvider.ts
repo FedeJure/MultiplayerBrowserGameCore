@@ -21,7 +21,6 @@ import {
   InMemoryRepository,
 } from "../repositories/InMemoryRepository";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
-import { PlayerStateRepository } from "../repositories/playerStateRepository";
 import { SocketRoomManager } from "../SocketRoomManager";
 import { ServerPresenterProvider } from "./serverPresenterProvider";
 import { CollisionManager } from "../../domain/collisions/collisionManager";
@@ -39,6 +38,8 @@ import { MongoosePlayerBalanceRepository } from "../repositories/mongoose/Mongoo
 import { MongooseEnemiesModelRepository } from "../repositories/mongoose/MongooseEnemiesModelRepository";
 import { Account } from "../../domain/account/account";
 import { MongooseAccountRepository } from "../repositories/mongoose/MongooseAccountRepository";
+import { PlayerState } from "../../domain/player/playerState";
+import { MongoosePlayerStateRepository } from "../repositories/mongoose/MongoosePlayerStateRepository";
 
 //This is necessary because the dependency manager not work with generics
 
@@ -56,6 +57,7 @@ class LootConfigurationRepository extends InMemoryAsyncRepository<LootConfigurat
 class EnemiesModelRepository extends InMemoryAsyncRepository<EnemyModel> {}
 class ItemRepository extends InMemoryAsyncRepository<Item> {}
 class AccountsRepository extends InMemoryAsyncRepository<Account> {}
+class PlayerStatesRepository extends InMemoryAsyncRepository<PlayerState> {}
 
 export class ServerProvider {
   constructor(
@@ -68,9 +70,11 @@ export class ServerProvider {
     >(() => new ClientConnectionRepository());
   }
 
-  public get playerStateRepository(): PlayerStateRepository {
-    return DependencyManager.GetOrInstantiate<PlayerStateRepository>(
-      () => new InMemoryPlayerStateRepository()
+  public get playerStateRepository(): AsyncRepository<PlayerState> {
+    return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerState>>(() =>
+      this.useInMemory
+        ? new PlayerStatesRepository()
+        : new MongoosePlayerStateRepository()
     );
   }
   public get presenterProvider(): ServerPresenterProvider {

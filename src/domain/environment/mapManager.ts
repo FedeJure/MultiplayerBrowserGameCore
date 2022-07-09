@@ -41,8 +41,10 @@ export class MapManager {
   }
 
   getMapForPlayer(player: ControllablePlayer) {
-    const { state } = player;
+    try {
+      const { state } = player;
     const currentMap = this.processedMaps[state.mapId];
+    console.log(state)
     if (!this.isInside(state.position.x, state.position.y, currentMap)) {
       const foundedMap = this.processedMapsAsList.find((map) =>
         this.isInside(state.position.x, state.position.y, map)
@@ -78,5 +80,9 @@ export class MapManager {
           .filter((id) => id !== undefined)
           .map((id) => this.processedMaps[id as number]),
       };
+    } catch (error) {
+      
+    }
+    
   }
 }

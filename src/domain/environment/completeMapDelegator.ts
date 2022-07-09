@@ -125,8 +125,10 @@ export class CompleteMapDelegator implements Delegator {
   }
 
   private updateMapForPlayer(player: ServerPlayer) {
-    const { foundedMap, neighborMaps } =
-      this.mapManager.getMapForPlayer(player);
+    const foundedMaps = this.mapManager.getMapForPlayer(player);
+    if (!foundedMaps) return Promise.resolve(new Array<string>())
+    const { foundedMap, neighborMaps } = foundedMaps
+      
     if (foundedMap && neighborMaps && foundedMap.id !== player.state.mapId) {
       player.updateState({
         mapId: foundedMap.id,

@@ -31,7 +31,7 @@ export class ServerPlayer extends ControllablePlayer {
     balance: Balance,
     private _connection: ClientConnection,
     private playerInfoRepository: AsyncRepository<PlayerInfo>,
-    private playerStateRepository: PlayerStateRepository,
+    private playerStateRepository: AsyncRepository<PlayerState>,
     private playerTransportation: PlayerTransportation
   ) {
     super(

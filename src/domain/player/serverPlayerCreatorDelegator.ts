@@ -5,7 +5,6 @@ import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { PlayerSocketInput } from "../../infrastructure/input/playerSocketInput";
 import { Log } from "../../infrastructure/Logger";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
-import { PlayerStateRepository } from "../../infrastructure/repositories/playerStateRepository";
 import { ServerPlayerView } from "../../view/player/serverPlayerView";
 import { ClientConnection } from "../clientConnection";
 import { Delegator } from "../delegator";
@@ -40,7 +39,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private socket: Socket,
     private roomManager: RoomManager,
     private playerInfoRepository: AsyncRepository<PlayerInfo>,
-    private playerStateRepository: PlayerStateRepository,
+    private playerStateRepository: AsyncRepository<PlayerState>,
     private inventoryRepository: AsyncRepository<PlayerInventoryDto>,
     private presenterProvider: ServerPresenterProvider,
     private inGamePlayersRepository: SimpleRepository<ServerPlayer>,
@@ -71,9 +70,10 @@ export class ServerPlayerCreatorDelegator implements Delegator {
             connection,
             this.mapManager
           );
-
-          const { foundedMap, neighborMaps } =
-            this.mapManager.getMapForPlayer(player);
+          const foundedMaps = this.mapManager.getMapForPlayer(player);
+          if (!foundedMaps) return
+          const { foundedMap, neighborMaps } = foundedMaps
+            
 
           connection.sendInitialStateEvent(
             {
@@ -157,7 +157,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     const playerInfo = await this.playerInfoRepository.get(playerId);
     if (!playerInfo) throw new Error(`Player with ID: ${playerId} not found`);
 
-    let playerState = this.playerStateRepository.get(playerId);
+    let playerState = await this.playerStateRepository.get(playerId);
     if (!playerState) {
       const startMap = mapManager.getMap(DefaultGameConfiguration.initialMapId);
       const startSpawnPoint = startMap.spawnPositions.find((p) => p.default);

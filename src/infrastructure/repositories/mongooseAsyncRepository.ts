@@ -9,19 +9,24 @@ export class MongooseAsyncRepository<T> implements AsyncRepository<T> {
   constructor(modelName: string, schema: mongoose.Schema) {
     this.model = mongoose.model<T>(modelName, schema);
   }
-  get(id: string) {
-    return this.model.findOne({ id }).exec();
+
+  async get(id: string) {
+    return this.model
+      .find({ id })
+      .exec()
+      .then((values) => values[0]);
   }
   async save(id: string, obj: T): Promise<void> {
-    const created = await new this.model(obj);
-    await created.save()
+    if ((obj as any).mapId) console.log(obj)
+    const created = new this.model({...obj, id});
+    await created.save();
     this._onSave.next(created);
   }
-  getAll(filter?: Partial<T> | undefined) {
-    return this.model.find(filter || {}).exec();
+  async getAll(filter?: Partial<T> | undefined) {
+    return await this.model.find(filter || {}, null, {new: true});
   }
   async update(id: string, payload: Partial<T>): Promise<void> {
-    this.model.updateOne({ id }, payload);
+    this.model.findOneAndUpdate({ id }, { $set: payload }, { runValidators: true });
   }
   async remove(id: string): Promise<void> {
     const deleted = await this.model.findOneAndDelete({ id });
