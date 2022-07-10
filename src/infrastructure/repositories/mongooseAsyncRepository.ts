@@ -9,12 +9,20 @@ export class MongooseAsyncRepository<T> implements AsyncRepository<T> {
   constructor(modelName: string, schema: mongoose.Schema) {
     this.model = mongoose.model<T>(modelName, schema);
   }
-  getBy(query: Partial<T>): Promise<T | null | undefined> {
-    return this.model.findOne(query).exec()
+  async getBy(query: Partial<T>): Promise<T | null | undefined> {
+    const element = (await this.model.findOne(query).lean()) as
+      | T
+      | null
+      | undefined;
+    return element;
   }
 
   async get(_id: string) {
-    return this.model.findById(_id).exec();
+    const element = (await this.model.findById(_id).lean()) as
+      | T
+      | null
+      | undefined;
+    return element;
   }
 
   async save(_id: string, obj: T): Promise<void> {
@@ -24,7 +32,10 @@ export class MongooseAsyncRepository<T> implements AsyncRepository<T> {
     this._onSave.next(created);
   }
   async getAll(filter?: Partial<T> | undefined) {
-    return await this.model.find(filter || {}, null, { new: true });
+    const elements = (await this.model
+      .find(filter || {}, null, { new: true })
+      .lean()) as T[];
+    return elements;
   }
   async update(_id: string, payload: Partial<T>): Promise<void> {
     this.model.findOneAndUpdate(
