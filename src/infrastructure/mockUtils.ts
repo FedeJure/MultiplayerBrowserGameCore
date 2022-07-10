@@ -16,46 +16,48 @@ export const LoadServerRepositoriesWithMockData = async (
   //   });
   // }
 
-  const playerId = "f1718a6b-1159-48f9-b07a-901d48775ba1";
-try {
-  if (!(await provider.accountRepository.get(playerId))) {
-    await provider.accountRepository.save(playerId, {
-      id: playerId,
-      email: "asd",
-      hashedPassword:
-        "$2b$10$wxXsqcb7zaE0RAoay19SIOaxFIA0jDYWHTHHOTSvtTuU2KabYVwjC", //asd
-      creationDate: 1657159261664,
-    });
-    
-
-    await provider.playerInfoRepository.save(playerId, {
-      id: playerId,
-      name: "Test Player",
-    });
+  const accountId = "f1718a6b115948f9b07a901d";
+  try {
+    if (!(await provider.accountRepository.get(accountId))) {
+      await provider.accountRepository.save(accountId, {
+        id: accountId,
+        email: "asd",
+        hashedPassword:
+          "$2b$10$wxXsqcb7zaE0RAoay19SIOaxFIA0jDYWHTHHOTSvtTuU2KabYVwjC", //asd
+        creationDate: 1657159261664,
+      });
+      const playerId = provider.playerInfoRepository.getId();
+      await provider.playerInfoRepository.save(playerId, {
+        id: playerId,
+        name: "Test Player",
+        accountId: accountId,
+      });
+    }
+  } catch (error) {
+    console.log(error);
   }
-} catch (error) {
-  console.log(error)
-}
 
-  const anotherId = "f1718a6b-1159-48f9-b07a-901d48775ba2";
+  const anotherAccountId = "f1718a6b115948f9b07a901f";
 
-  if (!(await provider.accountRepository.get(anotherId))) {
-    await provider.accountRepository.save(anotherId, {
-      id: anotherId,
+  if (!(await provider.accountRepository.get(anotherAccountId))) {
+    await provider.accountRepository.save(anotherAccountId, {
+      id: anotherAccountId,
       email: "asd1",
       hashedPassword:
         "$2b$10$wxXsqcb7zaE0RAoay19SIOaxFIA0jDYWHTHHOTSvtTuU2KabYVwjC", //asd
       creationDate: 1657159261664,
     });
-
-    await provider.playerInfoRepository.save(anotherId, {
-      id: anotherId,
+    const playerId = provider.playerInfoRepository.getId();
+    await provider.playerInfoRepository.save(playerId, {
+      id: playerId,
       name: "Another Test Player",
+      accountId: anotherAccountId,
     });
   }
 
   // Load existent items
-  await provider.itemsRepository.save("1", {
+  const itemId = provider.itemsRepository.getId();
+  await provider.itemsRepository.save(itemId, {
     id: "1",
     types: [ItemType.QUEST],
     icon: "ui/testItem.png",
@@ -63,7 +65,8 @@ try {
     name: "Default Test Item",
     detail: "This is a Test item used only for testing purpose",
   });
-  await provider.itemsRepository.save("2", {
+  const anotherItemId = provider.itemsRepository.getId();
+  await provider.itemsRepository.save(anotherItemId, {
     id: "2",
     types: [ItemType.ARMOR_EQUIPMENT, ItemType.QUEST],
     icon: "ui/testItem.png",
@@ -72,17 +75,20 @@ try {
     detail: "This is a Test item used only for testing purpose",
   });
 
-  await provider.lootConfigurationRepository.save("simpleLoot", {
-    id: "simpleLoot",
-    items: [
-      { itemId: "1", probability: 0.2 },
-      { itemId: "2", probability: 0.2 },
-    ],
-    minMoney: 50,
-    maxMoney: 150,
-    minItems: 0,
-    maxItems: 2,
-  });
+  await provider.lootConfigurationRepository.save(
+    provider.lootConfigurationRepository.getId(),
+    {
+      id: "simpleLoot",
+      items: [
+        { itemId: "1", probability: 0.2 },
+        { itemId: "2", probability: 0.2 },
+      ],
+      minMoney: 50,
+      maxMoney: 150,
+      minItems: 0,
+      maxItems: 2,
+    }
+  );
 
   provider.environmentObjectsRepository.save({
     id: 1,
@@ -94,8 +100,9 @@ try {
     objectVariant: EnvironmentObjectVariant.decorative,
   });
 
-  await provider.enemiesModelRepository.save(
-    SpiderEnemyModel.id,
-    SpiderEnemyModel
-  );
+  if (!provider.enemiesModelRepository.getBy({ id: SpiderEnemyModel.id }))
+    await provider.enemiesModelRepository.save(
+      provider.enemiesModelRepository.getId(),
+      SpiderEnemyModel
+    );
 };

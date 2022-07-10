@@ -14,7 +14,7 @@ import { BackgroundScene } from "./view/scenes/BackgroundScene";
 
 export const InitClientGame = (
   socket: any,
-  localPlayerId: string,
+  playerId: string,
   originUrl: string
 ) => {
   const connectionWithServer = new SocketServerConnection(socket);
@@ -24,7 +24,7 @@ export const InitClientGame = (
   const scene = new ClientGameScene(hudScene);
   ClientProvider.Init(
     connectionWithServer,
-    new LocalPlayerRepository(localPlayerId),
+    new LocalPlayerRepository(playerId),
     originUrl,
     hudScene
   );

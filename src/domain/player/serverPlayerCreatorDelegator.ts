@@ -24,7 +24,6 @@ import { MapManager } from "../environment/mapManager";
 import { PlayerInputRequestRepository } from "../../infrastructure/repositories/playerInputRequestRepository";
 import { CollisionManager } from "../collisions/collisionManager";
 import { ServerPlayerInventory } from "../inventory/serverPlayerInventory";
-import { BalanceDto } from "../inventory/balanceDto";
 import { DefaultPlayerBalance } from "../../infrastructure/configuration/DefaultPlayerBalance";
 import { ServerBalance } from "../inventory/serverBalance";
 import { PlayerTransportation } from "./playerTransportation";
@@ -156,7 +155,6 @@ export class ServerPlayerCreatorDelegator implements Delegator {
   ) {
     const playerInfo = await this.playerInfoRepository.get(playerId);
     if (!playerInfo) throw new Error(`Player with ID: ${playerId} not found`);
-
     let playerState = await this.playerStateRepository.get(playerId);
     if (!playerState) {
       const startMap = mapManager.getMap(DefaultGameConfiguration.initialMapId);
@@ -172,7 +170,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
           x: startSpawnPoint.position.x,
           y: startSpawnPoint.position.y,
         },
-        lastSpawnPoint: startSpawnPoint,
+        lastSpawnPoint: startSpawnPoint
       };
       this.playerStateRepository.save(playerId, newState);
       playerState = newState;

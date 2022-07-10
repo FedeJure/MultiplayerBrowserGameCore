@@ -8,7 +8,7 @@ import { Item } from "../../../domain/items/item";
 import { PlayerState } from "../../../domain/player/playerState";
 import { Vector } from "../../../domain/vector";
 
-export const EntityStatsType: mongoose.SchemaDefinition<EntityStats> = {
+export const EntityStatsType: mongoose.SchemaDefinition<EntityStats & {_id: String}> = {
   maxLife: Number,
   runSpeed: Number,
   walkSpeed: Number,
@@ -20,19 +20,19 @@ export const EntityStatsType: mongoose.SchemaDefinition<EntityStats> = {
   level: Number,
 };
 
-export const EnemyStatsType: mongoose.SchemaDefinition<EnemyStats> = {
+export const EnemyStatsType: mongoose.SchemaDefinition<EnemyStats & {_id: String}> = {
   height: Number,
   width: Number,
   detectionRange: Number,
   ...EntityStatsType,
 };
 
-export const EntityInfoType: mongoose.SchemaDefinition<EntityInfo> = {
+export const EntityInfoType: mongoose.SchemaDefinition<EntityInfo & {_id: String}> = {
   id: {required: true, type: String, unique: true},
   name: String,
 };
 
-export const ItemType: mongoose.SchemaDefinition<Item> = {
+export const ItemType: mongoose.SchemaDefinition<Item & {_id: String}> = {
   id: String,
   types: [String],
   icon: String,
@@ -41,12 +41,12 @@ export const ItemType: mongoose.SchemaDefinition<Item> = {
   detail: String,
 };
 
-const VectorType: mongoose.SchemaDefinition<Vector>= {
+const VectorType: mongoose.SchemaDefinition<Vector & {_id: String}>= {
   x: Number,
   y: Number
 }
 
-const AnimationDtoType: mongoose.SchemaDefinition<AnimationDto> = {
+const AnimationDtoType: mongoose.SchemaDefinition<AnimationDto & {_id: String}> = {
   name: String,
   layer: String,
   duration: {type: Number, required: false},
@@ -54,7 +54,7 @@ const AnimationDtoType: mongoose.SchemaDefinition<AnimationDto> = {
   time: {type: Number, required: false}
 }
 
-export const EntityStateType: mongoose.SchemaDefinition<EntityState> = {
+export const EntityStateType: mongoose.SchemaDefinition<EntityState& {_id: String}> = {
   life: Number,
   position: VectorType,
   velocity: VectorType,
@@ -66,7 +66,7 @@ export const EntityStateType: mongoose.SchemaDefinition<EntityState> = {
   inLadder: Boolean,
 }
 
-export const PlayerStateType: mongoose.SchemaDefinition<PlayerState> = {
+export const PlayerStateType: mongoose.SchemaDefinition<PlayerState & {_id: String}> = {
   ...EntityStateType,
   jumpsAvailable: Number,
   inInertia: Boolean,

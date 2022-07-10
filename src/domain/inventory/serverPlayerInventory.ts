@@ -15,11 +15,11 @@ export class ServerPlayerInventory extends Inventory<Item['id']> {
 
   setItems(itemIds: (Item['id'] | undefined)[]): void {
       super.setItems(itemIds)
-      this.inventoryRepository.save(this.playerId, this.dto)
+      this.inventoryRepository.update(this.playerId, this.dto)
   }
   addItem(item: Item['id']): void {
       super.addItem(item)
-      this.inventoryRepository.save(this.playerId, this.dto)
+      this.inventoryRepository.update(this.playerId, this.dto)
   }
 
   get dto(): PlayerInventoryDto {

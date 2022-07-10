@@ -44,7 +44,6 @@ export class MapManager {
     try {
       const { state } = player;
     const currentMap = this.processedMaps[state.mapId];
-    console.log(state)
     if (!this.isInside(state.position.x, state.position.y, currentMap)) {
       const foundedMap = this.processedMapsAsList.find((map) =>
         this.isInside(state.position.x, state.position.y, map)

@@ -9,27 +9,32 @@ export class MongooseAsyncRepository<T> implements AsyncRepository<T> {
   constructor(modelName: string, schema: mongoose.Schema) {
     this.model = mongoose.model<T>(modelName, schema);
   }
-
-  async get(id: string) {
-    return this.model
-      .find({ id })
-      .exec()
-      .then((values) => values[0]);
+  getBy(query: Partial<T>): Promise<T | null | undefined> {
+    return this.model.findOne(query).exec()
   }
-  async save(id: string, obj: T): Promise<void> {
-    if ((obj as any).mapId) console.log(obj)
-    const created = new this.model({...obj, id});
+
+  async get(_id: string) {
+    return this.model.findById(_id).exec();
+  }
+
+  async save(_id: string, obj: T): Promise<void> {
+    if ((obj as any).mapId) console.log(obj);
+    const created = new this.model({ ...obj, _id });
     await created.save();
     this._onSave.next(created);
   }
   async getAll(filter?: Partial<T> | undefined) {
-    return await this.model.find(filter || {}, null, {new: true});
+    return await this.model.find(filter || {}, null, { new: true });
   }
-  async update(id: string, payload: Partial<T>): Promise<void> {
-    this.model.findOneAndUpdate({ id }, { $set: payload }, { runValidators: true });
+  async update(_id: string, payload: Partial<T>): Promise<void> {
+    this.model.findOneAndUpdate(
+      { _id },
+      { $set: payload },
+      { runValidators: true }
+    );
   }
-  async remove(id: string): Promise<void> {
-    const deleted = await this.model.findOneAndDelete({ id });
+  async remove(_id: string): Promise<void> {
+    const deleted = await this.model.findOneAndDelete({ _id });
     if (!deleted) return;
     this._onRemove.next(deleted);
   }
@@ -38,5 +43,9 @@ export class MongooseAsyncRepository<T> implements AsyncRepository<T> {
   }
   get onRemove(): Observable<T> {
     return this._onRemove;
+  }
+
+  getId() {
+    return new mongoose.Types.ObjectId().toString();
   }
 }

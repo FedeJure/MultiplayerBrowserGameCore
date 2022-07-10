@@ -26,5 +26,5 @@ export const DefaultPlayerState: PlayerState = {
   exp: 0,
   transporting: false,
   inLadder: false,
-  lastSpawnPoint: { default: false, position: { x: 0, y: 0 } },
+  lastSpawnPoint: { default: false, position: { x: 0, y: 0 } }
 };

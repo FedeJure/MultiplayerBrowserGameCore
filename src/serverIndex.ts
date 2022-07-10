@@ -26,37 +26,28 @@ import { ServerLootClaimerDelegator } from "./domain/loot/serverLootClaimerDeleg
 import { DBConfiguration } from "./infrastructure/DBConfiguration";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
-import { v4 as uuidv4 } from "uuid";
 import { Account } from "./domain/account/account";
-import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
 
 class ServerApi {
   constructor(private provider: ServerProvider) {}
 
   public async loginUser(email: string, password: string) {
     return new Promise((res) => {
-      this.provider.accountRepository.getAll({ email }).then((accounts) => {
-        if (accounts.length === 0) {
+      this.provider.accountRepository.getBy({ email }).then(async (account) => {
+        if (!account) {
           res({ success: false, message: "Account not found" });
           return;
         }
-        if (accounts.length > 1) {
-          res({
-            success: false,
-            message:
-              "Invalid Account | Duplicated email. Please contact to support.",
-          });
-          return;
-        }
+        const existingPlayers = await this.provider.playerInfoRepository.getAll({accountId: account.id})
         bcrypt.compare(
           password,
-          accounts[0].hashedPassword,
+          account.hashedPassword,
           function (err, result) {
             if (result && !err)
               res({
                 success: true,
                 message: "Happy gaming!",
-                playerId: accounts[0].id,
+                players: existingPlayers,
               });
             else res({ success: false, message: "Wrong password" });
           }
@@ -71,15 +62,17 @@ class ServerApi {
         if (err) res({ success: false, message: "Error creating account" });
         else {
           const account: Account = {
-            id: uuidv4(),
+            id: this.provider.accountRepository.getId(),
             email,
             hashedPassword: hash,
             creationDate: Date.now(),
           };
           await this.provider.accountRepository.save(account.id, account);
-          await this.provider.playerInfoRepository.save(account.id, {
-            id: account.id,
+          const playerId = this.provider.playerInfoRepository.getId()
+          await this.provider.playerInfoRepository.save(playerId, {
+            id: playerId,
             name: email,
+            accountId: account.id
           });
           res({ success: true, message: "Account created!" });
         }
@@ -186,19 +179,7 @@ export const InitGame: (
             provider.lootRepository,
             provider.inGamePlayerRepository,
             provider.itemsRepository
-          ),
-          new ServerEnemyCreatorDelegator(
-            scene,
-            provider.enemiesRepository,
-            provider.roomManager,
-            provider.presenterProvider,
-            provider.collisionableTargetRepository,
-            provider.collisionManager,
-            provider.lootConfigurationRepository,
-            provider.lootGenerator,
-            provider.mapMapanger,
-            provider.enemiesModelRepository
-          ),
+          )
         ]);
         socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
           const connection = new SocketClientConnection(clientSocket);

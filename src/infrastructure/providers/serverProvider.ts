@@ -17,9 +17,9 @@ import { PlayerInventoryDto } from "../../domain/inventory/playerInventoryDto";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
 import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
 import {
-  InMemoryAsyncRepository,
   InMemoryRepository,
 } from "../repositories/InMemoryRepository";
+import { InMemoryAsyncRepository } from "../repositories/InMemoryAsyncRepository";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
 import { SocketRoomManager } from "../SocketRoomManager";
 import { ServerPresenterProvider } from "./serverPresenterProvider";

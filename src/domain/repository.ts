@@ -12,10 +12,12 @@ export interface SimpleRepository<T> {
 
 export interface AsyncRepository<T> {
     get(id: string): Promise<T | undefined | null>
+    getBy(query: Partial<T>): Promise<T | undefined | null>
     save(id: string, obj: T): Promise<void>
     getAll(filter?: Partial<T>): Promise<T[]>
     update(id: string, payload: Partial<T>): Promise<void>
     remove(id: string): Promise<void>
     onSave: Observable<T>
     onRemove: Observable<T>
+    getId(): string
 }

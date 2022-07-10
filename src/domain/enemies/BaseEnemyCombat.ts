@@ -76,7 +76,7 @@ export class EnemyCombat extends DefaultEntityCombat {
 
   resolveLoot() {
     if (!this.target) return;
-    this.lootConfigsRepository.get(this.lootId).then((lootConfig) => {
+    this.lootConfigsRepository.getBy({id: this.lootId}).then((lootConfig) => {
       if (!lootConfig) return;
       const itemsCount = Math.floor(
         Math.random() * (lootConfig.maxItems - lootConfig.minItems + 1) +

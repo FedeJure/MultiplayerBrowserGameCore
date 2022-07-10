@@ -18,7 +18,7 @@ export class ServerPlayerInventoryDelegator implements Delegator {
         connection.onItemDetailRequest().subscribe(async (ev) => {
           const items = await (
             await Promise.all(
-              ev.ev.itemIds.map((id) => this.itemsRepository.get(id))
+              ev.ev.itemIds.map((id) => this.itemsRepository.getBy({id}))
             )
           ).map((item) => item ?? DefaultItem);
           ev.callback(GameEvents.ITEM_DETAILS_RESPONSE.getEvent(items));
