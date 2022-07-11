@@ -28,6 +28,7 @@ import { ClientItemResolver } from "../items/clientItemResolver";
 import { TransitionView } from "../../view/ui/TransitionView";
 import { SpineLocalPlayerView } from "../../view/player/spineLocalPlayerView";
 import { SpinePlayerView } from "../../view/player/spinePlayerView";
+import { PlayerVirtualJoystickInput } from "../../infrastructure/input/playerVirtualJoystickInput";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -135,7 +136,7 @@ export class ClientConnectionDelegator implements Delegator {
     this.collisionManager.addPlayer(view);
 
     const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
-
+    new PlayerVirtualJoystickInput(this.scene)
     const movementSystem = new PlayerMovement();
 
     const moneyView = new HtmlMoneyView();

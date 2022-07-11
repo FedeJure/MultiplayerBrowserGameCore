@@ -1,5 +1,4 @@
 import { Input } from "phaser";
-import { Observable, Subject } from "rxjs";
 import { ClientPlayerInput } from "../../domain/player/playerInput";
 import { PlayerInputDto } from "../dtos/playerInputDto";
 import { DefaultKeyboardControlConfig } from "./keyboardControlConfig";

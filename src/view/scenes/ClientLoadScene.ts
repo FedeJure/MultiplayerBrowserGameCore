@@ -41,6 +41,8 @@ export class ClientLoadScene extends Scene {
       );
     });
 
+    let joistickPlugin = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';
+    this.load.plugin('joystick', joistickPlugin, true);
     this.load.once("complete", () => this.scene.launch(SceneNames.MainScene));
   }
 }

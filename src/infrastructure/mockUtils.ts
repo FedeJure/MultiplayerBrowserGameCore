@@ -96,7 +96,9 @@ export const LoadServerRepositoriesWithMockData = async (
     objectVariant: EnvironmentObjectVariant.decorative,
   });
 
-  if (!provider.enemiesModelRepository.getBy({ id: SpiderEnemyModel.id }))
+  if (
+    !(await provider.enemiesModelRepository.getBy({ id: SpiderEnemyModel.id }))
+  )
     await provider.enemiesModelRepository.save(
       provider.enemiesModelRepository.getId(),
       SpiderEnemyModel
