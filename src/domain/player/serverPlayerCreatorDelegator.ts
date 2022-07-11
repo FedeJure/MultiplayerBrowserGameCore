@@ -213,6 +213,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       this.playerInputRequestRepository
     );
     const playerStats = stats ?? DefaultPlayerStats;
+    
     const player = new ServerPlayer(
       playerInfo,
       playerState,

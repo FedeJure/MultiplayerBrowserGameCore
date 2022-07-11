@@ -11,6 +11,10 @@ export class ServerPlayerInventory extends Inventory<Item['id']> {
     capacity: number
   ) {
     super(capacity);
+    inventoryRepository.get(playerId).then(inventory => {
+      if (!inventory) return
+      this.setItems(inventory?.items)
+    })
   }
 
   setItems(itemIds: (Item['id'] | undefined)[]): void {

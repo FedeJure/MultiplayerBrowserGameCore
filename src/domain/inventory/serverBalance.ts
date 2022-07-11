@@ -9,6 +9,10 @@ export class ServerBalance extends Balance {
     private balanceRepository: AsyncRepository<PlayerBalance>
   ) {
     super();
+    balanceRepository.get(playerId).then(balance => {
+      if (!balance) return
+      this.set(balance.amount)
+    })
   }
 
   set(amount: number): void {
