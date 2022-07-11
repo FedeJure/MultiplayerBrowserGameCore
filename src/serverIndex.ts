@@ -37,6 +37,7 @@ class ServerApi {
           return;
         }
         const existingPlayers = await this.provider.playerInfoRepository.getAll({accountId: account.id})
+
         bcrypt.compare(
           password,
           account.hashedPassword,

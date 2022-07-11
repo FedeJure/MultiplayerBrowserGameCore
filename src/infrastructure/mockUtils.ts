@@ -17,24 +17,20 @@ export const LoadServerRepositoriesWithMockData = async (
   // }
 
   const accountId = "f1718a6b115948f9b07a901d";
-  try {
-    if (!(await provider.accountRepository.get(accountId))) {
-      await provider.accountRepository.save(accountId, {
-        id: accountId,
-        email: "asd",
-        hashedPassword:
-          "$2b$10$wxXsqcb7zaE0RAoay19SIOaxFIA0jDYWHTHHOTSvtTuU2KabYVwjC", //asd
-        creationDate: 1657159261664,
-      });
-      const playerId = provider.playerInfoRepository.getId();
-      await provider.playerInfoRepository.save(playerId, {
-        id: playerId,
-        name: "Test Player",
-        accountId: accountId,
-      });
-    }
-  } catch (error) {
-    console.log(error);
+  if (!(await provider.accountRepository.get(accountId))) {
+    await provider.accountRepository.save(accountId, {
+      id: accountId,
+      email: "asd",
+      hashedPassword:
+        "$2b$10$wxXsqcb7zaE0RAoay19SIOaxFIA0jDYWHTHHOTSvtTuU2KabYVwjC", //asd
+      creationDate: 1657159261664,
+    });
+    let playerId = provider.playerInfoRepository.getId();
+    await provider.playerInfoRepository.save(playerId, {
+      id: playerId,
+      name: "Test Player",
+      accountId: accountId,
+    });
   }
 
   const anotherAccountId = "f1718a6b115948f9b07a901f";
@@ -47,7 +43,7 @@ export const LoadServerRepositoriesWithMockData = async (
         "$2b$10$wxXsqcb7zaE0RAoay19SIOaxFIA0jDYWHTHHOTSvtTuU2KabYVwjC", //asd
       creationDate: 1657159261664,
     });
-    const playerId = provider.playerInfoRepository.getId();
+    let playerId = provider.playerInfoRepository.getId();
     await provider.playerInfoRepository.save(playerId, {
       id: playerId,
       name: "Another Test Player",

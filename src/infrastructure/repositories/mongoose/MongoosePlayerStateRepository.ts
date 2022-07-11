@@ -8,4 +8,10 @@ export class MongoosePlayerStateRepository extends MongooseAsyncRepository<Playe
     const schema = new mongoose.Schema<PlayerState>(PlayerStateType);
     super("playertate", schema, instance);
   }
+
+  async getAllGroupedByRoom() {
+    return this.model.aggregate([
+      { $group: { _id: "$mapId", position: { $first: "$position" } } },
+    ]);
+  }
 }

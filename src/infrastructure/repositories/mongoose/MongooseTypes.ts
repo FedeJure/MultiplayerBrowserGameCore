@@ -5,6 +5,7 @@ import { EntityInfo } from "../../../domain/entity/entityInfo";
 import { EntityState } from "../../../domain/entity/entityState";
 import { EntityStats } from "../../../domain/entity/entityStats";
 import { Item } from "../../../domain/items/item";
+import { PlayerInfo } from "../../../domain/player/playerInfo";
 import { PlayerState } from "../../../domain/player/playerState";
 import { Vector } from "../../../domain/vector";
 
@@ -30,6 +31,11 @@ export const EnemyStatsType: mongoose.SchemaDefinition<EnemyStats & {_id: String
 export const EntityInfoType: mongoose.SchemaDefinition<EntityInfo & {_id: String}> = {
   id: {required: true, type: String, unique: true},
   name: String,
+};
+
+export const PlayerInfoType: mongoose.SchemaDefinition<PlayerInfo & {_id: String}> = {
+  ...EntityInfoType,
+  accountId: String
 };
 
 export const ItemType: mongoose.SchemaDefinition<Item & {_id: String}> = {

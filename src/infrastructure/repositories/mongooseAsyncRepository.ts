@@ -3,7 +3,7 @@ import mongoose, { Mongoose } from "mongoose";
 import { AsyncRepository } from "../../domain/repository";
 
 export class MongooseAsyncRepository<T> implements AsyncRepository<T> {
-  private model: mongoose.Model<T>;
+  protected model: mongoose.Model<T>;
   private _onSave = new Subject<T>();
   private _onRemove = new Subject<T>();
   constructor(modelName: string, schema: mongoose.Schema, instance?: Mongoose) {
@@ -27,14 +27,13 @@ export class MongooseAsyncRepository<T> implements AsyncRepository<T> {
   }
 
   async save(_id: string, obj: T): Promise<void> {
-    if ((obj as any).mapId) console.log(obj);
     const created = new this.model({ ...obj, _id });
     await created.save();
     this._onSave.next(created);
   }
-  async getAll(filter?: Partial<T> | undefined) {
+  async getAll(filter: Partial<T> | undefined = {}) {
     const elements = (await this.model
-      .find(filter || {}, null, { new: true })
+      .find(filter)
       .lean()) as T[];
     return elements;
   }
