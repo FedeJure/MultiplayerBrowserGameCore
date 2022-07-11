@@ -1,7 +1,5 @@
 import * as Phaser from "phaser";
 import { Socket } from "socket.io";
-import { MongoMemoryServer } from "mongodb-memory-server";
-
 import { SocketIOEvents } from "./infrastructure/events/socketIoEvents";
 import { ServerProvider } from "./infrastructure/providers/serverProvider";
 import { GameScene } from "./view/scenes/GameScene";

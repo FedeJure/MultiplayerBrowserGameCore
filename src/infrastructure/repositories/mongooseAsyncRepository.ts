@@ -1,13 +1,14 @@
 import { Observable, Subject } from "rxjs";
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 import { AsyncRepository } from "../../domain/repository";
 
 export class MongooseAsyncRepository<T> implements AsyncRepository<T> {
   private model: mongoose.Model<T>;
   private _onSave = new Subject<T>();
   private _onRemove = new Subject<T>();
-  constructor(modelName: string, schema: mongoose.Schema) {
-    this.model = mongoose.model<T>(modelName, schema);
+  constructor(modelName: string, schema: mongoose.Schema, instance?: Mongoose) {
+    const instanceToUse = instance ?? mongoose
+    this.model = instanceToUse.model<T>(modelName, schema);
   }
   async getBy(query: Partial<T>): Promise<T | null | undefined> {
     const element = (await this.model.findOne(query).lean()) as
@@ -38,10 +39,10 @@ export class MongooseAsyncRepository<T> implements AsyncRepository<T> {
     return elements;
   }
   async update(_id: string, payload: Partial<T>): Promise<void> {
-    this.model.findOneAndUpdate(
-      { _id },
+    await this.model.findByIdAndUpdate(
+      _id,
       { $set: payload },
-      { runValidators: true }
+      { runValidators: true, new: true }
     );
   }
   async remove(_id: string): Promise<void> {
