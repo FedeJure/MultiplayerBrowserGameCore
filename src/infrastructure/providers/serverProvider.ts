@@ -15,7 +15,6 @@ import { MapsConfiguration } from "../configuration/MapsConfiguration";
 import { DependencyManager } from "../dependencyManager";
 import { PlayerInventoryDto } from "../../domain/inventory/playerInventoryDto";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
-import { InMemoryPlayerStateRepository } from "../repositories/inMemoryPlayerStateRepository";
 import {
   InMemoryRepository,
 } from "../repositories/InMemoryRepository";

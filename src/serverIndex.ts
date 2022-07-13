@@ -25,6 +25,7 @@ import { DBConfiguration } from "./infrastructure/DBConfiguration";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import { Account } from "./domain/account/account";
+import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
 
 class ServerApi {
   constructor(private provider: ServerProvider) {}
@@ -36,7 +37,9 @@ class ServerApi {
           res({ success: false, message: "Account not found" });
           return;
         }
-        const existingPlayers = await this.provider.playerInfoRepository.getAll({accountId: account.id})
+        const existingPlayers = await this.provider.playerInfoRepository.getAll(
+          { accountId: account.id }
+        );
 
         bcrypt.compare(
           password,
@@ -67,11 +70,11 @@ class ServerApi {
             creationDate: Date.now(),
           };
           await this.provider.accountRepository.save(account.id, account);
-          const playerId = this.provider.playerInfoRepository.getId()
+          const playerId = this.provider.playerInfoRepository.getId();
           await this.provider.playerInfoRepository.save(playerId, {
             id: playerId,
             name: email,
-            accountId: account.id
+            accountId: account.id,
           });
           res({ success: true, message: "Account created!" });
         }
@@ -99,8 +102,8 @@ export const InitGame: (
       //   dbName: DBConfiguration.dbName
       // });
       await mongoose.connect("mongodb://localhost:27017", {
-        dbName: DBConfiguration.dbName
-      })
+        dbName: DBConfiguration.dbName,
+      });
     })();
 
     const scene = new GameScene();
@@ -136,6 +139,18 @@ export const InitGame: (
             provider.collisionableTargetRepository,
             provider.lootConfigurationRepository,
             provider.lootGenerator,
+            provider.enemiesModelRepository
+          ),
+          new ServerEnemyCreatorDelegator(
+            scene,
+            provider.enemiesRepository,
+            provider.roomManager,
+            provider.presenterProvider,
+            provider.collisionableTargetRepository,
+            provider.collisionManager,
+            provider.lootConfigurationRepository,
+            provider.lootGenerator,
+            provider.mapMapanger,
             provider.enemiesModelRepository
           ),
           new PlayerStateDelegator(
@@ -178,7 +193,7 @@ export const InitGame: (
             provider.lootRepository,
             provider.inGamePlayerRepository,
             provider.itemsRepository
-          )
+          ),
         ]);
         socket.on(SocketIOEvents.CONNECTION, (clientSocket: Socket) => {
           const connection = new SocketClientConnection(clientSocket);

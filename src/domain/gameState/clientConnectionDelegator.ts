@@ -29,6 +29,7 @@ import { TransitionView } from "../../view/ui/TransitionView";
 import { SpineLocalPlayerView } from "../../view/player/spineLocalPlayerView";
 import { SpinePlayerView } from "../../view/player/spinePlayerView";
 import { PlayerVirtualJoystickInput } from "../../infrastructure/input/playerVirtualJoystickInput";
+import { isMobile } from "../../view/utils";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -77,7 +78,7 @@ export class ClientConnectionDelegator implements Delegator {
         .then(({ success, message }) => {
           if (!success) {
             alert(`Connecting error! | ${message}`);
-            location.reload()
+            location.reload();
           }
         });
     });
@@ -135,8 +136,11 @@ export class ClientConnectionDelegator implements Delegator {
 
     this.collisionManager.addPlayer(view);
 
-    const input = new PlayerKeyBoardInput(this.scene.input.keyboard);
-    new PlayerVirtualJoystickInput(this.scene)
+    const input = isMobile()
+      ? new PlayerVirtualJoystickInput(
+          this.scene.scene.get(SceneNames.ClientHudScene)
+        )
+      : new PlayerKeyBoardInput(this.scene.input.keyboard);
     const movementSystem = new PlayerMovement();
 
     const moneyView = new HtmlMoneyView();

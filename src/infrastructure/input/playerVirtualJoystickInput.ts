@@ -1,36 +1,93 @@
 import { Scene } from "phaser";
 import { Observable } from "rxjs";
 import { ClientPlayerInput } from "../../domain/player/playerInput";
+import { ButtonView } from "../../view/ui/ButtonView";
 import { PlayerInputDto } from "../dtos/playerInputDto";
 
 export class PlayerVirtualJoystickInput implements ClientPlayerInput {
+  private joystickCursor;
+  private jumpButton: ButtonView
   constructor(scene: Scene) {
-    (scene.plugins.get("joystick") as any).add(this, {
-      x: 55,
-      y: 400,
-      radius: 100,
-      base: scene.add.circle(0, 0, 50, 0x888888),
-      thumb: scene.add.circle(0, 0, 25, 0xcccccc),
-    });
+    this.jumpButton = new ButtonView(scene.game.canvas.width - 120, scene.game.canvas.height - 120, 120,120, scene)
+    const joystick = (scene.plugins.get("rexvirtualjoystickplugin") as any).add(
+      this,
+      {
+        x: 200,
+        y: scene.game.canvas.height - 150,
+        radius: 200,
+        base: scene.add.circle(
+          200,
+          scene.game.canvas.height - 150,
+          100,
+          0x888888
+        ),
+        thumb: scene.add.circle(
+          200,
+          scene.game.canvas.height - 150,
+          50,
+          0xcccccc
+        ),
+      }
+    );
+
+    this.joystickCursor = joystick.createCursorKeys();
   }
-  onInventoryChange: Observable<void>;
-  inventory: boolean;
-  action: boolean;
-  onAction: Observable<void>;
-  up: boolean;
-  down: boolean;
-  left: boolean;
-  right: boolean;
-  jump: boolean;
+  onInventoryChange = new Observable<void>();
+  inventory = false;
+  action = false;
+  onAction = new Observable<void>();
+  get up() {
+    return this.joystickCursor.up.isDown as boolean;
+  }
+  get down() {
+    return this.joystickCursor.down.isDown as boolean;
+  }
+  get left() {
+    return this.joystickCursor.left.isDown as boolean;
+  }
+  get right() {
+    return this.joystickCursor.right.isDown as boolean;
+  }
+  get jump() {
+    return this.jumpButton.isDown;
+  }
   toDto(): PlayerInputDto {
-    throw new Error("Method not implemented.");
+    return {
+      up: this.up,
+      down: this.down,
+      left: this.left,
+      right: this.right,
+      jump: this.jump,
+      basicAttack: this.basicAttack,
+      defend: this.defend,
+      skill1: this.skill1,
+      skill2: this.skill2,
+      skill3: this.skill3,
+      skill4: this.skill4,
+    };
   }
-  stats: boolean;
-  menu: boolean;
-  basicAttack: boolean;
-  defend: boolean;
-  skill1: boolean;
-  skill2: boolean;
-  skill3: boolean;
-  skill4: boolean;
+  get stats() {
+    return false;
+  }
+  get menu() {
+    return false;
+  }
+  get basicAttack() {
+    return false;
+  }
+  get defend() {
+    return false;
+  }
+  get skill1() {
+    return false;
+  }
+  get skill2() {
+    return false;
+  }
+  get skill3() {
+    return false;
+  }
+  get skill4() {
+    return false;
+  }
 }
