@@ -59,8 +59,6 @@ function resizeGameWindow(game: Phaser.Game) {
     window.innerHeight ||
     document.documentElement.clientHeight ||
     document.body.clientHeight;
-  // clientWidth = isMobile() ? clientHeight * 0.9 : clientWidth;
-  // clientHeight = isMobile() ? clientWidth * 0.9 : clientHeight;
   const gameHeight = 720;
   const gameWidth = 1280;
   const intendedZoom = clientWidth / gameWidth;
