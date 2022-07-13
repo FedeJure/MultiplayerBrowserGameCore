@@ -12,6 +12,7 @@ export class PhaserEntityView
   extends Phaser.GameObjects.Container
   implements EntityView, ViewObject
 {
+  private currentTween: Phaser.Tweens.Tween | undefined
   constructor(
     readonly view: Physics.Arcade.Sprite | SpineGameObject,
     x: number,
@@ -66,12 +67,13 @@ export class PhaserEntityView
   die() {}
 
   setPositionInTime(x: number, y: number, time: number) {
-    this.scene.tweens.add({
+    if (this.currentTween && this.currentTween.progress < 1) this.currentTween.stop()
+    this.currentTween = this.scene.tweens.add({
       targets: this,
       duration: time,
       props: {
-        x: { value: x, duration: time },
-        y: { value: y, duration: time, ease: "Linear" },
+        x: { value: x },
+        y: { value: y, ease: "Linear" },
       },
     });
   }
