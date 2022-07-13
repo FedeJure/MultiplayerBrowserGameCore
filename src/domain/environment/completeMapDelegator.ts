@@ -160,7 +160,7 @@ export class CompleteMapDelegator implements Delegator {
           ),
           this.collisionManager
         ).then(({ spawnPositions, entrances, exits, enemySpawners }) => {
-          this.mapManager.updateMap(m.id, {
+          this.mapManager.hydratateMap(m.id, {
             spawnPositions,
             entrances,
             exits,

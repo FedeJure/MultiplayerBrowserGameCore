@@ -45,30 +45,33 @@ export class ClientConnectionDelegator implements Delegator {
   ) {}
   init(): void {
     this.connection.onInitialGameState.subscribe(async (data) => {
-      Log(this, "Initial Game State Event", data);
-      this.createLocalClientPlayer(
-        data.localPlayer.state,
-        data.localPlayer.info,
-        data.localPlayer.stats
-      );
-      for (let i = 0; i < data.players.length; i++) {
-        const dto = data.players[i];
-        if (dto.id === data.localPlayer.id) continue;
-        this.createClientPlayer(dto.state, dto.info);
-      }
-
-      this.connection.onNewPlayerConnected.subscribe((data) => {
-        if (this.inGamePlayersRepository.get(data.player.id)) return;
-        this.createClientPlayer(data.player.state, data.player.info);
-      });
-
-      this.connection.onPlayerDisconnected.subscribe((data) => {
-        const player = this.inGamePlayersRepository.get(data.playerId);
-        if (player) {
-          this.collisionableTargetRepository.remove(player.view.id);
-          player.destroy();
-          this.inGamePlayersRepository.remove(data.playerId);
+      this.mapManager.onMapReady.subscribe((mapId) => {
+        if (mapId !== data.currentMap?.id) return;
+        Log(this, "Initial Game State Event", data);
+        this.createLocalClientPlayer(
+          data.localPlayer.state,
+          data.localPlayer.info,
+          data.localPlayer.stats
+        );
+        for (let i = 0; i < data.players.length; i++) {
+          const dto = data.players[i];
+          if (dto.id === data.localPlayer.id) continue;
+          this.createClientPlayer(dto.state, dto.info);
         }
+
+        this.connection.onNewPlayerConnected.subscribe((data) => {
+          if (this.inGamePlayersRepository.get(data.player.id)) return;
+          this.createClientPlayer(data.player.state, data.player.info);
+        });
+
+        this.connection.onPlayerDisconnected.subscribe((data) => {
+          const player = this.inGamePlayersRepository.get(data.playerId);
+          if (player) {
+            this.collisionableTargetRepository.remove(player.view.id);
+            player.destroy();
+            this.inGamePlayersRepository.remove(data.playerId);
+          }
+        });
       });
     });
 

@@ -54,3 +54,73 @@ export class PlayerMovementValidationDelegator implements Delegator {
 
   stop() {}
 }
+
+
+
+// const seconds = DefaultGameConfiguration.playerStatesEventInterval / 1000;
+// export class PlayerMovementValidationDelegator implements Delegator {
+//   private readonly disposer: Disposer = new Disposer();
+//   private lastInputValidated: number = 0;
+//   private remotePosition: Vector = Phaser.Math.Vector2.ZERO;
+//   private remoteVelocity: Vector = Phaser.Math.Vector2.ZERO;
+
+//   constructor(
+//     private readonly player: Player,
+//     private readonly connection: ServerConnection,
+//     private readonly inputRepository: PlayerInputRequestRepository
+//   ) {
+//     this.player = player;
+//     this.connection = connection;
+//     this.inputRepository = inputRepository;
+//   }
+//   update(time: number, delta: number): void {
+//     const nextPredictedPosition = {
+//       x: this.remotePosition.x + this.player.view.velocity.x * seconds,
+//       y: this.remotePosition.y + this.player.view.velocity.y * seconds,
+//     };
+//     this.player.view.setVelocity(
+//       this.player.view.velocity.x +
+//         Phaser.Math.GetSpeed(nextPredictedPosition.x - this.player.view.x, 66),
+//       this.player.view.velocity.y +
+//         Phaser.Math.GetSpeed(nextPredictedPosition.y - this.player.view.y, 66)
+//     );
+//   }
+
+//   init() {
+//     this.disposer.add(
+//       this.connection.onPlayersStates.subscribe((event) => {
+//         const state = event.states[this.player.info.id];
+//         if (!state) return;
+//         this.remotePosition = state.position;
+//         this.remoteVelocity = state.velocity;
+//         if (
+//           state &&
+//           this.inputRepository.getOrCreate(this.player.info.id) ==
+//             state.inputNumber &&
+//           state.inputNumber >= this.lastInputValidated
+//         ) {
+//           const distanceFromRemote = Phaser.Math.Distance.BetweenPoints(
+//             this.remotePosition,
+//             this.player.state.position
+//           );
+//           if (distanceFromRemote > 10) {
+//             const nextPredictedPosition = {
+//               x: this.remotePosition.x + this.player.view.velocity.x * seconds,
+//               y: this.remotePosition.y + this.player.view.velocity.y * seconds,
+//             };
+//             this.player.view.setPositionInTime(
+//               nextPredictedPosition.x,
+//               nextPredictedPosition.y,
+//               distanceFromRemote * 4
+//             );
+//           }
+//           this.lastInputValidated = state.inputNumber;
+//         }
+        
+        
+//       })
+//     );
+//   }
+
+//   stop() {}
+// }

@@ -123,7 +123,7 @@ export class CurrentMapDelegator implements Delegator {
               this.collisionManager
             ).then(({ createdObjects, spawnPositions, entrances, exits }) => {
               this.loadedMaps[m.id] = { map: m, createdObjects };
-              this.mapManager.updateMap(m.id, {
+              this.mapManager.hydratateMap(m.id, {
                 spawnPositions,
                 entrances,
                 exits,

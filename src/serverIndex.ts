@@ -156,7 +156,8 @@ export const InitGame: (
           new PlayerStateDelegator(
             provider.roomManager,
             provider.inGamePlayerRepository,
-            socket
+            socket,
+            provider.playerInputRequestRepository
           ),
           new LootUpdaterDelegator(socket, provider.lootRepository),
           new EnemiesStateSenderDelegator(

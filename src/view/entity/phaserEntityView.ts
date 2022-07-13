@@ -71,7 +71,7 @@ export class PhaserEntityView
       duration: time,
       props: {
         x: { value: x, duration: time },
-        y: { value: y, duration: time, ease: "Power2" },
+        y: { value: y, duration: time, ease: "Linear" },
       },
     });
   }
