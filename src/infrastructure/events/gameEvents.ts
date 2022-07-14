@@ -9,6 +9,7 @@ import { PlayerInputDto } from "../dtos/playerInputDto";
 import { PlayerInventoryDto } from "../../domain/inventory/playerInventoryDto";
 import { Loot } from "../../domain/loot/loot";
 import { BalanceDto } from "../../domain/inventory/balanceDto";
+import { Vector } from "../../domain/vector";
 
 export const GameEvents: {
   PLAYER_CONNECTED: {
@@ -41,7 +42,8 @@ export const GameEvents: {
     getEvent: (
       playerId: string,
       input: PlayerInputDto,
-      inputNumber: number
+      inputNumber: number,
+      clientPosition: Vector
     ) => PlayerInputEvent;
   };
   MAP_UPDATE: {
@@ -134,10 +136,11 @@ export const GameEvents: {
   },
   PLAYER_INPUT: {
     name: "player_input",
-    getEvent: (playerId, input, inputNumber) => ({
+    getEvent: (playerId, input, inputNumber, clientPosition) => ({
       playerId,
       input,
       inputNumber,
+      clientPosition,
       time: new Date(),
     }),
   },
@@ -259,6 +262,7 @@ export interface PlayerDisconnectedEvent extends BaseEvent {
 
 export interface PlayerInputEvent extends BaseEvent {
   playerId: string;
+  clientPosition: Vector;
   input: PlayerInputDto;
   inputNumber: number;
 }

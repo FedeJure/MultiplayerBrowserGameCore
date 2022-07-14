@@ -17,6 +17,7 @@ import {
 import { EnvironmentObject } from "./environmentObjects/environmentObject";
 import { Item } from "./items/item";
 import { Loot } from "./loot/loot";
+import { Vector } from "./vector";
 
 export interface ServerConnection {
   onNewPlayerConnected: Observable<NewPlayerConnectedEvent>;
@@ -30,7 +31,8 @@ export interface ServerConnection {
   emitInput(
     playerId: string,
     input: PlayerInputDto,
-    inputRequest: number
+    inputRequest: number,
+    position: Vector
   ): void;
   onMapUpdated: Observable<MapUpdateEvent>;
   onInventoryUpdate: Observable<InventoryBalanceUpdatedEvent>;

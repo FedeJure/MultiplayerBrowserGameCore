@@ -2,6 +2,7 @@ import { Observable, Subject } from "rxjs";
 import { Socket } from "socket.io-client";
 
 import { ServerConnection } from "../domain/serverConnection";
+import { Vector } from "../domain/vector";
 import { PlayerInputDto } from "./dtos/playerInputDto";
 import {
   EnemiesStatesEvent,
@@ -154,11 +155,12 @@ export class SocketServerConnection implements ServerConnection {
   emitInput(
     playerId: string,
     input: PlayerInputDto,
-    inputRequest: number
+    inputRequest: number,
+    position: Vector
   ): void {
     this.socket.emit(
       GameEvents.PLAYER_INPUT.name,
-      GameEvents.PLAYER_INPUT.getEvent(playerId, input, inputRequest)
+      GameEvents.PLAYER_INPUT.getEvent(playerId, input, inputRequest, position)
     );
   }
 

@@ -32,7 +32,8 @@ export class PlayerInputDelegator implements Delegator {
       this.connection.emitInput(
         this.player.info.id,
         currentInput,
-        newInputRequest
+        newInputRequest,
+        this.player.view.positionVector
       );
       this.inputRequestRepository.set(this.player.info.id, newInputRequest);
     }

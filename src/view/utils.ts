@@ -64,10 +64,14 @@ export function isMobile() {
         a.substr(0, 4)
       )
     )
-    check = true
-  })(
-    navigator.userAgent || navigator.vendor || (window as any).opera
-  );
+      check = true;
+  })(navigator.userAgent || navigator.vendor || (window as any).opera);
   return check;
 }
 
+export function getDistance(v1: Vector, v2: Vector) {
+  let y = v2.x - v1.x;
+  let x = v2.y - v1.y;
+
+  return Math.sqrt(x * x + y * y);
+}

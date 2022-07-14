@@ -1,6 +1,7 @@
-import { filter } from "rxjs";
+import { filter, Subject } from "rxjs";
 import { ClientConnection } from "../../domain/clientConnection";
 import { PlayerInput } from "../../domain/player/playerInput";
+import { Vector } from "../../domain/vector";
 import { PlayerInputDto } from "../dtos/playerInputDto";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
 
@@ -19,6 +20,8 @@ export class PlayerSocketInput implements PlayerInput {
   private _skill3: boolean = false;
   private _skill4: boolean = false;
   private _action: boolean = false;
+
+  private _onClientPositionReceived = new Subject<Vector>();
   constructor(
     playerId: string,
     connection: ClientConnection,
@@ -27,15 +30,16 @@ export class PlayerSocketInput implements PlayerInput {
     connection
       .onInput()
       .pipe(filter((ev) => ev.playerId === playerId))
-      .subscribe((inputDto) => {
-        this._up = inputDto.input.up;
-        this._down = inputDto.input.down;
-        this._left = inputDto.input.left;
-        this._right = inputDto.input.right;
-        this._jump = inputDto.input.jump;
-        this._basicAttack = inputDto.input.basicAttack;
-        this._defend = inputDto.input.defend;
-        inputRequestRepository.set(playerId, inputDto.inputNumber);
+      .subscribe(({ input, inputNumber, clientPosition }) => {
+        this._up = input.up;
+        this._down = input.down;
+        this._left = input.left;
+        this._right = input.right;
+        this._jump = input.jump;
+        this._basicAttack = input.basicAttack;
+        this._defend = input.defend;
+        inputRequestRepository.set(playerId, inputNumber);
+        this._onClientPositionReceived.next(clientPosition);
       });
   }
 
@@ -55,6 +59,9 @@ export class PlayerSocketInput implements PlayerInput {
     };
   }
 
+  get onClientPositionReceived() {
+    return this._onClientPositionReceived.asObservable();
+  }
   get up() {
     return this._up;
   }

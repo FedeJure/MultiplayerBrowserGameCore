@@ -13,6 +13,8 @@ import { MapManager } from "../../environment/mapManager";
 import { Balance } from "../../inventory/balance";
 import { ServerPlayerInventory } from "../../inventory/serverPlayerInventory";
 import { PlayerTransportation } from "../playerTransportation";
+import { ServerPlayerInput } from "../serverPlayerInput";
+import { Vector } from "matter";
 
 export class ServerPlayer extends ControllablePlayer {
   private _onStateChange: Subject<{
@@ -24,7 +26,7 @@ export class ServerPlayer extends ControllablePlayer {
     state: PlayerState,
     view: PlayerView,
     movementSystem: PlayerMovement,
-    input: PlayerInput,
+    input: ServerPlayerInput,
     stats: PlayerStats,
     mapManager: MapManager,
     inventory: ServerPlayerInventory,
@@ -45,7 +47,7 @@ export class ServerPlayer extends ControllablePlayer {
       inventory,
       balance
     );
-    playerTransportation.init(this)
+    playerTransportation.init(this);
   }
   updateInfo(newInfo: Omit<Partial<PlayerInfo>, "id">): void {
     super.updateInfo(newInfo);
@@ -64,8 +66,8 @@ export class ServerPlayer extends ControllablePlayer {
   }
 
   update(time: number, delta: number): void {
-      super.update(time,delta)
-      this.playerTransportation.update(time,delta)
+    super.update(time, delta);
+    this.playerTransportation.update(time, delta);
   }
 
   get onStateChange(): Observable<{
@@ -80,6 +82,6 @@ export class ServerPlayer extends ControllablePlayer {
   }
 
   get inventory() {
-     return this._inventory as ServerPlayerInventory 
+    return this._inventory as ServerPlayerInventory;
   }
 }

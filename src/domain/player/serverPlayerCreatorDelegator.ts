@@ -31,6 +31,7 @@ import { DefaultGameConfiguration } from "../../infrastructure/configuration/Gam
 import { PlayerState } from "./playerState";
 import { PlayerBalance } from "../inventory/playerBalance";
 import { PlayerRoomChangeEventRepository } from "./playerRoomChangeEventRepository";
+import { ServerPlayerMovement } from "./movement/serverPlayerMovement";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -221,7 +222,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       playerInfo,
       playerState,
       view,
-      new PlayerMovement(),
+      new ServerPlayerMovement(input),
       input,
       playerStats,
       this.mapManager,
