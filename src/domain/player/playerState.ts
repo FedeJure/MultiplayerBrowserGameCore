@@ -12,5 +12,6 @@ export interface PlayerState extends EntityState {
   readonly attacking: boolean;
   readonly exp: number;
   readonly transporting: boolean
-  readonly lastSpawnPoint: SpawnPoint
+  readonly lastSpawnPoint: SpawnPoint,
+  readonly lastTimeJump: number
 }

@@ -103,6 +103,7 @@ export const PlayerStateType: mongoose.SchemaDefinition<
     default: Boolean,
     position: VectorType,
   },
+  lastTimeJump: { type: Number, required: false}
 };
 
 export const PlayerRoomChangeEventType: mongoose.SchemaDefinition<PlayerRoomChangeEvent & {createdAt: Date}> =

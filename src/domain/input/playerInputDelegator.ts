@@ -7,10 +7,6 @@ import { PlayerInputRequestRepository } from "../../infrastructure/repositories/
 import { ControllablePlayer } from "../player/players/controllablePlayer";
 
 export class PlayerInputDelegator implements Delegator {
-  private currentInput: PlayerInputDto | undefined;
-  private lastInputSended: string = "";
-  private savedState: PlayerState | undefined;
-
   constructor(
     private player: ControllablePlayer,
     private input: ClientPlayerInput,
@@ -19,7 +15,6 @@ export class PlayerInputDelegator implements Delegator {
   ) {}
   init(): void {
     this.input.onInputChange.subscribe(() => {
-      console.log(this.input.toDto())
       this.connection.emitInput(
         this.player.info.id,
         this.input.toDto(),
@@ -29,31 +24,5 @@ export class PlayerInputDelegator implements Delegator {
   }
   stop(): void {}
   update(time: number, delta: number): void {
-    // const currentInput = this.input.toDto();
-    // this.currentInput = currentInput;
-
-    // if (
-    //   [this.inputHasChange(), ...Object.values(currentInput)].some((a) => a) ||
-    //   this.player.state != this.savedState
-    // ) {
-    //   const newInputRequest =
-    //     this.inputRequestRepository.getOrCreate(this.player.info.id) + 1;
-    //   this.connection.emitInput(
-    //     this.player.info.id,
-    //     currentInput,
-    //     newInputRequest
-    //   );
-    //   this.inputRequestRepository.set(this.player.info.id, newInputRequest);
-    // }
-    // this.savedState = this.player.state;
-
-    // this.lastInputSended = JSON.stringify(currentInput);
-  }
-
-  inputHasChange() {
-    return (
-      !this.lastInputSended ||
-      JSON.stringify(this.currentInput) != this.lastInputSended
-    );
   }
 }
