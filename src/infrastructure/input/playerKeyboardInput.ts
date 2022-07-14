@@ -1,4 +1,5 @@
 import { Input } from "phaser";
+import { Observable, Subject } from "rxjs";
 import { ClientPlayerInput } from "../../domain/player/playerInput";
 import { PlayerInputDto } from "../dtos/playerInputDto";
 import { DefaultKeyboardControlConfig } from "./keyboardControlConfig";
@@ -23,6 +24,7 @@ interface KeyboardInput {
 }
 export class PlayerKeyBoardInput implements ClientPlayerInput {
   readonly input: KeyboardInput;
+  readonly _onInputChange = new Subject<void>();
 
   constructor(inputPlugin: Input.Keyboard.KeyboardPlugin) {
     this.input = {
@@ -69,6 +71,18 @@ export class PlayerKeyBoardInput implements ClientPlayerInput {
         DefaultKeyboardControlConfig.skill4.map((k) => inputPlugin.addKey(k))
       ),
     };
+
+    this.input.up.onKeyChange.subscribe(() => this._onInputChange.next());
+    this.input.down.onKeyChange.subscribe(() => this._onInputChange.next());
+    this.input.left.onKeyChange.subscribe(() => this._onInputChange.next());
+    this.input.right.onKeyChange.subscribe(() => this._onInputChange.next());
+    this.input.action.onKeyChange.subscribe(() => this._onInputChange.next());
+    this.input.basicAttack.onKeyChange.subscribe(() => this._onInputChange.next());
+    this.input.jump.onKeyChange.subscribe(() => this._onInputChange.next());
+  }
+
+  get onInputChange() {
+    return this._onInputChange.asObservable();
   }
   toDto(): PlayerInputDto {
     return {
@@ -131,7 +145,7 @@ export class PlayerKeyBoardInput implements ClientPlayerInput {
   }
 
   get onInventoryChange() {
-    return this.input.inventory.onKeyDown;
+    return this.input.inventory.onKeyChange;
   }
 
   get action() {
@@ -139,6 +153,6 @@ export class PlayerKeyBoardInput implements ClientPlayerInput {
   }
 
   get onAction() {
-    return this.input.action.onKeyDown
+    return this.input.action.onKeyChange;
   }
 }

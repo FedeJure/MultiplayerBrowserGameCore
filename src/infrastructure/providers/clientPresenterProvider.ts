@@ -1,5 +1,5 @@
 import { ClientProvider } from "./clientProvider";
-import { PlayerInput } from "../../domain/player/playerInput";
+import { ClientPlayerInput, PlayerInput } from "../../domain/player/playerInput";
 import { PlayerMovementValidationDelegator } from "../../domain/player/movement/playerMovementValidationDelegator";
 import { PlayerInputDelegator } from "../../domain/input/playerInputDelegator";
 import { LocalPlayerRenderDelegator } from "../../domain/player/localPlayerRenderDelegator";
@@ -29,7 +29,7 @@ import { PhaserClientLootCreatorView } from "../../view/loot/phaserClientLootCre
 
 export class ClientPresenterProvider {
   forLocalPlayer(
-    input: PlayerInput,
+    input: ClientPlayerInput,
     player: LocalClientPlayer,
     view: GameObjects.GameObject
   ): void {

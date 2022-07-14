@@ -1,5 +1,5 @@
 import { Scene } from "phaser";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { ClientPlayerInput } from "../../domain/player/playerInput";
 import { ButtonView } from "../../view/ui/ButtonView";
 import { PlayerInputDto } from "../dtos/playerInputDto";
@@ -7,6 +7,8 @@ import { PlayerInputDto } from "../dtos/playerInputDto";
 export class PlayerVirtualJoystickInput implements ClientPlayerInput {
   private joystickCursor;
   private jumpButton: ButtonView
+  readonly _onInputChange = new Subject<void>();
+
   constructor(scene: Scene) {
     this.jumpButton = new ButtonView(scene.game.canvas.width - 120, scene.game.canvas.height - 120, 120,120, scene)
     const joystick = (scene.plugins.get("rexvirtualjoystickplugin") as any).add(
@@ -31,6 +33,12 @@ export class PlayerVirtualJoystickInput implements ClientPlayerInput {
     );
 
     this.joystickCursor = joystick.createCursorKeys();
+    joystick.on('update', () => {
+      this._onInputChange.next()
+    })
+    this.jumpButton.onChange.subscribe(() => {
+      this._onInputChange.next()
+    })
   }
   onInventoryChange = new Observable<void>();
   inventory = false;
@@ -50,6 +58,9 @@ export class PlayerVirtualJoystickInput implements ClientPlayerInput {
   }
   get jump() {
     return this.jumpButton.isDown;
+  }
+  get onInputChange() {
+    return this._onInputChange.asObservable()
   }
   toDto(): PlayerInputDto {
     return {

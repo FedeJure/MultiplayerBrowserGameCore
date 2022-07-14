@@ -20,7 +20,10 @@ export const InitClientGame = (
   playerId: string,
   originUrl: string
 ) => {
-  const connectionWithServer = new SocketServerConnection(masterSocket, gameStateSOcket);
+  const connectionWithServer = new SocketServerConnection(
+    masterSocket,
+    gameStateSOcket
+  );
   const hudScene = new GameplayHud(connectionWithServer);
   const bacgrkoundScene = new BackgroundScene();
 
@@ -37,12 +40,15 @@ export const InitClientGame = (
   };
   const game = new Phaser.Game(config);
   resizeGameWindow(game);
-  if (isMobile()) {
-    screen.orientation.addEventListener('change', function() {
-      resizeGameWindow(game)
-    });
-    screen.orientation.lock("landscape");
-  }
+  try {
+    if (isMobile()) {
+      screen.orientation.addEventListener("change", function () {
+        resizeGameWindow(game);
+      });
+      screen.orientation.lock("landscape");
+    }
+  } catch (error) {}
+
   window.addEventListener("resize", () => resizeGameWindow(game));
   AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
 

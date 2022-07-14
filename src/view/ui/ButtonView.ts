@@ -4,7 +4,7 @@ import { Observable, Subject } from "rxjs";
 export class ButtonView {
   private button: GameObjects.GameObject;
   private _isDown: boolean = false
-  private _onClick = new Subject<void>()
+  private _onChange = new Subject<void>()
   constructor(x: number, y: number,width: number, height: number, scene: Scene) {
     scene.input.addPointer(2)
     this.button = scene.add
@@ -16,17 +16,20 @@ export class ButtonView {
         Phaser.Display.Color.HexStringToColor("#ff0").color
       )
       .on('pointerdown', () => {
-        if (!this.isDown) this._onClick.next()
+        if (!this.isDown) this._onChange.next()
         this._isDown = true
       })
-      .on('pointerup', () => this._isDown = false).setInteractive()
+      .on('pointerup', () => {
+        if (this.isDown) this._onChange.next()
+        this._isDown = false
+      } ).setInteractive()
   }
 
   get isDown() {
     return this._isDown
   }
 
-  get onClick(): Observable<void> {
-    return this._onClick
+  get onChange(): Observable<void> {
+    return this._onChange
   }
 }

@@ -23,4 +23,5 @@ export interface ClientPlayerInput extends PlayerInput {
   inventory: boolean;
   action: boolean;
   onAction: Observable<void>
+  onInputChange: Observable<void>
 }
