@@ -30,6 +30,7 @@ import { PlayerTransportation } from "./playerTransportation";
 import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
 import { PlayerState } from "./playerState";
 import { PlayerBalance } from "../inventory/playerBalance";
+import { PlayerRoomChangeEventRepository } from "./playerRoomChangeEventRepository";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -47,7 +48,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private mapManager: MapManager,
     private playerInputRequestRepository: PlayerInputRequestRepository,
     private collisionManager: CollisionManager,
-    private balanceRepository: AsyncRepository<PlayerBalance>
+    private balanceRepository: AsyncRepository<PlayerBalance>,
+    private roomChangeRepository: PlayerRoomChangeEventRepository
   ) {}
   init(): void {
     this.connectionsRepository.onSave.subscribe((connection) => {
@@ -100,6 +102,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
             connection,
             [foundedMap, ...neighborMaps]
           );
+          this.roomChangeRepository.save(playerId, joinedRooms, [])
           player.updateState({ currentRooms: joinedRooms });
           connection.sendMapUpdateEvent(foundedMap, neighborMaps);
           this.socket.in(joinedRooms).emit(

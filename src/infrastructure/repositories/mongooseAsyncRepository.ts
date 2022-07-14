@@ -41,7 +41,7 @@ export class MongooseAsyncRepository<T> implements AsyncRepository<T> {
     await this.model.findByIdAndUpdate(
       _id,
       { $set: payload },
-      { runValidators: true, new: true }
+      { runValidators: true, new: true, overwrite: true }
     );
   }
   async remove(_id: string): Promise<void> {

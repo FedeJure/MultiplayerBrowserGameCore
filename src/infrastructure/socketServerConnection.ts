@@ -37,44 +37,44 @@ export class SocketServerConnection implements ServerConnection {
   private readonly _onLootsApprear = new Subject<LootsAppearEvent>();
   private readonly _onLootsDisapprear = new Subject<LootsDisappearEvent>();
 
-  constructor(socket: Socket) {
-    this.socket = socket;
+  constructor(masterSocket: Socket, gameStateSocket: Socket) {
+    this.socket = masterSocket;
 
-    socket.on(GameEvents.INITIAL_GAME_STATE.name, (data) =>
+    masterSocket.on(GameEvents.INITIAL_GAME_STATE.name, (data) =>
       this._onInitialGameState.next(data)
     );
-    socket.on(GameEvents.NEW_PLAYER_CONNECTED.name, (data) =>
+    masterSocket.on(GameEvents.NEW_PLAYER_CONNECTED.name, (data) =>
       this._onNewPlayerConnected.next(data)
     );
-    socket.on(GameEvents.PLAYERS_STATES.name, (data) =>
+    gameStateSocket.on(GameEvents.PLAYERS_STATES.name, (data) =>
       this._onPlayersStates.next(data)
     );
-    socket.on(GameEvents.PLAYER_DISCONNECTED.name, (data) =>
+    masterSocket.on(GameEvents.PLAYER_DISCONNECTED.name, (data) =>
       this._onPlayerDisconnected.next(data)
     );
-    socket.on(GameEvents.MAP_UPDATE.name, (data) =>
+    masterSocket.on(GameEvents.MAP_UPDATE.name, (data) =>
       this._onMapUpdated.next(data)
     );
-    socket.on(GameEvents.INVENTORY_UPDATED.name, (data) =>
+    masterSocket.on(GameEvents.INVENTORY_UPDATED.name, (data) =>
       this._onInventoryUpdated.next(data)
     );
-    socket.on(GameEvents.ENEMIES_STATES.name, (data) =>
+    masterSocket.on(GameEvents.ENEMIES_STATES.name, (data) =>
       this._onEnemyStates.next(data)
     );
-    socket.on(GameEvents.LOOT_APPEAR.name, (data) =>
+    masterSocket.on(GameEvents.LOOT_APPEAR.name, (data) =>
       this._onLootsApprear.next(data)
     );
-    socket.on(GameEvents.LOOT_DISAPPEAR.name, (data) =>
+    masterSocket.on(GameEvents.LOOT_DISAPPEAR.name, (data) =>
       this._onLootsDisapprear.next(data)
     );
 
     var startTime = Date.now();
-    socket.on(SocketIOEvents.PONG, () =>
+    masterSocket.on(SocketIOEvents.PONG, () =>
       this._onPing.next(Date.now() - startTime)
     );
     setInterval(() => {
       startTime = Date.now();
-      socket.emit(SocketIOEvents.PING);
+      masterSocket.emit(SocketIOEvents.PING);
     }, 2000);
   }
   emitClaimLoot(lootId: string, lootIndexes: number[], balance: number) {

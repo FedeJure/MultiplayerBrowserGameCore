@@ -139,7 +139,8 @@ export const InitGame: (
             provider.collisionableTargetRepository,
             provider.lootConfigurationRepository,
             provider.lootGenerator,
-            provider.enemiesModelRepository
+            provider.enemiesModelRepository,
+            provider.playerRoomChangeEventRepository
           ),
           new ServerEnemyCreatorDelegator(
             scene,
@@ -153,12 +154,12 @@ export const InitGame: (
             provider.mapMapanger,
             provider.enemiesModelRepository
           ),
-          new PlayerStateDelegator(
-            provider.roomManager,
-            provider.inGamePlayerRepository,
-            socket,
-            provider.playerInputRequestRepository
-          ),
+          // new PlayerStateDelegator( Trying send states from another service
+          //   provider.roomManager,
+          //   provider.inGamePlayerRepository,
+          //   socket,
+          //   provider.playerInputRequestRepository
+          // ),
           new LootUpdaterDelegator(socket, provider.lootRepository),
           new EnemiesStateSenderDelegator(
             provider.roomManager,
@@ -180,7 +181,8 @@ export const InitGame: (
             provider.mapMapanger,
             provider.playerInputRequestRepository,
             provider.collisionManager,
-            provider.playerBalanceRepository
+            provider.playerBalanceRepository,
+            provider.playerRoomChangeEventRepository
           ),
           new ServerPlayerInventoryDelegator(
             provider.itemsRepository,

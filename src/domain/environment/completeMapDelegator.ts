@@ -22,6 +22,7 @@ import { LootConfiguration } from "../loot/lootConfiguration";
 import { LootGenerator } from "../loot/lootGenerator";
 import { EnemyModel } from "../enemies/enemyModel/enemyModel";
 import { createEnemiesSpawner } from "../actions/createEnemiesSpawner";
+import { PlayerRoomChangeEventRepository } from "../player/playerRoomChangeEventRepository";
 
 export class CompleteMapDelegator implements Delegator {
   public constructor(
@@ -38,7 +39,8 @@ export class CompleteMapDelegator implements Delegator {
     private collisionableTargetRepository: SimpleRepository<CollisionableEntity>,
     private lootConfigsRepository: AsyncRepository<LootConfiguration>,
     private lootGenerator: LootGenerator,
-    private enemiesModelRepository: AsyncRepository<EnemyModel>
+    private enemiesModelRepository: AsyncRepository<EnemyModel>,
+    private playerRoomChangeEventRepository: PlayerRoomChangeEventRepository
   ) {
     this.inGamePlayersRepository.onSave.subscribe((serverPlayer) => {
       serverPlayer.onStateChange
@@ -73,8 +75,14 @@ export class CompleteMapDelegator implements Delegator {
         newState.currentRooms,
         joinedRooms
       );
+      this.playerRoomChangeEventRepository.save(
+        player.info.id,
+        newRooms,
+        leavingRooms
+      );
       if (leavingRooms.length === 0) return;
       this.sendExistentLoots(player, newRooms, leavingRooms);
+      
 
       this.socket
         .in(leavingRooms)
@@ -126,9 +134,9 @@ export class CompleteMapDelegator implements Delegator {
 
   private updateMapForPlayer(player: ServerPlayer) {
     const foundedMaps = this.mapManager.getMapForPlayer(player);
-    if (!foundedMaps) return Promise.resolve(new Array<string>())
-    const { foundedMap, neighborMaps } = foundedMaps
-      
+    if (!foundedMaps) return Promise.resolve(new Array<string>());
+    const { foundedMap, neighborMaps } = foundedMaps;
+
     if (foundedMap && neighborMaps && foundedMap.id !== player.state.mapId) {
       player.updateState({
         mapId: foundedMap.id,

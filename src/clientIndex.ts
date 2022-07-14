@@ -12,13 +12,15 @@ import { AssetLoader } from "./view/AssetLoader";
 import { PhaserCollisionManager } from "./view/collisions/phaserCollisionManager";
 import { BackgroundScene } from "./view/scenes/BackgroundScene";
 import { isMobile } from "./view/utils";
+import { Socket } from "socket.io-client";
 
 export const InitClientGame = (
-  socket: any,
+  masterSocket: Socket,
+  gameStateSOcket: Socket,
   playerId: string,
   originUrl: string
 ) => {
-  const connectionWithServer = new SocketServerConnection(socket);
+  const connectionWithServer = new SocketServerConnection(masterSocket, gameStateSOcket);
   const hudScene = new GameplayHud(connectionWithServer);
   const bacgrkoundScene = new BackgroundScene();
 

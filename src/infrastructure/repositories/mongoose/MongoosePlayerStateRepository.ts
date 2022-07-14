@@ -9,9 +9,15 @@ export class MongoosePlayerStateRepository extends MongooseAsyncRepository<Playe
     super("playertate", schema, instance);
   }
 
+  subscribeToChange(callback: Function) {
+    this.model.watch().on('change', (change) => {
+    })
+  }
+
   async getAllGroupedByRoom() {
     return this.model.aggregate([
-      { $group: { _id: "$mapId", position: { $first: "$position" } } },
+      {$unwind: '$currentRooms'},
+      { $group: { _id: '$currentRooms', states: { $push: "$$ROOT" } } },
     ]);
   }
 }

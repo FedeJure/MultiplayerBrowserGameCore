@@ -39,6 +39,10 @@ import { Account } from "../../domain/account/account";
 import { MongooseAccountRepository } from "../repositories/mongoose/MongooseAccountRepository";
 import { PlayerState } from "../../domain/player/playerState";
 import { MongoosePlayerStateRepository } from "../repositories/mongoose/MongoosePlayerStateRepository";
+import { PlayerRoomChangeEvent } from "../../domain/player/playerRoomChangeEvent";
+import { InMemoryPlayerRoomChangeEventsRepository } from "../repositories/inMemoryPlayerRoomChangeEventsRepository";
+import { MongoosePlayerRoomChangeRepository } from "../repositories/mongoose/MongooseRoomChangeEvent";
+import { PlayerRoomChangeEventRepository } from "../../domain/player/playerRoomChangeEventRepository";
 
 //This is necessary because the dependency manager not work with generics
 
@@ -210,5 +214,10 @@ export class ServerProvider {
         ? new PlayerInfoRepository()
         : new MongoosePlayerInfoRepository()
     );
+  }
+
+  public get playerRoomChangeEventRepository(): PlayerRoomChangeEventRepository {
+    return DependencyManager.GetOrInstantiate<PlayerRoomChangeEventRepository>(() => 
+    this.useInMemory ? new InMemoryPlayerRoomChangeEventsRepository() : new MongoosePlayerRoomChangeRepository())
   }
 }
