@@ -26,6 +26,7 @@ import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import { Account } from "./domain/account/account";
 import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
+import { ServerGameScene } from "./view/scenes/ServerGameScene";
 
 class ServerApi {
   constructor(private provider: ServerProvider) {}
@@ -106,7 +107,7 @@ export const InitGame: (
       });
     })();
 
-    const scene = new GameScene();
+    const scene = new ServerGameScene();
     const config = {
       ...PhaserServerConfig,
       scene: [new LoadScene(), scene],
