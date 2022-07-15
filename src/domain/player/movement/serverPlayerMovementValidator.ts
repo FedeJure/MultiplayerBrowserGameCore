@@ -36,10 +36,10 @@ export class PlayerServerMovementValidator implements EntityMovement {
   update(time: number, delta: number) {
     this.timer += delta;
     while (this.timer >= this.minTimeBetweenTicks) {
-
       this.timer -= this.minTimeBetweenTicks;
       this.handleTick();
-      this.currentTick++;
+      if (this.currentTick === 5000) this.currentTick = 0;
+      else this.currentTick++;
     }
   }
 
@@ -51,7 +51,9 @@ export class PlayerServerMovementValidator implements EntityMovement {
       bufferIndex = inputPayload.tick % this.bufferSize;
 
       const statePayload = this.processMovement(inputPayload, state);
-      this.player.updateState(statePayload)
+
+      this.player.updateState(statePayload);
+
       this.stateBuffer[bufferIndex] = {
         position: this.player.view.positionVector,
         tick: inputPayload.tick,
@@ -77,6 +79,6 @@ export class PlayerServerMovementValidator implements EntityMovement {
   }
 
   sendToClient(state: MovementPlayerStateDto) {
-    this.clientConnection.sendPositionChange(state)
+    this.clientConnection.sendPositionChange(state);
   }
 }

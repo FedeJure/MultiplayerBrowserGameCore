@@ -55,7 +55,10 @@ export function resolveMovement(
     x: Number(newVelX.toPrecision(2)),
     y: Number(newVelY.toPrecision(2)),
   }
+
   view.setVelocity(newVelocity.x, newVelocity.y)
+  // view.setPosition(newPosition.x, newPosition.y)
+  // view.setPositionInTime(newPosition.x, newPosition.y, delta)
   view.lookToLeft(side === Side.LEFT)
   return {
     jumpsAvailable: availableJumps,

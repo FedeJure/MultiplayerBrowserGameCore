@@ -43,11 +43,10 @@ export class PlayerMovementValidationDelegator implements Delegator {
     //   currentPosition.y,
     //   this.nextPredictedPosition.y
     // );
-    // this.player.view.setPositionInTime(
-    //   x,
-    //   y,
-    //   DefaultGameConfiguration.playerStatesEventInterval
-    // );
+    this.player.view.setPosition(
+      this.remotePosition.x,
+      this.remotePosition.y,
+    );
   }
 
   init() {

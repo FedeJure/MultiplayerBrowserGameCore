@@ -53,6 +53,7 @@ export class ClientConnectionDelegator implements Delegator {
           data.localPlayer.info,
           data.localPlayer.stats
         );
+        // this.createClientPlayer(data.localPlayer.state, data.localPlayer.info)
         for (let i = 0; i < data.players.length; i++) {
           const dto = data.players[i];
           if (dto.id === data.localPlayer.id) continue;

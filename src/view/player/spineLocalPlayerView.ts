@@ -21,7 +21,7 @@ export class SpineLocalPlayerView
     width: number,
     name: string,
     texture: string = "hero",
-    public readonly combatCollisionResolver: PhaserCombatCollisionResolver
+    public readonly combatCollisionResolver: PhaserCombatCollisionResolver,
   ) {
     super(scene, x, y, height, width, name, texture);
     this.hud = new EntityIngameHud(scene, 0, -height, height, 50, true);

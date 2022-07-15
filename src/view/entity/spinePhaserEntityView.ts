@@ -27,7 +27,6 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     const spine = scene.add.spine(x, y, texture, undefined, true);
 
     spine.setScale(height / spine.height);
-
     super(spine, x, y, height, width);
     this.setName(name);
     this.spine = spine;
@@ -41,9 +40,6 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     //   dispose: () => {},
     //   complete: () => {},
     // });
-    // this.spine.setAlpha(0)
-    // const spine1 = scene.add.spine(x, y, texture, undefined, true);
-    // spine1.setScale(height / spine.height);
     const tween = scene.tweens.add({
       targets: spine,
       x: 400,
@@ -52,17 +48,13 @@ export class SpinePhaserEntityView extends PhaserEntityView {
       duration: 100,
       paused: true,
       repeat: -1,
-      useFrames: true,
+      useFrames: false,
       loop: true
     });
     tween.play();
     this.scene.events.addListener(
       Phaser.Scenes.Events.UPDATE,
       (time, delta) => {
-        // if (Phaser.Math.Distance.Between(this.x, this.y, spine1.x, spine1.y) <= 3) {
-        //   spine1.setPosition(this.x, this.y)
-        //   return
-        // }
         if (tween.isPlaying()) {
           tween.updateTo("x", this.x, true);
           tween.updateTo("y", this.y + height / 6, true);

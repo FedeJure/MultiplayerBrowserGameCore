@@ -16,17 +16,13 @@ export const PhaserClientConfig: GameConfig = {
   dom: {
     createContainer: true,
   },
-  fps: {
-    target: 60,
-    smoothStep: true,
-  },
   physics: {
     default: "arcade",
     arcade: {
       gravity: {
         y: 1300,
       },
-      debug: true
+      // debug: true
     },
   },
   plugins: {
@@ -49,10 +45,6 @@ export const PhaserServerConfig: GameConfig = {
     height: 10,
   },
   customEnvironment: true,
-  fps: {
-    smoothStep: true,
-    target: 60,
-  },
   physics: {
     default: "arcade",
     arcade: {

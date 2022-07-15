@@ -1,3 +1,4 @@
+import { Vector } from "matter";
 import { EntityMovement } from "../../entity/entityMovement";
 import { InputWithTickDto } from "../../input/inputWithTickDto";
 import { ServerConnection } from "../../serverConnection";
@@ -21,6 +22,10 @@ export class PlayerClientMovementValidator implements EntityMovement {
   private inputBuffer: InputWithTickDto[];
   private latestServerState: MovementPlayerStateDto | undefined;
   private lastProcessedState: MovementPlayerStateDto | undefined;
+
+  private lastErrorReported: number = 0;
+  private consecutiveIncreasingErrors: number = 0;
+
   constructor(private serverConnection: ServerConnection) {
     this.stateBuffer = new Array(this.bufferSize);
     this.inputBuffer = new Array(this.bufferSize);
@@ -44,29 +49,28 @@ export class PlayerClientMovementValidator implements EntityMovement {
     this.timer += delta;
     while (this.timer >= this.minTimeBetweenTicks) {
       this.timer -= this.minTimeBetweenTicks;
-      this.handleTick();
-      this.currentTick++;
+      this.handleTick(time);
+      if (this.currentTick === 5000) this.currentTick = 0;
+      else this.currentTick++;
     }
   }
 
-  handleTick() {
+  handleTick(time: number) {
     if (
       this.latestServerState &&
       (!this.lastProcessedState ||
         this.latestServerState!.tick !== this.lastProcessedState!.tick)
     ) {
-      this.handleServerReconciliation();
+      this.handleServerReconciliation(time);
     }
 
     let bufferIndex = this.currentTick % this.bufferSize;
-
     let inputPayload: InputWithTickDto = {
       ...this.player.input.toDto(),
       tick: this.currentTick,
     };
     this.inputBuffer[bufferIndex] = inputPayload;
-    this.processMovement(inputPayload);
-
+    this.processMovement(inputPayload, time);
     this.stateBuffer[bufferIndex] = {
       position: this.player.view.positionVector,
       tick: this.currentTick,
@@ -75,41 +79,60 @@ export class PlayerClientMovementValidator implements EntityMovement {
     this.sendToServer(inputPayload);
   }
 
-  handleServerReconciliation() {
+  handleServerReconciliation(time: number) {
     if (!this.latestServerState) return;
+    const latestServerState = { ...this.latestServerState };
 
-    let serverStateBufferIndex = this.latestServerState.tick % this.bufferSize;
+    let serverStateBufferIndex = latestServerState.tick % this.bufferSize;
 
     if (
       !this.stateBuffer[serverStateBufferIndex].position ||
-      !this.latestServerState.position
+      !latestServerState.position
     )
       return;
 
     this.lastProcessedState = this.latestServerState;
     let positionError = Phaser.Math.Distance.BetweenPoints(
-      this.latestServerState.position,
+      latestServerState.position,
       this.stateBuffer[serverStateBufferIndex].position
     );
 
-    if (positionError > 0.1) {
+    if (positionError > 50) {
       console.log("Reconciliation with server");
+      // const x = Phaser.Math.Interpolation.SmoothStep(
+      //     0.8,
+      //     latestServerState.position.x,
+      //     this.stateBuffer[serverStateBufferIndex].position.x
+      //   );
+      //   const y = Phaser.Math.Interpolation.SmoothStep(
+      //     0.8,
+      //     latestServerState.position.y,
+      //     this.stateBuffer[serverStateBufferIndex].position.y
+      //   );
       this.player.view.setPosition(
-        this.latestServerState.position.x,
-        this.latestServerState.position.y
+        latestServerState.position.x,
+        latestServerState.position.y
       );
+      // if (positionError > 10 && this.lastErrorReported < positionError)
+      //   this.consecutiveIncreasingErrors++;
+      // else this.consecutiveIncreasingErrors = 0;
+      // this.lastErrorReported = positionError;
+      // if (this.consecutiveIncreasingErrors > 10)
+      //   this.player.view.setPosition(
+      //     latestServerState.position.x,
+      //     latestServerState.position.y
+      //   );
 
       this.stateBuffer[serverStateBufferIndex] = this.latestServerState;
 
       let tickToProcess = this.latestServerState.tick + 1;
-
       while (tickToProcess < this.currentTick) {
         const bufferIndex = tickToProcess % this.bufferSize;
 
         const statePayload = this.processMovement(
-          this.inputBuffer[bufferIndex]
+          this.inputBuffer[bufferIndex],
+          time
         );
-        this.player.updateState(statePayload);
 
         this.stateBuffer[bufferIndex] = {
           position: statePayload.position!,
@@ -120,7 +143,7 @@ export class PlayerClientMovementValidator implements EntityMovement {
     }
   }
 
-  processMovement(input: InputWithTickDto): Partial<PlayerState> {
+  processMovement(input: InputWithTickDto, time: number): Partial<PlayerState> {
     return resolveMovement(
       this.player.state,
       input,
@@ -132,7 +155,7 @@ export class PlayerClientMovementValidator implements EntityMovement {
   }
 
   sendToServer(inputPayload: InputWithTickDto) {
-    if (!this.inputHasChange) return;
+    // if (!this.inputHasChange) return;
     this.inputHasChange = false;
     this.serverConnection.emitInput(
       this.player.info.id,
