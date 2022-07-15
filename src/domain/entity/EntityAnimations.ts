@@ -3,7 +3,7 @@ import { Entity } from "./entity";
 
 export interface EntityAnimations {
   init(entity: Entity);
-  update(time: number, delta: number);
+  update();
   stopAnimations()
   executeAnimation(
     anim: EntityAnimationCode,

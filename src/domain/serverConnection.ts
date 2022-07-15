@@ -17,6 +17,7 @@ import {
 import { EnvironmentObject } from "./environmentObjects/environmentObject";
 import { Item } from "./items/item";
 import { Loot } from "./loot/loot";
+import { MovementPlayerStateDto } from "./player/movement/movementPlayerStateDto";
 
 export interface ServerConnection {
   onNewPlayerConnected: Observable<NewPlayerConnectedEvent>;
@@ -32,6 +33,7 @@ export interface ServerConnection {
     input: PlayerInputDto,
     inputRequest: number
   ): void;
+
   onMapUpdated: Observable<MapUpdateEvent>;
   onInventoryUpdate: Observable<InventoryBalanceUpdatedEvent>;
   onEnemyState: Observable<EnemiesStatesEvent>;
@@ -42,4 +44,5 @@ export interface ServerConnection {
   emitClaimLoot(lootId: Loot["id"], lootIndexes: number[], balance: number);
   onLootsAppear: Observable<LootsAppearEvent>;
   onLootsDisappear: Observable<LootsDisappearEvent>;
+  onPositionChange: Observable<MovementPlayerStateDto>;
 }

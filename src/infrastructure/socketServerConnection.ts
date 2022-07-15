@@ -1,5 +1,6 @@
 import { Observable, Subject } from "rxjs";
 import { Socket } from "socket.io-client";
+import { MovementPlayerStateDto } from "../domain/player/movement/movementPlayerStateDto";
 
 import { ServerConnection } from "../domain/serverConnection";
 import { PlayerInputDto } from "./dtos/playerInputDto";
@@ -17,6 +18,7 @@ import {
   PlayerConnectionResponseEvent,
   PlayerDisconnectedEvent,
   PlayerStatesEvent,
+  PositionChangeEvent,
 } from "./events/gameEvents";
 import { SocketIOEvents } from "./events/socketIoEvents";
 
@@ -36,6 +38,7 @@ export class SocketServerConnection implements ServerConnection {
   private readonly _onEnemyStates = new Subject<EnemiesStatesEvent>();
   private readonly _onLootsApprear = new Subject<LootsAppearEvent>();
   private readonly _onLootsDisapprear = new Subject<LootsDisappearEvent>();
+  private readonly _onPositionChange = new Subject<PositionChangeEvent>();
 
   constructor(masterSocket: Socket, gameStateSocket: Socket) {
     this.socket = masterSocket;
@@ -67,6 +70,9 @@ export class SocketServerConnection implements ServerConnection {
     masterSocket.on(GameEvents.LOOT_DISAPPEAR.name, (data) =>
       this._onLootsDisapprear.next(data)
     );
+    masterSocket.on(GameEvents.POSITION_CHANGE.name, (data) =>
+      this._onPositionChange.next(data)
+    );
 
     var startTime = Date.now();
     masterSocket.on(SocketIOEvents.PONG, () =>
@@ -76,6 +82,9 @@ export class SocketServerConnection implements ServerConnection {
       startTime = Date.now();
       masterSocket.emit(SocketIOEvents.PING);
     }, 2000);
+  }
+  get onPositionChange() {
+    return this._onPositionChange.asObservable();
   }
   emitClaimLoot(lootId: string, lootIndexes: number[], balance: number) {
     this.socket.emit(

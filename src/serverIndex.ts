@@ -27,7 +27,7 @@ import mongoose from "mongoose";
 import { Account } from "./domain/account/account";
 import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
 import { ServerGameScene } from "./view/scenes/ServerGameScene";
-
+import blocked from 'blocked-at'
 class ServerApi {
   constructor(private provider: ServerProvider) {}
 
@@ -88,6 +88,7 @@ export const InitGame: (
   socket: Socket,
   originUrl: string
 ) => Promise<ServerApi> = async (socket, originUrl) => {
+  // blocked(console.log)
   return new Promise((res, err) => {
     const provider = InitServerDependencies();
     // This will create an new instance of "MongoMemoryServer" and automatically start it

@@ -10,27 +10,29 @@ export class DefaultEntityAnimations implements EntityAnimations {
   init(entity: Entity) {
     this.entity = entity;
   }
-  update(time: number, delta: number) {
+  update() {
     if (!this.entity.state.isAlive) {
-      this.entity.updateState({anim: [{layer: AnimationLayer.MOVEMENT, name: EntityAnimationCode.DIE}]})
+      // this.entity.updateState({anim: [{layer: AnimationLayer.MOVEMENT, name: EntityAnimationCode.DIE}]})
       return
     }
     this.processAnimation();
   }
 
   processAnimation() {
-    this.entity.updateState({
-      anim: [
-        ...this.entity.state.anim
-          .filter(this.filterCondition)
-          .filter(this.filterFinishedAnimations)
-          .filter(this.removeRepetedLayerAnimations),
-        {
-          name: this.getMovementAnimation(),
-          layer: AnimationLayer.MOVEMENT,
-        },
-      ],
-    });
+    const movementAnim = this.getMovementAnimation()
+    this.executeAnimation(movementAnim, AnimationLayer.MOVEMENT, true)
+    // this.entity.updateState({
+    //   anim: [
+    //     ...this.entity.state.anim
+    //       .filter(this.filterCondition)
+    //       .filter(this.filterFinishedAnimations)
+    //       .filter(this.removeRepetedLayerAnimations),
+    //     {
+    //       name: this.getMovementAnimation(),
+    //       layer: AnimationLayer.MOVEMENT,
+    //     },
+    //   ],
+    // });
   }
 
   private removeRepetedLayerAnimations(
@@ -114,9 +116,9 @@ export class DefaultEntityAnimations implements EntityAnimations {
       anim: newAnim,
     });
 
-    this.entity.updateState({
-      anim: [...oldAnims, newAnim],
-    });
+    // this.entity.updateState({
+    //   anim: [...oldAnims, newAnim],
+    // });
   }
 
   stopAnimations() {

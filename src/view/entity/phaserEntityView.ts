@@ -7,6 +7,7 @@ import { ExistentDepths } from "../existentDepths";
 import { PhaserCombatCollisionResolver } from "../player/combatCollisionResolver";
 import { ViewObject, ViewObjectType } from "../../domain/viewObject";
 import { Entity } from "../../domain/entity/entity";
+import { Side } from "../../domain/side";
 
 export class PhaserEntityView
   extends Phaser.GameObjects.Container
@@ -21,8 +22,8 @@ export class PhaserEntityView
     width: number,
     protected collisionResolver?: PhaserCombatCollisionResolver
   ) {
-    super(view.scene, x, y, [view as GameObjects.GameObject]);
-    view.setPosition(0, height / 6);
+    super(view.scene, x, y);
+    // view.setPosition(0, height / 6);
     this.setSize(width, height);
     this.scene.physics.add.existing(this);
     this.scene.add.existing(this);
@@ -68,13 +69,14 @@ export class PhaserEntityView
 
   setPositionInTime(x: number, y: number, time: number) {
     if (this.currentTween && this.currentTween.progress < 1) this.currentTween.stop()
-    // const distance = Phaser.Math.Distance.Between(x,y, this.x, this.y)
+    const distance = Phaser.Math.Distance.Between(x,y, this.x, this.y)
     // this.scene.physics.moveTo(this,x,y,distance * 1000 / time )
     this.currentTween = this.scene.tweens.add({
       targets: this,
       duration: time,
       x: {from: this.x, to: x},
       y: {from: this.y, to: y},
+      ease: Phaser.Math.Easing.Linear
     });
   }
   getEntitiesClose(distance: number) {
@@ -95,6 +97,10 @@ export class PhaserEntityView
       (value ? -1 : 1) * Math.abs(this.view.scaleX),
       this.view.scaleY
     );
+  }
+
+  get side() {
+    return this.view.scaleX > 0 ? Side.RIGHT : Side.LEFT 
   }
 
   get positionVector(): Vector {

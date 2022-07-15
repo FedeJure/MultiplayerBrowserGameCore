@@ -14,6 +14,7 @@ import {
 import { ProcessedMap } from "./environment/processedMap";
 import { Loot } from "./loot/loot";
 import { BalanceDto } from "./inventory/balanceDto";
+import { MovementPlayerStateDto } from "./player/movement/movementPlayerStateDto";
 
 export interface ClientConnection {
   connectionId: string;
@@ -52,4 +53,5 @@ export interface ClientConnection {
   sendLootAppear(loots: Loot[]);
   sendLootDisappear(loots: Loot[]);
   onClaimLoot(): Observable<ClaimLootEvent>;
+  sendPositionChange(dto: MovementPlayerStateDto);
 }

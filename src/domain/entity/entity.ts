@@ -37,6 +37,7 @@ export class Entity<
     this._animations.init(this);
   }
 
+
   updateInfo(newInfo: Partial<Info>) {
     this._info = { ...this.info, ...newInfo };
   }
@@ -44,7 +45,6 @@ export class Entity<
   updateState(newState: Partial<State>) {
     this._prevState = this._state
     this._state = { ...this.state, ...newState };
-
   }
 
   updateStats(newStats: Partial<Stats>) {
@@ -56,9 +56,20 @@ export class Entity<
   }
 
   update(time: number, delta: number) {
-    this._animations.update(time, delta);
     this.combat.update(time, delta);
     this.movement.update(time, delta);
+  }
+
+  postUpdate() {
+    this.updateState({
+      position: this.view.positionVector,
+      velocity: this.view.velocity,
+      side: this.view.side,
+      grounded: this.view.grounded
+    } as State)
+    // this.view.playAnimations(this.state.anim);
+    this._animations.update();
+
   }
 
   receiveAttack(attack: CombatResult) {

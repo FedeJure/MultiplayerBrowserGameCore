@@ -1,9 +1,8 @@
+import { EntityMovement } from "../../entity/entityMovement";
 import { MapManager } from "../../environment/mapManager";
 import { Balance } from "../../inventory/balance";
 import { ClientInventory } from "../../inventory/playerInventory";
-import { PlayerView } from "../../playerView";
 import { LocalPlayerView } from "../localPlayerView";
-import { PlayerMovement } from "../movement/playerMovement";
 import { PlayerInfo } from "../playerInfo";
 import { ClientPlayerInput } from "../playerInput";
 import { PlayerState } from "../playerState";
@@ -16,7 +15,7 @@ export class LocalClientPlayer extends ControllablePlayer {
     state: PlayerState,
     view: LocalPlayerView,
     stats: PlayerStats,
-    movementSystem: PlayerMovement,
+    movementSystem: EntityMovement,
     input: ClientPlayerInput,
     inventory: ClientInventory,
     mapManager: MapManager,

@@ -15,7 +15,6 @@ import { AsyncRepository, SimpleRepository } from "../repository";
 import { PlayerInfo } from "./playerInfo";
 import { PlayerInventoryDto } from "../inventory/playerInventoryDto";
 import { Scene } from "phaser";
-import { PlayerMovement } from "./movement/playerMovement";
 import { DefaultPlayerStats, PlayerStats } from "./playerStats";
 import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { CollisionableTargetType } from "../combat/attackTargetType";
@@ -31,6 +30,7 @@ import { DefaultGameConfiguration } from "../../infrastructure/configuration/Gam
 import { PlayerState } from "./playerState";
 import { PlayerBalance } from "../inventory/playerBalance";
 import { PlayerRoomChangeEventRepository } from "./playerRoomChangeEventRepository";
+import { PlayerServerMovementValidator } from "./movement/serverPlayerMovementValidator";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -221,7 +221,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       playerInfo,
       playerState,
       view,
-      new PlayerMovement(),
+      new PlayerServerMovementValidator(connection),
       input,
       playerStats,
       this.mapManager,

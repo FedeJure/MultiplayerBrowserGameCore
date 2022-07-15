@@ -9,5 +9,4 @@ export class Player extends Entity<
   PlayerState,
   PlayerView,
   PlayerStats
-> {
-}
+> {}

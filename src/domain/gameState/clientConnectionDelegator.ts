@@ -9,7 +9,6 @@ import { PlayerInfo } from "../player/playerInfo";
 import { SimpleRepository } from "../repository";
 import { Scene } from "phaser";
 import { Player } from "../player/players/player";
-import { PlayerMovement } from "../player/movement/playerMovement";
 import { DefaultPlayerStats, PlayerStats } from "../player/playerStats";
 import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { CollisionableTargetType } from "../combat/attackTargetType";
@@ -30,6 +29,7 @@ import { SpineLocalPlayerView } from "../../view/player/spineLocalPlayerView";
 import { SpinePlayerView } from "../../view/player/spinePlayerView";
 import { PlayerVirtualJoystickInput } from "../../infrastructure/input/playerVirtualJoystickInput";
 import { isMobile } from "../../view/utils";
+import { PlayerClientMovementValidator } from "../player/movement/clientPlayerMovementValidator";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -144,7 +144,7 @@ export class ClientConnectionDelegator implements Delegator {
           this.scene.scene.get(SceneNames.ClientHudScene)
         )
       : new PlayerKeyBoardInput(this.scene.input.keyboard);
-    const movementSystem = new PlayerMovement();
+    const movementSystem = new PlayerClientMovementValidator(this.connection);
 
     const moneyView = new HtmlMoneyView();
     const player = new LocalClientPlayer(

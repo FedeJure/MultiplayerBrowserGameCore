@@ -9,6 +9,7 @@ import { PlayerInputDto } from "../dtos/playerInputDto";
 import { PlayerInventoryDto } from "../../domain/inventory/playerInventoryDto";
 import { Loot } from "../../domain/loot/loot";
 import { BalanceDto } from "../../domain/inventory/balanceDto";
+import { Vector } from "../../domain/vector";
 
 export const GameEvents: {
   PLAYER_CONNECTED: {
@@ -104,6 +105,10 @@ export const GameEvents: {
       success: boolean,
       message: string
     ) => PlayerConnectionResponseEvent;
+  };
+  POSITION_CHANGE: {
+    name: string;
+    getEvent: (position: Vector, tick: number) => PositionChangeEvent;
   };
 } = {
   PLAYER_CONNECTED: {
@@ -223,6 +228,14 @@ export const GameEvents: {
       time: new Date(),
     }),
   },
+  POSITION_CHANGE: {
+    name: "player_position_change",
+    getEvent: (position, tick) => ({
+      position,
+      tick,
+      time: new Date(),
+    }),
+  },
 };
 
 interface BaseEvent {
@@ -305,4 +318,9 @@ export interface LootsAppearEvent extends BaseEvent {
 
 export interface LootsDisappearEvent extends BaseEvent {
   loots: Loot[];
+}
+
+export interface PositionChangeEvent extends BaseEvent {
+  position: Vector;
+  tick: number;
 }

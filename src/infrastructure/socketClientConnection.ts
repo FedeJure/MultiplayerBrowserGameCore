@@ -8,7 +8,6 @@ import {
   GameEvents,
   ItemDetailRequest,
   ItemDetailResponse,
-  PlayerConnectedEvent,
   PlayerConnectionResponseEvent,
   PlayerInputEvent,
 } from "./events/gameEvents";
@@ -20,6 +19,7 @@ import { PlayerInventoryDto } from "../domain/inventory/playerInventoryDto";
 import { LocalPlayerInitialStateDto } from "./dtos/localPlayerInitialStateDto";
 import { Loot } from "../domain/loot/loot";
 import { BalanceDto } from "../domain/inventory/balanceDto";
+import { MovementPlayerStateDto } from "../domain/player/movement/movementPlayerStateDto";
 
 export class SocketClientConnection implements ClientConnection {
   public readonly socket: Socket;
@@ -48,6 +48,12 @@ export class SocketClientConnection implements ClientConnection {
     this.socket = socket;
 
     this.listenEvents();
+  }
+  sendPositionChange(dto: MovementPlayerStateDto) {
+    this.socket.emit(
+      GameEvents.POSITION_CHANGE.name,
+      GameEvents.POSITION_CHANGE.getEvent(dto.position, dto.tick)
+    );
   }
 
   listenEvents() {

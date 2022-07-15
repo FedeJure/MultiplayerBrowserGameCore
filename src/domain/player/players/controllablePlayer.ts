@@ -1,6 +1,7 @@
 import { Attackable } from "../../combat/attackTarget";
 import { CollisionableTargetType } from "../../combat/attackTargetType";
 import { Entity } from "../../entity/entity";
+import { EntityMovement } from "../../entity/entityMovement";
 import { MapManager } from "../../environment/mapManager";
 import { Balance } from "../../inventory/balance";
 import { Inventory } from "../../inventory/inventory";
@@ -9,7 +10,6 @@ import { PlayerView } from "../../playerView";
 import { DefendCombatAction } from "../combat/actions/DefendCombatAction";
 import { SimpleForwardPunchCombatAction } from "../combat/actions/SimpleForwardPunchCombatAction";
 import { CombatSystem } from "../combat/combatSystem";
-import { PlayerMovement } from "../movement/playerMovement";
 import { PlayerInfo } from "../playerInfo";
 import { PlayerInput } from "../playerInput";
 import { PlayerState } from "../playerState";
@@ -22,7 +22,7 @@ export class ControllablePlayer extends Player {
     _state: PlayerState,
     _view: PlayerView,
     _stats: PlayerStats,
-    _movementSystem: PlayerMovement,
+    _movementSystem: EntityMovement,
     protected _input: PlayerInput,
     mapManager: MapManager, //usar esto para spawnear al jugador en un spot de spawn al morir.
     protected _inventory: Inventory<Item | Item['id']>,

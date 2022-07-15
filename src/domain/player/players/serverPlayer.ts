@@ -1,5 +1,4 @@
 import { Observable, Subject } from "rxjs";
-import { PlayerStateRepository } from "../../../infrastructure/repositories/playerStateRepository";
 import { ClientConnection } from "../../clientConnection";
 import { PlayerView } from "../../playerView";
 import { AsyncRepository } from "../../repository";
@@ -7,12 +6,12 @@ import { ControllablePlayer } from "./controllablePlayer";
 import { PlayerInfo } from "../playerInfo";
 import { PlayerState } from "../playerState";
 import { PlayerInput } from "../playerInput";
-import { PlayerMovement } from "../movement/playerMovement";
 import { PlayerStats } from "../playerStats";
 import { MapManager } from "../../environment/mapManager";
 import { Balance } from "../../inventory/balance";
 import { ServerPlayerInventory } from "../../inventory/serverPlayerInventory";
 import { PlayerTransportation } from "../playerTransportation";
+import { EntityMovement } from "../../entity/entityMovement";
 
 export class ServerPlayer extends ControllablePlayer {
   private _onStateChange: Subject<{
@@ -23,7 +22,7 @@ export class ServerPlayer extends ControllablePlayer {
     info: PlayerInfo,
     state: PlayerState,
     view: PlayerView,
-    movementSystem: PlayerMovement,
+    movementSystem: EntityMovement,
     input: PlayerInput,
     stats: PlayerStats,
     mapManager: MapManager,

@@ -34,17 +34,17 @@ export class ClientPresenterProvider {
     view: GameObjects.GameObject
   ): void {
     new ViewPresenter(view, [
-      new PlayerMovementValidationDelegator(
-        player,
-        ClientProvider.serverConnection,
-        ClientProvider.playerInputRequestRepository
-      ),
-      new PlayerInputDelegator(
-        player,
-        input,
-        ClientProvider.serverConnection,
-        ClientProvider.playerInputRequestRepository
-      ),
+      // new PlayerMovementValidationDelegator(
+      //   player,
+      //   ClientProvider.serverConnection,
+      //   ClientProvider.playerInputRequestRepository
+      // ),
+      // new PlayerInputDelegator(
+      //   player,
+      //   input,
+      //   ClientProvider.serverConnection,
+      //   ClientProvider.playerInputRequestRepository
+      // ),
       new LocalPlayerRenderDelegator(player),
       new ClientPlayerConnectionDelegator(
         ClientProvider.serverConnection,

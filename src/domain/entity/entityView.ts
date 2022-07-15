@@ -2,6 +2,7 @@ import { AnimationDto } from "./AnimationDto";
 import { Vector } from "../vector";
 import { CollisionableEntity } from "./CollisionableEntity";
 import { Entity } from "./entity";
+import { Side } from "../side";
 
 export interface EntityView {
   velocity: Vector;
@@ -37,4 +38,5 @@ export interface EntityView {
   ): T[];
   die()
   setAllowGravity(value: boolean)
+  side: Side
 }

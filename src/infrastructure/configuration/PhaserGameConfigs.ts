@@ -17,7 +17,6 @@ export const PhaserClientConfig: GameConfig = {
     createContainer: true,
   },
   fps: {
-    forceSetTimeOut: true,
     target: 60,
     smoothStep: true,
   },
@@ -27,7 +26,7 @@ export const PhaserClientConfig: GameConfig = {
       gravity: {
         y: 1300,
       },
-      // debug: true
+      debug: true
     },
   },
   plugins: {
@@ -51,7 +50,6 @@ export const PhaserServerConfig: GameConfig = {
   },
   customEnvironment: true,
   fps: {
-    forceSetTimeOut: true,
     smoothStep: true,
     target: 60,
   },

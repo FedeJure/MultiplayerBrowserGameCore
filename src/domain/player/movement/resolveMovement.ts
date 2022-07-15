@@ -11,7 +11,7 @@ export function resolveMovement(
   view: PlayerView,
   time: number,
   delta: number
-): Partial<PlayerState> {
+): Omit<Partial<PlayerState>, 'position' | 'velocity'> {
   let newVelX = view.velocity.x;
   let newVelY = view.velocity.y;
   let maxRunVelocity =
@@ -19,7 +19,7 @@ export function resolveMovement(
 
   let canJump = state.canJump;
   let passLastTimeJump =
-    state.lastTimeJump === null ||  state.lastTimeJump + 200 < time;
+    state.lastTimeJump === null || state.lastTimeJump + 200 < time;
   let availableJumps =
     passLastTimeJump && state.grounded ? stats.maxJumps : state.jumpsAvailable;
   let jumping = state.jumping;
@@ -47,18 +47,47 @@ export function resolveMovement(
 
   const side =
     newVelX === 0 ? state.side : newVelX > 0 ? Side.RIGHT : Side.LEFT;
+  const newPosition = {
+    x: state.position.x + (delta * newVelX) / 1000,
+    y: state.position.y + (delta * newVelY) / 1000,
+  };
+  const newVelocity = {
+    x: Number(newVelX.toPrecision(2)),
+    y: Number(newVelY.toPrecision(2)),
+  }
+  view.setVelocity(newVelocity.x, newVelocity.y)
+  view.lookToLeft(side === Side.LEFT)
   return {
-    velocity: {
-      x: Number(newVelX.toPrecision(2)),
-      y: Number(newVelY.toPrecision(2)),
-    },
     jumpsAvailable: availableJumps,
-    position: view.positionVector,
     canJump,
-    side,
     jumping,
-    grounded: view.grounded,
     inLadder: false,
     lastTimeJump: hasJump ? time : state.lastTimeJump,
+  };
+}
+
+export function resolveLadderMovement(
+  state: PlayerState,
+  input: PlayerInputDto,
+  stats: PlayerStats,
+  view: PlayerView,
+  time: number,
+  delta: number
+) {
+  const directionVector = new Phaser.Math.Vector2(
+    input.left ? -1 : input.right ? 1 : 0,
+    input.up ? -1 : input.down ? 1 : 0
+  );
+
+  const velocity = directionVector.normalize().scale(stats.walkSpeed);
+  return {
+    velocity: { x: velocity.x, y: velocity.y },
+    position: view.positionVector,
+    side:
+      directionVector.x === 0
+        ? state.side
+        : directionVector.x > 0
+        ? Side.RIGHT
+        : Side.LEFT,
   };
 }

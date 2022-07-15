@@ -81,12 +81,12 @@ export class CombatSystem extends DefaultEntityCombat {
     this.player.updateState({ isAlive: false });
     this.player.view.scene.time.delayedCall(dieDuration, () => {
       this.player.view.setPosition(newPosition.x, newPosition.y);
-      this.player.updateState({
-        life: this.player.stats.maxLife,
-        anim: [],
-        position: newPosition,
-        isAlive: true,
-      });
+      // this.player.updateState({
+      //   life: this.player.stats.maxLife,
+      //   anim: [],
+      //   position: newPosition,
+      //   isAlive: true,
+      // });
     });
   }
 

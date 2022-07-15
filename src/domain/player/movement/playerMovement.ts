@@ -1,7 +1,6 @@
 import { DefaultEntityMovement } from "../../entity/DefaultMovement";
-import { Side } from "../../side";
 import { ControllablePlayer } from "../players/controllablePlayer";
-import { resolveMovement } from "./resolveMovement";
+import { resolveLadderMovement, resolveMovement } from "./resolveMovement";
 
 export class PlayerMovement extends DefaultEntityMovement {
   private player: ControllablePlayer;
@@ -25,25 +24,16 @@ export class PlayerMovement extends DefaultEntityMovement {
 
   resolveLadderMovement(time: number, delta: number) {
     this.player.view.setAllowGravity(false);
-
-    const directionVector = new Phaser.Math.Vector2(
-      this.player.input.left ? -1 : this.player.input.right ? 1 : 0,
-      this.player.input.up ? -1 : this.player.input.down ? 1 : 0
+    this.player.updateState(
+      resolveLadderMovement(
+        this.player.state,
+        this.player.input,
+        this.player.stats,
+        this.player.view,
+        time,
+        delta
+      )
     );
-
-    const velocity = directionVector
-      .normalize()
-      .scale(this.player.stats.walkSpeed);
-    this.player.updateState({
-      velocity: { x: velocity.x, y: velocity.y },
-      position: this.player.view.positionVector,
-      side:
-        directionVector.x === 0
-          ? this.player.state.side
-          : directionVector.x > 0
-          ? Side.RIGHT
-          : Side.LEFT,
-    });
   }
   resolveNormalMovement(time: number, delta: number) {
     this.player.view.setAllowGravity(true); // keep here
