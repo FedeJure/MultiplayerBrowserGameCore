@@ -1,4 +1,3 @@
-import { Vector } from "matter";
 import { EntityMovement } from "../../entity/entityMovement";
 import { InputWithTickDto } from "../../input/inputWithTickDto";
 import { ServerConnection } from "../../serverConnection";
@@ -16,15 +15,11 @@ export class PlayerClientMovementValidator implements EntityMovement {
   private timer = 0;
   private currentTick = 0;
   private minTimeBetweenTicks = this.serverTickRate;
-  private inputHasChange = false;
 
   private stateBuffer: MovementPlayerStateDto[];
   private inputBuffer: InputWithTickDto[];
   private latestServerState: MovementPlayerStateDto | undefined;
   private lastProcessedState: MovementPlayerStateDto | undefined;
-
-  private lastErrorReported: number = 0;
-  private consecutiveIncreasingErrors: number = 0;
 
   constructor(private serverConnection: ServerConnection) {
     this.stateBuffer = new Array(this.bufferSize);
@@ -36,13 +31,6 @@ export class PlayerClientMovementValidator implements EntityMovement {
 
   init(player: LocalClientPlayer): void {
     this.player = player;
-
-    setTimeout(() => {
-      //Refactor this
-      this.player.input.onInputChange.subscribe(() => {
-        this.inputHasChange = true;
-      });
-    }, 1000);
   }
 
   update(time: number, delta: number) {
@@ -98,30 +86,10 @@ export class PlayerClientMovementValidator implements EntityMovement {
     );
 
     if (positionError > 50) {
-      console.log("Reconciliation with server");
-      // const x = Phaser.Math.Interpolation.SmoothStep(
-      //     0.8,
-      //     latestServerState.position.x,
-      //     this.stateBuffer[serverStateBufferIndex].position.x
-      //   );
-      //   const y = Phaser.Math.Interpolation.SmoothStep(
-      //     0.8,
-      //     latestServerState.position.y,
-      //     this.stateBuffer[serverStateBufferIndex].position.y
-      //   );
       this.player.view.setPosition(
         latestServerState.position.x,
         latestServerState.position.y
       );
-      // if (positionError > 10 && this.lastErrorReported < positionError)
-      //   this.consecutiveIncreasingErrors++;
-      // else this.consecutiveIncreasingErrors = 0;
-      // this.lastErrorReported = positionError;
-      // if (this.consecutiveIncreasingErrors > 10)
-      //   this.player.view.setPosition(
-      //     latestServerState.position.x,
-      //     latestServerState.position.y
-      //   );
 
       this.stateBuffer[serverStateBufferIndex] = this.latestServerState;
 
@@ -155,8 +123,6 @@ export class PlayerClientMovementValidator implements EntityMovement {
   }
 
   sendToServer(inputPayload: InputWithTickDto) {
-    // if (!this.inputHasChange) return;
-    this.inputHasChange = false;
     this.serverConnection.emitInput(
       this.player.info.id,
       inputPayload,
