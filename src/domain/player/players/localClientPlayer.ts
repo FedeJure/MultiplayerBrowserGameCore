@@ -51,7 +51,7 @@ export class LocalClientPlayer extends ControllablePlayer {
   }
 
   get view(): LocalPlayerView {
-    return this._view as LocalPlayerView
+    return this._view as LocalPlayerView;
   }
 
   updateState(newState: Partial<PlayerState>): void {
@@ -70,5 +70,16 @@ export class LocalClientPlayer extends ControllablePlayer {
   update(time: number, delta: number): void {
     if (this.state.transporting) return;
     super.update(time, delta);
+  }
+
+  postUpdate(): void {
+    this.updateState({
+      position: this.view.positionVector,
+      velocity: this.view.velocity,
+      side: this.view.side,
+      grounded: this.view.grounded,
+      inLadder: this.view.inLadder,
+    });
+    super.postUpdate();
   }
 }

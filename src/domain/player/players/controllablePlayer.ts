@@ -40,6 +40,7 @@ export class ControllablePlayer extends Player {
       ]),
     );
   }
+
   updateStats(newStats: Partial<PlayerStats>) {
     this._stats = { ...this.stats, ...newStats };
   }

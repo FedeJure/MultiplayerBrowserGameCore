@@ -7,6 +7,8 @@ export class EnemyDelegator implements Delegator {
   stop(): void {}
   update(time: number, delta: number): void {
       this.enemy.update(time, delta)
-      this.enemy.postUpdate()
+  }
+  postUpdate() {
+    this.enemy.postUpdate()
   }
 }

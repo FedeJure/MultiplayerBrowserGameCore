@@ -1,3 +1,4 @@
+import { AnonymousSubject } from "rxjs/internal/Subject";
 import { AnimationDto } from "./AnimationDto";
 import { EntityAnimationCode, AnimationLayer } from "./animations";
 import { Entity } from "./entity";
@@ -13,14 +14,15 @@ export class DefaultEntityAnimations implements EntityAnimations {
   update() {
     if (!this.entity.state.isAlive) {
       // this.entity.updateState({anim: [{layer: AnimationLayer.MOVEMENT, name: EntityAnimationCode.DIE}]})
-      return
+      return;
     }
     this.processAnimation();
   }
 
   processAnimation() {
-    const movementAnim = this.getMovementAnimation()
-    this.executeAnimation(movementAnim, AnimationLayer.MOVEMENT, true)
+    const movementAnim = this.getMovementAnimation();
+    this.executeAnimation(movementAnim, AnimationLayer.MOVEMENT, false)
+    // this.executeAnimation(movementAnim, AnimationLayer.MOVEMENT, true)
     // this.entity.updateState({
     //   anim: [
     //     ...this.entity.state.anim
@@ -98,23 +100,31 @@ export class DefaultEntityAnimations implements EntityAnimations {
     loop?: boolean,
     duration?: number
   ) {
-    const currentAnim = this.currentAnimPerLayer.get(layer);
-    let oldAnims = this.entity.state.anim;
-    if (currentAnim) {
-      this.currentAnimPerLayer.delete(layer);
-      oldAnims = oldAnims.filter((a) => a.layer === layer);
-    }
+    this.entity.view.playAnimations([
+      {
+        name: anim,
+        layer,
+        loop,
+        ...(duration ? { duration, time: Date.now() } : {}),
+      },
+    ]);
+    // const currentAnim = this.currentAnimPerLayer.get(layer);
+    // let oldAnims = this.entity.state.anim;
+    // if (currentAnim) {
+    //   this.currentAnimPerLayer.delete(layer);
+    //   oldAnims = oldAnims.filter((a) => a.layer === layer);
+    // }
 
-    const newAnim = {
-      name: anim,
-      layer,
-      loop,
-      duration,
-      time: Date.now(),
-    };
-    this.currentAnimPerLayer.set(layer, {
-      anim: newAnim,
-    });
+    // const newAnim = {
+    //   name: anim,
+    //   layer,
+    //   loop,
+    //   duration,
+    //   time: Date.now(),
+    // };
+    // this.currentAnimPerLayer.set(layer, {
+    //   anim: newAnim,
+    // });
 
     // this.entity.updateState({
     //   anim: [...oldAnims, newAnim],

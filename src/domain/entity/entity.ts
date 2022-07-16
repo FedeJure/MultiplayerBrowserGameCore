@@ -67,9 +67,7 @@ export class Entity<
       side: this.view.side,
       grounded: this.view.grounded
     } as State)
-    // this.view.playAnimations(this.state.anim);
     this._animations.update();
-
   }
 
   receiveAttack(attack: CombatResult) {

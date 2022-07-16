@@ -67,6 +67,16 @@ export class ServerPlayer extends ControllablePlayer {
       this.playerTransportation.update(time,delta)
   }
 
+  postUpdate(): void {
+    this.updateState({
+      position: this.view.positionVector,
+      velocity: this.view.velocity,
+      side: this.view.side,
+      grounded: this.view.grounded,
+      inLadder: this.view.inLadder
+    })
+  }
+
   get onStateChange(): Observable<{
     state: PlayerState;
     change: Partial<PlayerState>;

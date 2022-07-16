@@ -30,7 +30,6 @@ export class SimpleForwardPunchCombatAction implements CombatAction {
         false,
         attackDuration
       );
-
       const x =
         this.player.state.position.x -
         this.player.view.width / 2 -
