@@ -5,7 +5,6 @@ import { LocalClientPlayer } from "../players/localClientPlayer";
 import { PlayerState } from "../playerState";
 import { MovementPlayerStateDto } from "./movementPlayerStateDto";
 import { resolveMovement } from "./resolveMovement";
-
 export class PlayerClientMovementValidator implements EntityMovement {
   private player: LocalClientPlayer;
 
@@ -118,7 +117,8 @@ export class PlayerClientMovementValidator implements EntityMovement {
       this.player.stats,
       this.player.view,
       Date.now(),
-      this.minTimeBetweenTicks
+      this.minTimeBetweenTicks,
+      false
     );
   }
 

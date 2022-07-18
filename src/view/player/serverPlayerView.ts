@@ -5,7 +5,6 @@ import { IsInsidePropertyOrRemove } from "../utils";
 import { Exit } from "../../domain/environment/exit";
 
 export class ServerPlayerView extends PhaserPlayerView {
-  private readonly spine: SpineGameObject;
   constructor(
     scene: Scene,
     x: number,

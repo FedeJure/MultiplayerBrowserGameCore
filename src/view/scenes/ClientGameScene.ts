@@ -9,6 +9,9 @@ export class ClientGameScene extends GameScene {
   }
 
   create(): void {
+    this.physics.world.setFPS(60)
+
+    console.log("FPS:", this.physics.world.fps)
     this.scene.launch(this.hudScene);
     this.scene.launch(SceneNames.BackgroundScene);
     this.scene.moveDown(SceneNames.BackgroundScene);

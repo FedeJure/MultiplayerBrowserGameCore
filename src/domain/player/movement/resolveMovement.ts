@@ -3,14 +3,15 @@ import { PlayerView } from "../../playerView";
 import { Side } from "../../side";
 import { PlayerState } from "../playerState";
 import { PlayerStats } from "../playerStats";
-
+let counter = 0
 export function resolveMovement(
   state: PlayerState,
   input: PlayerInputDto,
   stats: PlayerStats,
   view: PlayerView,
   time: number,
-  delta: number
+  delta: number,
+  isServer: boolean
 ): Omit<Partial<PlayerState>, 'position' | 'velocity'> {
   let newVelX = view.velocity.x;
   let newVelY = view.velocity.y;
@@ -25,7 +26,7 @@ export function resolveMovement(
   let jumping = state.jumping;
   let hasJump = false;
   if (canJump && availableJumps > 0 && input.jump && passLastTimeJump) {
-    newVelY = -stats.jumpPower * delta;
+    newVelY = -stats.jumpPower;
     availableJumps--;
     canJump = false;
     jumping = true;
@@ -36,8 +37,8 @@ export function resolveMovement(
 
   if (input.left || input.right || jumping) {
     const inAirFactor = !state.grounded ? 0.3 : 1;
-    newVelX += +input.right * maxRunVelocity * delta * inAirFactor;
-    newVelX -= +input.left * maxRunVelocity * delta * inAirFactor;
+    newVelX += +input.right * maxRunVelocity * inAirFactor;
+    newVelX -= +input.left * maxRunVelocity * inAirFactor;
 
     newVelX = Math.sign(newVelX) * Math.min(maxRunVelocity, Math.abs(newVelX));
   }
@@ -47,18 +48,12 @@ export function resolveMovement(
 
   const side =
     newVelX === 0 ? state.side : newVelX > 0 ? Side.RIGHT : Side.LEFT;
-  const newPosition = {
-    x: state.position.x + (delta * newVelX) / 1000,
-    y: state.position.y + (delta * newVelY) / 1000,
-  };
   const newVelocity = {
     x: Number(newVelX.toPrecision(2)),
     y: Number(newVelY.toPrecision(2)),
   }
 
   view.setVelocity(newVelocity.x, newVelocity.y)
-  // view.setPosition(newPosition.x, newPosition.y)
-  // view.setPositionInTime(newPosition.x, newPosition.y, delta)
   view.lookToLeft(side === Side.LEFT)
   return {
     jumpsAvailable: availableJumps,

@@ -17,19 +17,16 @@ export class PlayerServerMovementValidator implements EntityMovement {
 
   private stateBuffer: MovementPlayerStateDto[];
   private inputQueue: InputWithTickDto[];
-  private stateQueue: PlayerState[];
 
   constructor(private clientConnection: ClientConnection) {
     this.stateBuffer = new Array(this.bufferSize);
     this.inputQueue = [];
-    this.stateQueue = [];
   }
 
   init(player: ServerPlayer): void {
     this.player = player;
     this.clientConnection.onInput().subscribe(({ input, inputNumber }) => {
       this.inputQueue.push({ ...input, tick: inputNumber });
-      this.stateQueue.push({ ...player.state });
     });
   }
 
@@ -45,14 +42,12 @@ export class PlayerServerMovementValidator implements EntityMovement {
 
   handleTick() {
     let bufferIndex = -1;
-    while (this.inputQueue.length > 0 && this.stateQueue.length > 0) {
+
+    while (this.inputQueue.length > 0) {
       const inputPayload = this.inputQueue.pop()!;
-      const state = this.stateQueue.pop()!;
       bufferIndex = inputPayload.tick % this.bufferSize;
-
-      const statePayload = this.processMovement(inputPayload, state);
-
-      this.player.updateState(statePayload);
+      
+      this.processMovement(inputPayload, this.player.state)
 
       this.stateBuffer[bufferIndex] = {
         position: this.player.view.positionVector,
@@ -74,7 +69,8 @@ export class PlayerServerMovementValidator implements EntityMovement {
       this.player.stats,
       this.player.view,
       Date.now(),
-      this.minTimeBetweenTicks
+      this.minTimeBetweenTicks,
+      true
     );
   }
 

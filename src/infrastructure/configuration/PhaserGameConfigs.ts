@@ -22,6 +22,8 @@ export const PhaserClientConfig: GameConfig = {
       gravity: {
         y: 1300,
       },
+      fps: 60,
+      fixedStep: true,
       // debug: true
     },
   },
@@ -44,13 +46,15 @@ export const PhaserServerConfig: GameConfig = {
     width: 10,
     height: 10,
   },
-  customEnvironment: true,
   physics: {
     default: "arcade",
     arcade: {
       gravity: {
         y: 1300,
+        
       },
+      fixedStep: true,
+      fps: 30
     },
   },
 };

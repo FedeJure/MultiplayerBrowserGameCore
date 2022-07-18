@@ -49,7 +49,8 @@ export class PlayerMovement extends DefaultEntityMovement {
         this.player.stats,
         this.player.view,
         Date.now(),
-        delta
+        delta,
+        true
       )
     );
   }

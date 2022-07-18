@@ -39,6 +39,7 @@ export const InitClientGame = (
     scene: [new ClientLoadScene(), scene, hudScene, bacgrkoundScene],
   };
   const game = new Phaser.Game(config);
+
   resizeGameWindow(game);
   try {
     if (isMobile()) {
