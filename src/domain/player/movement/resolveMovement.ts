@@ -13,6 +13,12 @@ export function resolveMovement(
   delta: number,
   isServer: boolean
 ): Omit<Partial<PlayerState>, 'position' | 'velocity'> {
+  if (state.transporting) return {};
+  if (state.inLadder && view.inLadder && (input.up || view.falling)) {
+    return resolveLadderMovement(state,input,stats, view,time,delta)
+  }
+  view.setAllowGravity(true)
+
   let newVelX = view.velocity.x;
   let newVelY = view.velocity.y;
   let maxRunVelocity =
@@ -73,15 +79,16 @@ export function resolveLadderMovement(
   time: number,
   delta: number
 ) {
+  view.setAllowGravity(false)
   const directionVector = new Phaser.Math.Vector2(
     input.left ? -1 : input.right ? 1 : 0,
     input.up ? -1 : input.down ? 1 : 0
   );
 
   const velocity = directionVector.normalize().scale(stats.walkSpeed);
+  view.setVelocity(velocity.x, velocity.y)
   return {
-    velocity: { x: velocity.x, y: velocity.y },
-    position: view.positionVector,
+    inLadder: true,
     side:
       directionVector.x === 0
         ? state.side
