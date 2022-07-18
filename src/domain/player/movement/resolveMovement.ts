@@ -3,7 +3,7 @@ import { PlayerView } from "../../playerView";
 import { Side } from "../../side";
 import { PlayerState } from "../playerState";
 import { PlayerStats } from "../playerStats";
-let counter = 0
+
 export function resolveMovement(
   state: PlayerState,
   input: PlayerInputDto,
@@ -22,10 +22,11 @@ export function resolveMovement(
   let passLastTimeJump =
     state.lastTimeJump === null || state.lastTimeJump + 200 < time;
   let availableJumps =
-    passLastTimeJump && state.grounded ? stats.maxJumps : state.jumpsAvailable;
+    passLastTimeJump && view.grounded ? stats.maxJumps : state.jumpsAvailable;
   let jumping = state.jumping;
   let hasJump = false;
-  if (canJump && availableJumps > 0 && input.jump && passLastTimeJump) {
+  if (view.grounded && input.jump) {
+    // if (canJump && availableJumps > 0 && input.jump && passLastTimeJump) {
     newVelY = -stats.jumpPower;
     availableJumps--;
     canJump = false;
