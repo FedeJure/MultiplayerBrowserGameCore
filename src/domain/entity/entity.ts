@@ -57,6 +57,9 @@ export class Entity<
 
   update(time: number, delta: number) {
     this.combat.update(time, delta);
+  }
+
+  physicsUpdate(time: number, delta: number) {
     this.movement.update(time, delta);
   }
 

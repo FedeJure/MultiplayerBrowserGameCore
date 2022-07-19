@@ -13,7 +13,7 @@ import { PhaserEntityView } from "../../view/entity/phaserEntityView";
 export class ServerPresenterProvider {
   forPlayer(view: PhaserEntityView, player: ControllablePlayer): void {
     new ViewPresenter(view, [
-      new PlayerStateUpdaterDelegator(player)
+      new PlayerStateUpdaterDelegator(player, view.scene)
     ]);
   }
   forEnvironmentObject(

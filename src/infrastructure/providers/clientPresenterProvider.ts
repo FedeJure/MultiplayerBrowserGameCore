@@ -50,7 +50,7 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         player
       ),
-      new PlayerStateUpdaterDelegator(player),
+      new PlayerStateUpdaterDelegator(player, view.scene),
       new PlayerRemoteMovementDelegator(
         player,
         ClientProvider.serverConnection
@@ -74,7 +74,7 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         player
       ),
-      new PlayerStateUpdaterDelegator(player),
+      new PlayerStateUpdaterDelegator(player, view.scene),
     ]);
   }
 

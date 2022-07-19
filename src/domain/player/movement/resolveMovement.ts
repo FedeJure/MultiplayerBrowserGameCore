@@ -14,7 +14,7 @@ export function resolveMovement(
   isServer: boolean
 ): Omit<Partial<PlayerState>, 'position' | 'velocity'> {
   if (state.transporting) return {};
-  if (state.inLadder && view.inLadder && (input.up || view.falling)) {
+  if (state.inLadder ||( view.inLadder && (input.up || view.falling))) {
     return resolveLadderMovement(state,input,stats, view,time,delta)
   }
   view.setAllowGravity(true)

@@ -35,6 +35,7 @@ export class PhaserEntityView
     this.setData("id", uuidv4());
     this.setData("type", ViewObjectType.Entity);
     this.arcadeBody.onOverlap = true;
+    
   }
 
   setAllowGravity(value: boolean) {

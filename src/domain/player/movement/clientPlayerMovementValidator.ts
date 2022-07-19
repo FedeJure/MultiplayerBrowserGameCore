@@ -57,7 +57,9 @@ export class PlayerClientMovementValidator implements EntityMovement {
       tick: this.currentTick,
     };
     this.inputBuffer[bufferIndex] = inputPayload;
-    this.processMovement(inputPayload, time);
+    const state = this.processMovement(inputPayload, time);
+    this.player.updateState(state)
+    
     this.stateBuffer[bufferIndex] = {
       position: this.player.view.positionVector,
       tick: this.currentTick,

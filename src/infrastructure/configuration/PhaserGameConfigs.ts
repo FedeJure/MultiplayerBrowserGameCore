@@ -22,7 +22,6 @@ export const PhaserClientConfig: GameConfig = {
       gravity: {
         y: 1300,
       },
-      fps: 60,
       fixedStep: true,
       // debug: true
     },
@@ -54,7 +53,6 @@ export const PhaserServerConfig: GameConfig = {
         
       },
       fixedStep: true,
-      fps: 30
     },
   },
 };
