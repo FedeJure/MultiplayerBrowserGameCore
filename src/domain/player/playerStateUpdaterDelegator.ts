@@ -1,25 +1,25 @@
 import { Scene } from "phaser";
 import { Delegator } from "../delegator";
-import { Player } from "./players/player";
+import { Entity } from "../entity/entity";
 
-export class PlayerStateUpdaterDelegator implements Delegator {
+export class EntityStateUpdaterDelegator implements Delegator {
   private time: number = 0
-  constructor(private player: Player, private scene: Scene) {}
+  constructor(private entity: Entity, private scene: Scene) {}
   init(): void {
     this.scene.physics.world.on(Phaser.Physics.Arcade.Events.WORLD_STEP, (delta) => {
       const deltaInMillis = delta * 1000
       this.time += deltaInMillis
-      this.player.physicsUpdate(this.time, deltaInMillis) 
+      this.entity.physicsUpdate(this.time, deltaInMillis) 
 
     })
   }
   stop(): void {}
   update(time: number, delta: number): void {
-    if (!this.player.view.active) return;
-    this.player.update(time, delta);
+    if (!this.entity.view.active) return;
+    this.entity.update(time, delta);
   }
   postUpdate() {
-    if (!this.player.view.active) return;
-    this.player.postUpdate();
+    if (!this.entity.view.active) return;
+    this.entity.postUpdate();
   }
 }

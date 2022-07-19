@@ -45,6 +45,7 @@ export const PhaserServerConfig: GameConfig = {
     width: 10,
     height: 10,
   },
+  roundPixels: true,
   physics: {
     default: "arcade",
     arcade: {

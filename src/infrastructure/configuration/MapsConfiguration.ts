@@ -41,13 +41,13 @@ export const MapsConfiguration: MapConfiguration = {
           {
             id: 1,
             backgroundFile: [
-              { key: "forest-10", fileName: "backgrounds/forest/forest-00.png" },
-              { key: "forest-11", fileName: "backgrounds/forest/forest-01.png" },
-              { key: "forest-12", fileName: "backgrounds/forest/forest-02.png" },
-              { key: "forest-13", fileName: "backgrounds/forest/forest-03.png" },
-              { key: "forest-14", fileName: "backgrounds/forest/forest-04.png" },
-              { key: "forest-15", fileName: "backgrounds/forest/forest-05.png" },
-              { key: "forest-16", fileName: "backgrounds/forest/forest-06.png" },
+              { key: "forest-00", fileName: "backgrounds/forest/forest-00.png" },
+              { key: "forest-01", fileName: "backgrounds/forest/forest-01.png" },
+              { key: "forest-02", fileName: "backgrounds/forest/forest-02.png" },
+              { key: "forest-03", fileName: "backgrounds/forest/forest-03.png" },
+              { key: "forest-04", fileName: "backgrounds/forest/forest-04.png" },
+              { key: "forest-05", fileName: "backgrounds/forest/forest-05.png" },
+              { key: "forest-06", fileName: "backgrounds/forest/forest-06.png" },
             ],
             jsonFile: {
               key: "forest-village",

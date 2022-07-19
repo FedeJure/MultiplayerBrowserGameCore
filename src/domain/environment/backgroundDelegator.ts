@@ -23,6 +23,7 @@ export class BackgroundDelegator implements Delegator {
    
     this.connection.onMapUpdated.subscribe(async (ev) => {
       await this.loadAssets([ev.newMap, ...ev.neighborMaps]);
+      console.log(ev.newMap)
       await this.createBackground(ev.newMap, ev.neighborMaps);
     });
   }

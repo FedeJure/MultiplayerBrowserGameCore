@@ -17,7 +17,7 @@ import { EnvironmentObjectVariant } from "../../domain/environmentObjects/enviro
 import { Delegator } from "../../domain/delegator";
 import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
 import { GameObjects } from "phaser";
-import { PlayerStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
+import { EntityStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
 import { ClientEnemyCreatorDelegator } from "../../domain/enemies/clientEnemyCreatorDelegator";
 import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
 import { Player } from "../../domain/player/players/player";
@@ -50,7 +50,7 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         player
       ),
-      new PlayerStateUpdaterDelegator(player, view.scene),
+      new EntityStateUpdaterDelegator(player, view.scene),
       new PlayerRemoteMovementDelegator(
         player,
         ClientProvider.serverConnection
@@ -74,7 +74,7 @@ export class ClientPresenterProvider {
         ClientProvider.serverConnection,
         player
       ),
-      new PlayerStateUpdaterDelegator(player, view.scene),
+      new EntityStateUpdaterDelegator(player, view.scene),
     ]);
   }
 
@@ -134,6 +134,6 @@ export class ClientPresenterProvider {
     new ViewPresenter(view, delegators);
   }
   forEnemy(view: GameObjects.GameObject, enemy: Enemy) {
-    new ViewPresenter(view, [new EnemyUpdateDelegator(enemy)]);
+    new ViewPresenter(view, [new EntityStateUpdaterDelegator(enemy, view.scene)]);
   }
 }

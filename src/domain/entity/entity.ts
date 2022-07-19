@@ -21,7 +21,7 @@ export class Entity<
   Animations extends EntityAnimations = EntityAnimations
 > implements Attackable
 {
-  protected _prevState: EntityState
+  protected _prevState: EntityState;
   constructor(
     protected _info: Info,
     protected _state: State,
@@ -31,24 +31,23 @@ export class Entity<
     protected _combat: Combat = new DefaultEntityCombat() as any as Combat,
     protected _animations: Animations = new DefaultEntityAnimations() as any as Animations
   ) {
-    this._prevState = this._state
+    this._prevState = this._state;
     this._movement.init(this);
     this._combat.init(this);
     this._animations.init(this);
   }
-
 
   updateInfo(newInfo: Partial<Info>) {
     this._info = { ...this.info, ...newInfo };
   }
 
   updateState(newState: Partial<State>) {
-    this._prevState = this._state
+    this._prevState = this._state;
     this._state = { ...this.state, ...newState };
   }
 
   updateStats(newStats: Partial<Stats>) {
-    this._stats = {...this.stats, ...newStats}
+    this._stats = { ...this.stats, ...newStats };
   }
 
   destroy() {
@@ -60,7 +59,9 @@ export class Entity<
   }
 
   physicsUpdate(time: number, delta: number) {
-    this.movement.update(time, delta);
+    try {
+      this.movement.update(time, delta);
+    } catch (error) {}
   }
 
   postUpdate() {
@@ -68,8 +69,8 @@ export class Entity<
       position: this.view.positionVector,
       velocity: this.view.velocity,
       side: this.view.side,
-      grounded: this.view.grounded
-    } as State)
+      grounded: this.view.grounded,
+    } as State);
     this._animations.update();
   }
 
