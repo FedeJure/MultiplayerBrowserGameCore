@@ -30,6 +30,7 @@ import { SpinePlayerView } from "../../view/player/spinePlayerView";
 import { PlayerVirtualJoystickInput } from "../../infrastructure/input/playerVirtualJoystickInput";
 import { isMobile } from "../../view/utils";
 import { PlayerClientMovementValidator } from "../player/movement/clientPlayerMovementValidator";
+import { BackgroundCreator } from "../environment/backgroundCreator";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -44,6 +45,11 @@ export class ClientConnectionDelegator implements Delegator {
     private itemResolver: ClientItemResolver
   ) {}
   init(): void {
+    const backgroundCreator = new BackgroundCreator(
+      this.scene,
+      this.localPlayerId,
+      this.inGamePlayersRepository
+    );
     this.connection.onInitialGameState.subscribe(async (data) => {
       this.mapManager.onMapReady.subscribe((mapId) => {
         if (mapId !== data.currentMap?.id) return;
@@ -60,6 +66,8 @@ export class ClientConnectionDelegator implements Delegator {
           this.createClientPlayer(dto.state, dto.info);
         }
 
+        backgroundCreator.process(data.currentMap, data.neighborMaps ?? []);
+
         this.connection.onNewPlayerConnected.subscribe((data) => {
           if (this.inGamePlayersRepository.get(data.player.id)) return;
           this.createClientPlayer(data.player.state, data.player.info);
@@ -73,6 +81,9 @@ export class ClientConnectionDelegator implements Delegator {
             this.inGamePlayersRepository.remove(data.playerId);
           }
         });
+      });
+      this.connection.onMapUpdated.subscribe(async (ev) => {
+        backgroundCreator.process(ev.newMap, ev.neighborMaps);
       });
     });
 

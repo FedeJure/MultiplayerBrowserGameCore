@@ -1,12 +1,9 @@
 import { ClientProvider } from "./clientProvider";
-import { ClientPlayerInput, PlayerInput } from "../../domain/player/playerInput";
-import { PlayerMovementValidationDelegator } from "../../domain/player/movement/playerMovementValidationDelegator";
-import { PlayerInputDelegator } from "../../domain/input/playerInputDelegator";
+import { ClientPlayerInput } from "../../domain/player/playerInput";
 import { LocalPlayerRenderDelegator } from "../../domain/player/localPlayerRenderDelegator";
 import { PlayerRemoteMovementDelegator } from "../../domain/player/movement/playerRemoteMovementDelegator";
 import { CurrentMapDelegator } from "../../domain/environment/currentMapDelegator";
 import { ClientGameScene } from "../../view/scenes/ClientGameScene";
-import { BackgroundDelegator } from "../../domain/environment/backgroundDelegator";
 import { ClientPlayerInventoryDelegator } from "../../domain/inventory/clientPlayerInventoryDelegator";
 import { ViewPresenter } from "../../presentation/viewPresenter";
 import { ClientConnectionDelegator } from "../../domain/gameState/clientConnectionDelegator";
@@ -19,11 +16,9 @@ import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjec
 import { GameObjects } from "phaser";
 import { EntityStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
 import { ClientEnemyCreatorDelegator } from "../../domain/enemies/clientEnemyCreatorDelegator";
-import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
 import { Player } from "../../domain/player/players/player";
 import { Enemy } from "../../domain/enemies/enemy";
 import { LocalClientPlayer } from "../../domain/player/players/localClientPlayer";
-import { SceneNames } from "../../view/scenes/SceneNames";
 import { ClientLootUpdaterDelegator } from "../../domain/loot/clientLootUpdaterDelegator";
 import { PhaserClientLootCreatorView } from "../../view/loot/phaserClientLootCreatorView";
 
@@ -34,17 +29,6 @@ export class ClientPresenterProvider {
     view: GameObjects.GameObject
   ): void {
     new ViewPresenter(view, [
-      // new PlayerMovementValidationDelegator(
-      //   player,
-      //   ClientProvider.serverConnection,
-      //   ClientProvider.playerInputRequestRepository
-      // ),
-      // new PlayerInputDelegator(
-      //   player,
-      //   input,
-      //   ClientProvider.serverConnection,
-      //   ClientProvider.playerInputRequestRepository
-      // ),
       new LocalPlayerRenderDelegator(player),
       new ClientPlayerConnectionDelegator(
         ClientProvider.serverConnection,
@@ -86,12 +70,6 @@ export class ClientPresenterProvider {
         ClientProvider.environmentObjectRepository,
         ClientProvider.mapManager,
         ClientProvider.collisionManager
-      ),
-      new BackgroundDelegator(
-        scene.scene.get(SceneNames.BackgroundScene),
-        ClientProvider.serverConnection,
-        ClientProvider.localPlayerRepository,
-        ClientProvider.inGamePlayersRepository
       ),
       new ClientConnectionDelegator(
         ClientProvider.localPlayerRepository.playerId,

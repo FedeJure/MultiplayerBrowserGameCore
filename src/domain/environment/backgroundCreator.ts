@@ -1,35 +1,20 @@
-import { GameObjects, Scene, WEBGL } from "phaser";
-import { LocalPlayerRepository } from "../../infrastructure/repositories/localPlayerRepository";
+import { GameObjects, Scene } from "phaser";
 import { ExistentDepths } from "../../view/existentDepths";
 import { loadBackgroundAssets } from "../actions/loadBackgroundAssets";
-import { Delegator } from "../delegator";
-import { ControllablePlayer } from "../player/players/controllablePlayer";
+import { PlayerInfo } from "../player/playerInfo";
+import { Player } from "../player/players/player";
 import { SimpleRepository } from "../repository";
-import { ServerConnection } from "../serverConnection";
 import { ProcessedMap } from "./processedMap";
 
-export class BackgroundDelegator implements Delegator {
+export class BackgroundCreator {
   private createdBackgrounds: GameObjects.Image[] = [];
-
   private createdBackgroundsMap: { [key: string]: GameObjects.Image } = {};
 
-  public constructor(
+  constructor(
     private scene: Scene,
-    private connection: ServerConnection,
-    private localplayerRepository: LocalPlayerRepository,
-    private inGamePlayersRepository: SimpleRepository<ControllablePlayer>
+    private localPlayerId: PlayerInfo["id"],
+    private inGamePlayersRepository: SimpleRepository<Player>
   ) {}
-  init(): void {
-   
-    this.connection.onMapUpdated.subscribe(async (ev) => {
-      await this.loadAssets([ev.newMap, ...ev.neighborMaps]);
-      console.log(ev.newMap)
-      await this.createBackground(ev.newMap, ev.neighborMaps);
-    });
-  }
-  stop(): void {}
-  update(time: number, delta: number): void {}
-
   private async loadAssets(maps: ProcessedMap[]) {
     return Promise.all(maps.map((m) => loadBackgroundAssets(m, this.scene)));
   }
@@ -39,10 +24,7 @@ export class BackgroundDelegator implements Delegator {
     neighborMaps: ProcessedMap[]
   ) {
     try {
-      const localPlayer = this.inGamePlayersRepository.get(
-        this.localplayerRepository.playerId
-      );
-
+      const localPlayer = this.inGamePlayersRepository.get(this.localPlayerId);
       if (localPlayer) {
         currentMap.config.backgroundFile.forEach((bg, i) => {
           const isOnlyOne = currentMap.config.backgroundFile.length === 1;
@@ -71,7 +53,6 @@ export class BackgroundDelegator implements Delegator {
             this.createdBackgroundsMap[bg.key].setActive(true).setVisible(true);
             return;
           }
-
           const currentBg = this.scene.add
             .image(currentMap.originX, currentMap.originY, bg.key)
             .setScrollFactor(factor, undefined)
@@ -83,5 +64,10 @@ export class BackgroundDelegator implements Delegator {
         });
       }
     } catch (error) {}
+  }
+
+  public async process(currentMap:ProcessedMap, maps: ProcessedMap[]) {
+    await this.loadAssets([currentMap, ...maps]);
+    await this.createBackground(currentMap, maps);
   }
 }
