@@ -17,7 +17,7 @@ export class ServerPlayerInventory extends Inventory<Item['id']> {
     })
   }
 
-  setItems(itemIds: (Item['id'] | undefined)[]): void {
+  setItems(itemIds: (Item['id'] | undefined | null)[]): void {
       super.setItems(itemIds)
       this.inventoryRepository.update(this.playerId, this.dto)
   }

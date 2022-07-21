@@ -1,7 +1,7 @@
 import { Observable, Subject } from "rxjs";
 
 export class Inventory<T> {
-  protected _items: (T | undefined)[];
+  protected _items: (T | undefined | null)[];
   protected _onChange = new Subject<void>();
   constructor(capacity: number) {
     this._items = new Array(capacity);
@@ -14,7 +14,7 @@ export class Inventory<T> {
   addItem(item: T) {
     for (let i = 0; i < this.items.length; i++) {
       const foundedItem = this.items[i];
-      if (foundedItem === undefined) {
+      if (!foundedItem) {
         this._items[i] = item;
         this._onChange.next();
         return;
@@ -23,8 +23,8 @@ export class Inventory<T> {
     throw new Error("Inventory full");
   }
 
-  setItems(items: (T | undefined)[]) {
-    if (items.length > this._items.length) throw new Error("Inventory full");
+  setItems(items: (T | undefined | null)[]) {
+    if (items.length > this._items.length && !this._items.includes(null)) throw new Error("Inventory full");
     this._items = [...items, ...new Array(this._items.length - items.length)];
     this._onChange.next();
   }

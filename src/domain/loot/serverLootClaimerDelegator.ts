@@ -46,7 +46,9 @@ export class ServerLootClaimerDelegator implements Delegator {
                 try {
                   player.inventory.addItem(itemId);
                   lootedItems.push(itemId);
-                } catch (error) {}
+                } catch (error) {
+                  console.log("Loot Claimer :: Inventory Full")
+                }
               });
 
               if (balance === loot.balance) {

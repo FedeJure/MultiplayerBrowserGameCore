@@ -72,9 +72,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
             this.mapManager
           );
           const foundedMaps = this.mapManager.getMapForPlayer(player);
-          if (!foundedMaps) return
-          const { foundedMap, neighborMaps } = foundedMaps
-            
+          if (!foundedMaps) return;
+          const { foundedMap, neighborMaps } = foundedMaps;
 
           connection.sendInitialStateEvent(
             {
@@ -102,7 +101,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
             connection,
             [foundedMap, ...neighborMaps]
           );
-          this.roomChangeRepository.save(playerId, joinedRooms, [])
+          this.roomChangeRepository.save(playerId, joinedRooms, []);
           player.updateState({ currentRooms: joinedRooms });
           connection.sendMapUpdateEvent(foundedMap, neighborMaps);
           this.socket.in(joinedRooms).emit(
@@ -173,7 +172,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
           x: startSpawnPoint.position.x,
           y: startSpawnPoint.position.y,
         },
-        lastSpawnPoint: startSpawnPoint
+        lastSpawnPoint: startSpawnPoint,
       };
       this.playerStateRepository.save(playerId, newState);
       playerState = newState;
@@ -216,7 +215,7 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       this.playerInputRequestRepository
     );
     const playerStats = stats ?? DefaultPlayerStats;
-    
+
     const player = new ServerPlayer(
       playerInfo,
       playerState,

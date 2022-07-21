@@ -8,13 +8,13 @@ export class ClientItemResolver {
     private itemsRepository: SimpleRepository<Item>
   ) {}
 
-  async getItems(ids: (Item["id"] | undefined)[]) {
+  async getItems(ids: (Item["id"] | undefined | null)[]) {
     const newItems = ids.filter(
-      (i) => i !== undefined && !this.itemsRepository.get(i)
+      (i) => i && !this.itemsRepository.get(i)
     ) as string[];
     const response = await this.connection.emitGetItemDetails(newItems);
     const items = ids.map((id) =>
-      id !== undefined
+      id
         ? this.itemsRepository.get(id) ??
           response.items.find((item) => item.id === id) ??
           undefined

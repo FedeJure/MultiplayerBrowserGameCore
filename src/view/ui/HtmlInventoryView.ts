@@ -37,6 +37,7 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     this.initMoney();
     this.container.hidden = true;
     playerInput.onInventoryChange.subscribe(() => {
+      if (!playerInput.inventory) return
       this.container.hidden = !this.container.hidden;
     });
     this.initDrag();
