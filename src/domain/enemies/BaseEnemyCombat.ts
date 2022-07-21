@@ -161,6 +161,7 @@ export class EnemyCombat extends DefaultEntityCombat {
         if (execution) {
           this.enemy.updateState({ attacking: true });
           this.attacking = true;
+          if (!this.target.state.isAlive) this._target = null
           setTimeout(() => {
             this.attacking = false;
           }, execution.duration);

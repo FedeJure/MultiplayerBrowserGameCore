@@ -58,7 +58,6 @@ export class SpinePhaserEntityView extends PhaserEntityView {
       Phaser.Scenes.Events.UPDATE,
       (time, delta) => {
         if (tween.isPlaying()) {
-
           tween.updateTo("x", this.x, true);
           tween.updateTo("y", this.y + height / 6, true);
         }

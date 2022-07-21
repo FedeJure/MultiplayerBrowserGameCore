@@ -14,7 +14,7 @@ import { EnvironmentObjectVariant } from "../../domain/environmentObjects/enviro
 import { Delegator } from "../../domain/delegator";
 import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
 import { GameObjects } from "phaser";
-import { EntityStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
+import { EntityStateUpdaterDelegator } from "../../domain/entity/entityUpdaterDelegator";
 import { ClientEnemyCreatorDelegator } from "../../domain/enemies/clientEnemyCreatorDelegator";
 import { Player } from "../../domain/player/players/player";
 import { Enemy } from "../../domain/enemies/enemy";

@@ -3,7 +3,7 @@ import { Delegator } from "../../domain/delegator";
 import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
 import { EnvironmentObjectVariant } from "../../domain/environmentObjects/environmentObjectVariant";
 import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
-import { EntityStateUpdaterDelegator } from "../../domain/player/playerStateUpdaterDelegator";
+import { EntityStateUpdaterDelegator } from "../../domain/entity/entityUpdaterDelegator";
 import { ViewPresenter } from "../../presentation/viewPresenter";
 import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
 import { ControllablePlayer } from "../../domain/player/players/controllablePlayer";
@@ -29,6 +29,6 @@ export class ServerPresenterProvider {
     new ViewPresenter(view, delegators);
   }
   forEnemy(view: GameObjects.GameObject, enemy: Enemy) {
-    new ViewPresenter(view, [new EnemyUpdateDelegator(enemy)]);
+    new ViewPresenter(view, [new EntityStateUpdaterDelegator(enemy, view.scene)]);
   }
 }

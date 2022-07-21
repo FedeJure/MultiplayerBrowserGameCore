@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 import { Delegator } from "../delegator";
-import { Entity } from "../entity/entity";
+import { Entity } from "./entity";
 
 export class EntityStateUpdaterDelegator implements Delegator {
   private time: number = 0
