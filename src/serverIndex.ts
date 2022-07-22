@@ -25,7 +25,6 @@ import { DBConfiguration } from "./infrastructure/DBConfiguration";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import { Account } from "./domain/account/account";
-import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
 import { ServerGameScene } from "./view/scenes/ServerGameScene";
 
 class ServerApi {
@@ -143,18 +142,6 @@ export const InitGame: (
             provider.lootGenerator,
             provider.enemiesModelRepository,
             provider.playerRoomChangeEventRepository
-          ),
-          new ServerEnemyCreatorDelegator(
-            scene,
-            provider.enemiesRepository,
-            provider.roomManager,
-            provider.presenterProvider,
-            provider.collisionableTargetRepository,
-            provider.collisionManager,
-            provider.lootConfigurationRepository,
-            provider.lootGenerator,
-            provider.mapMapanger,
-            provider.enemiesModelRepository
           ),
           new LootUpdaterDelegator(socket, provider.lootRepository),
           new EnemiesStateSenderDelegator(

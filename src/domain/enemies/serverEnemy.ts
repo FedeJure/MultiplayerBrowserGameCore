@@ -7,7 +7,6 @@ import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 import { ServerEnemyView } from "./ServerEnemyView";
 import { Entity } from "../entity/entity";
-import { MeleeAttack } from "./combatActions/MeleeAttack";
 
 export class ServerEnemy
   extends Entity<
