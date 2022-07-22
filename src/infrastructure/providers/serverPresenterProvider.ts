@@ -5,7 +5,6 @@ import { EnvironmentObjectVariant } from "../../domain/environmentObjects/enviro
 import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjects/variants/AnimatedDecortaiveObjectDelegator";
 import { EntityStateUpdaterDelegator } from "../../domain/entity/entityUpdaterDelegator";
 import { ViewPresenter } from "../../presentation/viewPresenter";
-import { EnemyUpdateDelegator } from "../../domain/enemies/enemyUpdateDelegator";
 import { ControllablePlayer } from "../../domain/player/players/controllablePlayer";
 import { Enemy } from "../../domain/enemies/enemy";
 import { PhaserEntityView } from "../../view/entity/phaserEntityView";
