@@ -69,8 +69,7 @@ export class PlayerServerMovementValidator implements EntityMovement {
       this.player.stats,
       this.player.view,
       Date.now(),
-      this.minTimeBetweenTicks,
-      true
+      this.minTimeBetweenTicks
     );
   }
 

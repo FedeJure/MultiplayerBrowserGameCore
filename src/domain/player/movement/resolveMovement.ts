@@ -10,14 +10,17 @@ export function resolveMovement(
   stats: PlayerStats,
   view: PlayerView,
   time: number,
-  delta: number,
-  isServer: boolean
-): Omit<Partial<PlayerState>, 'position' | 'velocity'> {
+  delta: number
+): Omit<Partial<PlayerState>, "position" | "velocity"> {
   if (state.transporting) return {};
-  if (state.inLadder ||( view.inLadder && (input.up || view.falling))) {
-    return resolveLadderMovement(state,input,stats, view,time,delta)
+  if (
+    (state.inLadder && view.inLadder) ||
+    (state.grounded && view.inLadder && input.up) ||
+    (view.inLadder && view.falling)
+  ) {
+    return resolveLadderMovement(state, input, stats, view, time, delta);
   }
-  view.setAllowGravity(true)
+  view.setAllowGravity(true);
 
   let newVelX = view.velocity.x;
   let newVelY = view.velocity.y;
@@ -58,10 +61,10 @@ export function resolveMovement(
   const newVelocity = {
     x: Number(newVelX.toPrecision(2)),
     y: Number(newVelY.toPrecision(2)),
-  }
+  };
 
-  view.setVelocity(newVelocity.x, newVelocity.y)
-  view.lookToLeft(side === Side.LEFT)
+  view.setVelocity(newVelocity.x, newVelocity.y);
+  view.lookToLeft(side === Side.LEFT);
   return {
     jumpsAvailable: availableJumps,
     canJump,
@@ -79,14 +82,14 @@ export function resolveLadderMovement(
   time: number,
   delta: number
 ) {
-  view.setAllowGravity(false)
+  view.setAllowGravity(false);
   const directionVector = new Phaser.Math.Vector2(
     input.left ? -1 : input.right ? 1 : 0,
     input.up ? -1 : input.down ? 1 : 0
   );
 
   const velocity = directionVector.normalize().scale(stats.walkSpeed);
-  view.setVelocity(velocity.x, velocity.y)
+  view.setVelocity(velocity.x, velocity.y);
   return {
     inLadder: true,
     side:

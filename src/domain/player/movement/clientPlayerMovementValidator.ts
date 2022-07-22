@@ -119,8 +119,7 @@ export class PlayerClientMovementValidator implements EntityMovement {
       this.player.stats,
       this.player.view,
       Date.now(),
-      this.minTimeBetweenTicks,
-      false
+      this.minTimeBetweenTicks
     );
   }
 

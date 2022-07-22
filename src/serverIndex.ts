@@ -27,7 +27,7 @@ import mongoose from "mongoose";
 import { Account } from "./domain/account/account";
 import { ServerEnemyCreatorDelegator } from "./domain/enemies/serverEnemyCreatorDelegator";
 import { ServerGameScene } from "./view/scenes/ServerGameScene";
-import blocked from 'blocked-at'
+
 class ServerApi {
   constructor(private provider: ServerProvider) {}
 
@@ -118,7 +118,7 @@ export const InitGame: (
     AssetLoader.setBaseUrl(`${originUrl}${AssetsConfiguration.assetsPath}`);
 
     game.events.addListener(Phaser.Core.Events.DESTROY, async () => {
-      // await mongod.stop();
+      await mongod.stop();
       await mongoose.disconnect();
     });
 
@@ -156,12 +156,6 @@ export const InitGame: (
             provider.mapMapanger,
             provider.enemiesModelRepository
           ),
-          // new PlayerStateDelegator( Trying send states from another service
-          //   provider.roomManager,
-          //   provider.inGamePlayerRepository,
-          //   socket,
-          //   provider.playerInputRequestRepository
-          // ),
           new LootUpdaterDelegator(socket, provider.lootRepository),
           new EnemiesStateSenderDelegator(
             provider.roomManager,

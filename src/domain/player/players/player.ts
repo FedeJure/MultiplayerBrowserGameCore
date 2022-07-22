@@ -16,7 +16,6 @@ export class Player extends Entity<
       velocity: this.view.velocity,
       side: this.view.side,
       grounded: this.view.grounded,
-      inLadder: this.view.inLadder,
     });
     this._animations.update();
   }

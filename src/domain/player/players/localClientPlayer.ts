@@ -77,8 +77,7 @@ export class LocalClientPlayer extends ControllablePlayer {
       position: this.view.positionVector,
       velocity: this.view.velocity,
       side: this.view.side,
-      grounded: this.view.grounded,
-      inLadder: this.view.inLadder,
+      grounded: this.view.grounded
     });
     super.postUpdate();
   }
