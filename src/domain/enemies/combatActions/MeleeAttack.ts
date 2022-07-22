@@ -16,12 +16,12 @@ export class MeleeAttack implements CombatAction {
       ) < this.enemy.stats.meleeDistance
     ) {
       const duration = 1000 / this.enemy.stats.basicAttackSpeed;
-      this.enemy.animations.executeAnimation(
-        EntityAnimationCode.BASIC_ATTACK,
-        AnimationLayer.COMBAT,
-        false,
+      this.enemy.updateState({attackAnimation: {
+        name: EntityAnimationCode.BASIC_ATTACK,
+        layer: AnimationLayer.COMBAT,
+        loop: false,
         duration
-      );
+    }})
 
       this.enemy.combat.target.combat.receiveAttack({
         damage: this.enemy.stats.meleeDamage,

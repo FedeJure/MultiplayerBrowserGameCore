@@ -38,6 +38,10 @@ export class ServerEnemy
     );
   }
 
+  update(time: number, delta: number): void {
+      super.update(time,delta)
+  }
+
   destroy(): void {
     this._onDestroy.next();
     this._onDestroy.complete();

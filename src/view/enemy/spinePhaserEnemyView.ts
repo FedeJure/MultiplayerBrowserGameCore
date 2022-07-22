@@ -16,6 +16,7 @@ export class SpinePhaserEnemyView
     name: string
   ) {
     super(scene, x, y, height, width, name, "slime");
+    this.arcadeBody.setAllowGravity(false)
     this.hud = new EntityIngameHud(scene, 0, -height, height, 50, false);
     this.hud.setDisplayName(name);
     this.add(this.hud)

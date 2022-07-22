@@ -76,7 +76,7 @@ export class EnemyCombat extends DefaultEntityCombat {
 
   resolveLoot() {
     if (!this.target) return;
-    this.lootConfigsRepository.getBy({id: this.lootId}).then((lootConfig) => {
+    this.lootConfigsRepository.getBy({ id: this.lootId }).then((lootConfig) => {
       if (!lootConfig) return;
       const itemsCount = Math.floor(
         Math.random() * (lootConfig.maxItems - lootConfig.minItems + 1) +
@@ -138,7 +138,7 @@ export class EnemyCombat extends DefaultEntityCombat {
   }
 
   update(time: number, delta: number) {
-    if (!this.enemy.state.isAlive) return
+    if (!this.enemy.state.isAlive) return;
     super.update(time, delta);
 
     if (this.lastTimeCheck + this.intervalTimeCheck < time) {
@@ -161,14 +161,17 @@ export class EnemyCombat extends DefaultEntityCombat {
         if (execution) {
           this.enemy.updateState({ attacking: true });
           this.attacking = true;
-          if (!this.target.state.isAlive) this._target = null
+          if (!this.target.state.isAlive) this._target = null;
           setTimeout(() => {
             this.attacking = false;
+            this.enemy.updateState({
+              attacking: false,
+              attackAnimation: undefined,
+            });
           }, execution.duration);
           return;
         }
       }
-      this.enemy.updateState({ attacking: false });
     }
   }
 }

@@ -1,62 +1,24 @@
-import { AnonymousSubject } from "rxjs/internal/Subject";
-import { AnimationDto } from "./AnimationDto";
 import { EntityAnimationCode, AnimationLayer } from "./animations";
 import { Entity } from "./entity";
 import { EntityAnimations } from "./EntityAnimations";
 
 export class DefaultEntityAnimations implements EntityAnimations {
-  private currentAnimPerLayer: Map<AnimationLayer, { anim: AnimationDto }> =
-    new Map();
-  private entity: Entity;
+
+  protected entity: Entity;
   init(entity: Entity) {
     this.entity = entity;
   }
   update() {
     if (!this.entity.state.isAlive) {
-      // this.entity.updateState({anim: [{layer: AnimationLayer.MOVEMENT, name: EntityAnimationCode.DIE}]})
+      this.executeAnimation(EntityAnimationCode.DIE, AnimationLayer.MOVEMENT, false)
       return;
     }
-    this.processAnimation();
+    this.processMovementAnimation();
   }
 
-  processAnimation() {
+  processMovementAnimation() {
     const movementAnim = this.getMovementAnimation();
     this.executeAnimation(movementAnim, AnimationLayer.MOVEMENT, false)
-    // this.executeAnimation(movementAnim, AnimationLayer.MOVEMENT, true)
-    // this.entity.updateState({
-    //   anim: [
-    //     ...this.entity.state.anim
-    //       .filter(this.filterCondition)
-    //       .filter(this.filterFinishedAnimations)
-    //       .filter(this.removeRepetedLayerAnimations),
-    //     {
-    //       name: this.getMovementAnimation(),
-    //       layer: AnimationLayer.MOVEMENT,
-    //     },
-    //   ],
-    // });
-  }
-
-  private removeRepetedLayerAnimations(
-    anim: AnimationDto,
-    i: number,
-    array: AnimationDto[]
-  ) {
-    const sameLayer = array.filter((a) => a.layer === anim.layer);
-    if (sameLayer.length <= 1) return true;
-    return anim.name === sameLayer[0].name;
-  }
-
-  private filterCondition(anim: AnimationDto) {
-    return anim.layer !== AnimationLayer.MOVEMENT;
-  }
-
-  private filterFinishedAnimations(anim: AnimationDto): boolean {
-    return (
-      anim.duration === undefined ||
-      anim.time === undefined ||
-      Date.now() <= anim.duration + anim.time
-    );
   }
 
   private getMovementAnimation() {
@@ -84,7 +46,6 @@ export class DefaultEntityAnimations implements EntityAnimations {
       !this.entity.view.blocked
     )
       return EntityAnimationCode.RUNNING;
-
     if (!state.grounded && absVelx < 1 && velY < 2)
       return EntityAnimationCode.IDLE_JUMP;
 
@@ -108,27 +69,6 @@ export class DefaultEntityAnimations implements EntityAnimations {
         ...(duration ? { duration, time: Date.now() } : {}),
       },
     ]);
-    // const currentAnim = this.currentAnimPerLayer.get(layer);
-    // let oldAnims = this.entity.state.anim;
-    // if (currentAnim) {
-    //   this.currentAnimPerLayer.delete(layer);
-    //   oldAnims = oldAnims.filter((a) => a.layer === layer);
-    // }
-
-    // const newAnim = {
-    //   name: anim,
-    //   layer,
-    //   loop,
-    //   duration,
-    //   time: Date.now(),
-    // };
-    // this.currentAnimPerLayer.set(layer, {
-    //   anim: newAnim,
-    // });
-
-    // this.entity.updateState({
-    //   anim: [...oldAnims, newAnim],
-    // });
   }
 
   stopAnimations() {

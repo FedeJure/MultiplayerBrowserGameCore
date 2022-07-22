@@ -69,16 +69,19 @@ export class PhaserEntityView
   die() {}
 
   setPositionInTime(x: number, y: number, time: number) {
-    if (this.currentTween && this.currentTween.progress < 1) this.currentTween.stop()
-    const distance = Phaser.Math.Distance.Between(x,y, this.x, this.y)
-    // this.scene.physics.moveTo(this,x,y,distance * 1000 / time )
-    this.currentTween = this.scene.tweens.add({
-      targets: this,
-      duration: time,
-      x: {from: this.x, to: x},
-      y: {from: this.y, to: y},
-      ease: Phaser.Math.Easing.Linear
-    });
+    try {
+      if (this.currentTween && this.currentTween.progress < 1) this.currentTween.stop()
+      const distance = Phaser.Math.Distance.Between(x,y, this.x, this.y)
+      // this.scene.physics.moveTo(this,x,y,distance * 1000 / time )
+      this.currentTween = this.scene.tweens.add({
+        targets: this,
+        duration: time,
+        x: {from: this.x, to: x},
+        y: {from: this.y, to: y},
+        ease: Phaser.Math.Easing.Linear
+      });
+    } catch (error) { 
+    }
   }
   getEntitiesClose(distance: number) {
     return (

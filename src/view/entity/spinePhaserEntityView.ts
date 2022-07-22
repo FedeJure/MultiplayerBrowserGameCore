@@ -13,6 +13,8 @@ export class SpinePhaserEntityView extends PhaserEntityView {
   protected spine: SpineGameObject;
   protected hud: EntityIngameHud;
   private lastAnimationsByLayer: Map<AnimationLayer, AnimationDto>;
+  private tween: Phaser.Tweens.Tween
+
 
   constructor(
     scene: Scene,
@@ -42,10 +44,10 @@ export class SpinePhaserEntityView extends PhaserEntityView {
     this.spine.on("complete", (ev: spine.TrackEntry, s: any) => {
       this.spine.clearTrack(ev.trackIndex)
     });
-    const tween = scene.tweens.add({
+    this.tween = scene.tweens.add({
       targets: spine,
-      x: 400,
-      y: 300,
+      x: x,
+      y: y,
       ease: Phaser.Math.Easing.Sine.Out,
       duration: 100,
       paused: true,
@@ -53,18 +55,19 @@ export class SpinePhaserEntityView extends PhaserEntityView {
       useFrames: false,
       loop: true,
     });
-    tween.play();
-    this.scene.events.addListener(
-      Phaser.Scenes.Events.UPDATE,
-      (time, delta) => {
-        if (tween.isPlaying()) {
-          tween.updateTo("x", this.x, true);
-          tween.updateTo("y", this.y + height / 6, true);
-        }
-      }
+    this.tween.play();
+    this.scene.events.on(
+      Phaser.Scenes.Events.UPDATE,this.update.bind(this)
     );
 
     this.lastAnimationsByLayer = new Map();
+  }
+
+  update(time: number, delta: number): void {
+    if (this.tween.isPlaying()) {
+      this.tween.updateTo("x", this.x, true);
+      this.tween.updateTo("y", this.y + this.height / 6, true);
+    }
   }
 
   override playAnimations(anims: AnimationDto[]): void {
@@ -103,6 +106,9 @@ export class SpinePhaserEntityView extends PhaserEntityView {
   }
 
   destroy(fromScene?: boolean | undefined): void {
+    this.scene.events.off(
+      Phaser.Scenes.Events.UPDATE,this.update.bind(this)
+    );
     super.destroy(fromScene);
     this.spine.destroy(fromScene);
   }
