@@ -31,6 +31,7 @@ import { PlayerVirtualJoystickInput } from "../../infrastructure/input/playerVir
 import { isMobile } from "../../view/utils";
 import { PlayerClientMovementValidator } from "../player/movement/clientPlayerMovementValidator";
 import { BackgroundCreator } from "../environment/backgroundCreator";
+import { LocalPlayerInitialStateDto } from "../../infrastructure/dtos/localPlayerInitialStateDto";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -42,7 +43,8 @@ export class ClientConnectionDelegator implements Delegator {
     private collisionableTargetRepository: SimpleRepository<CollisionableEntity>,
     private mapManager: MapManager,
     private collisionManager: CollisionManager,
-    private itemResolver: ClientItemResolver
+    private itemResolver: ClientItemResolver,
+    private dependencies: Delegator[]
   ) {}
   init(): void {
     const backgroundCreator = new BackgroundCreator(
@@ -54,11 +56,7 @@ export class ClientConnectionDelegator implements Delegator {
       this.mapManager.onMapReady.subscribe((mapId) => {
         if (mapId !== data.currentMap?.id) return;
         Log(this, "Initial Game State Event", data);
-        this.createLocalClientPlayer(
-          data.localPlayer.state,
-          data.localPlayer.info,
-          data.localPlayer.stats
-        );
+        this.createLocalClientPlayer(data.localPlayer);
         // this.createClientPlayer(data.localPlayer.state, data.localPlayer.info)
         for (let i = 0; i < data.players.length; i++) {
           const dto = data.players[i];
@@ -81,6 +79,8 @@ export class ClientConnectionDelegator implements Delegator {
             this.inGamePlayersRepository.remove(data.playerId);
           }
         });
+
+        this.dependencies.forEach(d => d.init())
       });
       this.connection.onMapUpdated.subscribe(async (ev) => {
         backgroundCreator.process(ev.newMap, ev.neighborMaps);
@@ -99,7 +99,9 @@ export class ClientConnectionDelegator implements Delegator {
     });
   }
   stop(): void {}
-  update(time: number, delta: number): void {}
+  update(time: number, delta: number): void {
+    this.dependencies.forEach((d) => d.init());
+  }
 
   createClientPlayer(state: PlayerState, info: PlayerInfo) {
     const collisionResolver = new PhaserCombatCollisionResolver(
@@ -126,11 +128,13 @@ export class ClientConnectionDelegator implements Delegator {
     this.inGamePlayersRepository.save(player.info.id, player);
   }
 
-  createLocalClientPlayer(
-    state: PlayerState,
-    info: PlayerInfo,
-    stats: PlayerStats
-  ) {
+  createLocalClientPlayer({
+    state,
+    info,
+    stats,
+    balance,
+    inventory
+  }: LocalPlayerInitialStateDto) {
     const collisionResolver = new PhaserCombatCollisionResolver(
       state.position.x,
       state.position.y,
@@ -194,7 +198,7 @@ export class ClientConnectionDelegator implements Delegator {
     });
     new TransitionView(this.scene).fadeIn();
 
-    this.presenterProvider.forInventory(player, view);
+    this.presenterProvider.forInventory(player, view, inventory, balance);
     this.presenterProvider.forLocalPlayer(input, player, view);
 
     this.inGamePlayersRepository.save(player.info.id, player);

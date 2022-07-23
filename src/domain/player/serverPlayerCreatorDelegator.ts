@@ -81,6 +81,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
               state: player.state,
               stats: player.stats,
               info: player.info,
+              inventory: player.inventory.dto,
+              balance: player.balance.dto,
             },
             this.inGamePlayersRepository.getAll().map((player) => ({
               id: player.info.id,
@@ -227,14 +229,17 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       new ServerPlayerInventory(
         playerId,
         this.inventoryRepository,
+        inventory?.items ?? [],
         playerStats.inventorySize
       ),
-      new ServerBalance(playerId, this.balanceRepository),
+      new ServerBalance(playerId, this.balanceRepository, balance?.amount ?? 0),
       connection,
       this.playerInfoRepository,
       this.playerStateRepository,
       new PlayerTransportation(this.mapManager)
     );
+    player.inventory.setItems(inventory?.items ?? [])
+    player.balance.set(balance?.amount ?? 0)
 
     view.setEntityReference(player);
 

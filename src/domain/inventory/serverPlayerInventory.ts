@@ -1,3 +1,4 @@
+import { get } from "mongoose";
 import { Item } from "../items/item";
 import { PlayerInfo } from "../player/playerInfo";
 import { AsyncRepository } from "../repository";
@@ -8,13 +9,11 @@ export class ServerPlayerInventory extends Inventory<Item['id']> {
   constructor(
     private playerId: PlayerInfo['id'],
     private inventoryRepository: AsyncRepository<PlayerInventoryDto>,
+    initialItems: (string | null | undefined)[],
     capacity: number
   ) {
     super(capacity);
-    inventoryRepository.get(playerId).then(inventory => {
-      if (!inventory) return
-      this.setItems(inventory?.items)
-    })
+    this.setItems(initialItems);
   }
 
   setItems(itemIds: (Item['id'] | undefined | null)[]): void {

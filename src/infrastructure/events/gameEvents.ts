@@ -26,7 +26,7 @@ export const GameEvents: {
       localPlayer: LocalPlayerInitialStateDto,
       players: PlayerInitialStateDto[],
       currentMap: ProcessedMap | undefined,
-      neighborMaps: ProcessedMap[] | undefined
+      neighborMaps: ProcessedMap[] | undefined,
     ) => InitialGameStateEvent;
   };
   NEW_PLAYER_CONNECTED: {

@@ -21,6 +21,8 @@ import { Enemy } from "../../domain/enemies/enemy";
 import { LocalClientPlayer } from "../../domain/player/players/localClientPlayer";
 import { ClientLootUpdaterDelegator } from "../../domain/loot/clientLootUpdaterDelegator";
 import { PhaserClientLootCreatorView } from "../../view/loot/phaserClientLootCreatorView";
+import { PlayerInventoryDto } from "../../domain/inventory/playerInventoryDto";
+import { BalanceDto } from "../../domain/inventory/balanceDto";
 
 export class ClientPresenterProvider {
   forLocalPlayer(
@@ -64,13 +66,6 @@ export class ClientPresenterProvider {
 
   forGameplay(scene: ClientGameScene): void {
     new ScenePresenter(scene, [
-      new CurrentMapDelegator(
-        scene,
-        ClientProvider.serverConnection,
-        ClientProvider.environmentObjectRepository,
-        ClientProvider.mapManager,
-        ClientProvider.collisionManager
-      ),
       new ClientConnectionDelegator(
         ClientProvider.localPlayerRepository.playerId,
         ClientProvider.serverConnection,
@@ -80,8 +75,18 @@ export class ClientPresenterProvider {
         ClientProvider.collisionableTargetRepository,
         ClientProvider.mapManager,
         ClientProvider.collisionManager,
-        ClientProvider.itemResolver
+        ClientProvider.itemResolver,
+        [
+          new CurrentMapDelegator(
+            scene,
+            ClientProvider.serverConnection,
+            ClientProvider.environmentObjectRepository,
+            ClientProvider.mapManager,
+            ClientProvider.collisionManager
+          ),
+        ]
       ),
+
       new ClientEnemyCreatorDelegator(
         scene,
         ClientProvider.serverConnection,
@@ -90,12 +95,19 @@ export class ClientPresenterProvider {
       ),
     ]);
   }
-  forInventory(player: LocalClientPlayer, view: GameObjects.GameObject) {
+  forInventory(
+    player: LocalClientPlayer,
+    view: GameObjects.GameObject,
+    initialInventory: PlayerInventoryDto,
+    initialBalance: BalanceDto
+  ) {
     new ViewPresenter(view, [
       new ClientPlayerInventoryDelegator(
         player,
         ClientProvider.serverConnection,
-        ClientProvider.itemResolver
+        ClientProvider.itemResolver,
+        initialInventory,
+        initialBalance
       ),
     ]);
   }
@@ -112,6 +124,8 @@ export class ClientPresenterProvider {
     new ViewPresenter(view, delegators);
   }
   forEnemy(view: GameObjects.GameObject, enemy: Enemy) {
-    new ViewPresenter(view, [new EntityStateUpdaterDelegator(enemy, view.scene)]);
+    new ViewPresenter(view, [
+      new EntityStateUpdaterDelegator(enemy, view.scene),
+    ]);
   }
 }

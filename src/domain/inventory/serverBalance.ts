@@ -6,13 +6,11 @@ import { PlayerBalance } from "./playerBalance";
 export class ServerBalance extends Balance {
   constructor(
     private playerId: PlayerInfo["id"],
-    private balanceRepository: AsyncRepository<PlayerBalance>
+    private balanceRepository: AsyncRepository<PlayerBalance>,
+    initialBalance: number
   ) {
     super();
-    balanceRepository.get(playerId).then(balance => {
-      if (!balance) return
-      this.set(balance.amount)
-    })
+    this.set(initialBalance)
   }
 
   set(amount: number): void {
