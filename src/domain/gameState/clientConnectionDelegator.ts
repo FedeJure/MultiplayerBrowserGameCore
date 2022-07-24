@@ -32,6 +32,7 @@ import { isMobile } from "../../view/utils";
 import { PlayerClientMovementValidator } from "../player/movement/clientPlayerMovementValidator";
 import { BackgroundCreator } from "../environment/backgroundCreator";
 import { LocalPlayerInitialStateDto } from "../../infrastructure/dtos/localPlayerInitialStateDto";
+import { first } from "rxjs";
 
 export class ClientConnectionDelegator implements Delegator {
   constructor(
@@ -53,7 +54,7 @@ export class ClientConnectionDelegator implements Delegator {
       this.inGamePlayersRepository
     );
     this.connection.onInitialGameState.subscribe(async (data) => {
-      this.mapManager.onMapReady.subscribe((mapId) => {
+      this.mapManager.onMapReady.pipe(first()).subscribe((mapId) => {
         if (mapId !== data.currentMap?.id) return;
         Log(this, "Initial Game State Event", data);
         this.createLocalClientPlayer(data.localPlayer);
