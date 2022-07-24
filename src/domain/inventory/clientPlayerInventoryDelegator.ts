@@ -30,6 +30,13 @@ export class ClientPlayerInventoryDelegator implements Delegator {
         this.processInventoryBalance(inventory, balance)
       )
     );
+    this.disposer.add(
+      this.player.inventory.onItemsSortChange.subscribe((items) => {
+        this.connection.emitInventoryOrderUpdated({
+          items: items.map((i) => i?.id),
+        });
+      })
+    );
   }
 
   private async processInventoryBalance(

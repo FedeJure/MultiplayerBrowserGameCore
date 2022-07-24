@@ -2,18 +2,21 @@ import { Item } from "../../domain/items/item";
 import { AssetLoader } from "../AssetLoader";
 import interact from "interactjs";
 import { ItemType } from "../../domain/items/itemType";
+import { Subject } from "rxjs";
 
 export class HtmlCellView {
   readonly element: HTMLDivElement;
   private img: HTMLImageElement | null = null;
+  private _onItemStartDrag = new Subject<void>();
+  private _onItemDropped = new Subject<void>();
+
   constructor(
     size: number,
     acceptedTypes?: ItemType[],
     private preventsDrag: boolean = false
   ) {
     this.element = document.createElement("div");
-    this.element.style.width = `${size}px`;
-    this.element.style.height = `${size}px`;
+    this.setSize(size);
     this.element.style.margin = "1px";
     this.element.style.backgroundColor = "#b08e6b";
 
@@ -23,16 +26,24 @@ export class HtmlCellView {
           const rawTypes = draggableElement.getAttribute("types");
           if (!rawTypes) return false;
           const types = rawTypes.split(",");
-          return acceptedTypes ? acceptedTypes.some((type) => types.includes(type)) : true;
+          return acceptedTypes
+            ? acceptedTypes.some((type) => types.includes(type))
+            : true;
         },
         overlap: "center",
         ondrop: (event) => {
+          this._onItemDropped.next();
           if (!this.img || event.relatedTarget === this.img) {
             this.setExistentItem(event.relatedTarget);
           }
         },
       });
     }
+  }
+
+  setSize(size: number) {
+    this.element.style.width = `${size}px`;
+    this.element.style.height = `${size}px`;
   }
 
   dragMoveListener = (event) => {
@@ -62,6 +73,7 @@ export class HtmlCellView {
           this.setExistentItem(event.currentTarget);
         },
         onmove: this.dragMoveListener,
+        onstart: () => this._onItemStartDrag.next(),
       });
     }
   }
@@ -72,6 +84,7 @@ export class HtmlCellView {
     img.setAttribute("types", item.types.join(","));
     img.src = AssetLoader.resolveAssetPath(item.icon);
     this.setExistentItem(img);
+    img.dataset.itemId = item.id;
   }
 
   clear() {
@@ -84,16 +97,22 @@ export class HtmlCellView {
     return this.img === null;
   }
 
+  get onItemDropped() {
+    return this._onItemDropped.asObservable();
+  }
+  get onItemStartDrag() {
+    return this._onItemStartDrag.asObservable();
+  }
+
   setSelected(selected: boolean) {
     if (selected) {
-      this.element.style.border = "2px solid #9ecaed"
-      this.element.style.margin = "-1px"
-      this.element.style.boxShadow = "0 0 10px #9ecaed"
-    }
-    else {
-      this.element.style.margin = "1px"
-      this.element.style.border = "none"
-      this.element.style.boxShadow = "none"
+      this.element.style.border = "2px solid #9ecaed";
+      this.element.style.margin = "-1px";
+      this.element.style.boxShadow = "0 0 10px #9ecaed";
+    } else {
+      this.element.style.margin = "1px";
+      this.element.style.border = "none";
+      this.element.style.boxShadow = "none";
     }
   }
 }

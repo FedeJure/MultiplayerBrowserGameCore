@@ -16,4 +16,8 @@ export class ClientInventory extends Inventory<Item> {
     super.setItems(items);
     this.view.saveItems(this.items);
   }
+
+  get onItemsSortChange() {
+    return this.view.onItemMove;
+  }
 }

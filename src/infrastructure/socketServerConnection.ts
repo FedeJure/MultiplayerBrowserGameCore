@@ -1,6 +1,6 @@
 import { Observable, Subject } from "rxjs";
 import { Socket } from "socket.io-client";
-import { MovementPlayerStateDto } from "../domain/player/movement/movementPlayerStateDto";
+import { PlayerInventoryDto } from "../domain/inventory/playerInventoryDto";
 
 import { ServerConnection } from "../domain/serverConnection";
 import { PlayerInputDto } from "./dtos/playerInputDto";
@@ -82,6 +82,9 @@ export class SocketServerConnection implements ServerConnection {
       startTime = Date.now();
       masterSocket.emit(SocketIOEvents.PING);
     }, 2000);
+  }
+  emitInventoryOrderUpdated(dto: PlayerInventoryDto) {
+    this.socket.emit(GameEvents.INVENTORY_UPDATED.name, GameEvents.INVENTORY_UPDATED.getEvent(dto))
   }
   get onPositionChange() {
     return this._onPositionChange.asObservable();

@@ -6,6 +6,7 @@ import {
   ClaimLootEvent,
   EnvironmentObjectDetailsRequest,
   EnvironmentObjectDetailsResponse,
+  InventoryBalanceUpdatedEvent,
   ItemDetailRequest,
   ItemDetailResponse,
   PlayerConnectionResponseEvent,
@@ -54,4 +55,5 @@ export interface ClientConnection {
   sendLootDisappear(loots: Loot[]);
   onClaimLoot(): Observable<ClaimLootEvent>;
   sendPositionChange(dto: MovementPlayerStateDto);
+  onInventoryUpdated(): Observable<InventoryBalanceUpdatedEvent>
 }

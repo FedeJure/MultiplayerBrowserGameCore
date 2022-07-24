@@ -6,6 +6,7 @@ import {
   EnvironmentObjectDetailsRequest,
   EnvironmentObjectDetailsResponse,
   GameEvents,
+  InventoryBalanceUpdatedEvent,
   ItemDetailRequest,
   ItemDetailResponse,
   PlayerConnectionResponseEvent,
@@ -40,6 +41,7 @@ export class SocketClientConnection implements ClientConnection {
     callback: (ev: EnvironmentObjectDetailsResponse) => void;
   }>();
   private _onClaimLoot = new Subject<ClaimLootEvent>();
+  private _onInventoryUpdated = new Subject<InventoryBalanceUpdatedEvent>();
   private currentRooms: string[] = [];
 
   constructor(socket: Socket) {
@@ -48,6 +50,9 @@ export class SocketClientConnection implements ClientConnection {
     this.socket = socket;
 
     this.listenEvents();
+  }
+  onInventoryUpdated() {
+    return this._onInventoryUpdated.asObservable();
   }
   sendPositionChange(dto: MovementPlayerStateDto) {
     this.socket.emit(
@@ -89,6 +94,9 @@ export class SocketClientConnection implements ClientConnection {
           callback,
         });
       }
+    );
+    this.socket.on(GameEvents.INVENTORY_UPDATED.name, (dto) =>
+      this._onInventoryUpdated.next(dto)
     );
   }
   onClaimLoot(): Observable<ClaimLootEvent> {

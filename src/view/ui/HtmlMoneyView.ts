@@ -44,6 +44,10 @@ export class HtmlMoneyView  implements MoneyView{
     this.setBalance({ gold: 0, silver: 0, copper: 0 });
   }
 
+  private setSize() {
+
+  }
+
   get element() {
     return this.container;
   }

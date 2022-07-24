@@ -1,5 +1,6 @@
 import interact from "interactjs";
 import { Scene } from "phaser";
+import { Subject } from "rxjs";
 import { InventoryView } from "../../domain/inventory/inventoryView";
 import { Item } from "../../domain/items/item";
 import { ItemType } from "../../domain/items/itemType";
@@ -9,9 +10,12 @@ import { HtmlElement } from "./HtmlElement";
 import { HtmlMoneyView } from "./HtmlMoneyView";
 
 export class HtmlInventoryView extends HtmlElement implements InventoryView {
+  private _onItemsMove = new Subject<(Item | undefined | null)[]>();
   private content: HTMLDivElement;
   private cells: HtmlCellView[] = [];
   private balanceView: HtmlMoneyView;
+  private items: (Item | undefined)[] = [];
+  private itemIndexDragging: number | null = null;
   constructor(
     scene: Scene,
     playerInput: ClientPlayerInput,
@@ -28,8 +32,7 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     this.container.style.bottom = `0`;
     this.container.style.right = `5%`;
     this.container.style.margin = `auto 0`;
-    this.container.style.width = "250px";
-    this.container.style.height = "360px";
+
     this.initBackground();
     this.initContent();
     this.initTitle();
@@ -37,17 +40,39 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     this.initMoney();
     this.container.hidden = true;
     playerInput.onInventoryChange.subscribe(() => {
-      if (!playerInput.inventory) return
+      if (!playerInput.inventory) return;
       this.container.hidden = !this.container.hidden;
     });
     this.initDrag();
+    this.setSize();
+
+    this.scene.scale.addListener(Phaser.Scale.Events.RESIZE, () => {
+      this.setSize();
+    });
   }
+  get onItemMove() {
+    return this, this._onItemsMove.asObservable();
+  }
+
+  private setSize() {
+    const aspectRatio = 250 / 360;
+    const height = this.scene.game.scale.displaySize.height * 0.5;
+    this.container.style.height = `${height}px`;
+    this.container.style.width = `${height * aspectRatio}px`;
+    const newCellSize = (height * 50) / 360;
+    this.cells.forEach((cell) => {
+      cell.setSize(newCellSize);
+    });
+  }
+
   saveItems(items: (Item | undefined)[]) {
+    this.items = items;
+
     for (let i = 0; i < this.slotsCount; i++) {
       const cell = this.cells[i];
       cell.clear();
       const item = items[i];
-      if (!item) return;
+      if (!item) continue;
       cell.setItem(item);
     }
   }
@@ -65,11 +90,10 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     const background = document.createElement("img");
 
     background.src =
-      'https://img.freepik.com/foto-gratis/textura-estuco-color-ocre_1360-504.jpg?w=2000';
-      background.style.height = "100%"
-      background.style.width = "100%"
-      background.style.objectFit = 'none'
-
+      "https://img.freepik.com/foto-gratis/textura-estuco-color-ocre_1360-504.jpg?w=2000";
+    background.style.height = "100%";
+    background.style.width = "100%";
+    background.style.objectFit = "none";
 
     this.container.appendChild(background);
   }
@@ -82,8 +106,8 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
     title.style.textAlign = "center";
     title.style.width = "100%";
     title.style.margin = "0";
-    title.style.fontSize = '25px'
-    title.style.textShadow = '1px 1px 3px grey'
+    title.style.fontSize = "25px";
+    title.style.textShadow = "1px 1px 3px grey";
     this.content.appendChild(title);
   }
 
@@ -108,6 +132,22 @@ export class HtmlInventoryView extends HtmlElement implements InventoryView {
         ItemType.QUEST,
       ]);
       cellContainer.appendChild(cell.element);
+      cell.onItemStartDrag.subscribe(() => {
+        if (this.itemIndexDragging !== null) return;
+        this.itemIndexDragging = i;
+      });
+      cell.onItemDropped.subscribe(() => {
+        if (this.itemIndexDragging === null) return;
+        if (this.itemIndexDragging === i) {
+          this.itemIndexDragging = null;
+          return;
+        }
+        if (this.items[i]) return;
+        this.items[i] = this.items[this.itemIndexDragging];
+        this.items[this.itemIndexDragging] = undefined;
+        this.itemIndexDragging = null;
+        this._onItemsMove.next(this.items);
+      });
       this.cells.push(cell);
     }
   }

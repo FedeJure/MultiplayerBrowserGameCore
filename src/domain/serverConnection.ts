@@ -15,6 +15,7 @@ import {
   PlayerStatesEvent,
 } from "../infrastructure/events/gameEvents";
 import { EnvironmentObject } from "./environmentObjects/environmentObject";
+import { PlayerInventoryDto } from "./inventory/playerInventoryDto";
 import { Item } from "./items/item";
 import { Loot } from "./loot/loot";
 import { MovementPlayerStateDto } from "./player/movement/movementPlayerStateDto";
@@ -42,6 +43,7 @@ export interface ServerConnection {
     ids: EnvironmentObject["id"][]
   ): Promise<EnvironmentObjectDetailsResponse>;
   emitClaimLoot(lootId: Loot["id"], lootIndexes: number[], balance: number);
+  emitInventoryOrderUpdated(dto: PlayerInventoryDto)
   onLootsAppear: Observable<LootsAppearEvent>;
   onLootsDisappear: Observable<LootsDisappearEvent>;
   onPositionChange: Observable<MovementPlayerStateDto>;
