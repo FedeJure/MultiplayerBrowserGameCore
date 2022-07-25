@@ -9,7 +9,6 @@ import { LoadScene } from "./view/scenes/LoadScene";
 import { Log } from "./infrastructure/Logger";
 import { CompleteMapDelegator } from "./domain/environment/completeMapDelegator";
 import { MapsConfiguration } from "./infrastructure/configuration/MapsConfiguration";
-import { PlayerStateDelegator } from "./domain/gameState/playerStateDelegator";
 import { ServerPlayerCreatorDelegator } from "./domain/player/serverPlayerCreatorDelegator";
 import { ServerPlayerInventoryDelegator } from "./domain/inventory/serverPlayerInventoryDelegator";
 import { ScenePresenter } from "./presentation/scenePresenter";
@@ -102,7 +101,7 @@ export const InitGame: (
       // await mongoose.connect("mongodb://localhost:27017", {
       //   dbName: DBConfiguration.dbName
       // });
-      await mongoose.connect("mongodb://localhost:27017", {
+      mongod = await mongoose.connect("mongodb://localhost:27017", {
         dbName: DBConfiguration.dbName,
       });
     })();
@@ -141,7 +140,8 @@ export const InitGame: (
             provider.lootConfigurationRepository,
             provider.lootGenerator,
             provider.enemiesModelRepository,
-            provider.playerRoomChangeEventRepository
+            provider.playerRoomChangeEventRepository,
+            provider.enemiesStatesRepository
           ),
           new LootUpdaterDelegator(socket, provider.lootRepository),
           new EnemiesStateSenderDelegator(

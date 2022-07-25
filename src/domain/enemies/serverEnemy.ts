@@ -7,6 +7,7 @@ import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 import { ServerEnemyView } from "./ServerEnemyView";
 import { Entity } from "../entity/entity";
+import { AsyncRepository } from "../repository";
 
 export class ServerEnemy
   extends Entity<
@@ -25,7 +26,8 @@ export class ServerEnemy
     info: EnemyInfo,
     stats: EnemyStats,
     view: ServerEnemyView,
-    combat: EnemyCombat
+    combat: EnemyCombat,
+    private stateRepository: AsyncRepository<EnemyState>
   ) {
     super(
       info,
@@ -39,6 +41,11 @@ export class ServerEnemy
 
   update(time: number, delta: number): void {
       super.update(time,delta)
+  }
+
+  updateState(newState: Partial<EnemyState>): void {
+      super.updateState(newState)
+      this.stateRepository.update(this.info.id, newState)
   }
 
   destroy(): void {

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { EnemyState } from "../../../domain/enemies/EnemyState";
 import { EnemyStats } from "../../../domain/enemies/EnemyStats";
 import { AnimationDto } from "../../../domain/entity/AnimationDto";
 import { EntityInfo } from "../../../domain/entity/entityInfo";
@@ -105,6 +106,14 @@ export const PlayerStateType: mongoose.SchemaDefinition<
   },
   lastTimeJump: { type: Number, required: false}
 };
+
+export const EnemyStateType: mongoose.SchemaDefinition<EnemyState & {_id: String}> = {
+  ...EntityStateType,
+  inCombat: Boolean,
+  reseting: Boolean,
+  attacking: Boolean,
+  attackAnimation: {type: AnimationDtoType, required: false}
+}
 
 export const PlayerRoomChangeEventType: mongoose.SchemaDefinition<PlayerRoomChangeEvent & {createdAt: Date}> =
   {

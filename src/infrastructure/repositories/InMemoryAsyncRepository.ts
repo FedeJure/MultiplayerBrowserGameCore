@@ -3,6 +3,10 @@ import { AsyncRepository } from "../../domain/repository";
 import { v4 as uuidv4 } from "uuid";
 
 export class InMemoryAsyncRepository<T> implements AsyncRepository<T> {
+  clear(): Promise<void> {
+    this.store.clear()
+    return Promise.resolve()
+  }
   getBy(query: Partial<T>): Promise<T | null | undefined> {
     return this.getAll(query).then(results => results[0])
   }

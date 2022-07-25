@@ -17,6 +17,7 @@ export interface AsyncRepository<T> {
     getAll(filter?: Partial<T>): Promise<T[]>
     update(id: string, payload: Partial<T>): Promise<void>
     remove(id: string): Promise<void>
+    clear(): Promise<void>
     onSave: Observable<T>
     onRemove: Observable<T>
     getId(): string

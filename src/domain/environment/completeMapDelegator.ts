@@ -23,6 +23,8 @@ import { LootGenerator } from "../loot/lootGenerator";
 import { EnemyModel } from "../enemies/enemyModel/enemyModel";
 import { createEnemiesSpawner } from "../actions/createEnemiesSpawner";
 import { PlayerRoomChangeEventRepository } from "../player/playerRoomChangeEventRepository";
+import { EnemyState } from "../enemies/EnemyState";
+import { Log } from "../../infrastructure/Logger";
 
 export class CompleteMapDelegator implements Delegator {
   public constructor(
@@ -40,7 +42,8 @@ export class CompleteMapDelegator implements Delegator {
     private lootConfigsRepository: AsyncRepository<LootConfiguration>,
     private lootGenerator: LootGenerator,
     private enemiesModelRepository: AsyncRepository<EnemyModel>,
-    private playerRoomChangeEventRepository: PlayerRoomChangeEventRepository
+    private playerRoomChangeEventRepository: PlayerRoomChangeEventRepository,
+    private enemiesStatesRepository: AsyncRepository<EnemyState>
   ) {
     this.inGamePlayersRepository.onSave.subscribe((serverPlayer) => {
       serverPlayer.onStateChange
@@ -154,6 +157,10 @@ export class CompleteMapDelegator implements Delegator {
   }
 
   init(): void {
+    this.scene.game.events.addListener(Phaser.Core.Events.DESTROY, async () => {
+      Log(CompleteMapDelegator, "Deleting existent enemies...")
+      this.enemiesStatesRepository.clear()
+    });
     Promise.all(
       this.mapManager.maps.map((m) => loadMapAssets(m, this.scene))
     ).then((_) =>
@@ -184,7 +191,8 @@ export class CompleteMapDelegator implements Delegator {
               this.roomManager,
               this.presenterProvider,
               this.enemiesRepository,
-              this.enemiesModelRepository
+              this.enemiesModelRepository,
+              this.enemiesStatesRepository
             )
           );
         })

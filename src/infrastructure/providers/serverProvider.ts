@@ -43,6 +43,8 @@ import { PlayerRoomChangeEvent } from "../../domain/player/playerRoomChangeEvent
 import { InMemoryPlayerRoomChangeEventsRepository } from "../repositories/inMemoryPlayerRoomChangeEventsRepository";
 import { MongoosePlayerRoomChangeRepository } from "../repositories/mongoose/MongooseRoomChangeEvent";
 import { PlayerRoomChangeEventRepository } from "../../domain/player/playerRoomChangeEventRepository";
+import { EnemyState } from "../../domain/enemies/EnemyState";
+import { MongooseEnemiesStatesRepository } from "../repositories/mongoose/MongooseEnemyRepository";
 
 //This is necessary because the dependency manager not work with generics
 
@@ -126,6 +128,11 @@ export class ServerProvider {
     return DependencyManager.GetOrInstantiate<SpawnedEnemiesRepository>(
       () => new SpawnedEnemiesRepository()
     );
+  }
+
+  public get enemiesStatesRepository(): AsyncRepository<EnemyState> {
+    return DependencyManager.GetOrInstantiate<MongooseEnemiesStatesRepository>(
+    () => new MongooseEnemiesStatesRepository())
   }
 
   private _collisionManager: CollisionManager;

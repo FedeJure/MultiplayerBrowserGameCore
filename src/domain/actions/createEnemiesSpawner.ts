@@ -30,8 +30,10 @@ export async function createEnemiesSpawner(
   roomManager: RoomManager,
   presenterProvider: ServerPresenterProvider,
   enemiesRepository: SimpleRepository<Enemy>,
-  enemiesModelRepository: AsyncRepository<EnemyModel>
+  enemiesModelRepository: AsyncRepository<EnemyModel>,
+  enemiesStatesRepository: AsyncRepository<EnemyState>
 ) {
+  enemiesStatesRepository.clear()
   const model = await enemiesModelRepository.getBy({
     id: spawnerConfig.enemyModelId,
   });
@@ -43,6 +45,10 @@ export async function createEnemiesSpawner(
     spawnerConfig.minInterval,
     spawnerConfig.maxInterval,
     (x, y) => {
+      const info = {
+        name: model.name,
+        id: enemiesStatesRepository.getId(),
+      }
       const state: EnemyState = {
         life: model.stats.maxLife,
         position: { x, y },
@@ -59,6 +65,7 @@ export async function createEnemiesSpawner(
         attacking: false,
         inLadder: false,
       };
+      enemiesStatesRepository.save(info.id, state)
       const view = new PhaserEnemyView(
         scene.physics.add.sprite(state.position.x, state.position.y, ""),
         state.position.x,
@@ -76,10 +83,7 @@ export async function createEnemiesSpawner(
       collisionManager.addEnemy(view);
       const enemy = new ServerEnemy(
         state,
-        {
-          name: model.name,
-          id: Phaser.Utils.String.UUID(),
-        },
+        info,
         model.stats,
         view,
         new EnemyCombat(
@@ -87,7 +91,8 @@ export async function createEnemiesSpawner(
           model.lootConfigId,
           lootConfigurationRepository,
           lootGenerator
-        )
+        ),
+        enemiesStatesRepository
       );
       view.setEntityReference(enemy);
       roomManager.joinEnemyToRoom(

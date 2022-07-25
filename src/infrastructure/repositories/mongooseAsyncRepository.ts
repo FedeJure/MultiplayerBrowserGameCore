@@ -59,4 +59,11 @@ export class MongooseAsyncRepository<T> implements AsyncRepository<T> {
   getId() {
     return new mongoose.Types.ObjectId().toString();
   }
+
+  clear(): Promise<void> {
+    return new Promise(async (res) => {
+      await this.model.deleteMany({})
+      res()
+    })
+  }
 }

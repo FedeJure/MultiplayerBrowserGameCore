@@ -9,11 +9,6 @@ export class MongoosePlayerStateRepository extends MongooseAsyncRepository<Playe
     super("playertate", schema, instance);
   }
 
-  subscribeToChange(callback: Function) {
-    this.model.watch().on('change', (change) => {
-    })
-  }
-
   async getAllGroupedByRoom() {
     return this.model.aggregate([
       {$unwind: '$currentRooms'},
