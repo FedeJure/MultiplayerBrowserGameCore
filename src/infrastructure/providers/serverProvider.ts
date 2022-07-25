@@ -15,9 +15,7 @@ import { MapsConfiguration } from "../configuration/MapsConfiguration";
 import { DependencyManager } from "../dependencyManager";
 import { PlayerInventoryDto } from "../../domain/inventory/playerInventoryDto";
 import { InMemoryEnvironmentObjectRepository } from "../repositories/inMemoryEnvironmentObjectRepository";
-import {
-  InMemoryRepository,
-} from "../repositories/InMemoryRepository";
+import { InMemoryRepository } from "../repositories/InMemoryRepository";
 import { InMemoryAsyncRepository } from "../repositories/InMemoryAsyncRepository";
 import { PlayerInputRequestRepository } from "../repositories/playerInputRequestRepository";
 import { SocketRoomManager } from "../SocketRoomManager";
@@ -63,6 +61,7 @@ class EnemiesModelRepository extends InMemoryAsyncRepository<EnemyModel> {}
 class ItemRepository extends InMemoryAsyncRepository<Item> {}
 class AccountsRepository extends InMemoryAsyncRepository<Account> {}
 class PlayerStatesRepository extends InMemoryAsyncRepository<PlayerState> {}
+class EnemyStatesRepository extends InMemoryAsyncRepository<EnemyState> {}
 
 export class ServerProvider {
   constructor(
@@ -76,10 +75,11 @@ export class ServerProvider {
   }
 
   public get playerStateRepository(): AsyncRepository<PlayerState> {
-    return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerState>>(() =>
-      this.useInMemory
-        ? new PlayerStatesRepository()
-        : new MongoosePlayerStateRepository()
+    return DependencyManager.GetOrInstantiate<AsyncRepository<PlayerState>>(
+      () =>
+        this.useInMemory
+          ? new PlayerStatesRepository()
+          : new MongoosePlayerStateRepository()
     );
   }
   public get presenterProvider(): ServerPresenterProvider {
@@ -131,8 +131,11 @@ export class ServerProvider {
   }
 
   public get enemiesStatesRepository(): AsyncRepository<EnemyState> {
-    return DependencyManager.GetOrInstantiate<MongooseEnemiesStatesRepository>(
-    () => new MongooseEnemiesStatesRepository())
+    return DependencyManager.GetOrInstantiate<AsyncRepository<EnemyState>>(() =>
+      this.useInMemory
+        ? new EnemyStatesRepository()
+        : new MongooseEnemiesStatesRepository()
+    );
   }
 
   private _collisionManager: CollisionManager;
@@ -224,7 +227,11 @@ export class ServerProvider {
   }
 
   public get playerRoomChangeEventRepository(): PlayerRoomChangeEventRepository {
-    return DependencyManager.GetOrInstantiate<PlayerRoomChangeEventRepository>(() => 
-    this.useInMemory ? new InMemoryPlayerRoomChangeEventsRepository() : new MongoosePlayerRoomChangeRepository())
+    return DependencyManager.GetOrInstantiate<PlayerRoomChangeEventRepository>(
+      () =>
+        this.useInMemory
+          ? new InMemoryPlayerRoomChangeEventsRepository()
+          : new MongoosePlayerRoomChangeRepository()
+    );
   }
 }
