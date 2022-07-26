@@ -2,7 +2,7 @@ import { ProcessedMap } from "../../domain/environment/processedMap";
 import { EnvironmentObject } from "../../domain/environmentObjects/environmentObject";
 import { Item } from "../../domain/items/item";
 import { PlayerState } from "../../domain/player/playerState";
-import { EnemyStatesDto } from "../dtos/enemyStatesDto";
+import { EnemyDataDto } from "../dtos/enemyStatesDto";
 import { LocalPlayerInitialStateDto } from "../dtos/localPlayerInitialStateDto";
 import { PlayerInitialStateDto } from "../dtos/playerInitialStateDto";
 import { PlayerInputDto } from "../dtos/playerInputDto";
@@ -10,6 +10,8 @@ import { PlayerInventoryDto } from "../../domain/inventory/playerInventoryDto";
 import { Loot } from "../../domain/loot/loot";
 import { BalanceDto } from "../../domain/inventory/balanceDto";
 import { Vector } from "../../domain/vector";
+import { EnemyInfo } from "../../domain/enemies/EnemyInfo";
+import { EnemyState } from "../../domain/enemies/EnemyState";
 
 export const GameEvents: {
   PLAYER_CONNECTED: {
@@ -26,7 +28,7 @@ export const GameEvents: {
       localPlayer: LocalPlayerInitialStateDto,
       players: PlayerInitialStateDto[],
       currentMap: ProcessedMap | undefined,
-      neighborMaps: ProcessedMap[] | undefined,
+      neighborMaps: ProcessedMap[] | undefined
     ) => InitialGameStateEvent;
   };
   NEW_PLAYER_CONNECTED: {
@@ -79,9 +81,19 @@ export const GameEvents: {
       objects: EnvironmentObject[]
     ) => EnvironmentObjectDetailsResponse;
   };
+  ENEMIES_CREATION: {
+    name: string;
+    getEvent: (enemyStates: EnemyDataDto) => EnemyCreatedEvent;
+  };
+  ENEMIES_DESTROY: {
+    name: string;
+    getEvent: (enemyIds: EnemyInfo["id"][]) => EnemyDestroyEvent;
+  };
   ENEMIES_STATES: {
     name: string;
-    getEvent: (enemyStates: EnemyStatesDto) => EnemiesStatesEvent;
+    getEvent: (
+      enemies: (EnemyState & { id: EnemyInfo["id"] })[]
+    ) => EnemiesStatesEvent;
   };
   LOOT_APPEAR: {
     name: string;
@@ -190,10 +202,24 @@ export const GameEvents: {
       time: new Date(),
     }),
   },
+  ENEMIES_CREATION: {
+    name: "enemies_creation_event",
+    getEvent: (enemyStates) => ({
+      enemiesData: enemyStates,
+      time: new Date(),
+    }),
+  },
+  ENEMIES_DESTROY: {
+    name: "enemies_destroy_event",
+    getEvent: (enemyIds) => ({
+      enemyIds,
+      time: new Date(),
+    }),
+  },
   ENEMIES_STATES: {
     name: "enemies_states_event",
-    getEvent: (enemyStates) => ({
-      enemyStates: enemyStates,
+    getEvent: (enemies) => ({
+      enemies,
       time: new Date(),
     }),
   },
@@ -308,8 +334,16 @@ export interface ClaimLootEvent extends BaseEvent {
   balance: number;
 }
 
+export interface EnemyCreatedEvent extends BaseEvent {
+  enemiesData: EnemyDataDto;
+}
+
+export interface EnemyDestroyEvent extends BaseEvent {
+  enemyIds: EnemyInfo["id"][];
+}
+
 export interface EnemiesStatesEvent extends BaseEvent {
-  enemyStates: EnemyStatesDto;
+  enemies: (EnemyState & { id: EnemyInfo["id"] })[];
 }
 
 export interface LootsAppearEvent extends BaseEvent {

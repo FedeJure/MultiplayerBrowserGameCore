@@ -114,6 +114,7 @@ function getEnemySpawners(scene: Scene, map: ProcessedMap) {
         maxEnemies: data.maxEnemies,
         minInterval: data.minInterval,
         maxInterval: data.maxEnemies,
+        mapId: map.id
       });
     }
   });

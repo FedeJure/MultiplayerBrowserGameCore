@@ -1,4 +1,6 @@
 import { Scene } from "phaser";
+import { Socket } from "socket.io";
+import { GameEvents } from "../../infrastructure/events/gameEvents";
 import { ServerPresenterProvider } from "../../infrastructure/providers/serverPresenterProvider";
 import { PhaserEnemyView } from "../../view/enemy/phaserEnemyView";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
@@ -31,9 +33,10 @@ export async function createEnemiesSpawner(
   presenterProvider: ServerPresenterProvider,
   enemiesRepository: SimpleRepository<Enemy>,
   enemiesModelRepository: AsyncRepository<EnemyModel>,
-  enemiesStatesRepository: AsyncRepository<EnemyState>
+  enemiesStatesRepository: AsyncRepository<EnemyState>,
+  socket: Socket
 ) {
-  enemiesStatesRepository.clear()
+  enemiesStatesRepository.clear();
   const model = await enemiesModelRepository.getBy({
     id: spawnerConfig.enemyModelId,
   });
@@ -48,14 +51,14 @@ export async function createEnemiesSpawner(
       const info = {
         name: model.name,
         id: enemiesStatesRepository.getId(),
-      }
+      };
       const state: EnemyState = {
         life: model.stats.maxLife,
         position: { x, y },
         anim: [
           { name: EntityAnimationCode.IDLE, layer: AnimationLayer.MOVEMENT },
         ],
-        mapId: 0,
+        mapId: spawnerConfig.mapId,
         velocity: { x: 0, y: 0 },
         side: Side.RIGHT,
         inCombat: false,
@@ -65,7 +68,7 @@ export async function createEnemiesSpawner(
         attacking: false,
         inLadder: false,
       };
-      enemiesStatesRepository.save(info.id, state)
+      enemiesStatesRepository.save(info.id, state);
       const view = new PhaserEnemyView(
         scene.physics.add.sprite(state.position.x, state.position.y, ""),
         state.position.x,
@@ -106,6 +109,12 @@ export async function createEnemiesSpawner(
         roomManager.removeEnemyFromRoom(enemy.info.id, [
           enemy.state.mapId.toString(),
         ]);
+        socket
+          .in(state.mapId.toString())
+          .emit(
+            GameEvents.ENEMIES_DESTROY.name,
+            GameEvents.ENEMIES_DESTROY.getEvent([enemy.info.id])
+          );
       });
       enemiesRepository.save(enemy.info.id, enemy);
       presenterProvider.forEnemy(view, enemy);
@@ -113,6 +122,13 @@ export async function createEnemiesSpawner(
         target: enemy,
         type: CollisionableTargetType.MOB,
       });
+
+      socket.in(state.mapId.toString()).emit(
+        GameEvents.ENEMIES_CREATION.name,
+        GameEvents.ENEMIES_CREATION.getEvent({
+          enemies: [{ state, stats: model.stats, info }],
+        })
+      );
 
       return enemy;
     }

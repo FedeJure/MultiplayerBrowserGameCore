@@ -2,6 +2,8 @@ import { Observable } from "rxjs";
 import { PlayerInputDto } from "../infrastructure/dtos/playerInputDto";
 import {
   EnemiesStatesEvent,
+  EnemyCreatedEvent,
+  EnemyDestroyEvent,
   EnvironmentObjectDetailsResponse,
   InitialGameStateEvent,
   InventoryBalanceUpdatedEvent,
@@ -37,7 +39,9 @@ export interface ServerConnection {
 
   onMapUpdated: Observable<MapUpdateEvent>;
   onInventoryUpdate: Observable<InventoryBalanceUpdatedEvent>;
-  onEnemyState: Observable<EnemiesStatesEvent>;
+  onEnemyCreation: Observable<EnemyCreatedEvent>;
+  onEnemyDestroy: Observable<EnemyDestroyEvent>;
+  onEnemiesStates: Observable<EnemiesStatesEvent>;
   emitGetItemDetails(ids: Item["id"][]): Promise<ItemDetailResponse>;
   emitGetEnvironmentObjectsDetails(
     ids: EnvironmentObject["id"][]

@@ -6,6 +6,8 @@ import { ServerConnection } from "../domain/serverConnection";
 import { PlayerInputDto } from "./dtos/playerInputDto";
 import {
   EnemiesStatesEvent,
+  EnemyCreatedEvent,
+  EnemyDestroyEvent,
   EnvironmentObjectDetailsResponse,
   GameEvents,
   InitialGameStateEvent,
@@ -35,7 +37,9 @@ export class SocketServerConnection implements ServerConnection {
   private readonly _onMapUpdated = new Subject<MapUpdateEvent>();
   private readonly _onInventoryUpdated =
     new Subject<InventoryBalanceUpdatedEvent>();
-  private readonly _onEnemyStates = new Subject<EnemiesStatesEvent>();
+  private readonly _onEnemyCreation = new Subject<EnemyCreatedEvent>();
+  private readonly _onEnemyDestroy = new Subject<EnemyDestroyEvent>();
+  private readonly _onEnemiesStates = new Subject<EnemiesStatesEvent>();
   private readonly _onLootsApprear = new Subject<LootsAppearEvent>();
   private readonly _onLootsDisapprear = new Subject<LootsDisappearEvent>();
   private readonly _onPositionChange = new Subject<PositionChangeEvent>();
@@ -43,14 +47,17 @@ export class SocketServerConnection implements ServerConnection {
   constructor(masterSocket: Socket, gameStateSocket: Socket) {
     this.socket = masterSocket;
 
+    gameStateSocket.on(GameEvents.PLAYERS_STATES.name, (data) =>
+      this._onPlayersStates.next(data)
+    );
+    gameStateSocket.on(GameEvents.ENEMIES_STATES.name, (data) =>
+      this._onEnemiesStates.next(data)
+    );
     masterSocket.on(GameEvents.INITIAL_GAME_STATE.name, (data) =>
       this._onInitialGameState.next(data)
     );
     masterSocket.on(GameEvents.NEW_PLAYER_CONNECTED.name, (data) =>
       this._onNewPlayerConnected.next(data)
-    );
-    gameStateSocket.on(GameEvents.PLAYERS_STATES.name, (data) =>
-      this._onPlayersStates.next(data)
     );
     masterSocket.on(GameEvents.PLAYER_DISCONNECTED.name, (data) =>
       this._onPlayerDisconnected.next(data)
@@ -61,8 +68,8 @@ export class SocketServerConnection implements ServerConnection {
     masterSocket.on(GameEvents.INVENTORY_UPDATED.name, (data) =>
       this._onInventoryUpdated.next(data)
     );
-    masterSocket.on(GameEvents.ENEMIES_STATES.name, (data) =>
-      this._onEnemyStates.next(data)
+    masterSocket.on(GameEvents.ENEMIES_CREATION.name, (data) =>
+      this._onEnemyCreation.next(data)
     );
     masterSocket.on(GameEvents.LOOT_APPEAR.name, (data) =>
       this._onLootsApprear.next(data)
@@ -84,7 +91,10 @@ export class SocketServerConnection implements ServerConnection {
     }, 2000);
   }
   emitInventoryOrderUpdated(dto: PlayerInventoryDto) {
-    this.socket.emit(GameEvents.INVENTORY_UPDATED.name, GameEvents.INVENTORY_UPDATED.getEvent(dto))
+    this.socket.emit(
+      GameEvents.INVENTORY_UPDATED.name,
+      GameEvents.INVENTORY_UPDATED.getEvent(dto)
+    );
   }
   get onPositionChange() {
     return this._onPositionChange.asObservable();
@@ -138,8 +148,12 @@ export class SocketServerConnection implements ServerConnection {
     return this._onPing;
   }
 
-  get onEnemyState() {
-    return this._onEnemyStates;
+  get onEnemyCreation() {
+    return this._onEnemyCreation;
+  }
+
+  get onEnemyDestroy() {
+    return this._onEnemyDestroy;
   }
 
   get onLootsAppear(): Observable<LootsAppearEvent> {
@@ -149,6 +163,9 @@ export class SocketServerConnection implements ServerConnection {
     return this._onLootsDisapprear;
   }
 
+  get onEnemiesStates(): Observable<EnemiesStatesEvent> {
+    return this._onEnemiesStates;
+  }
   emitStartNewConnection(
     playerId: string
   ): Promise<PlayerConnectionResponseEvent> {

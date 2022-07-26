@@ -192,7 +192,8 @@ export class CompleteMapDelegator implements Delegator {
               this.presenterProvider,
               this.enemiesRepository,
               this.enemiesModelRepository,
-              this.enemiesStatesRepository
+              this.enemiesStatesRepository,
+              this.socket
             )
           );
         })

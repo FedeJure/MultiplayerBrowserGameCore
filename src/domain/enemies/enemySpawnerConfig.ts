@@ -5,5 +5,6 @@ export interface EnemySpawnerConfig {
     maxEnemies: number
     minInterval: number
     maxInterval: number,
-    position: Vector
+    position: Vector,
+    mapId: number
 }

@@ -1,5 +1,4 @@
 import { Scene } from "phaser";
-import { EnemiesStatesEvent } from "../../infrastructure/events/gameEvents";
 import { ClientPresenterProvider } from "../../infrastructure/providers/clientPresenterProvider";
 import { SpinePhaserEnemyView } from "../../view/enemy/spinePhaserEnemyView";
 import { Delegator } from "../delegator";
@@ -11,8 +10,6 @@ import { EnemyState } from "./EnemyState";
 import { EnemyStats } from "./EnemyStats";
 
 export class ClientEnemyCreatorDelegator implements Delegator {
-  private lastTimeCleanup: number = 0;
-  private readonly cleanupTime = 100;
   constructor(
     private scene: Scene,
     private serverConnection: ServerConnection,
@@ -20,15 +17,28 @@ export class ClientEnemyCreatorDelegator implements Delegator {
     private presenterProvider: ClientPresenterProvider
   ) {}
   init(): void {
-    this.serverConnection.onEnemyState.subscribe((event) => {
-      event.enemyStates.enemies.forEach((enemy) => {
+    this.serverConnection.onEnemyCreation.subscribe((event) => {
+      event.enemiesData.enemies.forEach((enemy) => {
         const existentEnemy = this.spawnedEnemies.get(enemy.info.id);
         if (!existentEnemy)
           this.createEnemy(enemy.state, enemy.info, enemy.stats);
         else existentEnemy.updateState(enemy.state);
-        if (this.lastTimeCleanup + this.cleanupTime < Date.now()) {
-          this.cleanUp(event);
-        }
+      });
+    });
+
+    this.serverConnection.onEnemyDestroy.subscribe(({ enemyIds }) => {
+      enemyIds.forEach((id) => {
+        const enemy = this.spawnedEnemies.get(id);
+        if (!enemy) return;
+        enemy.destroy();
+        this.spawnedEnemies.remove(id);
+      });
+    });
+
+    this.serverConnection.onEnemiesStates.subscribe(({ enemies }) => {
+      enemies.forEach((enemyData) => {
+        const enemy = this.spawnedEnemies.get(enemyData.id);
+        enemy?.updateState(enemyData);
       });
     });
   }
@@ -42,19 +52,9 @@ export class ClientEnemyCreatorDelegator implements Delegator {
       info.name
     );
     const enemy = new Enemy(info, state, view, stats);
-    view.setEntityReference(enemy)
+    view.setEntityReference(enemy);
     this.presenterProvider.forEnemy(view, enemy);
     this.spawnedEnemies.save(enemy.info.id, enemy);
-  }
-
-  private cleanUp(event: EnemiesStatesEvent) {
-    this.lastTimeCleanup = Date.now();
-    this.spawnedEnemies.getAll().forEach((enemy) => {
-      if (!event.enemyStates.enemies.find((e) => e.info.id === enemy.info.id)) {
-        this.spawnedEnemies.remove(enemy.info.id);
-        enemy.destroy();
-      }
-    });
   }
 
   stop(): void {}

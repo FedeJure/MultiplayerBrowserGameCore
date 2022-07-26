@@ -144,11 +144,6 @@ export const InitGame: (
             provider.enemiesStatesRepository
           ),
           new LootUpdaterDelegator(socket, provider.lootRepository),
-          new EnemiesStateSenderDelegator(
-            provider.roomManager,
-            socket,
-            provider.enemiesRepository
-          ),
           new ServerPlayerCreatorDelegator(
             provider.connectionsRepository,
             scene,
