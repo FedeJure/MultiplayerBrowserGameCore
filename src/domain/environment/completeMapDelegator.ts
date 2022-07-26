@@ -25,6 +25,8 @@ import { createEnemiesSpawner } from "../actions/createEnemiesSpawner";
 import { PlayerRoomChangeEventRepository } from "../player/playerRoomChangeEventRepository";
 import { EnemyState } from "../enemies/EnemyState";
 import { Log } from "../../infrastructure/Logger";
+import { sendEnemiesDataForRoom } from "../actions/sendEnemiesDataForRooms";
+import { sendEnemiesDestroyForRoom } from "../actions/sendEnemiesDestroyForRooms";
 
 export class CompleteMapDelegator implements Delegator {
   public constructor(
@@ -78,6 +80,18 @@ export class CompleteMapDelegator implements Delegator {
         newState.currentRooms,
         joinedRooms
       );
+
+      sendEnemiesDataForRoom(
+        joinedRooms,
+        this.roomManager,
+        this.enemiesRepository,
+        player.connection
+      );
+      sendEnemiesDestroyForRoom(
+        leavingRooms,
+        this.roomManager,
+        player.connection
+      );
       this.playerRoomChangeEventRepository.save(
         player.info.id,
         newRooms,
@@ -85,7 +99,6 @@ export class CompleteMapDelegator implements Delegator {
       );
       if (leavingRooms.length === 0) return;
       this.sendExistentLoots(player, newRooms, leavingRooms);
-      
 
       this.socket
         .in(leavingRooms)
@@ -158,8 +171,8 @@ export class CompleteMapDelegator implements Delegator {
 
   init(): void {
     this.scene.game.events.addListener(Phaser.Core.Events.DESTROY, async () => {
-      Log(CompleteMapDelegator, "Deleting existent enemies...")
-      this.enemiesStatesRepository.clear()
+      Log(CompleteMapDelegator, "Deleting existent enemies...");
+      this.enemiesStatesRepository.clear();
     });
     Promise.all(
       this.mapManager.maps.map((m) => loadMapAssets(m, this.scene))

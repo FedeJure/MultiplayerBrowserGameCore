@@ -71,6 +71,9 @@ export class SocketServerConnection implements ServerConnection {
     masterSocket.on(GameEvents.ENEMIES_CREATION.name, (data) =>
       this._onEnemyCreation.next(data)
     );
+    masterSocket.on(GameEvents.ENEMIES_DESTROY.name, (data) =>
+      this._onEnemyDestroy.next(data)
+    );
     masterSocket.on(GameEvents.LOOT_APPEAR.name, (data) =>
       this._onLootsApprear.next(data)
     );

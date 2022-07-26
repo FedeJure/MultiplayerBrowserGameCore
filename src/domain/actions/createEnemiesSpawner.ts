@@ -109,6 +109,7 @@ export async function createEnemiesSpawner(
         roomManager.removeEnemyFromRoom(enemy.info.id, [
           enemy.state.mapId.toString(),
         ]);
+
         socket
           .in(state.mapId.toString())
           .emit(
@@ -122,7 +123,6 @@ export async function createEnemiesSpawner(
         target: enemy,
         type: CollisionableTargetType.MOB,
       });
-
       socket.in(state.mapId.toString()).emit(
         GameEvents.ENEMIES_CREATION.name,
         GameEvents.ENEMIES_CREATION.getEvent({
