@@ -31,6 +31,8 @@ import { PlayerState } from "./playerState";
 import { PlayerBalance } from "../inventory/playerBalance";
 import { PlayerRoomChangeEventRepository } from "./playerRoomChangeEventRepository";
 import { PlayerServerMovementValidator } from "./movement/serverPlayerMovementValidator";
+import { Enemy } from "../enemies/enemy";
+import { sendEnemiesDataForRoom } from "../actions/sendEnemiesDataForRooms";
 
 export class ServerPlayerCreatorDelegator implements Delegator {
   constructor(
@@ -49,7 +51,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
     private playerInputRequestRepository: PlayerInputRequestRepository,
     private collisionManager: CollisionManager,
     private balanceRepository: AsyncRepository<PlayerBalance>,
-    private roomChangeRepository: PlayerRoomChangeEventRepository
+    private roomChangeRepository: PlayerRoomChangeEventRepository,
+    private enemiesRepository: SimpleRepository<Enemy>
   ) {}
   init(): void {
     this.connectionsRepository.onSave.subscribe((connection) => {
@@ -90,7 +93,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
               info: player.info,
             })),
             foundedMap,
-            neighborMaps
+            neighborMaps,
+            [] //TODO: remove this
           );
           this.inGamePlayersRepository.save(player.info.id, player);
 
@@ -106,6 +110,14 @@ export class ServerPlayerCreatorDelegator implements Delegator {
           this.roomChangeRepository.save(playerId, joinedRooms, []);
           player.updateState({ currentRooms: joinedRooms });
           connection.sendMapUpdateEvent(foundedMap, neighborMaps);
+          sendEnemiesDataForRoom(
+            [foundedMap!.id, ...neighborMaps.map((m) => m.id)].map((id) =>
+              id.toString()
+            ),
+            this.roomManager,
+            this.enemiesRepository,
+            connection
+          );
           this.socket.in(joinedRooms).emit(
             GameEvents.NEW_PLAYER_CONNECTED.name,
             GameEvents.NEW_PLAYER_CONNECTED.getEvent({
@@ -238,8 +250,8 @@ export class ServerPlayerCreatorDelegator implements Delegator {
       this.playerStateRepository,
       new PlayerTransportation(this.mapManager)
     );
-    player.inventory.setItems(inventory?.items ?? [])
-    player.balance.set(balance?.amount ?? 0)
+    player.inventory.setItems(inventory?.items ?? []);
+    player.balance.set(balance?.amount ?? 0);
 
     view.setEntityReference(player);
 

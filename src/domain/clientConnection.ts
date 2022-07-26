@@ -16,6 +16,8 @@ import { ProcessedMap } from "./environment/processedMap";
 import { Loot } from "./loot/loot";
 import { BalanceDto } from "./inventory/balanceDto";
 import { MovementPlayerStateDto } from "./player/movement/movementPlayerStateDto";
+import { EnemyDataDto } from "../infrastructure/dtos/enemyStatesDto";
+import { EnemyInfo } from "./enemies/EnemyInfo";
 
 export interface ClientConnection {
   connectionId: string;
@@ -29,7 +31,8 @@ export interface ClientConnection {
     localPlayer: LocalPlayerInitialStateDto,
     players: PlayerInitialStateDto[],
     currentMap: ProcessedMap | undefined,
-    neighborMaps: ProcessedMap[] | undefined
+    neighborMaps: ProcessedMap[] | undefined,
+    enemies: EnemyDataDto[]
   ): void;
   join(roomName: string | string[]): Promise<{ previousRooms: string[] }>;
   onInput(): Observable<PlayerInputEvent>;
@@ -55,5 +58,7 @@ export interface ClientConnection {
   sendLootDisappear(loots: Loot[]);
   onClaimLoot(): Observable<ClaimLootEvent>;
   sendPositionChange(dto: MovementPlayerStateDto);
-  onInventoryUpdated(): Observable<InventoryBalanceUpdatedEvent>
+  onInventoryUpdated(): Observable<InventoryBalanceUpdatedEvent>;
+  sendEnemiesCreation(enemies: EnemyDataDto)
+  sendEnemiesDestroy(enemies: EnemyInfo['id'][])
 }

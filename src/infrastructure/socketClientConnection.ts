@@ -21,6 +21,7 @@ import { LocalPlayerInitialStateDto } from "./dtos/localPlayerInitialStateDto";
 import { Loot } from "../domain/loot/loot";
 import { BalanceDto } from "../domain/inventory/balanceDto";
 import { MovementPlayerStateDto } from "../domain/player/movement/movementPlayerStateDto";
+import { EnemyDataDto } from "./dtos/enemyStatesDto";
 
 export class SocketClientConnection implements ClientConnection {
   public readonly socket: Socket;
@@ -50,6 +51,18 @@ export class SocketClientConnection implements ClientConnection {
     this.socket = socket;
 
     this.listenEvents();
+  }
+  sendEnemiesCreation(enemies: EnemyDataDto) {
+    this.socket.emit(
+      GameEvents.ENEMIES_CREATION.name,
+      GameEvents.ENEMIES_CREATION.getEvent(enemies)
+    );
+  }
+  sendEnemiesDestroy(enemies: string[]) {
+    this.socket.emit(
+      GameEvents.ENEMIES_DESTROY.name,
+      GameEvents.ENEMIES_DESTROY.getEvent(enemies)
+    );
   }
   onInventoryUpdated() {
     return this._onInventoryUpdated.asObservable();
@@ -176,7 +189,8 @@ export class SocketClientConnection implements ClientConnection {
     localPlayer: LocalPlayerInitialStateDto,
     players: PlayerInitialStateDto[],
     currentMap: ProcessedMap | undefined,
-    neighborMaps: ProcessedMap[] | undefined
+    neighborMaps: ProcessedMap[] | undefined,
+    enemies: EnemyDataDto[]
   ) {
     this.socket.emit(
       GameEvents.INITIAL_GAME_STATE.name,
@@ -184,7 +198,8 @@ export class SocketClientConnection implements ClientConnection {
         localPlayer,
         players,
         currentMap,
-        neighborMaps
+        neighborMaps,
+        enemies
       )
     );
   }

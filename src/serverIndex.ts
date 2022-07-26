@@ -160,7 +160,8 @@ export const InitGame: (
             provider.playerInputRequestRepository,
             provider.collisionManager,
             provider.playerBalanceRepository,
-            provider.playerRoomChangeEventRepository
+            provider.playerRoomChangeEventRepository,
+            provider.enemiesRepository
           ),
           new ServerPlayerInventoryDelegator(
             provider.itemsRepository,
