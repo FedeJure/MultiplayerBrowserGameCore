@@ -21,6 +21,7 @@ interface LoadedMap {
 type MapId = number;
 
 export class CurrentMapDelegator implements Delegator {
+  private currentMapId: number = -1
   private loadedMaps: { [key: MapId]: LoadedMap } = {};
   public constructor(
     private scene: ClientGameScene,
@@ -31,6 +32,8 @@ export class CurrentMapDelegator implements Delegator {
   ) {}
   init(): void {
     this.connection.onMapUpdated.subscribe(async (ev) => {
+      if (this.currentMapId === ev.newMap.id) return
+      this.currentMapId = ev.newMap.id
       this.mapManager.setMaps([ev.newMap, ...ev.neighborMaps]);
       return new Promise(async () => {
         await this.loadAssets([ev.newMap]);
@@ -107,7 +110,6 @@ export class CurrentMapDelegator implements Delegator {
   private createMap(maps: ProcessedMap[]) {
     try {
       const loadedKeys = Object.keys(this.loadedMaps);
-
       return Promise.all(
         maps
           .filter((m) => !loadedKeys.includes(m.id.toString()))
