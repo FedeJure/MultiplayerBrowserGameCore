@@ -12,12 +12,15 @@ import { Balance } from "../../inventory/balance";
 import { ServerPlayerInventory } from "../../inventory/serverPlayerInventory";
 import { PlayerTransportation } from "../playerTransportation";
 import { EntityMovement } from "../../entity/entityMovement";
+import { DefaultGameConfiguration } from "../../../infrastructure/configuration/GameConfigurations";
 
 export class ServerPlayer extends ControllablePlayer {
   private _onStateChange: Subject<{
     state: PlayerState;
     change: Partial<PlayerState>;
   }> = new Subject();
+  private lastTimeSave = Date.now();
+  private newStateToSave: Partial<PlayerState> = {};
   constructor(
     info: PlayerInfo,
     state: PlayerState,
@@ -44,7 +47,7 @@ export class ServerPlayer extends ControllablePlayer {
       inventory,
       balance
     );
-    playerTransportation.init(this)
+    playerTransportation.init(this);
   }
   updateInfo(newInfo: Omit<Partial<PlayerInfo>, "id">): void {
     super.updateInfo(newInfo);
@@ -54,7 +57,7 @@ export class ServerPlayer extends ControllablePlayer {
   updateState(newState: Partial<PlayerState>): void {
     super.updateState(newState);
     this._onStateChange.next({ state: this.state, change: newState });
-    this.playerStateRepository.update(this.info.id, newState);
+    this.newStateToSave = { ...this.newStateToSave, ...newState };
   }
 
   destroy(): void {
@@ -63,8 +66,16 @@ export class ServerPlayer extends ControllablePlayer {
   }
 
   update(time: number, delta: number): void {
-      super.update(time,delta)
-      this.playerTransportation.update(time,delta)
+    super.update(time, delta);
+    this.playerTransportation.update(time, delta);
+    if (
+      Date.now() >
+      this.lastTimeSave + DefaultGameConfiguration.playerStatesEventInterval
+    ) {
+      this.lastTimeSave = Date.now();
+      this.playerStateRepository.update(this.info.id, this.newStateToSave);
+      this.newStateToSave = {};
+    }
   }
 
   postUpdate(): void {
@@ -72,8 +83,8 @@ export class ServerPlayer extends ControllablePlayer {
       position: this.view.positionVector,
       velocity: this.view.velocity,
       side: this.view.side,
-      grounded: this.view.grounded
-    })
+      grounded: this.view.grounded,
+    });
   }
 
   get onStateChange(): Observable<{
@@ -88,6 +99,6 @@ export class ServerPlayer extends ControllablePlayer {
   }
 
   get inventory() {
-     return this._inventory as ServerPlayerInventory 
+    return this._inventory as ServerPlayerInventory;
   }
 }

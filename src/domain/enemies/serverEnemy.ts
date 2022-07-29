@@ -8,6 +8,7 @@ import { EnemyStats } from "./EnemyStats";
 import { ServerEnemyView } from "./ServerEnemyView";
 import { Entity } from "../entity/entity";
 import { AsyncRepository } from "../repository";
+import { DefaultGameConfiguration } from "../../infrastructure/configuration/GameConfigurations";
 
 export class ServerEnemy
   extends Entity<
@@ -20,6 +21,8 @@ export class ServerEnemy
   implements Attackable
 {
   private _onDestroy = new Subject<void>();
+  private lastTimeSave = Date.now();
+  private newStateToSave: Partial<EnemyState> = {};
 
   constructor(
     state: EnemyState,
@@ -29,23 +32,23 @@ export class ServerEnemy
     combat: EnemyCombat,
     private stateRepository: AsyncRepository<EnemyState>
   ) {
-    super(
-      info,
-      state,
-      view,
-      stats,
-      new EnemyMovement(),
-      combat
-    );
+    super(info, state, view, stats, new EnemyMovement(), combat);
   }
 
   update(time: number, delta: number): void {
-      super.update(time,delta)
+    super.update(time, delta);
+    if (
+      this.lastTimeSave + DefaultGameConfiguration.playerStatesEventInterval <
+      Date.now()
+    ) {
+      this.stateRepository.update(this.info.id, this.newStateToSave);
+      this.newStateToSave = {}
+    }
   }
 
   updateState(newState: Partial<EnemyState>): void {
-      super.updateState(newState)
-      this.stateRepository.update(this.info.id, newState)
+    super.updateState(newState);
+    this.newStateToSave = { ...this.newStateToSave, ...newState };
   }
 
   destroy(): void {

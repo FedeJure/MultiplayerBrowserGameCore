@@ -2,7 +2,6 @@ import * as Phaser from "phaser";
 import { Socket } from "socket.io";
 import { SocketIOEvents } from "./infrastructure/events/socketIoEvents";
 import { ServerProvider } from "./infrastructure/providers/serverProvider";
-import { GameScene } from "./view/scenes/GameScene";
 import { SocketClientConnection } from "./infrastructure/socketClientConnection";
 import { PhaserServerConfig } from "./infrastructure/configuration/PhaserGameConfigs";
 import { LoadScene } from "./view/scenes/LoadScene";
