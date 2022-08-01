@@ -8,8 +8,8 @@ import { PlayerState } from "../player/playerState";
 import { PlayerInfo } from "../player/playerInfo";
 import { SimpleRepository } from "../repository";
 import { Scene } from "phaser";
-import { Player } from "../player/players/player";
-import { DefaultPlayerStats, PlayerStats } from "../player/playerStats";
+import { ClientRemotePlayer } from "../player/players/player";
+import { DefaultPlayerStats } from "../player/playerStats";
 import { CollisionableEntity } from "../entity/CollisionableEntity";
 import { CollisionableTargetType } from "../combat/attackTargetType";
 import { PhaserCombatCollisionResolver } from "../../view/player/combatCollisionResolver";
@@ -40,7 +40,7 @@ export class ClientConnectionDelegator implements Delegator {
     private connection: ServerConnection,
     private scene: Scene,
     private presenterProvider: ClientPresenterProvider,
-    private inGamePlayersRepository: SimpleRepository<Player>,
+    private inGamePlayersRepository: SimpleRepository<ClientRemotePlayer | LocalClientPlayer>,
     private collisionableTargetRepository: SimpleRepository<CollisionableEntity>,
     private mapManager: MapManager,
     private collisionManager: CollisionManager,
@@ -123,7 +123,7 @@ export class ClientConnectionDelegator implements Delegator {
     );
     this.collisionManager.addPlayer(view);
 
-    const player = new Player(info, state, view, DefaultPlayerStats);
+    const player = new ClientRemotePlayer(info, state, view, DefaultPlayerStats);
     view.setEntityReference(player);
     this.presenterProvider.forPlayer(player, view);
     this.inGamePlayersRepository.save(player.info.id, player);

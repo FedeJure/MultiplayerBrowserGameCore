@@ -13,7 +13,7 @@ export interface GameConfigurations {
 export const DefaultGameConfiguration: GameConfigurations = {
   initialMapId: 1,
   gameRate: 60,
-  playerStatesEventInterval: 80,
+  playerStatesEventInterval: 30,
   lootDuration: 60000,
   lootDistance: 40,
   timeBetweenTransportations: 5000

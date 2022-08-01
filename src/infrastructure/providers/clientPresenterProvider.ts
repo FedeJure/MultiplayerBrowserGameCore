@@ -16,7 +16,7 @@ import { AnimatedDecorativeObjectDelegator } from "../../domain/environmentObjec
 import { GameObjects } from "phaser";
 import { EntityStateUpdaterDelegator } from "../../domain/entity/entityUpdaterDelegator";
 import { ClientEnemyCreatorDelegator } from "../../domain/enemies/clientEnemyCreatorDelegator";
-import { Player } from "../../domain/player/players/player";
+import { ClientRemotePlayer } from "../../domain/player/players/player";
 import { Enemy } from "../../domain/enemies/enemy";
 import { LocalClientPlayer } from "../../domain/player/players/localClientPlayer";
 import { ClientLootUpdaterDelegator } from "../../domain/loot/clientLootUpdaterDelegator";
@@ -50,7 +50,7 @@ export class ClientPresenterProvider {
       ),
     ]);
   }
-  forPlayer(player: Player, view: GameObjects.GameObject): void {
+  forPlayer(player: ClientRemotePlayer, view: GameObjects.GameObject): void {
     new ViewPresenter(view, [
       new PlayerRemoteMovementDelegator(
         player,

@@ -14,9 +14,8 @@ import { PlayerInfo } from "../playerInfo";
 import { PlayerInput } from "../playerInput";
 import { PlayerState } from "../playerState";
 import { PlayerStats } from "../playerStats";
-import { Player } from "./player";
 
-export class ControllablePlayer extends Player {
+export class ControllablePlayer extends Entity<PlayerInfo, PlayerState, PlayerView, PlayerStats> {
   constructor(
     _info: PlayerInfo,
     _state: PlayerState,

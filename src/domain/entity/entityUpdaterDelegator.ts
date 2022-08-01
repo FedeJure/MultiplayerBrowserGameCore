@@ -10,7 +10,6 @@ export class EntityStateUpdaterDelegator implements Delegator {
       const deltaInMillis = delta * 1000
       this.time += deltaInMillis
       this.entity.physicsUpdate(this.time, deltaInMillis) 
-
     })
   }
   stop(): void {}

@@ -2,7 +2,7 @@ import { DefaultGameConfiguration } from "../../infrastructure/configuration/Gam
 import { Map } from "../environment/mapConfiguration";
 import { Balance } from "../inventory/balance";
 import { Item } from "../items/item";
-import { Player } from "../player/players/player";
+import { ClientRemotePlayer } from "../player/players/player";
 import { SimpleRepository } from "../repository";
 import { Vector } from "../vector";
 import { Loot } from "./loot";
@@ -15,7 +15,7 @@ export class LootGenerator {
     itemIds: Item["id"][],
     balance: Balance,
     position: Vector,
-    owner: Player["info"]["id"],
+    owner: ClientRemotePlayer["info"]["id"],
     mapId: Map["id"]
   ) {
     const loot: Loot = {

@@ -2,7 +2,8 @@ import { GameObjects, Scene } from "phaser";
 import { ExistentDepths } from "../../view/existentDepths";
 import { loadBackgroundAssets } from "../actions/loadBackgroundAssets";
 import { PlayerInfo } from "../player/playerInfo";
-import { Player } from "../player/players/player";
+import { LocalClientPlayer } from "../player/players/localClientPlayer";
+import { ClientRemotePlayer } from "../player/players/player";
 import { SimpleRepository } from "../repository";
 import { ProcessedMap } from "./processedMap";
 
@@ -13,7 +14,7 @@ export class BackgroundCreator {
   constructor(
     private scene: Scene,
     private localPlayerId: PlayerInfo["id"],
-    private inGamePlayersRepository: SimpleRepository<Player>
+    private inGamePlayersRepository: SimpleRepository<ClientRemotePlayer | LocalClientPlayer>
   ) {}
   private async loadAssets(maps: ProcessedMap[]) {
     return Promise.all(maps.map((m) => loadBackgroundAssets(m, this.scene)));

@@ -1,22 +1,17 @@
 import { Entity } from "../../entity/entity";
 import { PlayerView } from "../../playerView";
+import { ClientRemotePlayerMovement } from "../movement/clientRemotePlayerMovement";
 import { PlayerInfo } from "../playerInfo";
 import { PlayerState } from "../playerState";
 import { PlayerStats } from "../playerStats";
 
-export class Player extends Entity<
-  PlayerInfo,
-  PlayerState,
-  PlayerView,
-  PlayerStats
-> {
-  postUpdate(): void {
-    this.updateState({
-      position: this.view.positionVector,
-      velocity: this.view.velocity,
-      side: this.view.side,
-      grounded: this.view.grounded,
-    });
-    this._animations.update();
+export class ClientRemotePlayer extends Entity<PlayerInfo, PlayerState, PlayerView, PlayerStats> {
+  constructor(
+    info: PlayerInfo,
+    state: PlayerState,
+    view: PlayerView,
+    stats: PlayerStats
+  ) {
+    super(info, state,view,stats, new ClientRemotePlayerMovement());
   }
 }
