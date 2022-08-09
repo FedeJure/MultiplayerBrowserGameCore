@@ -141,6 +141,7 @@ function createMapObjects(scene: Scene, map: ProcessedMap) {
         .setRotation(object.rotation)
         .setFlip(object.flipX, object.flipY)
         .setDepth(object.depth);
+        console.log(object.depth)
     }
   });
 }

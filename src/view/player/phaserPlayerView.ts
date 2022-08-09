@@ -4,6 +4,7 @@ import { PhaserCombatCollisionResolver } from "./combatCollisionResolver";
 import { PhaserEntityView } from "../entity/phaserEntityView";
 import { IsInsidePropertyOrRemove } from "../utils";
 import { Ladder } from "../../domain/environment/ladder";
+import { ExistentDepths } from "../existentDepths";
 
 export class PhaserPlayerView extends PhaserEntityView implements PlayerView {
   constructor(
@@ -16,6 +17,7 @@ export class PhaserPlayerView extends PhaserEntityView implements PlayerView {
   ) {
     super(view, x, y, height, width, combatCollisionResolver);
     this.setName("Player View");
+    this.setDepth(ExistentDepths.PLAYERS);
   }
   get inLadder() {
     return IsInsidePropertyOrRemove<Ladder>(this, "ladder") !== undefined;

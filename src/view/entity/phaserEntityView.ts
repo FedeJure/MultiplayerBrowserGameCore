@@ -1,4 +1,4 @@
-import Phaser, { GameObjects, Physics } from "phaser";
+import Phaser, { Physics } from "phaser";
 import { v4 as uuidv4 } from "uuid";
 import { EntityView } from "../../domain/entity/entityView";
 import { AnimationDto } from "../../domain/entity/AnimationDto";
@@ -23,11 +23,10 @@ export class PhaserEntityView
     protected collisionResolver?: PhaserCombatCollisionResolver
   ) {
     super(view.scene, x, y);
-    // view.setPosition(0, height / 6);
     this.setSize(width, height);
     this.scene.physics.add.existing(this);
     this.scene.add.existing(this);
-    this.setDepth(ExistentDepths.ENTITY);
+    this.setDepth(ExistentDepths.ENTITIES);
     this.arcadeBody.setFriction(100, 100);
     this.arcadeBody.setBounce(0, 0);
     this.arcadeBody.setDrag(0, 0);

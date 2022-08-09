@@ -2,6 +2,7 @@ import { Scene } from "phaser";
 import { EnemyView } from "../../domain/enemies/EnemyView";
 import { EntityIngameHud } from "../entity/entityIngameHud";
 import { SpinePhaserEntityView } from "../entity/spinePhaserEntityView";
+import { ExistentDepths } from "../existentDepths";
 
 export class SpinePhaserEnemyView
   extends SpinePhaserEntityView
@@ -20,5 +21,6 @@ export class SpinePhaserEnemyView
     this.hud = new EntityIngameHud(scene, 0, -height, height, 50, false);
     this.hud.setDisplayName(name);
     this.add(this.hud)
+    this.spine.setDepth(ExistentDepths.ENTITIES);
   }
 }
