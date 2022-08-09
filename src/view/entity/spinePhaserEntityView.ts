@@ -60,6 +60,13 @@ export class SpinePhaserEntityView extends PhaserEntityView {
       Phaser.Scenes.Events.UPDATE,this.update.bind(this)
     );
 
+    this.once(Phaser.GameObjects.Events.DESTROY, () => {
+          scene.events.off(
+            Phaser.Scenes.Events.UPDATE,
+            this.update.bind(this)
+          );
+    })
+
     this.lastAnimationsByLayer = new Map();
   }
 
@@ -106,9 +113,6 @@ export class SpinePhaserEntityView extends PhaserEntityView {
   }
 
   destroy(fromScene?: boolean | undefined): void {
-    this.scene.events.off(
-      Phaser.Scenes.Events.UPDATE,this.update.bind(this)
-    );
     super.destroy(fromScene);
     this.spine.destroy(fromScene);
   }

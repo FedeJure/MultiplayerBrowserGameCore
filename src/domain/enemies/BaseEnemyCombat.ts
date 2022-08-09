@@ -118,7 +118,7 @@ export class EnemyCombat extends DefaultEntityCombat {
     const totalExp = 100; //refactor: calculate experience
     this.attackers.forEach((attacker) => {
       attacker.entity.combat.bringExperience(
-        (totalExp * attacker.damage) / totalDamage
+        (totalExp * attacker.damage) / totalDamage || 0
       );
     });
   }
@@ -127,12 +127,15 @@ export class EnemyCombat extends DefaultEntityCombat {
     const filterTargets = targets.filter(
       (t) => t.type === CollisionableTargetType.PLAYER
     );
-    if (this._target && filterTargets.length === 0) {
+    const findSameTarget = filterTargets.find((t) => t.target === this.target);
+
+    if (this._target && (filterTargets.length === 0 || !findSameTarget)) {
       this._target = null;
       this.lastTimeWithTarget = Date.now();
     }
-    if (filterTargets.find((t) => t.target === this.target)) return;
-    filterTargets.map(({ target }) => {
+    if (findSameTarget && this.target) return;
+
+    filterTargets.forEach(({ target }) => {
       this._target = target;
     });
   }
